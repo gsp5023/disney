@@ -1,0 +1,9 @@
+{
+  "sys_params": {
+    "memory_reservations": {
+      "low": {
+        "json_deflate": 12582912
+      }
+    }
+  }
+}

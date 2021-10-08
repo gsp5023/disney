@@ -1,0 +1,9 @@
+{
+  "v1": {
+    "options": [{
+      "bundle": [{
+        "file": "build/bundle/rust_app.bundle.zip"
+      }]
+    }]
+  }
+}

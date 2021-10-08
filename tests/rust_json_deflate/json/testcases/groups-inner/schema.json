@@ -1,0 +1,67 @@
+{
+	"type":	"object",
+	"properties":	{
+		"alpha":	{
+			"type":	"object",
+			"properties":	{
+				"alpha-1":	{
+					"type":	"object",
+					"properties":	{
+						"alpha-1-a":	{
+							"type":	["string", "boolean"]
+						},
+						"alpha-1-b":	{
+							"type":	"string"
+						},
+						"alpha-1-c":	{
+							"type":	"string"
+						},
+						"alpha-2-a":	{
+							"type":	"string"
+						},
+						"alpha-2-b":	{
+							"type":	"string"
+						},
+						"alpha-2-c":	{
+							"type":	"string"
+						},
+						"alpha-3-a":	{
+							"type":	"string"
+						},
+						"alpha-3-b":	{
+							"type":	"string"
+						},
+						"alpha-3-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	[],
+					"name":	"Alpha"
+				},
+				"alpha-2":	{
+					"type":	"/alpha/alpha-1"
+				},
+				"alpha-3":	{
+					"type":	"/alpha/alpha-1"
+				}
+			},
+			"required":	["alpha-1", "alpha-2", "alpha-3"]
+		},
+		"other-alpha":	{
+			"type":	"object",
+			"properties":	{
+				"alpha-1":	{
+					"type":	"/alpha/alpha-1"
+				},
+				"alpha-2":	{
+					"type":	"/alpha/alpha-1"
+				},
+				"alpha-3":	{
+					"type":	"/alpha/alpha-1"
+				}
+			},
+			"required":	["alpha-1", "alpha-2", "alpha-3"]
+		}
+	},
+	"required":	["alpha", "other-alpha"]
+}

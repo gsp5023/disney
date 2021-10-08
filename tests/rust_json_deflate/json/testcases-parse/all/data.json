@@ -1,0 +1,10 @@
+ {
+    "abc-string-xyz": "abc-string-xyz",
+    "abc-integer-xyz": 1234567890,
+    "abc-number-xyz": 1.50000000,
+    "abc-boolean-xyz": true,
+    "abc-array-xyz": [1, 2],
+    "abc-object-xyz": {
+        "abc-inner-xyz": false
+    }
+}

@@ -1,0 +1,16 @@
+{
+  "v1": {
+    "default_persona": "persona1",
+    "personas": [
+      {
+        "manifest_url": "manifest_url_success1"
+      },
+      {
+        "manifest_url": "manifest_url_success2"
+      },
+      {
+        "manifest_url": "manifest_url_success3"
+      }
+    ]
+  }
+}

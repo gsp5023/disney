@@ -1,0 +1,10 @@
+{
+  "v1": {
+    "options": [{
+      "bundle": [{
+        "url": "http://0.0.0.0:8000/build/bundle/rust_app.bundle.zip",
+        "signature": "aFsnm+NY2pNgPm+lWZWP8cxuJEA2rr2ifAbBk7neWE4="
+      }]
+    }]
+  }
+}

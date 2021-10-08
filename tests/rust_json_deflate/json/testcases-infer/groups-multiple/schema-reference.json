@@ -1,0 +1,32 @@
+{
+	"type":	"object",
+	"properties":	{
+		"a":	{
+			"type":	"object",
+			"properties":	{
+				"f":	{
+					"type":	"object",
+					"properties":	{
+						"string":	{
+							"type":	"string"
+						},
+						"integer":	{
+							"type":	"integer"
+						}
+					},
+					"required":	[],
+					"name":	"In"
+				},
+				"g":	{
+					"type":	"/a/f"
+				}
+			},
+			"required":	["f", "g"],
+			"name":	"Out"
+		},
+		"b":	{
+			"type":	"/a"
+		}
+	},
+	"required":	["a", "b"]
+}

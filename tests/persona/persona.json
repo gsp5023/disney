@@ -1,0 +1,21 @@
+{
+  "v1": {
+    "default_persona": "persona1",
+    "personas": [
+      {
+        "id": "persona1",
+        "manifest_url": "manifest_url_success1",
+        "error_message": "test_message1"
+      },
+      {
+        "id": "persona2",
+        "manifest_url": "manifest_url_success2",
+        "error_message": "test_message2"
+      },
+      {
+        "id": "persona3",
+        "manifest_url": "manifest_url_success3"
+      }
+    ]
+  }
+}

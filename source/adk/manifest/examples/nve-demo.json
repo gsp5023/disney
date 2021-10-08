@@ -1,0 +1,23 @@
+{
+  "v1": {
+    "options": [
+      {
+        "bundle": [
+          {
+            "file": "build/bundle/nve_demo.bundle.zip"
+          }
+        ],
+        "runtime_config": {
+          "sys_params": {
+            "memory_reservations": {
+              "low": {
+                "render_device": 4334496,
+                "canvas": 52428800
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

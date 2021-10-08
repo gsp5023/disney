@@ -1,0 +1,2922 @@
+{
+  "types": [
+    {
+      "name": "i16",
+      "size": 2,
+      "align": 2
+    },
+    {
+      "name": "i32",
+      "size": 4,
+      "align": 4
+    },
+    {
+      "name": "i64",
+      "size": 8,
+      "align": 8
+    },
+    {
+      "name": "i8",
+      "size": 1,
+      "align": 1
+    },
+    {
+      "name": "u16",
+      "size": 2,
+      "align": 2
+    },
+    {
+      "name": "u32",
+      "size": 4,
+      "align": 4
+    },
+    {
+      "name": "u64",
+      "size": 8,
+      "align": 8
+    },
+    {
+      "name": "u8",
+      "size": 1,
+      "align": 1
+    }
+  ],
+  "enums": [
+    {
+      "name": "nve_abr_policy_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_abr_policy_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_abr_policy_aggressive",
+          "constant": 2
+        },
+        {
+          "name": "nve_abr_policy_conservative",
+          "constant": 0
+        },
+        {
+          "name": "nve_abr_policy_moderate",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "nve_audio_capabilities_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_audio_capabilities_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_audio_capabilities_dolby_atmos",
+          "constant": 4
+        },
+        {
+          "name": "nve_audio_capabilities_dolby_digital",
+          "constant": 2
+        },
+        {
+          "name": "nve_audio_capabilities_last",
+          "constant": 8
+        },
+        {
+          "name": "nve_audio_capabilities_lpcm",
+          "constant": 1
+        },
+        {
+          "name": "nve_audio_capabilities_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_audio_codecs_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_audio_codecs_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_audio_codecs_aac",
+          "constant": 2
+        },
+        {
+          "name": "nve_audio_codecs_ac3",
+          "constant": 4
+        },
+        {
+          "name": "nve_audio_codecs_atmos",
+          "constant": 8
+        },
+        {
+          "name": "nve_audio_codecs_eac3",
+          "constant": 1
+        },
+        {
+          "name": "nve_audio_codecs_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_capability_flag_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_capability_flag_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_capability_decoder_support",
+          "constant": 1
+        },
+        {
+          "name": "nve_capability_hardware_support",
+          "constant": 2
+        },
+        {
+          "name": "nve_capability_no_support",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_color_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_color_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_color_black",
+          "constant": 1
+        },
+        {
+          "name": "nve_color_blue",
+          "constant": 12
+        },
+        {
+          "name": "nve_color_bright_blue",
+          "constant": 13
+        },
+        {
+          "name": "nve_color_bright_cyan",
+          "constant": 22
+        },
+        {
+          "name": "nve_color_bright_green",
+          "constant": 10
+        },
+        {
+          "name": "nve_color_bright_magenta",
+          "constant": 19
+        },
+        {
+          "name": "nve_color_bright_red",
+          "constant": 7
+        },
+        {
+          "name": "nve_color_bright_white",
+          "constant": 4
+        },
+        {
+          "name": "nve_color_bright_yellow",
+          "constant": 16
+        },
+        {
+          "name": "nve_color_cyan",
+          "constant": 21
+        },
+        {
+          "name": "nve_color_dark_blue",
+          "constant": 11
+        },
+        {
+          "name": "nve_color_dark_cyan",
+          "constant": 20
+        },
+        {
+          "name": "nve_color_dark_green",
+          "constant": 8
+        },
+        {
+          "name": "nve_color_dark_magenta",
+          "constant": 17
+        },
+        {
+          "name": "nve_color_dark_red",
+          "constant": 5
+        },
+        {
+          "name": "nve_color_dark_yellow",
+          "constant": 14
+        },
+        {
+          "name": "nve_color_default",
+          "constant": 0
+        },
+        {
+          "name": "nve_color_gray",
+          "constant": 2
+        },
+        {
+          "name": "nve_color_green",
+          "constant": 9
+        },
+        {
+          "name": "nve_color_magenta",
+          "constant": 18
+        },
+        {
+          "name": "nve_color_red",
+          "constant": 6
+        },
+        {
+          "name": "nve_color_white",
+          "constant": 3
+        },
+        {
+          "name": "nve_color_yellow",
+          "constant": 15
+        }
+      ]
+    },
+    {
+      "name": "nve_drm_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_drm_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_drm_nagra",
+          "constant": 4
+        },
+        {
+          "name": "nve_drm_none",
+          "constant": 0
+        },
+        {
+          "name": "nve_drm_playready",
+          "constant": 1
+        },
+        {
+          "name": "nve_drm_widevine",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "nve_drm_key_tag_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_drm_key_tag_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_drm_key_tag_session",
+          "constant": 1
+        },
+        {
+          "name": "nve_drm_key_tag_unknown",
+          "constant": 0
+        },
+        {
+          "name": "nve_drm_key_tag_variant",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "nve_drm_method_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_drm_method_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_drm_method_aes128",
+          "constant": 2
+        },
+        {
+          "name": "nve_drm_method_none",
+          "constant": 0
+        },
+        {
+          "name": "nve_drm_method_playready_aes128",
+          "constant": 4
+        },
+        {
+          "name": "nve_drm_method_sample_aes",
+          "constant": 3
+        },
+        {
+          "name": "nve_drm_method_vanilla_aes128",
+          "constant": 1
+        },
+        {
+          "name": "nve_drm_method_widevine",
+          "constant": 5
+        }
+      ]
+    },
+    {
+      "name": "nve_drm_workflow_init_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_drm_workflow_init_type_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_drm_workflow_init_type_app_context",
+          "constant": 0
+        },
+        {
+          "name": "nve_drm_workflow_init_type_drm_manager_context",
+          "constant": 2
+        },
+        {
+          "name": "nve_drm_workflow_init_type_url_context",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "nve_event_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_event_type_audio_manifest_updated",
+          "constant": 18
+        },
+        {
+          "name": "nve_event_type_audio_updated",
+          "constant": 15
+        },
+        {
+          "name": "nve_event_type_buffer",
+          "constant": 11
+        },
+        {
+          "name": "nve_event_type_cenc_initdata",
+          "constant": 12
+        },
+        {
+          "name": "nve_event_type_drm_challenge_generated",
+          "constant": 13
+        },
+        {
+          "name": "nve_event_type_drm_error",
+          "constant": 16
+        },
+        {
+          "name": "nve_event_type_load_information",
+          "constant": 10
+        },
+        {
+          "name": "nve_event_type_media_player_general_info",
+          "constant": 19
+        },
+        {
+          "name": "nve_event_type_media_player_item",
+          "constant": 9
+        },
+        {
+          "name": "nve_event_type_media_player_status_changed",
+          "constant": 8
+        },
+        {
+          "name": "nve_event_type_none",
+          "constant": 0
+        },
+        {
+          "name": "nve_event_type_playback_rate",
+          "constant": 7
+        },
+        {
+          "name": "nve_event_type_profile",
+          "constant": 6
+        },
+        {
+          "name": "nve_event_type_seek",
+          "constant": 5
+        },
+        {
+          "name": "nve_event_type_size_available",
+          "constant": 4
+        },
+        {
+          "name": "nve_event_type_text_manifest_updated",
+          "constant": 17
+        },
+        {
+          "name": "nve_event_type_text_updated",
+          "constant": 14
+        },
+        {
+          "name": "nve_event_type_time_change",
+          "constant": 3
+        },
+        {
+          "name": "nve_event_type_timed_metadata",
+          "constant": 2
+        },
+        {
+          "name": "nve_event_type_timeline",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "nve_font_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_font_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_font_casual",
+          "constant": 5
+        },
+        {
+          "name": "nve_font_cursive",
+          "constant": 6
+        },
+        {
+          "name": "nve_font_default",
+          "constant": 0
+        },
+        {
+          "name": "nve_font_monospace_with_serifs",
+          "constant": 1
+        },
+        {
+          "name": "nve_font_monospace_without_serifs",
+          "constant": 3
+        },
+        {
+          "name": "nve_font_proportional_with_serifs",
+          "constant": 2
+        },
+        {
+          "name": "nve_font_proportional_without_serifs",
+          "constant": 4
+        },
+        {
+          "name": "nve_font_small_capitals",
+          "constant": 7
+        }
+      ]
+    },
+    {
+      "name": "nve_font_edge_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_font_edge_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_font_edge_default",
+          "constant": 0
+        },
+        {
+          "name": "nve_font_edge_depressed",
+          "constant": 3
+        },
+        {
+          "name": "nve_font_edge_drop_shadow_left",
+          "constant": 5
+        },
+        {
+          "name": "nve_font_edge_drop_shadow_right",
+          "constant": 6
+        },
+        {
+          "name": "nve_font_edge_none",
+          "constant": 1
+        },
+        {
+          "name": "nve_font_edge_raised",
+          "constant": 2
+        },
+        {
+          "name": "nve_font_edge_uniform",
+          "constant": 4
+        }
+      ]
+    },
+    {
+      "name": "nve_load_information_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_load_information_type_file",
+          "constant": 8
+        },
+        {
+          "name": "nve_load_information_type_fragment_audio",
+          "constant": 1
+        },
+        {
+          "name": "nve_load_information_type_fragment_subtitle",
+          "constant": 2
+        },
+        {
+          "name": "nve_load_information_type_fragment_track",
+          "constant": 3
+        },
+        {
+          "name": "nve_load_information_type_fragment_video",
+          "constant": 0
+        },
+        {
+          "name": "nve_load_information_type_manifest_audio",
+          "constant": 6
+        },
+        {
+          "name": "nve_load_information_type_manifest_master",
+          "constant": 4
+        },
+        {
+          "name": "nve_load_information_type_manifest_subtitle",
+          "constant": 7
+        },
+        {
+          "name": "nve_load_information_type_manifest_video",
+          "constant": 5
+        }
+      ]
+    },
+    {
+      "name": "nve_media_audio_capabilities_flag_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_audio_capabilities_flag_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_audio_capabilities_flag_dolby_atmos",
+          "constant": 4
+        },
+        {
+          "name": "nve_media_audio_capabilities_flag_dolby_digital",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_audio_capabilities_flag_last",
+          "constant": 8
+        },
+        {
+          "name": "nve_media_audio_capabilities_flag_lpcm",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_audio_capabilities_flag_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_media_color_depth_flag_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_color_depth_flag_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_color_depth_flag_10bpc",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_color_depth_flag_12bpc",
+          "constant": 4
+        },
+        {
+          "name": "nve_media_color_depth_flag_8bpc",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_color_depth_flag_last",
+          "constant": 8
+        },
+        {
+          "name": "nve_media_color_depth_flag_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_media_color_format_flag_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_color_format_flag_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_color_format_flag_4_2_0",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_color_format_flag_last",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_color_format_flag_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_media_color_space_flag_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_color_space_flag_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_color_space_flag_ITU_R_BT2020",
+          "constant": 8
+        },
+        {
+          "name": "nve_media_color_space_flag_ITU_R_BT601",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_color_space_flag_ITU_R_BT709",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_color_space_flag_SRGB",
+          "constant": 4
+        },
+        {
+          "name": "nve_media_color_space_flag_last",
+          "constant": 16
+        },
+        {
+          "name": "nve_media_color_space_flag_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_media_encryption_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_encryption_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_encryption_cbcs",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_encryption_ctr",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_encryption_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_media_hdcp_level_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_hdcp_level_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_hdcp_level_1_0",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_hdcp_level_1_1",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_hdcp_level_1_2",
+          "constant": 3
+        },
+        {
+          "name": "nve_media_hdcp_level_1_3",
+          "constant": 4
+        },
+        {
+          "name": "nve_media_hdcp_level_1_4",
+          "constant": 5
+        },
+        {
+          "name": "nve_media_hdcp_level_2_0",
+          "constant": 6
+        },
+        {
+          "name": "nve_media_hdcp_level_2_1",
+          "constant": 7
+        },
+        {
+          "name": "nve_media_hdcp_level_2_2",
+          "constant": 8
+        },
+        {
+          "name": "nve_media_hdcp_level_2_3",
+          "constant": 9
+        },
+        {
+          "name": "nve_media_hdcp_level_last",
+          "constant": 10
+        },
+        {
+          "name": "nve_media_hdcp_level_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_media_player_status_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_media_player_status_complete",
+          "constant": 8
+        },
+        {
+          "name": "nve_media_player_status_error",
+          "constant": 9
+        },
+        {
+          "name": "nve_media_player_status_idle",
+          "constant": 0
+        },
+        {
+          "name": "nve_media_player_status_initialized",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_player_status_initializing",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_player_status_paused",
+          "constant": 6
+        },
+        {
+          "name": "nve_media_player_status_playing",
+          "constant": 5
+        },
+        {
+          "name": "nve_media_player_status_prepared",
+          "constant": 4
+        },
+        {
+          "name": "nve_media_player_status_preparing",
+          "constant": 3
+        },
+        {
+          "name": "nve_media_player_status_released",
+          "constant": 10
+        },
+        {
+          "name": "nve_media_player_status_seeking",
+          "constant": 7
+        },
+        {
+          "name": "nve_media_player_status_suspended",
+          "constant": 11
+        }
+      ]
+    },
+    {
+      "name": "nve_media_resource_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "Custom",
+          "constant": 3
+        },
+        {
+          "name": "DASH",
+          "constant": 2
+        },
+        {
+          "name": "HDS",
+          "constant": 0
+        },
+        {
+          "name": "HLS",
+          "constant": 1
+        },
+        {
+          "name": "ISOBMFF",
+          "constant": 5
+        },
+        {
+          "name": "Unknown",
+          "constant": 4
+        }
+      ]
+    },
+    {
+      "name": "nve_media_video_output_rate_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_video_output_rate_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_video_output_rate_100",
+          "constant": 32
+        },
+        {
+          "name": "nve_media_video_output_rate_119_98_or_120",
+          "constant": 64
+        },
+        {
+          "name": "nve_media_video_output_rate_200",
+          "constant": 128
+        },
+        {
+          "name": "nve_media_video_output_rate_239_76_or_240",
+          "constant": 256
+        },
+        {
+          "name": "nve_media_video_output_rate_23_98_or_24",
+          "constant": 1
+        },
+        {
+          "name": "nve_media_video_output_rate_25",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_video_output_rate_29_97_or_30",
+          "constant": 4
+        },
+        {
+          "name": "nve_media_video_output_rate_50",
+          "constant": 8
+        },
+        {
+          "name": "nve_media_video_output_rate_59_94_or_60",
+          "constant": 16
+        },
+        {
+          "name": "nve_media_video_output_rate_last",
+          "constant": 1024
+        },
+        {
+          "name": "nve_media_video_output_rate_none",
+          "constant": 0
+        },
+        {
+          "name": "nve_media_video_output_rate_other",
+          "constant": 512
+        }
+      ]
+    },
+    {
+      "name": "nve_media_video_output_resolution_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_media_video_output_resolution_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_media_video_output_resolution_1080p",
+          "constant": 4
+        },
+        {
+          "name": "nve_media_video_output_resolution_1440p",
+          "constant": 8
+        },
+        {
+          "name": "nve_media_video_output_resolution_4k",
+          "constant": 16
+        },
+        {
+          "name": "nve_media_video_output_resolution_5k",
+          "constant": 32
+        },
+        {
+          "name": "nve_media_video_output_resolution_720p",
+          "constant": 2
+        },
+        {
+          "name": "nve_media_video_output_resolution_8k",
+          "constant": 64
+        },
+        {
+          "name": "nve_media_video_output_resolution_last",
+          "constant": 256
+        },
+        {
+          "name": "nve_media_video_output_resolution_none",
+          "constant": 0
+        },
+        {
+          "name": "nve_media_video_output_resolution_other",
+          "constant": 128
+        },
+        {
+          "name": "nve_media_video_output_resolution_sd",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "nve_network_method_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_network_method_get",
+          "constant": 0
+        },
+        {
+          "name": "nve_network_method_post",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "nve_network_request_state_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_network_request_state_done",
+          "constant": 2
+        },
+        {
+          "name": "nve_network_request_state_error",
+          "constant": 3
+        },
+        {
+          "name": "nve_network_request_state_executing",
+          "constant": 1
+        },
+        {
+          "name": "nve_network_request_state_init",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_result_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_result_access_from_different_thread_error",
+          "constant": 17
+        },
+        {
+          "name": "nve_result_ad_manifest_load_failed",
+          "constant": 203
+        },
+        {
+          "name": "nve_result_ad_resolver_failed",
+          "constant": 202
+        },
+        {
+          "name": "nve_result_audio_track_error",
+          "constant": 16
+        },
+        {
+          "name": "nve_result_codec_not_supported",
+          "constant": 11
+        },
+        {
+          "name": "nve_result_creation_failed",
+          "constant": 5
+        },
+        {
+          "name": "nve_result_data_not_available",
+          "constant": 7
+        },
+        {
+          "name": "nve_result_element_not_found",
+          "constant": 18
+        },
+        {
+          "name": "nve_result_generic_error",
+          "constant": 14
+        },
+        {
+          "name": "nve_result_illegal_state",
+          "constant": 3
+        },
+        {
+          "name": "nve_result_interface_not_found",
+          "constant": 4
+        },
+        {
+          "name": "nve_result_invalid_argument",
+          "constant": 1
+        },
+        {
+          "name": "nve_result_invalid_seek_time",
+          "constant": 15
+        },
+        {
+          "name": "nve_result_lazy_ad_resolution_in_progress",
+          "constant": 204
+        },
+        {
+          "name": "nve_result_media_error",
+          "constant": 12
+        },
+        {
+          "name": "nve_result_native_warning",
+          "constant": 201
+        },
+        {
+          "name": "nve_result_network_error",
+          "constant": 13
+        },
+        {
+          "name": "nve_result_network_timeout",
+          "constant": 58
+        },
+        {
+          "name": "nve_result_not_implemented",
+          "constant": 19
+        },
+        {
+          "name": "nve_result_null_pointer",
+          "constant": 2
+        },
+        {
+          "name": "nve_result_playback_not_authorized",
+          "constant": 57
+        },
+        {
+          "name": "nve_result_playback_operation_failed",
+          "constant": 200
+        },
+        {
+          "name": "nve_result_preroll_disabled",
+          "constant": 20
+        },
+        {
+          "name": "nve_result_range_error",
+          "constant": 10
+        },
+        {
+          "name": "nve_result_revenue_optimization",
+          "constant": 300
+        },
+        {
+          "name": "nve_result_seek_error",
+          "constant": 8
+        },
+        {
+          "name": "nve_result_success",
+          "constant": 0
+        },
+        {
+          "name": "nve_result_unsupported_feature",
+          "constant": 9
+        },
+        {
+          "name": "nve_result_unsupported_operation",
+          "constant": 6
+        }
+      ]
+    },
+    {
+      "name": "nve_size_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_size_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_size_default",
+          "constant": 0
+        },
+        {
+          "name": "nve_size_large",
+          "constant": 3
+        },
+        {
+          "name": "nve_size_medium",
+          "constant": 2
+        },
+        {
+          "name": "nve_size_small",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "nve_timed_metadata_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_timed_metadata_type_id3",
+          "constant": 1
+        },
+        {
+          "name": "nve_timed_metadata_type_tag",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_video_dynamic_range_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_video_dynamic_range_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_video_dynamic_range_dolby_version_5",
+          "constant": 2
+        },
+        {
+          "name": "nve_video_dynamic_range_hdr10",
+          "constant": 1
+        },
+        {
+          "name": "nve_video_dynamic_range_standard",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_video_level_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_video_level_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_video_level_3_1",
+          "constant": 1
+        },
+        {
+          "name": "nve_video_level_4",
+          "constant": 2
+        },
+        {
+          "name": "nve_video_level_none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "nve_video_profile_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__nve_video_profile_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "nve_video_profile_h264_high",
+          "constant": 2
+        },
+        {
+          "name": "nve_video_profile_h264_main",
+          "constant": 1
+        },
+        {
+          "name": "nve_video_profile_hevc_main",
+          "constant": 4
+        },
+        {
+          "name": "nve_video_profile_hevc_main_10",
+          "constant": 8
+        },
+        {
+          "name": "nve_video_profile_none",
+          "constant": 0
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "nve_abr_params_init",
+      "args": [
+        {
+          "rust_type": "* mut nve_abr_params_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_audio_current_track_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_audio_track_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_audio_num_tracks_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_audio_track_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut nve_audio_track_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_audio_track_set",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_buffer_params_init",
+      "args": [
+        {
+          "rust_type": "* mut nve_buffer_params_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_capabilities_get",
+      "args": [
+        {
+          "rust_type": "* mut nve_capabilities_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_current_profile_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_profile_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_dispatcher_bind_media_player_events",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_dispatcher_create",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_dispatcher_unbind_media_player_events",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_drm_error_text_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_drm_error_payload_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_drm_manager_generate_challenge",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_drm_manager_store_certificate_bytes",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_drm_manager_store_license_bytes",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_enable_debug_logging",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "nve_event_filtering_enabled",
+      "args": [
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_init",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "nve_initialize_drm",
+      "args": [
+        {
+          "rust_type": "* mut nve_drm_init_payload_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_load_information_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_load_information_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_m5_callback_manager_create",
+      "args": [],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_m5_callback_manager_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_m5_cenc_init_data_get",
+      "args": [
+        {
+          "rust_type": "nve_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut i32",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut nve_drm_method_e",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut nve_drm_key_tag_e",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_m5_challenge_generated_listener_create",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_m5_challenge_generated_listener_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_m5_challenge_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut i32",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_m5_operation_complete_listener_create",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_m5_operation_complete_listener_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_m5_view_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_buffered_range_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_range_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_create",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_media_player_event_buffer_bind",
+      "args": [
+        {
+          "rust_type": "nve_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_event_buffer_unbind",
+      "args": [
+        {
+          "rust_type": "nve_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_event_get",
+      "args": [
+        {
+          "rust_type": "nve_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_event_payload_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_get_abr_params",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_abr_params_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_get_buffer_params",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_buffer_params_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_get_drm_manager",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_media_player_get_text_style",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_text_format_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_get_view",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_media_player_item_network_configuration_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_network_configuration_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_media_player_pause",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_play",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_playback_range_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_range_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_position",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "f64"
+    },
+    {
+      "name": "nve_media_player_prepare_to_play",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_media_player_replace_resource",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_reset",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_media_player_restore",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_media_player_seek",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "f64",
+          "wasm_type": "f64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_set_abr_params",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const nve_abr_params_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_set_buffer_params",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const nve_buffer_params_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_set_text_style",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const nve_text_format_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_set_view",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_stop",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_media_player_suspend",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_media_resource_create",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "nve_media_resource_type_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_media_resource_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_metadata_create",
+      "args": [],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_metadata_event_capture",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_metadata_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut nve_metadata_key_value_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_metadata_num_keys_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_mpi_config_create",
+      "args": [
+        {
+          "rust_type": "* mut nve_network_configuration_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_mpi_config_subscribe_tag",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_network_request_body_data_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut i32",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_network_request_create",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "nve_network_method_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_network_request_error_data_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_network_request_error_data_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_network_request_execute",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_network_request_get_state",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_network_request_state_e"
+    },
+    {
+      "name": "nve_network_request_header_data_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut i32",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_network_request_header_set",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_network_request_payload_set",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_network_request_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "nve_result_e"
+    },
+    {
+      "name": "nve_network_request_result_code_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "u32"
+    },
+    {
+      "name": "nve_payload_ref_add",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_payload_ref_release",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_profile_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut nve_profile_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_profile_num_profiles_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_release_psdk_ref",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_set_local_storage_path",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_text_current_track_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut nve_text_track_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_text_format_init",
+      "args": [
+        {
+          "rust_type": "* mut nve_text_format_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_text_has_tracks",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_text_num_tracks_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_text_set_custom_font",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_text_track_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut nve_text_track_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_text_track_set",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_text_visibility_get",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "nve_text_visibility_set",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_version_get",
+      "args": [
+        {
+          "rust_type": "* mut nve_version_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_view_create",
+      "args": [
+        {
+          "rust_type": "* mut cg_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "nve_view_get_height",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_view_get_width",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_view_get_x",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_view_get_y",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "nve_view_set_pos",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_view_set_size",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    }
+  ],
+  "structs": [
+    {
+      "name": "nve_abr_params_t",
+      "size": 56,
+      "align": 8,
+      "members": [
+        "initial_bitrate_bps",
+        "min_bitrate_bps",
+        "max_bitrate_bps",
+        "max_avg_bitrate_bps",
+        "min_trickplay_bitrate_bps",
+        "max_trickplay_bitrate_bps",
+        "max_trickplay_avg_bitrate_bps",
+        "max_trickplay_bandwidth_usage_bps",
+        "max_playout_rate",
+        "max_width",
+        "max_height",
+        "abr_policy"
+      ]
+    },
+    {
+      "name": "nve_audio_track_t",
+      "size": 208,
+      "align": 4,
+      "members": [
+        "id",
+        "track_name",
+        "track_language",
+        "track_channels",
+        "pid",
+        "is_default",
+        "is_auto_select"
+      ]
+    },
+    {
+      "name": "nve_buffer_params_t",
+      "size": 16,
+      "align": 8,
+      "members": [
+        "initial_buffer_time",
+        "play_buffer_time"
+      ]
+    },
+    {
+      "name": "nve_capabilities_t",
+      "size": 88,
+      "align": 4,
+      "members": [
+        "dolby_atmos",
+        "dolby_vision",
+        "dolby_digital",
+        "hdr10",
+        "h265",
+        "hdcp",
+        "hdmi_capabilities",
+        "decoder_capabilities"
+      ]
+    },
+    {
+      "name": "nve_drm_error_payload_t",
+      "size": 2048,
+      "align": 1,
+      "members": [
+        "error_string",
+        "error_server_url"
+      ]
+    },
+    {
+      "name": "nve_drm_init_payload_t",
+      "size": 280,
+      "align": 8,
+      "members": [
+        "init_type",
+        "core_player_context",
+        "app_storage_path",
+        "publisher_id",
+        "app_id",
+        "app_version",
+        "privacy_mode"
+      ]
+    },
+    {
+      "name": "nve_event_payload_t",
+      "size": 24,
+      "align": 8,
+      "members": [
+        "event_type",
+        "f_arg0",
+        "f_arg1",
+        "f_arg2",
+        "event_payload_ptr"
+      ]
+    },
+    {
+      "name": "nve_load_information_t",
+      "size": 688,
+      "align": 4,
+      "members": [
+        "period_index",
+        "size",
+        "track_index",
+        "http_status",
+        "latency",
+        "error_code",
+        "track_name",
+        "track_type",
+        "url",
+        "profile_id",
+        "profile_width",
+        "profile_height",
+        "profile_peak_bit_rate",
+        "profile_avg_bit_rate",
+        "profile_framerate"
+      ]
+    },
+    {
+      "name": "nve_media_decoder_capabilities_t",
+      "size": 36,
+      "align": 4,
+      "members": [
+        "audio_codecs",
+        "profile",
+        "level",
+        "dynamic_range",
+        "video_output_resolution",
+        "video_output_rate",
+        "drm",
+        "encryption",
+        "hdcp_level"
+      ]
+    },
+    {
+      "name": "nve_media_hdmi_capabilities_t",
+      "size": 28,
+      "align": 4,
+      "members": [
+        "audio_capabilities",
+        "video_output_resolution",
+        "video_output_rate",
+        "color_format",
+        "color_depth",
+        "color_space",
+        "hdcp_level"
+      ]
+    },
+    {
+      "name": "nve_metadata_key_value_t",
+      "size": 1024,
+      "align": 1,
+      "members": [
+        "key",
+        "value"
+      ]
+    },
+    {
+      "name": "nve_network_configuration_t",
+      "size": 576,
+      "align": 8,
+      "members": [
+        "use_cookie_header_for_all_requests",
+        "force_native_networking",
+        "force_https",
+        "read_set_cookie_header",
+        "use_redirect_domain",
+        "keep_alive",
+        "use_parent_manifest_query_params",
+        "account_for_buffer_length_to_calc_live_point",
+        "disable_ssl_certificate",
+        "offline_playback",
+        "custom_user_agent",
+        "network_down_url",
+        "ad_manifest_timeout",
+        "number_of_manifest_retry_before_error",
+        "number_of_map_retry_before_error",
+        "number_of_vtt_retry_before_error",
+        "number_of_audio_segments_retry_before_error",
+        "number_of_video_segments_retry_before_error",
+        "number_of_segments_from_live_point",
+        "first_byte_timeout_ms",
+        "file_timeout_ms",
+        "cookie_headers_metadata_ptr",
+        "custom_headers_metadata_ptr"
+      ]
+    },
+    {
+      "name": "nve_network_request_error_data_t",
+      "size": 256,
+      "align": 1,
+      "members": [
+        "error_text"
+      ]
+    },
+    {
+      "name": "nve_profile_t",
+      "size": 24,
+      "align": 4,
+      "members": [
+        "id",
+        "width",
+        "height",
+        "peak_bit_rate",
+        "avg_bit_rate",
+        "framerate"
+      ]
+    },
+    {
+      "name": "nve_range_t",
+      "size": 16,
+      "align": 8,
+      "members": [
+        "begin",
+        "end"
+      ]
+    },
+    {
+      "name": "nve_text_format_t",
+      "size": 76,
+      "align": 4,
+      "members": [
+        "font",
+        "size",
+        "font_edge",
+        "font_color",
+        "background_color",
+        "fill_color",
+        "edge_color",
+        "font_opacity",
+        "background_opacity",
+        "fill_opacity",
+        "treat_space_as_alpha_num",
+        "bottom_inset",
+        "safe_area"
+      ]
+    },
+    {
+      "name": "nve_text_track_t",
+      "size": 144,
+      "align": 4,
+      "members": [
+        "id",
+        "track_name",
+        "track_language",
+        "is_forced",
+        "is_default",
+        "is_auto_select"
+      ]
+    },
+    {
+      "name": "nve_version_t",
+      "size": 84,
+      "align": 4,
+      "members": [
+        "version",
+        "major",
+        "minor",
+        "revision",
+        "revision_minor",
+        "api_version"
+      ]
+    }
+  ]
+}

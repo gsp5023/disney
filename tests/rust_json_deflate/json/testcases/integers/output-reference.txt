@@ -1,0 +1,1 @@
+Ok(Root { regular: 10, optional_some: Some(20), optional_none: None, catch_ok: Ok(30), catch_err: Err("Expected integer but found string at /catch-err"), optional_catch_some_ok: Some(Ok(-50)), optional_catch_some_err: Some(Err("Expected integer but found string at /optional-catch-some-err")), optional_catch_none: None })

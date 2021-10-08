@@ -1,0 +1,3651 @@
+{
+	"type":	"object",
+	"properties":	{
+		"data":	{
+			"type":	"object",
+			"properties":	{
+				"DictionaryByResourceKey":	{
+					"type":	"object",
+					"properties":	{
+						"createdDate":	{
+							"type":	"string"
+						},
+						"version":	{
+							"type":	"string"
+						},
+						"entries_json":	{
+							"type":	"object",
+							"properties":	{
+								"Text_Settings_HelpScreen_Copy":	{
+									"type":	"string"
+								},
+								"Text_Settings_HelpScreen_Title":	{
+									"type":	"string"
+								},
+								"Text_Settings_HelpScreen_URL":	{
+									"type":	"string"
+								},
+								"about_mail_sent_copy_debug":	{
+									"type":	"string"
+								},
+								"about_mail_sent_title_debug":	{
+									"type":	"string"
+								},
+								"about_no_mail_copy_debug":	{
+									"type":	"string"
+								},
+								"about_no_mail_title_debug":	{
+									"type":	"string"
+								},
+								"about_reset_app_copy_debug":	{
+									"type":	"string"
+								},
+								"about_title_debug":	{
+									"type":	"string"
+								},
+								"account_billing":	{
+									"type":	"string"
+								},
+								"account_change_email_alert_body":	{
+									"type":	"string"
+								},
+								"account_change_email_alert_title":	{
+									"type":	"string"
+								},
+								"account_change_email_email_description":	{
+									"type":	"string"
+								},
+								"account_change_password_header":	{
+									"type":	"string"
+								},
+								"account_create_password_title":	{
+									"type":	"string"
+								},
+								"account_createpassword_title":	{
+									"type":	"string"
+								},
+								"account_details":	{
+									"type":	"string"
+								},
+								"account_disney_visa_rewards_offer":	{
+									"type":	"string"
+								},
+								"account_email_placeholder":	{
+									"type":	"string"
+								},
+								"account_free_trial_duration":	{
+									"type":	"string"
+								},
+								"account_hold_copy":	{
+									"type":	"string"
+								},
+								"account_hold_copy_amazon":	{
+									"type":	"string"
+								},
+								"account_hold_copy_apple":	{
+									"type":	"string"
+								},
+								"account_hold_copy_bamtech":	{
+									"type":	"string"
+								},
+								"account_hold_copy_google":	{
+									"type":	"string"
+								},
+								"account_hold_copy_roku":	{
+									"type":	"string"
+								},
+								"account_hold_title":	{
+									"type":	"string"
+								},
+								"account_notify_email":	{
+									"type":	"string"
+								},
+								"account_notify_password":	{
+									"type":	"string"
+								},
+								"account_notify_password_created":	{
+									"type":	"string"
+								},
+								"account_notify_password_updated":	{
+									"type":	"string"
+								},
+								"account_password":	{
+									"type":	"string"
+								},
+								"account_password_placeholder":	{
+									"type":	"string"
+								},
+								"account_subscription_hulu":	{
+									"type":	"string"
+								},
+								"account_subscription_manage":	{
+									"type":	"string"
+								},
+								"account_subscription_message":	{
+									"type":	"string"
+								},
+								"account_subscription_message_amazon":	{
+									"type":	"string"
+								},
+								"account_subscription_message_apple":	{
+									"type":	"string"
+								},
+								"account_subscription_message_bamtech":	{
+									"type":	"string"
+								},
+								"account_subscription_message_bamtech_bundle":	{
+									"type":	"string"
+								},
+								"account_subscription_message_bouygues":	{
+									"type":	"string"
+								},
+								"account_subscription_message_canal":	{
+									"type":	"string"
+								},
+								"account_subscription_message_detelekom":	{
+									"type":	"string"
+								},
+								"account_subscription_message_free":	{
+									"type":	"string"
+								},
+								"account_subscription_message_google":	{
+									"type":	"string"
+								},
+								"account_subscription_message_hulu":	{
+									"type":	"string"
+								},
+								"account_subscription_message_hulu_bundle":	{
+									"type":	"string"
+								},
+								"account_subscription_message_movistar":	{
+									"type":	"string"
+								},
+								"account_subscription_message_no_payment":	{
+									"type":	"string"
+								},
+								"account_subscription_message_o2":	{
+									"type":	"string"
+								},
+								"account_subscription_message_orange":	{
+									"type":	"string"
+								},
+								"account_subscription_message_roku":	{
+									"type":	"string"
+								},
+								"account_subscription_message_sfr":	{
+									"type":	"string"
+								},
+								"account_subscription_message_skyuk":	{
+									"type":	"string"
+								},
+								"account_subscription_message_tim":	{
+									"type":	"string"
+								},
+								"account_subscription_message_verizon":	{
+									"type":	"string"
+								},
+								"account_subscription_message_verizon_bundle":	{
+									"type":	"string"
+								},
+								"account_subscription_promotion":	{
+									"type":	"string"
+								},
+								"account_subscription_roku":	{
+									"type":	"string"
+								},
+								"account_subscription_roku_manage":	{
+									"type":	"string"
+								},
+								"account_subscription_title":	{
+									"type":	"string"
+								},
+								"account_subscription_title_amazon":	{
+									"type":	"string"
+								},
+								"account_subscription_title_apple":	{
+									"type":	"string"
+								},
+								"account_subscription_title_bamtech":	{
+									"type":	"string"
+								},
+								"account_subscription_title_bamtech_bundle":	{
+									"type":	"string"
+								},
+								"account_subscription_title_bouygues":	{
+									"type":	"string"
+								},
+								"account_subscription_title_canal":	{
+									"type":	"string"
+								},
+								"account_subscription_title_detelekom":	{
+									"type":	"string"
+								},
+								"account_subscription_title_disney_rewards":	{
+									"type":	"string"
+								},
+								"account_subscription_title_free":	{
+									"type":	"string"
+								},
+								"account_subscription_title_google":	{
+									"type":	"string"
+								},
+								"account_subscription_title_hulu_bundle":	{
+									"type":	"string"
+								},
+								"account_subscription_title_movistar":	{
+									"type":	"string"
+								},
+								"account_subscription_title_no_payment":	{
+									"type":	"string"
+								},
+								"account_subscription_title_o2":	{
+									"type":	"string"
+								},
+								"account_subscription_title_orange":	{
+									"type":	"string"
+								},
+								"account_subscription_title_roku":	{
+									"type":	"string"
+								},
+								"account_subscription_title_sfr":	{
+									"type":	"string"
+								},
+								"account_subscription_title_skyuk":	{
+									"type":	"string"
+								},
+								"account_subscription_title_tim":	{
+									"type":	"string"
+								},
+								"account_subscription_title_verizon":	{
+									"type":	"string"
+								},
+								"account_subscription_title_verizon_bundle":	{
+									"type":	"string"
+								},
+								"account_verified_flash_message":	{
+									"type":	"string"
+								},
+								"actions_title_debug":	{
+									"type":	"string"
+								},
+								"activate_hulu_copy":	{
+									"type":	"string"
+								},
+								"activate_hulu_title":	{
+									"type":	"string"
+								},
+								"ad_placement":	{
+									"type":	"string"
+								},
+								"add_profile_title":	{
+									"type":	"string"
+								},
+								"alert_comingsoon_addtowatchlist":	{
+									"type":	"string"
+								},
+								"annual_value_prop":	{
+									"type":	"string"
+								},
+								"app_settings_title":	{
+									"type":	"string"
+								},
+								"app_version_debug":	{
+									"type":	"string"
+								},
+								"app_version_number":	{
+									"type":	"string"
+								},
+								"audiolabel_5_1":	{
+									"type":	"string"
+								},
+								"auto_login_copy":	{
+									"type":	"string"
+								},
+								"auto_login_title":	{
+									"type":	"string"
+								},
+								"autoplay_subcopy":	{
+									"type":	"string"
+								},
+								"background_disney_couch_skyuk":	{
+									"type":	"string"
+								},
+								"badge_new":	{
+									"type":	"string"
+								},
+								"banner_blocked":	{
+									"type":	"string"
+								},
+								"banner_blocked_update":	{
+									"type":	"string"
+								},
+								"banner_blocked_url":	{
+									"type":	"string"
+								},
+								"because_you_watched_set_title":	{
+									"type":	"string"
+								},
+								"billing_details":	{
+									"type":	"string"
+								},
+								"billinginfo_copy":	{
+									"type":	"string"
+								},
+								"billinginfo_title":	{
+									"type":	"string"
+								},
+								"body_disney_return_to_login_skyuk":	{
+									"type":	"string"
+								},
+								"body_disney_sign_up_skyuk":	{
+									"type":	"string"
+								},
+								"body_disney_skyuk_url":	{
+									"type":	"string"
+								},
+								"body_disney_subscribe_and_set_up_skyuk":	{
+									"type":	"string"
+								},
+								"body_disney_subscribe_now_skyuk":	{
+									"type":	"string"
+								},
+								"btn_account_hold_update_payment":	{
+									"type":	"string"
+								},
+								"btn_action1_collection_unavailable":	{
+									"type":	"string"
+								},
+								"btn_action_1_pagenolongeravailable":	{
+									"type":	"string"
+								},
+								"btn_activate_later":	{
+									"type":	"string"
+								},
+								"btn_agree_continue":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-at_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-de_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-es_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-fr_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-it_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-lu_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-mc_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_dplus-sub-se_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_gtou_dplus-sub-at_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_gtou_dplus-sub-de_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_gtou_dplus-sub-es_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_gtou_dplus-sub-fr_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_gtou_dplus-sub-it_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_gtou_dplus-sub-mc_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_agree_continue_legal":	{
+									"type":	"string"
+								},
+								"btn_allow":	{
+									"type":	"string"
+								},
+								"btn_apply":	{
+									"type":	"string"
+								},
+								"btn_billing_start_your_free_trial":	{
+									"type":	"string"
+								},
+								"btn_bundle_activate_disneyplus":	{
+									"type":	"string"
+								},
+								"btn_cancel":	{
+									"type":	"string"
+								},
+								"btn_cancel_3":	{
+									"type":	"string"
+								},
+								"btn_change_payment_method":	{
+									"type":	"string"
+								},
+								"btn_chooseprofileicon_cancel":	{
+									"type":	"string"
+								},
+								"btn_chooseprofileicon_skip":	{
+									"type":	"string"
+								},
+								"btn_complete_subscription":	{
+									"type":	"string"
+								},
+								"btn_continue":	{
+									"type":	"string"
+								},
+								"btn_continue_3":	{
+									"type":	"string"
+								},
+								"btn_continue_4":	{
+									"type":	"string"
+								},
+								"btn_continue_checkemail":	{
+									"type":	"string"
+								},
+								"btn_continue_to_disney":	{
+									"type":	"string"
+								},
+								"btn_continue_to_disney_plus":	{
+									"type":	"string"
+								},
+								"btn_cookiebanner":	{
+									"type":	"string"
+								},
+								"btn_createpassword":	{
+									"type":	"string"
+								},
+								"btn_delete":	{
+									"type":	"string"
+								},
+								"btn_delete_all_downloads_delete":	{
+									"type":	"string"
+								},
+								"btn_delete_play_next":	{
+									"type":	"string"
+								},
+								"btn_delete_profile":	{
+									"type":	"string"
+								},
+								"btn_details_restart":	{
+									"type":	"string"
+								},
+								"btn_dismiss":	{
+									"type":	"string"
+								},
+								"btn_done":	{
+									"type":	"string"
+								},
+								"btn_dont_save":	{
+									"type":	"string"
+								},
+								"btn_download_again":	{
+									"type":	"string"
+								},
+								"btn_download_space":	{
+									"type":	"string"
+								},
+								"btn_edit_pcon":	{
+									"type":	"string"
+								},
+								"btn_edit_profile":	{
+									"type":	"string"
+								},
+								"btn_edit_profile_name":	{
+									"type":	"string"
+								},
+								"btn_error_mediaunavailable":	{
+									"type":	"string"
+								},
+								"btn_exit":	{
+									"type":	"string"
+								},
+								"btn_find_something_download":	{
+									"type":	"string"
+								},
+								"btn_finish_later":	{
+									"type":	"string"
+								},
+								"btn_help_center":	{
+									"type":	"string"
+								},
+								"btn_hide_pw":	{
+									"type":	"string"
+								},
+								"btn_kids":	{
+									"type":	"string"
+								},
+								"btn_learn_more":	{
+									"type":	"string"
+								},
+								"btn_license_expired_renew":	{
+									"type":	"string"
+								},
+								"btn_login":	{
+									"type":	"string"
+								},
+								"btn_login_2":	{
+									"type":	"string"
+								},
+								"btn_login_forgot_password":	{
+									"type":	"string"
+								},
+								"btn_login_help":	{
+									"type":	"string"
+								},
+								"btn_logout":	{
+									"type":	"string"
+								},
+								"btn_manage_account":	{
+									"type":	"string"
+								},
+								"btn_manage_downloads":	{
+									"type":	"string"
+								},
+								"btn_monthly_price":	{
+									"type":	"string"
+								},
+								"btn_no":	{
+									"type":	"string"
+								},
+								"btn_not_now":	{
+									"type":	"string"
+								},
+								"btn_ok":	{
+									"type":	"string"
+								},
+								"btn_ok_2":	{
+									"type":	"string"
+								},
+								"btn_open_app":	{
+									"type":	"string"
+								},
+								"btn_options":	{
+									"type":	"string"
+								},
+								"btn_pause":	{
+									"type":	"string"
+								},
+								"btn_play":	{
+									"type":	"string"
+								},
+								"btn_play1":	{
+									"type":	"string"
+								},
+								"btn_play_extra":	{
+									"type":	"string"
+								},
+								"btn_play_movie":	{
+									"type":	"string"
+								},
+								"btn_play_next_ep":	{
+									"type":	"string"
+								},
+								"btn_play_specific_episode":	{
+									"type":	"string"
+								},
+								"btn_play_trailer":	{
+									"type":	"string"
+								},
+								"btn_play_video":	{
+									"type":	"string"
+								},
+								"btn_playextra":	{
+									"type":	"string"
+								},
+								"btn_playtrailer":	{
+									"type":	"string"
+								},
+								"btn_postplay_play":	{
+									"type":	"string"
+								},
+								"btn_postplay_seedetails":	{
+									"type":	"string"
+								},
+								"btn_postplay_sneakpeek":	{
+									"type":	"string"
+								},
+								"btn_profiles":	{
+									"type":	"string"
+								},
+								"btn_purchase_apple":	{
+									"type":	"string"
+								},
+								"btn_purchase_dtc":	{
+									"type":	"string"
+								},
+								"btn_purchase_google":	{
+									"type":	"string"
+								},
+								"btn_refresh":	{
+									"type":	"string"
+								},
+								"btn_remove_download":	{
+									"type":	"string"
+								},
+								"btn_resend_email_code":	{
+									"type":	"string"
+								},
+								"btn_restartsub":	{
+									"type":	"string"
+								},
+								"btn_restore_purchase":	{
+									"type":	"string"
+								},
+								"btn_resume":	{
+									"type":	"string"
+								},
+								"btn_resume_2":	{
+									"type":	"string"
+								},
+								"btn_resume_episode":	{
+									"type":	"string"
+								},
+								"btn_retry":	{
+									"type":	"string"
+								},
+								"btn_retry_activation":	{
+									"type":	"string"
+								},
+								"btn_review":	{
+									"type":	"string"
+								},
+								"btn_review_declined":	{
+									"type":	"string"
+								},
+								"btn_save":	{
+									"type":	"string"
+								},
+								"btn_sb_hulu_go_to_hulu_cta":	{
+									"type":	"string"
+								},
+								"btn_sdk_error_dismiss":	{
+									"type":	"string"
+								},
+								"btn_see_all_ep":	{
+									"type":	"string"
+								},
+								"btn_see_all_extras":	{
+									"type":	"string"
+								},
+								"btn_see_details":	{
+									"type":	"string"
+								},
+								"btn_setup_later":	{
+									"type":	"string"
+								},
+								"btn_show_pw":	{
+									"type":	"string"
+								},
+								"btn_sign_up":	{
+									"type":	"string"
+								},
+								"btn_signup":	{
+									"type":	"string"
+								},
+								"btn_skip_credits":	{
+									"type":	"string"
+								},
+								"btn_skip_intro":	{
+									"type":	"string"
+								},
+								"btn_skip_recap":	{
+									"type":	"string"
+								},
+								"btn_start_streaming":	{
+									"type":	"string"
+								},
+								"btn_start_watching":	{
+									"type":	"string"
+								},
+								"btn_stillwatching_noresponse":	{
+									"type":	"string"
+								},
+								"btn_stillwatching_yesresponse":	{
+									"type":	"string"
+								},
+								"btn_support":	{
+									"type":	"string"
+								},
+								"btn_support_ok":	{
+									"type":	"string"
+								},
+								"btn_switch_annual_agree_switch":	{
+									"type":	"string"
+								},
+								"btn_switch_annual_cancel":	{
+									"type":	"string"
+								},
+								"btn_terms_privacy":	{
+									"type":	"string"
+								},
+								"btn_terms_privacy_gtou_dplus-sub-at_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_terms_privacy_gtou_dplus-sub-de_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_terms_privacy_gtou_dplus-sub-es_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_terms_privacy_gtou_dplus-sub-fr_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_terms_privacy_gtou_dplus-sub-it_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_terms_privacy_gtou_dplus-sub-mc_ppv2_fln_proxy":	{
+									"type":	"string"
+								},
+								"btn_trailer":	{
+									"type":	"string"
+								},
+								"btn_try_again":	{
+									"type":	"string"
+								},
+								"btn_try_again_2":	{
+									"type":	"string"
+								},
+								"btn_update_app":	{
+									"type":	"string"
+								},
+								"btn_updatepayment":	{
+									"type":	"string"
+								},
+								"btn_verify_country":	{
+									"type":	"string"
+								},
+								"btn_watch_credits":	{
+									"type":	"string"
+								},
+								"btn_welcome_signup_cta":	{
+									"type":	"string"
+								},
+								"btn_wifi_required_queue":	{
+									"type":	"string"
+								},
+								"btn_wifi_required_settings":	{
+									"type":	"string"
+								},
+								"btn_yearly_price":	{
+									"type":	"string"
+								},
+								"btn_yes":	{
+									"type":	"string"
+								},
+								"btn_yes_continue":	{
+									"type":	"string"
+								},
+								"bullet_separator":	{
+									"type":	"string"
+								},
+								"bundle_activate_account_copy":	{
+									"type":	"string"
+								},
+								"bundle_activate_account_title":	{
+									"type":	"string"
+								},
+								"bundle_billing_details_my_services":	{
+									"type":	"string"
+								},
+								"bundle_hulu_success_subcopy":	{
+									"type":	"string"
+								},
+								"bundle_hulu_success_subcopy_link_1_target":	{
+									"type":	"string"
+								},
+								"bundle_hulu_success_subcopy_link_1_text":	{
+									"type":	"string"
+								},
+								"bundle_start_streeming":	{
+									"type":	"string"
+								},
+								"bundle_subscription_copy":	{
+									"type":	"string"
+								},
+								"bundle_subscription_title":	{
+									"type":	"string"
+								},
+								"bundle_success_copy":	{
+									"type":	"string"
+								},
+								"bundle_success_subcopy":	{
+									"type":	"string"
+								},
+								"bundle_success_subcopy_link_1_text":	{
+									"type":	"string"
+								},
+								"bundle_success_title":	{
+									"type":	"string"
+								},
+								"bundle_verizon_success_subcopy_link_1_target":	{
+									"type":	"string"
+								},
+								"bundle_verizon_success_subcopy_link_1_url":	{
+									"type":	"string"
+								},
+								"bundle_verizon_success_subcopy_link_2_target":	{
+									"type":	"string"
+								},
+								"bundle_verizon_success_subcopy_link_2_text":	{
+									"type":	"string"
+								},
+								"bundle_verizon_success_subcopy_link_2_url":	{
+									"type":	"string"
+								},
+								"button_account_change_email_alert_create":	{
+									"type":	"string"
+								},
+								"button_account_create_password_save":	{
+									"type":	"string"
+								},
+								"button_season_number":	{
+									"type":	"string"
+								},
+								"button_single_sign_on_log_in":	{
+									"type":	"string"
+								},
+								"cancel":	{
+									"type":	"string"
+								},
+								"cancel_label":	{
+									"type":	"string"
+								},
+								"carrier_debug":	{
+									"type":	"string"
+								},
+								"case_sensitive":	{
+									"type":	"string"
+								},
+								"cast_copy":	{
+									"type":	"string"
+								},
+								"cast_menu_empty":	{
+									"type":	"string"
+								},
+								"cast_title_placeholder":	{
+									"type":	"string"
+								},
+								"cast_to_title":	{
+									"type":	"string"
+								},
+								"casting_to":	{
+									"type":	"string"
+								},
+								"cell_data_usage_automatic":	{
+									"type":	"string"
+								},
+								"cell_data_usage_automatic_copy":	{
+									"type":	"string"
+								},
+								"cell_data_usage_label":	{
+									"type":	"string"
+								},
+								"cell_data_usage_save_data":	{
+									"type":	"string"
+								},
+								"cell_data_usage_save_data_copy":	{
+									"type":	"string"
+								},
+								"cell_data_usage_title":	{
+									"type":	"string"
+								},
+								"cell_data_usage_wifi":	{
+									"type":	"string"
+								},
+								"cell_data_usage_wifi_copy":	{
+									"type":	"string"
+								},
+								"change":	{
+									"type":	"string"
+								},
+								"change_email_error_unhandled":	{
+									"type":	"string"
+								},
+								"change_password":	{
+									"type":	"string"
+								},
+								"change_password_error_unhandled":	{
+									"type":	"string"
+								},
+								"characters_alpha":	{
+									"type":	"string"
+								},
+								"characters_lower_case":	{
+									"type":	"string"
+								},
+								"characters_numeral":	{
+									"type":	"string"
+								},
+								"characters_numerical":	{
+									"type":	"string"
+								},
+								"check_email_copy":	{
+									"type":	"string"
+								},
+								"check_email_title":	{
+									"type":	"string"
+								},
+								"choose_profile_title":	{
+									"type":	"string"
+								},
+								"chooseprofileicon_cancel":	{
+									"type":	"string"
+								},
+								"chooseprofileicon_skip":	{
+									"type":	"string"
+								},
+								"chooseprofileicon_taken":	{
+									"type":	"string"
+								},
+								"chooseprofileicon_title":	{
+									"type":	"string"
+								},
+								"chromecast_not_available":	{
+									"type":	"string"
+								},
+								"chromecast_oneid_auth_error":	{
+									"type":	"string"
+								},
+								"chromecast_ready":	{
+									"type":	"string"
+								},
+								"chromecast_upnext_1":	{
+									"type":	"string"
+								},
+								"chromecast_upnext_2":	{
+									"type":	"string"
+								},
+								"chromecast_upnext_3":	{
+									"type":	"string"
+								},
+								"coming_soon_set_title":	{
+									"type":	"string"
+								},
+								"communication_settings":	{
+									"type":	"string"
+								},
+								"communication_settings_link_1_target":	{
+									"type":	"string"
+								},
+								"communication_settings_link_1_text":	{
+									"type":	"string"
+								},
+								"communication_settings_link_1_url":	{
+									"type":	"string"
+								},
+								"communication_settings_mobile":	{
+									"type":	"string"
+								},
+								"communication_settings_prompt":	{
+									"type":	"string"
+								},
+								"complete_promo_subscription_title":	{
+									"type":	"string"
+								},
+								"complete_subscription_copy":	{
+									"type":	"string"
+								},
+								"complete_subscription_title":	{
+									"type":	"string"
+								},
+								"config_ripcut_base":	{
+									"type":	"string"
+								},
+								"contact_csr_call":	{
+									"type":	"string"
+								},
+								"contact_csr_phone":	{
+									"type":	"string"
+								},
+								"contact_csr_phone_au":	{
+									"type":	"string"
+								},
+								"contact_csr_phone_ca":	{
+									"type":	"string"
+								},
+								"contact_csr_phone_nl":	{
+									"type":	"string"
+								},
+								"contact_csr_phone_nz":	{
+									"type":	"string"
+								},
+								"contact_csr_phone_us":	{
+									"type":	"string"
+								},
+								"contact_csr_subtitle":	{
+									"type":	"string"
+								},
+								"contact_csr_subtitle_1":	{
+									"type":	"string"
+								},
+								"contact_csr_subtitle_link_1_url":	{
+									"type":	"string"
+								},
+								"contact_csr_title":	{
+									"type":	"string"
+								},
+								"content_leaving_title":	{
+									"type":	"string"
+								},
+								"content_rating_display":	{
+									"type":	"string"
+								},
+								"continue_watching_hours":	{
+									"type":	"string"
+								},
+								"continue_watching_seconds":	{
+									"type":	"string"
+								},
+								"continue_watching_set_title":	{
+									"type":	"string"
+								},
+								"continue_watching_start_episode":	{
+									"type":	"string"
+								},
+								"continue_watching_time_remaining":	{
+									"type":	"string"
+								},
+								"cookiebanner_copy":	{
+									"type":	"string"
+								},
+								"cookiebanner_copy_link_1_target":	{
+									"type":	"string"
+								},
+								"cookiebanner_copy_link_1_text":	{
+									"type":	"string"
+								},
+								"cookiebanner_copy_link_1_url":	{
+									"type":	"string"
+								},
+								"cookiebanner_copy_link_2_target":	{
+									"type":	"string"
+								},
+								"cookiebanner_copy_link_2_text":	{
+									"type":	"string"
+								},
+								"cookiebanner_copy_link_2_url":	{
+									"type":	"string"
+								},
+								"cookiebanner_heading":	{
+									"type":	"string"
+								},
+								"create":	{
+									"type":	"string"
+								},
+								"create_another_profile_copy":	{
+									"type":	"string"
+								},
+								"create_another_profile_title":	{
+									"type":	"string"
+								},
+								"create_new_password":	{
+									"type":	"string"
+								},
+								"create_new_password_subtitle":	{
+									"type":	"string"
+								},
+								"create_password":	{
+									"type":	"string"
+								},
+								"create_password_title":	{
+									"type":	"string"
+								},
+								"create_profile_add_profile":	{
+									"type":	"string"
+								},
+								"create_profile_autoplay":	{
+									"type":	"string"
+								},
+								"create_profile_copy":	{
+									"type":	"string"
+								},
+								"create_profile_name":	{
+									"type":	"string"
+								},
+								"create_profile_name_placeholder":	{
+									"type":	"string"
+								},
+								"create_profile_title":	{
+									"type":	"string"
+								},
+								"ctv_activation":	{
+									"type":	"string"
+								},
+								"ctv_activation_error":	{
+									"type":	"string"
+								},
+								"ctv_activation_generic":	{
+									"type":	"string"
+								},
+								"ctv_activation_mobile_error":	{
+									"type":	"string"
+								},
+								"ctv_activation_mobile_success":	{
+									"type":	"string"
+								},
+								"ctv_activation_success":	{
+									"type":	"string"
+								},
+								"current_password":	{
+									"type":	"string"
+								},
+								"d23countdown_launchday":	{
+									"type":	"string"
+								},
+								"d23countdownclock_days":	{
+									"type":	"string"
+								},
+								"d23countdownclock_hours":	{
+									"type":	"string"
+								},
+								"d23countdownclock_minutes":	{
+									"type":	"string"
+								},
+								"d23countdownclock_seconds":	{
+									"type":	"string"
+								},
+								"d23success_copy":	{
+									"type":	"string"
+								},
+								"d23success_title":	{
+									"type":	"string"
+								},
+								"date_long_format":	{
+									"type":	"string"
+								},
+								"date_mmmm_1":	{
+									"type":	"string"
+								},
+								"date_mmmm_10":	{
+									"type":	"string"
+								},
+								"date_mmmm_11":	{
+									"type":	"string"
+								},
+								"date_mmmm_12":	{
+									"type":	"string"
+								},
+								"date_mmmm_2":	{
+									"type":	"string"
+								},
+								"date_mmmm_3":	{
+									"type":	"string"
+								},
+								"date_mmmm_4":	{
+									"type":	"string"
+								},
+								"date_mmmm_5":	{
+									"type":	"string"
+								},
+								"date_mmmm_6":	{
+									"type":	"string"
+								},
+								"date_mmmm_7":	{
+									"type":	"string"
+								},
+								"date_mmmm_8":	{
+									"type":	"string"
+								},
+								"date_mmmm_9":	{
+									"type":	"string"
+								},
+								"day":	{
+									"type":	"string"
+								},
+								"day_unit":	{
+									"type":	"string"
+								},
+								"default_profile":	{
+									"type":	"string"
+								},
+								"delete_all_downloads_alert_copy":	{
+									"type":	"string"
+								},
+								"delete_profile_copy":	{
+									"type":	"string"
+								},
+								"delete_profile_title":	{
+									"type":	"string"
+								},
+								"delete_profile_title_2":	{
+									"type":	"string"
+								},
+								"descriptor_copy_pagenolongeravailable":	{
+									"type":	"string"
+								},
+								"descriptor_title_pagenolongeravailable":	{
+									"type":	"string"
+								},
+								"deselect_all_label":	{
+									"type":	"string"
+								},
+								"detail_creator":	{
+									"type":	"string"
+								},
+								"detail_director":	{
+									"type":	"string"
+								},
+								"detail_duration":	{
+									"type":	"string"
+								},
+								"detail_extras_director":	{
+									"type":	"string"
+								},
+								"detail_formats":	{
+									"type":	"string"
+								},
+								"detail_genre":	{
+									"type":	"string"
+								},
+								"detail_more_info":	{
+									"type":	"string"
+								},
+								"detail_present":	{
+									"type":	"string"
+								},
+								"detail_rating":	{
+									"type":	"string"
+								},
+								"detail_release_date":	{
+									"type":	"string"
+								},
+								"detail_release_year":	{
+									"type":	"string"
+								},
+								"detail_starring":	{
+									"type":	"string"
+								},
+								"detail_total_season":	{
+									"type":	"string"
+								},
+								"detail_total_seasons":	{
+									"type":	"string"
+								},
+								"details_genre_delimiter":	{
+									"type":	"string"
+								},
+								"details_heritage_countdown":	{
+									"type":	"string"
+								},
+								"device_name":	{
+									"type":	"string"
+								},
+								"device_storage_app":	{
+									"type":	"string"
+								},
+								"device_storage_free":	{
+									"type":	"string"
+								},
+								"device_storage_title":	{
+									"type":	"string"
+								},
+								"device_storage_used":	{
+									"type":	"string"
+								},
+								"disney_account_copy":	{
+									"type":	"string"
+								},
+								"disney_password":	{
+									"type":	"string"
+								},
+								"disney_rewards":	{
+									"type":	"string"
+								},
+								"done_editing_profile_title":	{
+									"type":	"string"
+								},
+								"download_app_amazon":	{
+									"type":	"string"
+								},
+								"download_app_apple":	{
+									"type":	"string"
+								},
+								"download_app_google":	{
+									"type":	"string"
+								},
+								"download_cancelled":	{
+									"type":	"string"
+								},
+								"download_completed":	{
+									"type":	"string"
+								},
+								"download_device_limit_copy":	{
+									"type":	"string"
+								},
+								"download_device_limit_title":	{
+									"type":	"string"
+								},
+								"download_episodes":	{
+									"type":	"string"
+								},
+								"download_error_general":	{
+									"type":	"string"
+								},
+								"download_fail":	{
+									"type":	"string"
+								},
+								"download_fail_title":	{
+									"type":	"string"
+								},
+								"download_failed":	{
+									"type":	"string"
+								},
+								"download_failed_to_remove":	{
+									"type":	"string"
+								},
+								"download_media_missing":	{
+									"type":	"string"
+								},
+								"download_paused":	{
+									"type":	"string"
+								},
+								"download_resume":	{
+									"type":	"string"
+								},
+								"download_resume2":	{
+									"type":	"string"
+								},
+								"download_space_title":	{
+									"type":	"string"
+								},
+								"download_unavailable":	{
+									"type":	"string"
+								},
+								"downloads_copy":	{
+									"type":	"string"
+								},
+								"downloads_empty_copy":	{
+									"type":	"string"
+								},
+								"downloads_empty_header":	{
+									"type":	"string"
+								},
+								"downloads_hint":	{
+									"type":	"string"
+								},
+								"downloads_settings_title":	{
+									"type":	"string"
+								},
+								"downloads_title":	{
+									"type":	"string"
+								},
+								"edit":	{
+									"type":	"string"
+								},
+								"edit_profile_copy":	{
+									"type":	"string"
+								},
+								"edit_profile_title":	{
+									"type":	"string"
+								},
+								"edit_profile_title_2":	{
+									"type":	"string"
+								},
+								"edit_specific_profile_title":	{
+									"type":	"string"
+								},
+								"email_change_copy":	{
+									"type":	"string"
+								},
+								"email_change_new_email":	{
+									"type":	"string"
+								},
+								"email_change_title":	{
+									"type":	"string"
+								},
+								"email_changed_banner_message":	{
+									"type":	"string"
+								},
+								"email_code_title":	{
+									"type":	"string"
+								},
+								"email_current":	{
+									"type":	"string"
+								},
+								"email_log_debug":	{
+									"type":	"string"
+								},
+								"email_new":	{
+									"type":	"string"
+								},
+								"email_resend_subtitle":	{
+									"type":	"string"
+								},
+								"email_resend_subtitle_3":	{
+									"type":	"string"
+								},
+								"email_resend_title":	{
+									"type":	"string"
+								},
+								"email_resend_title_2":	{
+									"type":	"string"
+								},
+								"email_resend_unsuccessful_subtitle":	{
+									"type":	"string"
+								},
+								"email_resend_unsuccessful_title":	{
+									"type":	"string"
+								},
+								"empty_profile_name_error":	{
+									"type":	"string"
+								},
+								"enter_email":	{
+									"type":	"string"
+								},
+								"enter_email_title":	{
+									"type":	"string"
+								},
+								"enter_new_password":	{
+									"type":	"string"
+								},
+								"enter_password_title":	{
+									"type":	"string"
+								},
+								"enter_your_password":	{
+									"type":	"string"
+								},
+								"entitlements_debug":	{
+									"type":	"string"
+								},
+								"episode_placeholder":	{
+									"type":	"string"
+								},
+								"episode_runtime_placeholder":	{
+									"type":	"string"
+								},
+								"episode_singular":	{
+									"type":	"string"
+								},
+								"episode_size_runtime_placeholder":	{
+									"type":	"string"
+								},
+								"episodes_placeholder":	{
+									"type":	"string"
+								},
+								"error_activation_generic":	{
+									"type":	"string"
+								},
+								"error_activation_generic_copy":	{
+									"type":	"string"
+								},
+								"error_activation_generic_copy_2":	{
+									"type":	"string"
+								},
+								"error_activation_generic_title":	{
+									"type":	"string"
+								},
+								"error_activation_partner_contact":	{
+									"type":	"string"
+								},
+								"error_activation_partner_copy":	{
+									"type":	"string"
+								},
+								"error_activation_partner_title":	{
+									"type":	"string"
+								},
+								"error_add_remove_watchlist_copy":	{
+									"type":	"string"
+								},
+								"error_addtowatchlist_title":	{
+									"type":	"string"
+								},
+								"error_avplayer_hdcp":	{
+									"type":	"string"
+								},
+								"error_bin_blocked":	{
+									"type":	"string"
+								},
+								"error_bin_blocked_title":	{
+									"type":	"string"
+								},
+								"error_cd_firmwareupdate_copy":	{
+									"type":	"string"
+								},
+								"error_cd_firmwareupdate_header":	{
+									"type":	"string"
+								},
+								"error_cd_update_copy":	{
+									"type":	"string"
+								},
+								"error_cd_update_header":	{
+									"type":	"string"
+								},
+								"error_chromecast_deprecation":	{
+									"type":	"string"
+								},
+								"error_collection_unavailable":	{
+									"type":	"string"
+								},
+								"error_content_unavailable":	{
+									"type":	"string"
+								},
+								"error_copy":	{
+									"type":	"string"
+								},
+								"error_download_blacklist_header":	{
+									"type":	"string"
+								},
+								"error_duplicate_profile_name":	{
+									"type":	"string"
+								},
+								"error_generic":	{
+									"type":	"string"
+								},
+								"error_genericplaybackfailure":	{
+									"type":	"string"
+								},
+								"error_header_playstore_subscription_expired":	{
+									"type":	"string"
+								},
+								"error_invalid_profile_name":	{
+									"type":	"string"
+								},
+								"error_medianotallowed_parental-control":	{
+									"type":	"string"
+								},
+								"error_medianotallowed_stream-concurrency":	{
+									"type":	"string"
+								},
+								"error_mediaunavailable":	{
+									"type":	"string"
+								},
+								"error_message_playstore_subscription_expired":	{
+									"type":	"string"
+								},
+								"error_no_error_details":	{
+									"type":	"string"
+								},
+								"error_pagenotallowed_parental-control":	{
+									"type":	"string"
+								},
+								"error_playback_blacklist":	{
+									"type":	"string"
+								},
+								"error_playback_blacklist_header":	{
+									"type":	"string"
+								},
+								"error_playback_greylist":	{
+									"type":	"string"
+								},
+								"error_playback_greylist_cta":	{
+									"type":	"string"
+								},
+								"error_playback_greylist_header":	{
+									"type":	"string"
+								},
+								"error_purchase_refunded":	{
+									"type":	"string"
+								},
+								"error_purchase_refunded_guest_blocked":	{
+									"type":	"string"
+								},
+								"error_purchase_refunded_title":	{
+									"type":	"string"
+								},
+								"error_removefromwatchlist_title":	{
+									"type":	"string"
+								},
+								"error_unsaved_changes_title":	{
+									"type":	"string"
+								},
+								"eup_login_note":	{
+									"type":	"string"
+								},
+								"expiringpaymentmethod_banner":	{
+									"type":	"string"
+								},
+								"expiringpaymentmethod_banner_title":	{
+									"type":	"string"
+								},
+								"expiringpaymentmethod_billingdetails_banner":	{
+									"type":	"string"
+								},
+								"expiringpaymentmethod_copy":	{
+									"type":	"string"
+								},
+								"expiringpaymentmethod_title":	{
+									"type":	"string"
+								},
+								"explore_label":	{
+									"type":	"string"
+								},
+								"failed_download_retry":	{
+									"type":	"string"
+								},
+								"failed_download_retry_title":	{
+									"type":	"string"
+								},
+								"failed_download_season_copy":	{
+									"type":	"string"
+								},
+								"failed_download_season_header":	{
+									"type":	"string"
+								},
+								"failed_download_start":	{
+									"type":	"string"
+								},
+								"failed_download_start_title":	{
+									"type":	"string"
+								},
+								"failedpayment_notnow":	{
+									"type":	"string"
+								},
+								"failedpaymentmethod_banner":	{
+									"type":	"string"
+								},
+								"failedpaymentmethod_banner_title":	{
+									"type":	"string"
+								},
+								"failedpaymentmethod_billingdetails_banner":	{
+									"type":	"string"
+								},
+								"failedpaymentmethod_copy":	{
+									"type":	"string"
+								},
+								"failedpaymentmethod_title":	{
+									"type":	"string"
+								},
+								"fat_finger_email_copy":	{
+									"type":	"string"
+								},
+								"fatal_error_auto_exit_title":	{
+									"type":	"string"
+								},
+								"fatal_error_generic_title":	{
+									"type":	"string"
+								},
+								"feature_avail_date":	{
+									"type":	"string"
+								},
+								"footer_about_us":	{
+									"type":	"string"
+								},
+								"footer_eup_login_cookie_policy":	{
+									"type":	"string"
+								},
+								"footer_eup_login_eu_privacy_rights":	{
+									"type":	"string"
+								},
+								"footer_eup_login_privacy_policy":	{
+									"type":	"string"
+								},
+								"footer_eup_login_terms_of_use":	{
+									"type":	"string"
+								},
+								"footer_help":	{
+									"type":	"string"
+								},
+								"footer_interest_based_ads":	{
+									"type":	"string"
+								},
+								"footer_manage_preferences":	{
+									"type":	"string"
+								},
+								"footer_ways_to_watch":	{
+									"type":	"string"
+								},
+								"forgot_password":	{
+									"type":	"string"
+								},
+								"founding_member_badge":	{
+									"type":	"string"
+								},
+								"freetrial_fraud_prevention_copy":	{
+									"type":	"string"
+								},
+								"freetrial_fraud_prevention_title":	{
+									"type":	"string"
+								},
+								"genre_300000":	{
+									"type":	"string"
+								},
+								"genre_300001":	{
+									"type":	"string"
+								},
+								"genre_300002":	{
+									"type":	"string"
+								},
+								"genre_300003":	{
+									"type":	"string"
+								},
+								"genre_300004":	{
+									"type":	"string"
+								},
+								"genre_300005":	{
+									"type":	"string"
+								},
+								"genre_300006":	{
+									"type":	"string"
+								},
+								"genre_300007":	{
+									"type":	"string"
+								},
+								"genre_300008":	{
+									"type":	"string"
+								},
+								"genre_300009":	{
+									"type":	"string"
+								},
+								"genre_300010":	{
+									"type":	"string"
+								},
+								"genre_300011":	{
+									"type":	"string"
+								},
+								"genre_300012":	{
+									"type":	"string"
+								},
+								"genre_300013":	{
+									"type":	"string"
+								},
+								"genre_300014":	{
+									"type":	"string"
+								},
+								"genre_300015":	{
+									"type":	"string"
+								},
+								"genre_300017":	{
+									"type":	"string"
+								},
+								"genre_300018":	{
+									"type":	"string"
+								},
+								"genre_300019":	{
+									"type":	"string"
+								},
+								"genre_300020":	{
+									"type":	"string"
+								},
+								"genre_300021":	{
+									"type":	"string"
+								},
+								"genre_300050":	{
+									"type":	"string"
+								},
+								"genre_300051":	{
+									"type":	"string"
+								},
+								"genre_300052":	{
+									"type":	"string"
+								},
+								"genre_300053":	{
+									"type":	"string"
+								},
+								"genre_300054":	{
+									"type":	"string"
+								},
+								"genre_300055":	{
+									"type":	"string"
+								},
+								"genre_300056":	{
+									"type":	"string"
+								},
+								"genre_300057":	{
+									"type":	"string"
+								},
+								"genre_300058":	{
+									"type":	"string"
+								},
+								"genre_300059":	{
+									"type":	"string"
+								},
+								"genre_300060":	{
+									"type":	"string"
+								},
+								"genre_300061":	{
+									"type":	"string"
+								},
+								"genre_300062":	{
+									"type":	"string"
+								},
+								"genre_300063":	{
+									"type":	"string"
+								},
+								"genre_300064":	{
+									"type":	"string"
+								},
+								"genre_300065":	{
+									"type":	"string"
+								},
+								"genre_300066":	{
+									"type":	"string"
+								},
+								"genre_300067":	{
+									"type":	"string"
+								},
+								"genre_300068":	{
+									"type":	"string"
+								},
+								"genre_300069":	{
+									"type":	"string"
+								},
+								"genre_300070":	{
+									"type":	"string"
+								},
+								"genre_300071":	{
+									"type":	"string"
+								},
+								"genre_300072":	{
+									"type":	"string"
+								},
+								"genre_300073":	{
+									"type":	"string"
+								},
+								"google_home_link_confirm_CTA":	{
+									"type":	"string"
+								},
+								"google_home_link_info_text":	{
+									"type":	"string"
+								},
+								"google_home_link_legal_text_1":	{
+									"type":	"string"
+								},
+								"google_home_link_legal_text_2":	{
+									"type":	"string"
+								},
+								"google_home_link_legal_text_3":	{
+									"type":	"string"
+								},
+								"google_home_link_legal_text_3_link_1_target":	{
+									"type":	"string"
+								},
+								"google_home_link_legal_text_3_link_1_text":	{
+									"type":	"string"
+								},
+								"google_home_link_legal_text_3_link_1_url":	{
+									"type":	"string"
+								},
+								"google_home_profile_change_text":	{
+									"type":	"string"
+								},
+								"google_home_profile_select_confirmation_text":	{
+									"type":	"string"
+								},
+								"google_home_profile_select_question_text":	{
+									"type":	"string"
+								},
+								"google_home_profile_select_text":	{
+									"type":	"string"
+								},
+								"groupwatch_change_episode_btn":	{
+									"type":	"string"
+								},
+								"groupwatch_continue_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_ctv_invite_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_details_first_time_tooltip":	{
+									"type":	"string"
+								},
+								"groupwatch_details_rejoin_tooltip":	{
+									"type":	"string"
+								},
+								"groupwatch_group_ended_body":	{
+									"type":	"string"
+								},
+								"groupwatch_group_ended_header":	{
+									"type":	"string"
+								},
+								"groupwatch_group_ended_primary_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_group_ended_secondary_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_group_full":	{
+									"type":	"string"
+								},
+								"groupwatch_gw_not_available_header":	{
+									"type":	"string"
+								},
+								"groupwatch_host_label":	{
+									"type":	"string"
+								},
+								"groupwatch_hp_gw_tile_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_hp_gw_tile_header":	{
+									"type":	"string"
+								},
+								"groupwatch_join_multiple_groups_body":	{
+									"type":	"string"
+								},
+								"groupwatch_join_multiple_groups_header":	{
+									"type":	"string"
+								},
+								"groupwatch_join_stream_btn":	{
+									"type":	"string"
+								},
+								"groupwatch_join_stream_message":	{
+									"type":	"string"
+								},
+								"groupwatch_leave_group_btn":	{
+									"type":	"string"
+								},
+								"groupwatch_leave_group_confirm_body_end":	{
+									"type":	"string"
+								},
+								"groupwatch_leave_group_confirm_body_rejoin":	{
+									"type":	"string"
+								},
+								"groupwatch_leave_group_confirm_header":	{
+									"type":	"string"
+								},
+								"groupwatch_leave_group_confirm_leave_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_never_mind_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_ok_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_player_controls_tooltip":	{
+									"type":	"string"
+								},
+								"groupwatch_player_event_join":	{
+									"type":	"string"
+								},
+								"groupwatch_player_event_leave":	{
+									"type":	"string"
+								},
+								"groupwatch_player_event_pause":	{
+									"type":	"string"
+								},
+								"groupwatch_player_event_play":	{
+									"type":	"string"
+								},
+								"groupwatch_player_event_seek":	{
+									"type":	"string"
+								},
+								"groupwatch_player_postplay_complete_header":	{
+									"type":	"string"
+								},
+								"groupwatch_player_postplay_complete_subheader":	{
+									"type":	"string"
+								},
+								"groupwatch_player_postplay_episode_desc":	{
+									"type":	"string"
+								},
+								"groupwatch_player_postplay_episode_name":	{
+									"type":	"string"
+								},
+								"groupwatch_player_postplay_leave_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_player_postplay_nextepisode_cta":	{
+									"type":	"string"
+								},
+								"groupwatch_player_postplay_series_header":	{
+									"type":	"string"
+								},
+								"groupwatch_player_reaction_receive":	{
+									"type":	"string"
+								},
+								"groupwatch_player_reactions_toast":	{
+									"type":	"string"
+								},
+								"groupwatch_player_synchronizing":	{
+									"type":	"string"
+								},
+								"groupwatch_player_viewer":	{
+									"type":	"string"
+								},
+								"groupwatch_player_viewers_profile":	{
+									"type":	"string"
+								},
+								"groupwatch_player_viewers_total":	{
+									"type":	"string"
+								},
+								"groupwatch_profile_not_allowed":	{
+									"type":	"string"
+								},
+								"groupwatch_room_full_message":	{
+									"type":	"string"
+								},
+								"groupwatch_room_header":	{
+									"type":	"string"
+								},
+								"groupwatch_start_multiple_groups_body":	{
+									"type":	"string"
+								},
+								"groupwatch_start_multiple_groups_header":	{
+									"type":	"string"
+								},
+								"groupwatch_start_stream_btn":	{
+									"type":	"string"
+								},
+								"groupwatch_title_not_available":	{
+									"type":	"string"
+								},
+								"groupwatch_wait_start_stream_message":	{
+									"type":	"string"
+								},
+								"groupwatch_whos_joining":	{
+									"type":	"string"
+								},
+								"groupwatch_whos_joining_subheader":	{
+									"type":	"string"
+								},
+								"groupwatch_you_are_host_flash_message":	{
+									"type":	"string"
+								},
+								"have_account":	{
+									"type":	"string"
+								},
+								"have_account_2":	{
+									"type":	"string"
+								},
+								"header_disney_skyuk":	{
+									"type":	"string"
+								},
+								"help":	{
+									"type":	"string"
+								},
+								"help_link_1_target":	{
+									"type":	"string"
+								},
+								"help_link_1_text":	{
+									"type":	"string"
+								},
+								"help_link_1_url":	{
+									"type":	"string"
+								},
+								"homecountrywarn_copy":	{
+									"type":	"string"
+								},
+								"homecountrywarn_title":	{
+									"type":	"string"
+								},
+								"hulu_linking_flash_message":	{
+									"type":	"string"
+								},
+								"idfa_debug":	{
+									"type":	"string"
+								},
+								"image_account_hold":	{
+									"type":	"string"
+								},
+								"image_detelekom_logo":	{
+									"type":	"string"
+								},
+								"image_disney_orange_cobrand_logo":	{
+									"type":	"string"
+								},
+								"image_disney_plus_standalone_logo":	{
+									"type":	"string"
+								},
+								"image_disney_sfr_cobrand_logo":	{
+									"type":	"string"
+								},
+								"image_disney_skyuk_cobrand_logo":	{
+									"type":	"string"
+								},
+								"image_get_amazon_app":	{
+									"type":	"string"
+								},
+								"image_media_feature_dolby_atmos":	{
+									"type":	"string"
+								},
+								"image_media_feature_dolby_vision":	{
+									"type":	"string"
+								},
+								"image_media_feature_dolby_vision_dolby_atmos":	{
+									"type":	"string"
+								},
+								"image_movistar_logo":	{
+									"type":	"string"
+								},
+								"image_o2_logo":	{
+									"type":	"string"
+								},
+								"image_service_unavailable":	{
+									"type":	"string"
+								},
+								"image_skyuk_logo":	{
+									"type":	"string"
+								},
+								"image_starz":	{
+									"type":	"string"
+								},
+								"image_starz_play":	{
+									"type":	"string"
+								},
+								"image_tim_logo":	{
+									"type":	"string"
+								},
+								"image_verizon_logo":	{
+									"type":	"string"
+								},
+								"interrupt_subscription":	{
+									"type":	"string"
+								},
+								"interrupt_subscription_title":	{
+									"type":	"string"
+								},
+								"invalid_email":	{
+									"type":	"string"
+								},
+								"keyboard_continue":	{
+									"type":	"string"
+								},
+								"keyboard_delete_all":	{
+									"type":	"string"
+								},
+								"keyboard_done":	{
+									"type":	"string"
+								},
+								"keyboard_move_to_pin":	{
+									"type":	"string"
+								},
+								"kidsprofile":	{
+									"type":	"string"
+								},
+								"kidsprofile_restrictedsearch":	{
+									"type":	"string"
+								},
+								"kidsprofile_restrictedsearch_smallcopy":	{
+									"type":	"string"
+								},
+								"kidsprofile_subcopy":	{
+									"type":	"string"
+								},
+								"lang_dutch":	{
+									"type":	"string"
+								},
+								"lang_english_intl":	{
+									"type":	"string"
+								},
+								"lang_english_us":	{
+									"type":	"string"
+								},
+								"lang_french":	{
+									"type":	"string"
+								},
+								"lang_german":	{
+									"type":	"string"
+								},
+								"lang_italian":	{
+									"type":	"string"
+								},
+								"lang_spanish":	{
+									"type":	"string"
+								},
+								"learn_more":	{
+									"type":	"string"
+								},
+								"leaving_soon_set_title":	{
+									"type":	"string"
+								},
+								"legal":	{
+									"type":	"string"
+								},
+								"legal_cd_iap_copy":	{
+									"type":	"string"
+								},
+								"legal_copy":	{
+									"type":	"string"
+								},
+								"legal_copy_2":	{
+									"type":	"string"
+								},
+								"legal_opt_in_form_subheading":	{
+									"type":	"string"
+								},
+								"legal_opt_in_form_title":	{
+									"type":	"string"
+								},
+								"legal_subscriber_agreement_acceptance":	{
+									"type":	"string"
+								},
+								"legalcenter_title":	{
+									"type":	"string"
+								},
+								"license_expired_fail_title":	{
+									"type":	"string"
+								},
+								"license_expired_renew":	{
+									"type":	"string"
+								},
+								"license_expired_title":	{
+									"type":	"string"
+								},
+								"link_footer_eup_login_cookie_policy":	{
+									"type":	"string"
+								},
+								"link_footer_eup_login_eu_privacy_rights":	{
+									"type":	"string"
+								},
+								"link_footer_eup_login_privacy_policy":	{
+									"type":	"string"
+								},
+								"link_footer_eup_login_terms_of_use":	{
+									"type":	"string"
+								},
+								"locked_out_copy":	{
+									"type":	"string"
+								},
+								"locked_out_title":	{
+									"type":	"string"
+								},
+								"log_in_and_link_cta":	{
+									"type":	"string"
+								},
+								"log_in_email_error_no_account":	{
+									"type":	"string"
+								},
+								"log_in_noaccount":	{
+									"type":	"string"
+								},
+								"log_in_noaccount_2":	{
+									"type":	"string"
+								},
+								"log_in_noaccount_subcopy":	{
+									"type":	"string"
+								},
+								"log_in_partner_noaccount_subcopy":	{
+									"type":	"string"
+								},
+								"log_in_preexisting_account_2":	{
+									"type":	"string"
+								},
+								"log_in_pwd_error_none":	{
+									"type":	"string"
+								},
+								"log_in_title":	{
+									"type":	"string"
+								},
+								"log_in_title_2":	{
+									"type":	"string"
+								},
+								"log_out":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_change_email_copy":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_change_password_copy":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_confirmation_copy":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_confirmation_title":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_cta":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_logged_out_copy":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_logged_out_password_copy":	{
+									"type":	"string"
+								},
+								"log_out_all_devices_logged_out_title":	{
+									"type":	"string"
+								},
+								"log_out_confirmation_copy":	{
+									"type":	"string"
+								},
+								"log_out_confirmation_title":	{
+									"type":	"string"
+								},
+								"log_out_try_again":	{
+									"type":	"string"
+								},
+								"log_out_try_again_link_1_target":	{
+									"type":	"string"
+								},
+								"log_out_try_again_link_1_text":	{
+									"type":	"string"
+								},
+								"log_out_try_again_link_1_url":	{
+									"type":	"string"
+								},
+								"loggedoutnavigation":	{
+									"type":	"string"
+								},
+								"login":	{
+									"type":	"string"
+								},
+								"login_2":	{
+									"type":	"string"
+								},
+								"login_hide_password_asterisk":	{
+									"type":	"string"
+								},
+								"manage_account":	{
+									"type":	"string"
+								},
+								"manage_account_link_1_target":	{
+									"type":	"string"
+								},
+								"manage_account_link_1_text":	{
+									"type":	"string"
+								},
+								"manage_account_link_1_url":	{
+									"type":	"string"
+								},
+								"manage_downloads":	{
+									"type":	"string"
+								},
+								"marketing_opt_in_form_subheading":	{
+									"type":	"string"
+								},
+								"marketing_opt_in_form_title":	{
+									"type":	"string"
+								},
+								"marketing_opt_in_submit_button_text":	{
+									"type":	"string"
+								},
+								"media_content_fetch_failure":	{
+									"type":	"string"
+								},
+								"media_empty":	{
+									"type":	"string"
+								},
+								"media_feature_dolby_51":	{
+									"type":	"string"
+								},
+								"media_feature_hdr":	{
+									"type":	"string"
+								},
+								"media_feature_hdr_10":	{
+									"type":	"string"
+								},
+								"media_format_hd":	{
+									"type":	"string"
+								},
+								"media_format_uhd":	{
+									"type":	"string"
+								},
+								"media_playback_total_runtime":	{
+									"type":	"string"
+								},
+								"media_player_fetch_failure":	{
+									"type":	"string"
+								},
+								"media_settings_message_series_prefer_remastered_false":	{
+									"type":	"string"
+								},
+								"media_settings_message_series_prefer_remastered_true":	{
+									"type":	"string"
+								},
+								"media_settings_subcopy_series_prefer_remastered":	{
+									"type":	"string"
+								},
+								"media_settings_title_series_prefer_remastered":	{
+									"type":	"string"
+								},
+								"message_error_restart":	{
+									"type":	"string"
+								},
+								"message_error_unexpected":	{
+									"type":	"string"
+								},
+								"meta_description_copy":	{
+									"type":	"string"
+								},
+								"meta_description_title":	{
+									"type":	"string"
+								},
+								"mobile_prompt_copy":	{
+									"type":	"string"
+								},
+								"mobile_prompt_title":	{
+									"type":	"string"
+								},
+								"modal_multiexternalstorage_label":	{
+									"type":	"string"
+								},
+								"model_debug":	{
+									"type":	"string"
+								},
+								"month":	{
+									"type":	"string"
+								},
+								"month_unit":	{
+									"type":	"string"
+								},
+								"nav_account":	{
+									"type":	"string"
+								},
+								"nav_audio":	{
+									"type":	"string"
+								},
+								"nav_details":	{
+									"type":	"string"
+								},
+								"nav_episodes":	{
+									"type":	"string"
+								},
+								"nav_extras":	{
+									"type":	"string"
+								},
+								"nav_help":	{
+									"type":	"string"
+								},
+								"nav_home":	{
+									"type":	"string"
+								},
+								"nav_info":	{
+									"type":	"string"
+								},
+								"nav_log_out":	{
+									"type":	"string"
+								},
+								"nav_more":	{
+									"type":	"string"
+								},
+								"nav_movies":	{
+									"type":	"string"
+								},
+								"nav_movies_title":	{
+									"type":	"string"
+								},
+								"nav_originals":	{
+									"type":	"string"
+								},
+								"nav_originals_title":	{
+									"type":	"string"
+								},
+								"nav_pcon":	{
+									"type":	"string"
+								},
+								"nav_related":	{
+									"type":	"string"
+								},
+								"nav_search":	{
+									"type":	"string"
+								},
+								"nav_season":	{
+									"type":	"string"
+								},
+								"nav_series":	{
+									"type":	"string"
+								},
+								"nav_series_title":	{
+									"type":	"string"
+								},
+								"nav_settings":	{
+									"type":	"string"
+								},
+								"nav_settings_title":	{
+									"type":	"string"
+								},
+								"nav_subtitle_styling":	{
+									"type":	"string"
+								},
+								"nav_subtitles":	{
+									"type":	"string"
+								},
+								"nav_synopsis":	{
+									"type":	"string"
+								},
+								"nav_watchlist":	{
+									"type":	"string"
+								},
+								"nav_watchlist_title":	{
+									"type":	"string"
+								},
+								"network_error_header":	{
+									"type":	"string"
+								},
+								"network_error_message":	{
+									"type":	"string"
+								},
+								"network_error_message_noretry":	{
+									"type":	"string"
+								},
+								"new_episode_set_title":	{
+									"type":	"string"
+								},
+								"new_to_disney":	{
+									"type":	"string"
+								},
+								"next_episode":	{
+									"type":	"string"
+								},
+								"next_episode_avail_date":	{
+									"type":	"string"
+								},
+								"no":	{
+									"type":	"string"
+								},
+								"no_downloads":	{
+									"type":	"string"
+								},
+								"no_internet_connection":	{
+									"type":	"string"
+								},
+								"no_password":	{
+									"type":	"string"
+								},
+								"no_search_results":	{
+									"type":	"string"
+								},
+								"no_search_results_copy":	{
+									"type":	"string"
+								},
+								"offline_copy":	{
+									"type":	"string"
+								},
+								"offline_flash_message":	{
+									"type":	"string"
+								},
+								"offline_title":	{
+									"type":	"string"
+								},
+								"onboarding_stepper":	{
+									"type":	"string"
+								},
+								"or":	{
+									"type":	"string"
+								},
+								"os_version_debug":	{
+									"type":	"string"
+								},
+								"otp_placeholder":	{
+									"type":	"string"
+								},
+								"otp_placeholder_spaced":	{
+									"type":	"string"
+								},
+								"partner_activate_account_copy_1":	{
+									"type":	"string"
+								},
+								"partner_activate_account_copy_2":	{
+									"type":	"string"
+								},
+								"partner_activate_account_title":	{
+									"type":	"string"
+								},
+								"partner_success_copy":	{
+									"type":	"string"
+								},
+								"password":	{
+									"type":	"string"
+								},
+								"password_changed_banner_message":	{
+									"type":	"string"
+								},
+								"password_create_password_banner_message":	{
+									"type":	"string"
+								},
+								"password_creation_error_empty":	{
+									"type":	"string"
+								},
+								"password_rating_fair":	{
+									"type":	"string"
+								},
+								"password_rating_good":	{
+									"type":	"string"
+								},
+								"password_rating_great":	{
+									"type":	"string"
+								},
+								"password_rating_normal":	{
+									"type":	"string"
+								},
+								"password_rating_ok":	{
+									"type":	"string"
+								},
+								"password_rating_strong":	{
+									"type":	"string"
+								},
+								"password_rating_weak":	{
+									"type":	"string"
+								},
+								"password_reqs":	{
+									"type":	"string"
+								},
+								"payment_confirmation_success_title":	{
+									"type":	"string"
+								},
+								"payment_error_copy":	{
+									"type":	"string"
+								},
+								"payment_error_title":	{
+									"type":	"string"
+								},
+								"paymentcountryterms_title":	{
+									"type":	"string"
+								},
+								"paywall_copy":	{
+									"type":	"string"
+								},
+								"paywall_copy_2":	{
+									"type":	"string"
+								},
+								"paywall_mobile_link":	{
+									"type":	"string"
+								},
+								"pcon_copy_1":	{
+									"type":	"string"
+								},
+								"pcon_copy_2":	{
+									"type":	"string"
+								},
+								"pcon_title":	{
+									"type":	"string"
+								},
+								"peekpop_details":	{
+									"type":	"string"
+								},
+								"peekpop_list":	{
+									"type":	"string"
+								},
+								"peekpop_play":	{
+									"type":	"string"
+								},
+								"peekpop_share":	{
+									"type":	"string"
+								},
+								"portability_granted_flashmessage":	{
+									"type":	"string"
+								},
+								"postplay_becauseyouwatched":	{
+									"type":	"string"
+								},
+								"postplay_castdevice":	{
+									"type":	"string"
+								},
+								"postplay_contenttitle":	{
+									"type":	"string"
+								},
+								"postplay_countdown":	{
+									"type":	"string"
+								},
+								"postplay_countdown_text":	{
+									"type":	"string"
+								},
+								"postplay_episodetitle":	{
+									"type":	"string"
+								},
+								"postplay_playondevice":	{
+									"type":	"string"
+								},
+								"postplay_shortdescription":	{
+									"type":	"string"
+								},
+								"postplay_sneakpeek":	{
+									"type":	"string"
+								},
+								"postplay_sunriseday":	{
+									"type":	"string"
+								},
+								"postplay_upnext":	{
+									"type":	"string"
+								},
+								"primaryprofile":	{
+									"type":	"string"
+								},
+								"primaryprofileexplainer":	{
+									"type":	"string"
+								},
+								"privacy":	{
+									"type":	"string"
+								},
+								"profile_copy":	{
+									"type":	"string"
+								},
+								"profile_icon":	{
+									"type":	"string"
+								},
+								"profile_name_placeholder":	{
+									"type":	"string"
+								},
+								"profile_selection_title":	{
+									"type":	"string"
+								},
+								"promo_cominglater":	{
+									"type":	"string"
+								},
+								"promo_cominglater_unauth":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_episode":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_movie":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_movie_header":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_movie_subcopy":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_payone_movie":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_series":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_short-form":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_short-form_header":	{
+									"type":	"string"
+								},
+								"promo_comingsoon_short-form_subcopy":	{
+									"type":	"string"
+								},
+								"promo_exclusivetrailer":	{
+									"type":	"string"
+								},
+								"promo_exclusivetrailer_unauth":	{
+									"type":	"string"
+								},
+								"promo_existing_sub_stacking_billing":	{
+									"type":	"string"
+								},
+								"promo_existing_sub_stacking_billing_link_1_target":	{
+									"type":	"string"
+								},
+								"promo_existing_sub_stacking_billing_link_1_text":	{
+									"type":	"string"
+								},
+								"promo_existing_sub_stacking_billing_link_1_url":	{
+									"type":	"string"
+								},
+								"promo_newlyadded_season":	{
+									"type":	"string"
+								},
+								"promocode":	{
+									"type":	"string"
+								},
+								"purchase_success":	{
+									"type":	"string"
+								},
+								"purchase_success_copy":	{
+									"type":	"string"
+								},
+								"rated":	{
+									"type":	"string"
+								},
+								"ratings_delimiter":	{
+									"type":	"string"
+								},
+								"recent_search_title":	{
+									"type":	"string"
+								},
+								"related_search":	{
+									"type":	"string"
+								},
+								"remember":	{
+									"type":	"string"
+								},
+								"resend_email":	{
+									"type":	"string"
+								},
+								"resend_email_copy":	{
+									"type":	"string"
+								},
+								"resend_email_copy_2":	{
+									"type":	"string"
+								},
+								"reset_app_debug":	{
+									"type":	"string"
+								},
+								"reset_password_copy":	{
+									"type":	"string"
+								},
+								"reset_password_title":	{
+									"type":	"string"
+								},
+								"restart_copy":	{
+									"type":	"string"
+								},
+								"restart_sub":	{
+									"type":	"string"
+								},
+								"restart_sub_2":	{
+									"type":	"string"
+								},
+								"restart_sub_3":	{
+									"type":	"string"
+								},
+								"restart_subscription_cddirect_legal_copy":	{
+									"type":	"string"
+								},
+								"restart_subscription_web_legal_copy":	{
+									"type":	"string"
+								},
+								"restart_title":	{
+									"type":	"string"
+								},
+								"restore_purchase":	{
+									"type":	"string"
+								},
+								"returninglatertitle_copy":	{
+									"type":	"string"
+								},
+								"runtime_hours":	{
+									"type":	"string"
+								},
+								"runtime_minutes":	{
+									"type":	"string"
+								},
+								"runtime_seconds":	{
+									"type":	"string"
+								},
+								"save_badge":	{
+									"type":	"string"
+								},
+								"save_payment":	{
+									"type":	"string"
+								},
+								"save_payment_disneyrewards":	{
+									"type":	"string"
+								},
+								"save_payment_ideal":	{
+									"type":	"string"
+								},
+								"save_payment_paypal":	{
+									"type":	"string"
+								},
+								"search_call_to_action":	{
+									"type":	"string"
+								},
+								"search_noresults":	{
+									"type":	"string"
+								},
+								"search_placeholder":	{
+									"type":	"string"
+								},
+								"search_results_trending":	{
+									"type":	"string"
+								},
+								"search_results_youmaylike_label":	{
+									"type":	"string"
+								},
+								"search_trysearching":	{
+									"type":	"string"
+								},
+								"searcheasteregg_multipleresults":	{
+									"type":	"string"
+								},
+								"searcheasteregg_singleresult":	{
+									"type":	"string"
+								},
+								"season_episode_title_placeholder":	{
+									"type":	"string"
+								},
+								"season_number":	{
+									"type":	"string"
+								},
+								"select_all_label":	{
+									"type":	"string"
+								},
+								"select_content_remove":	{
+									"type":	"string"
+								},
+								"selected_placeholder":	{
+									"type":	"string"
+								},
+								"selected_size_placeholder":	{
+									"type":	"string"
+								},
+								"series_season_episode":	{
+									"type":	"string"
+								},
+								"series_year_range":	{
+									"type":	"string"
+								},
+								"server_error_header":	{
+									"type":	"string"
+								},
+								"server_error_message":	{
+									"type":	"string"
+								},
+								"service_availability":	{
+									"type":	"string"
+								},
+								"service_availability_url":	{
+									"type":	"string"
+								},
+								"service_name":	{
+									"type":	"string"
+								},
+								"service_unavailable_image":	{
+									"type":	"string"
+								},
+								"service_unavailable_subtitle":	{
+									"type":	"string"
+								},
+								"service_unavailable_title":	{
+									"type":	"string"
+								},
+								"set_up_profiles_copy":	{
+									"type":	"string"
+								},
+								"settings_amazon_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_apple_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_background_video":	{
+									"type":	"string"
+								},
+								"settings_background_video_subcopy":	{
+									"type":	"string"
+								},
+								"settings_bouygues_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_canal_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_datausage_help":	{
+									"type":	"string"
+								},
+								"settings_datausage_pageheader":	{
+									"type":	"string"
+								},
+								"settings_datausage_tier1_body":	{
+									"type":	"string"
+								},
+								"settings_datausage_tier1_body_hd":	{
+									"type":	"string"
+								},
+								"settings_datausage_tier1_header":	{
+									"type":	"string"
+								},
+								"settings_datausage_tier2_body":	{
+									"type":	"string"
+								},
+								"settings_datausage_tier2_header":	{
+									"type":	"string"
+								},
+								"settings_datausage_tier3_body":	{
+									"type":	"string"
+								},
+								"settings_datausage_tier3_header":	{
+									"type":	"string"
+								},
+								"settings_detelekom_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_faq":	{
+									"type":	"string"
+								},
+								"settings_free_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_google_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_header":	{
+									"type":	"string"
+								},
+								"settings_helpscreen_copy":	{
+									"type":	"string"
+								},
+								"settings_helpscreen_title":	{
+									"type":	"string"
+								},
+								"settings_helpscreen_url":	{
+									"type":	"string"
+								},
+								"settings_hulu_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_movistar_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_notifications":	{
+									"type":	"string"
+								},
+								"settings_o2_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_orange_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_roku_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_sfr_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_skyuk_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_tim_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_title":	{
+									"type":	"string"
+								},
+								"settings_verizon_bundle_linktext":	{
+									"type":	"string"
+								},
+								"settings_verizon_bundle_linktext_link_1_target":	{
+									"type":	"string"
+								},
+								"settings_verizon_bundle_linktext_link_1_text":	{
+									"type":	"string"
+								},
+								"settings_verizon_bundle_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"settings_verizon_linktext_link_1_url":	{
+									"type":	"string"
+								},
+								"setup_profiles_later":	{
+									"type":	"string"
+								},
+								"sign_up":	{
+									"type":	"string"
+								},
+								"sign_up_caps":	{
+									"type":	"string"
+								},
+								"sign_up_on_web":	{
+									"type":	"string"
+								},
+								"sign_up_title":	{
+									"type":	"string"
+								},
+								"signup_existing_user_copy":	{
+									"type":	"string"
+								},
+								"signup_existing_user_copy_2":	{
+									"type":	"string"
+								},
+								"signup_existing_user_title":	{
+									"type":	"string"
+								},
+								"signup_freetrial":	{
+									"type":	"string"
+								},
+								"signup_iap_legal":	{
+									"type":	"string"
+								},
+								"signup_legal_disclaimer":	{
+									"type":	"string"
+								},
+								"signup_new_user":	{
+									"type":	"string"
+								},
+								"single_sign_on_header":	{
+									"type":	"string"
+								},
+								"single_sign_on_instructions":	{
+									"type":	"string"
+								},
+								"single_sign_on_password_placeholder":	{
+									"type":	"string"
+								},
+								"single_sign_on_username_placeholder":	{
+									"type":	"string"
+								},
+								"size_episodes_placeholder":	{
+									"type":	"string"
+								},
+								"size_runtime_placeholder":	{
+									"type":	"string"
+								},
+								"sponsoredby_copy":	{
+									"type":	"string"
+								},
+								"starz_buy_now":	{
+									"type":	"string"
+								},
+								"starz_buy_now_link_1_target":	{
+									"type":	"string"
+								},
+								"starz_buy_now_link_1_text":	{
+									"type":	"string"
+								},
+								"starz_buy_now_link_1_url":	{
+									"type":	"string"
+								},
+								"starz_cd_visit_starz":	{
+									"type":	"string"
+								},
+								"starz_tagline":	{
+									"type":	"string"
+								},
+								"starz_tagline_us":	{
+									"type":	"string"
+								},
+								"stillwatching_question":	{
+									"type":	"string"
+								},
+								"stop_casting":	{
+									"type":	"string"
+								},
+								"store_app_rating":	{
+									"type":	"string"
+								},
+								"store_soft_prompt":	{
+									"type":	"string"
+								},
+								"store_support_request":	{
+									"type":	"string"
+								},
+								"stored_payment_confirm_billing_details":	{
+									"type":	"string"
+								},
+								"stored_payment_edit":	{
+									"type":	"string"
+								},
+								"stored_payment_flash_message":	{
+									"type":	"string"
+								},
+								"stream_concurrency_error":	{
+									"type":	"string"
+								},
+								"stream_concurrency_error_too_many_videos":	{
+									"type":	"string"
+								},
+								"subscribe_copy":	{
+									"type":	"string"
+								},
+								"subscribe_expired_copy":	{
+									"type":	"string"
+								},
+								"subscribe_expired_title":	{
+									"type":	"string"
+								},
+								"subscribe_title":	{
+									"type":	"string"
+								},
+								"subscriber_agreement":	{
+									"type":	"string"
+								},
+								"subscriber_agreement_header":	{
+									"type":	"string"
+								},
+								"subscription":	{
+									"type":	"string"
+								},
+								"subscription_annual":	{
+									"type":	"string"
+								},
+								"subscription_monthly":	{
+									"type":	"string"
+								},
+								"subscription_period_duration_default":	{
+									"type":	"string"
+								},
+								"subscription_period_unit_default":	{
+									"type":	"string"
+								},
+								"subscription_valid_until_date":	{
+									"type":	"string"
+								},
+								"subtitle_styling_background_color":	{
+									"type":	"string"
+								},
+								"subtitle_styling_background_opacity":	{
+									"type":	"string"
+								},
+								"subtitle_styling_example":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_casual":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_black":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_blue":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_cyan":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_green":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_magenta":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_red":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_white":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_color_yellow":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_default":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_edge_styling":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_edge_styling_depressed":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_edge_styling_drop_shadow":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_edge_styling_none":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_edge_styling_raised":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_edge_styling_uniform":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_monospace_sans_serif":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_monospace_serif":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_opacity":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_opacity_0":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_opacity_100":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_opacity_25":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_opacity_75":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_proportional_sans_serif":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_proportional_serif":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_script":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_size":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_size_100":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_size_200":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_size_50":	{
+									"type":	"string"
+								},
+								"subtitle_styling_font_small_caps":	{
+									"type":	"string"
+								},
+								"subtitle_styling_reset":	{
+									"type":	"string"
+								},
+								"subtitle_styling_window_color":	{
+									"type":	"string"
+								},
+								"subtitle_styling_window_opacity":	{
+									"type":	"string"
+								},
+								"subtitles_media_player":	{
+									"type":	"string"
+								},
+								"success_copy":	{
+									"type":	"string"
+								},
+								"success_nofreetrial_title":	{
+									"type":	"string"
+								},
+								"success_title":	{
+									"type":	"string"
+								},
+								"switch_annual_account_settings":	{
+									"type":	"string"
+								},
+								"switch_annual_confirmation_legal":	{
+									"type":	"string"
+								},
+								"switch_annual_confirmation_price":	{
+									"type":	"string"
+								},
+								"switch_annual_confirmation_title":	{
+									"type":	"string"
+								},
+								"switch_annual_flash_message":	{
+									"type":	"string"
+								},
+								"switch_monthly_account_settings":	{
+									"type":	"string"
+								},
+								"switch_monthly_confirmation_copy":	{
+									"type":	"string"
+								},
+								"switch_monthly_confirmation_date":	{
+									"type":	"string"
+								},
+								"switch_monthly_confirmation_price":	{
+									"type":	"string"
+								},
+								"switch_monthly_confirmation_title":	{
+									"type":	"string"
+								},
+								"switch_monthly_flash_message":	{
+									"type":	"string"
+								},
+								"terms":	{
+									"type":	"string"
+								},
+								"terms_copy":	{
+									"type":	"string"
+								},
+								"terms_copy_2":	{
+									"type":	"string"
+								},
+								"text_exit_confirm":	{
+									"type":	"string"
+								},
+								"text_exit_disney":	{
+									"type":	"string"
+								},
+								"title_stream_concurrency_error_too_many_videos":	{
+									"type":	"string"
+								},
+								"toggle_off":	{
+									"type":	"string"
+								},
+								"toggle_on":	{
+									"type":	"string"
+								},
+								"trending_set_title":	{
+									"type":	"string"
+								},
+								"trial_title":	{
+									"type":	"string"
+								},
+								"ui_language_copy":	{
+									"type":	"string"
+								},
+								"ui_language_setting":	{
+									"type":	"string"
+								},
+								"unauth_brand_disney":	{
+									"type":	"string"
+								},
+								"unauth_brand_marvel":	{
+									"type":	"string"
+								},
+								"unauth_brand_natgeo":	{
+									"type":	"string"
+								},
+								"unauth_brand_pixar":	{
+									"type":	"string"
+								},
+								"unauth_brand_starwars":	{
+									"type":	"string"
+								},
+								"unauth_explore_generic":	{
+									"type":	"string"
+								},
+								"unauthcollectionpage_signupcta":	{
+									"type":	"string"
+								},
+								"unauthdetail_modal_copy":	{
+									"type":	"string"
+								},
+								"unauthdetail_signupcta":	{
+									"type":	"string"
+								},
+								"unauthdetail_you_may_also_like":	{
+									"type":	"string"
+								},
+								"unsupported_device_title":	{
+									"type":	"string"
+								},
+								"unsupported_device_title_copy":	{
+									"type":	"string"
+								},
+								"unsupported_device_title_copy_link_1_target":	{
+									"type":	"string"
+								},
+								"unsupported_device_title_copy_link_1_text":	{
+									"type":	"string"
+								},
+								"unsupported_device_title_copy_link_1_url":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_1_target":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_1_text":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_1_url":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_2_target":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_2_text":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_2_url":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_3_target":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_3_text":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_3_url":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_4_target":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_4_text":	{
+									"type":	"string"
+								},
+								"unsupportedbrowser_banner_link_4_url":	{
+									"type":	"string"
+								},
+								"update_app_body":	{
+									"type":	"string"
+								},
+								"update_app_title":	{
+									"type":	"string"
+								},
+								"updatepayment":	{
+									"type":	"string"
+								},
+								"upgrade_instructions":	{
+									"type":	"string"
+								},
+								"upgrade_title":	{
+									"type":	"string"
+								},
+								"use_this_email_copy":	{
+									"type":	"string"
+								},
+								"validating":	{
+									"type":	"string"
+								},
+								"verify_account_banner":	{
+									"type":	"string"
+								},
+								"verify_account_cta":	{
+									"type":	"string"
+								},
+								"video_duration_fallback":	{
+									"type":	"string"
+								},
+								"video_episode_title":	{
+									"type":	"string"
+								},
+								"video_error_message":	{
+									"type":	"string"
+								},
+								"video_error_templated_message":	{
+									"type":	"string"
+								},
+								"video_error_title":	{
+									"type":	"string"
+								},
+								"video_playback_title":	{
+									"type":	"string"
+								},
+								"video_quality_label":	{
+									"type":	"string"
+								},
+								"video_quality_label_high":	{
+									"type":	"string"
+								},
+								"video_quality_label_medium":	{
+									"type":	"string"
+								},
+								"video_quality_label_standard":	{
+									"type":	"string"
+								},
+								"video_season_episode":	{
+									"type":	"string"
+								},
+								"video_time_remaining":	{
+									"type":	"string"
+								},
+								"video_time_remaining_under_minute":	{
+									"type":	"string"
+								},
+								"videolabel_hd":	{
+									"type":	"string"
+								},
+								"videoplayer_audio":	{
+									"type":	"string"
+								},
+								"videoplayer_off":	{
+									"type":	"string"
+								},
+								"videoplayer_subtitles":	{
+									"type":	"string"
+								},
+								"watchlist_copy":	{
+									"type":	"string"
+								},
+								"watchlist_set_title":	{
+									"type":	"string"
+								},
+								"watchlist_subcopy":	{
+									"type":	"string"
+								},
+								"watchlist_title":	{
+									"type":	"string"
+								},
+								"webview_error_message":	{
+									"type":	"string"
+								},
+								"webview_error_title":	{
+									"type":	"string"
+								},
+								"week":	{
+									"type":	"string"
+								},
+								"week_unit":	{
+									"type":	"string"
+								},
+								"welcome_copy_2":	{
+									"type":	"string"
+								},
+								"welcome_sign_up_web":	{
+									"type":	"string"
+								},
+								"welcome_subcta_copy":	{
+									"type":	"string"
+								},
+								"welcome_subcta_loginonly_copy":	{
+									"type":	"string"
+								},
+								"welcome_tagline_copy":	{
+									"type":	"string"
+								},
+								"welcome_tagline_loginonly":	{
+									"type":	"string"
+								},
+								"welcome_template":	{
+									"type":	"string"
+								},
+								"welcome_to_disney":	{
+									"type":	"string"
+								},
+								"welcomeback_email_title":	{
+									"type":	"string"
+								},
+								"welcomeback_title":	{
+									"type":	"string"
+								},
+								"wifi_required":	{
+									"type":	"string"
+								},
+								"wifi_required_title":	{
+									"type":	"string"
+								},
+								"wifi_streaming_only_message":	{
+									"type":	"string"
+								},
+								"wifionly_disabled":	{
+									"type":	"string"
+								},
+								"wifionly_label":	{
+									"type":	"string"
+								},
+								"xbox_store_support_request":	{
+									"type":	"string"
+								},
+								"year":	{
+									"type":	"string"
+								},
+								"year_unit":	{
+									"type":	"string"
+								},
+								"yes":	{
+									"type":	"string"
+								},
+								"zero_auth_pending_charge":	{
+									"type":	"string"
+								},
+								"zero_auth_title":	{
+									"type":	"string"
+								}
+							},
+							"required":	["Text_Settings_HelpScreen_Copy", "Text_Settings_HelpScreen_Title", "Text_Settings_HelpScreen_URL", "about_mail_sent_copy_debug", "about_mail_sent_title_debug", "about_no_mail_copy_debug", "about_no_mail_title_debug", "about_reset_app_copy_debug", "about_title_debug", "account_billing", "account_change_email_alert_body", "account_change_email_alert_title", "account_change_email_email_description", "account_change_password_header", "account_create_password_title", "account_createpassword_title", "account_details", "account_disney_visa_rewards_offer", "account_email_placeholder", "account_free_trial_duration", "account_hold_copy", "account_hold_copy_amazon", "account_hold_copy_apple", "account_hold_copy_bamtech", "account_hold_copy_google", "account_hold_copy_roku", "account_hold_title", "account_notify_email", "account_notify_password", "account_notify_password_created", "account_notify_password_updated", "account_password", "account_password_placeholder", "account_subscription_hulu", "account_subscription_manage", "account_subscription_message", "account_subscription_message_amazon", "account_subscription_message_apple", "account_subscription_message_bamtech", "account_subscription_message_bamtech_bundle", "account_subscription_message_bouygues", "account_subscription_message_canal", "account_subscription_message_detelekom", "account_subscription_message_free", "account_subscription_message_google", "account_subscription_message_hulu", "account_subscription_message_hulu_bundle", "account_subscription_message_movistar", "account_subscription_message_no_payment", "account_subscription_message_o2", "account_subscription_message_orange", "account_subscription_message_roku", "account_subscription_message_sfr", "account_subscription_message_skyuk", "account_subscription_message_tim", "account_subscription_message_verizon", "account_subscription_message_verizon_bundle", "account_subscription_promotion", "account_subscription_roku", "account_subscription_roku_manage", "account_subscription_title", "account_subscription_title_amazon", "account_subscription_title_apple", "account_subscription_title_bamtech", "account_subscription_title_bamtech_bundle", "account_subscription_title_bouygues", "account_subscription_title_canal", "account_subscription_title_detelekom", "account_subscription_title_disney_rewards", "account_subscription_title_free", "account_subscription_title_google", "account_subscription_title_hulu_bundle", "account_subscription_title_movistar", "account_subscription_title_no_payment", "account_subscription_title_o2", "account_subscription_title_orange", "account_subscription_title_roku", "account_subscription_title_sfr", "account_subscription_title_skyuk", "account_subscription_title_tim", "account_subscription_title_verizon", "account_subscription_title_verizon_bundle", "account_verified_flash_message", "actions_title_debug", "activate_hulu_copy", "activate_hulu_title", "ad_placement", "add_profile_title", "alert_comingsoon_addtowatchlist", "annual_value_prop", "app_settings_title", "app_version_debug", "app_version_number", "audiolabel_5_1", "auto_login_copy", "auto_login_title", "autoplay_subcopy", "background_disney_couch_skyuk", "badge_new", "banner_blocked", "banner_blocked_update", "banner_blocked_url", "because_you_watched_set_title", "billing_details", "billinginfo_copy", "billinginfo_title", "body_disney_return_to_login_skyuk", "body_disney_sign_up_skyuk", "body_disney_skyuk_url", "body_disney_subscribe_and_set_up_skyuk", "body_disney_subscribe_now_skyuk", "btn_account_hold_update_payment", "btn_action1_collection_unavailable", "btn_action_1_pagenolongeravailable", "btn_activate_later", "btn_agree_continue", "btn_agree_continue_dplus-sub-at_proxy", "btn_agree_continue_dplus-sub-de_proxy", "btn_agree_continue_dplus-sub-es_proxy", "btn_agree_continue_dplus-sub-fr_proxy", "btn_agree_continue_dplus-sub-it_proxy", "btn_agree_continue_dplus-sub-lu_proxy", "btn_agree_continue_dplus-sub-mc_proxy", "btn_agree_continue_dplus-sub-se_proxy", "btn_agree_continue_gtou_dplus-sub-at_ppv2_fln_proxy", "btn_agree_continue_gtou_dplus-sub-de_ppv2_fln_proxy", "btn_agree_continue_gtou_dplus-sub-es_ppv2_fln_proxy", "btn_agree_continue_gtou_dplus-sub-fr_ppv2_fln_proxy", "btn_agree_continue_gtou_dplus-sub-it_ppv2_fln_proxy", "btn_agree_continue_gtou_dplus-sub-mc_ppv2_fln_proxy", "btn_agree_continue_legal", "btn_allow", "btn_apply", "btn_billing_start_your_free_trial", "btn_bundle_activate_disneyplus", "btn_cancel", "btn_cancel_3", "btn_change_payment_method", "btn_chooseprofileicon_cancel", "btn_chooseprofileicon_skip", "btn_complete_subscription", "btn_continue", "btn_continue_3", "btn_continue_4", "btn_continue_checkemail", "btn_continue_to_disney", "btn_continue_to_disney_plus", "btn_cookiebanner", "btn_createpassword", "btn_delete", "btn_delete_all_downloads_delete", "btn_delete_play_next", "btn_delete_profile", "btn_details_restart", "btn_dismiss", "btn_done", "btn_dont_save", "btn_download_again", "btn_download_space", "btn_edit_pcon", "btn_edit_profile", "btn_edit_profile_name", "btn_error_mediaunavailable", "btn_exit", "btn_find_something_download", "btn_finish_later", "btn_help_center", "btn_hide_pw", "btn_kids", "btn_learn_more", "btn_license_expired_renew", "btn_login", "btn_login_2", "btn_login_forgot_password", "btn_login_help", "btn_logout", "btn_manage_account", "btn_manage_downloads", "btn_monthly_price", "btn_no", "btn_not_now", "btn_ok", "btn_ok_2", "btn_open_app", "btn_options", "btn_pause", "btn_play", "btn_play1", "btn_play_extra", "btn_play_movie", "btn_play_next_ep", "btn_play_specific_episode", "btn_play_trailer", "btn_play_video", "btn_playextra", "btn_playtrailer", "btn_postplay_play", "btn_postplay_seedetails", "btn_postplay_sneakpeek", "btn_profiles", "btn_purchase_apple", "btn_purchase_dtc", "btn_purchase_google", "btn_refresh", "btn_remove_download", "btn_resend_email_code", "btn_restartsub", "btn_restore_purchase", "btn_resume", "btn_resume_2", "btn_resume_episode", "btn_retry", "btn_retry_activation", "btn_review", "btn_review_declined", "btn_save", "btn_sb_hulu_go_to_hulu_cta", "btn_sdk_error_dismiss", "btn_see_all_ep", "btn_see_all_extras", "btn_see_details", "btn_setup_later", "btn_show_pw", "btn_sign_up", "btn_signup", "btn_skip_credits", "btn_skip_intro", "btn_skip_recap", "btn_start_streaming", "btn_start_watching", "btn_stillwatching_noresponse", "btn_stillwatching_yesresponse", "btn_support", "btn_support_ok", "btn_switch_annual_agree_switch", "btn_switch_annual_cancel", "btn_terms_privacy", "btn_terms_privacy_gtou_dplus-sub-at_ppv2_fln_proxy", "btn_terms_privacy_gtou_dplus-sub-de_ppv2_fln_proxy", "btn_terms_privacy_gtou_dplus-sub-es_ppv2_fln_proxy", "btn_terms_privacy_gtou_dplus-sub-fr_ppv2_fln_proxy", "btn_terms_privacy_gtou_dplus-sub-it_ppv2_fln_proxy", "btn_terms_privacy_gtou_dplus-sub-mc_ppv2_fln_proxy", "btn_trailer", "btn_try_again", "btn_try_again_2", "btn_update_app", "btn_updatepayment", "btn_verify_country", "btn_watch_credits", "btn_welcome_signup_cta", "btn_wifi_required_queue", "btn_wifi_required_settings", "btn_yearly_price", "btn_yes", "btn_yes_continue", "bullet_separator", "bundle_activate_account_copy", "bundle_activate_account_title", "bundle_billing_details_my_services", "bundle_hulu_success_subcopy", "bundle_hulu_success_subcopy_link_1_target", "bundle_hulu_success_subcopy_link_1_text", "bundle_start_streeming", "bundle_subscription_copy", "bundle_subscription_title", "bundle_success_copy", "bundle_success_subcopy", "bundle_success_subcopy_link_1_text", "bundle_success_title", "bundle_verizon_success_subcopy_link_1_target", "bundle_verizon_success_subcopy_link_1_url", "bundle_verizon_success_subcopy_link_2_target", "bundle_verizon_success_subcopy_link_2_text", "bundle_verizon_success_subcopy_link_2_url", "button_account_change_email_alert_create", "button_account_create_password_save", "button_season_number", "button_single_sign_on_log_in", "cancel", "cancel_label", "carrier_debug", "case_sensitive", "cast_copy", "cast_menu_empty", "cast_title_placeholder", "cast_to_title", "casting_to", "cell_data_usage_automatic", "cell_data_usage_automatic_copy", "cell_data_usage_label", "cell_data_usage_save_data", "cell_data_usage_save_data_copy", "cell_data_usage_title", "cell_data_usage_wifi", "cell_data_usage_wifi_copy", "change", "change_email_error_unhandled", "change_password", "change_password_error_unhandled", "characters_alpha", "characters_lower_case", "characters_numeral", "characters_numerical", "check_email_copy", "check_email_title", "choose_profile_title", "chooseprofileicon_cancel", "chooseprofileicon_skip", "chooseprofileicon_taken", "chooseprofileicon_title", "chromecast_not_available", "chromecast_oneid_auth_error", "chromecast_ready", "chromecast_upnext_1", "chromecast_upnext_2", "chromecast_upnext_3", "coming_soon_set_title", "communication_settings", "communication_settings_link_1_target", "communication_settings_link_1_text", "communication_settings_link_1_url", "communication_settings_mobile", "communication_settings_prompt", "complete_promo_subscription_title", "complete_subscription_copy", "complete_subscription_title", "config_ripcut_base", "contact_csr_call", "contact_csr_phone", "contact_csr_phone_au", "contact_csr_phone_ca", "contact_csr_phone_nl", "contact_csr_phone_nz", "contact_csr_phone_us", "contact_csr_subtitle", "contact_csr_subtitle_1", "contact_csr_subtitle_link_1_url", "contact_csr_title", "content_leaving_title", "content_rating_display", "continue_watching_hours", "continue_watching_seconds", "continue_watching_set_title", "continue_watching_start_episode", "continue_watching_time_remaining", "cookiebanner_copy", "cookiebanner_copy_link_1_target", "cookiebanner_copy_link_1_text", "cookiebanner_copy_link_1_url", "cookiebanner_copy_link_2_target", "cookiebanner_copy_link_2_text", "cookiebanner_copy_link_2_url", "cookiebanner_heading", "create", "create_another_profile_copy", "create_another_profile_title", "create_new_password", "create_new_password_subtitle", "create_password", "create_password_title", "create_profile_add_profile", "create_profile_autoplay", "create_profile_copy", "create_profile_name", "create_profile_name_placeholder", "create_profile_title", "ctv_activation", "ctv_activation_error", "ctv_activation_generic", "ctv_activation_mobile_error", "ctv_activation_mobile_success", "ctv_activation_success", "current_password", "d23countdown_launchday", "d23countdownclock_days", "d23countdownclock_hours", "d23countdownclock_minutes", "d23countdownclock_seconds", "d23success_copy", "d23success_title", "date_long_format", "date_mmmm_1", "date_mmmm_10", "date_mmmm_11", "date_mmmm_12", "date_mmmm_2", "date_mmmm_3", "date_mmmm_4", "date_mmmm_5", "date_mmmm_6", "date_mmmm_7", "date_mmmm_8", "date_mmmm_9", "day", "day_unit", "default_profile", "delete_all_downloads_alert_copy", "delete_profile_copy", "delete_profile_title", "delete_profile_title_2", "descriptor_copy_pagenolongeravailable", "descriptor_title_pagenolongeravailable", "deselect_all_label", "detail_creator", "detail_director", "detail_duration", "detail_extras_director", "detail_formats", "detail_genre", "detail_more_info", "detail_present", "detail_rating", "detail_release_date", "detail_release_year", "detail_starring", "detail_total_season", "detail_total_seasons", "details_genre_delimiter", "details_heritage_countdown", "device_name", "device_storage_app", "device_storage_free", "device_storage_title", "device_storage_used", "disney_account_copy", "disney_password", "disney_rewards", "done_editing_profile_title", "download_app_amazon", "download_app_apple", "download_app_google", "download_cancelled", "download_completed", "download_device_limit_copy", "download_device_limit_title", "download_episodes", "download_error_general", "download_fail", "download_fail_title", "download_failed", "download_failed_to_remove", "download_media_missing", "download_paused", "download_resume", "download_resume2", "download_space_title", "download_unavailable", "downloads_copy", "downloads_empty_copy", "downloads_empty_header", "downloads_hint", "downloads_settings_title", "downloads_title", "edit", "edit_profile_copy", "edit_profile_title", "edit_profile_title_2", "edit_specific_profile_title", "email_change_copy", "email_change_new_email", "email_change_title", "email_changed_banner_message", "email_code_title", "email_current", "email_log_debug", "email_new", "email_resend_subtitle", "email_resend_subtitle_3", "email_resend_title", "email_resend_title_2", "email_resend_unsuccessful_subtitle", "email_resend_unsuccessful_title", "empty_profile_name_error", "enter_email", "enter_email_title", "enter_new_password", "enter_password_title", "enter_your_password", "entitlements_debug", "episode_placeholder", "episode_runtime_placeholder", "episode_singular", "episode_size_runtime_placeholder", "episodes_placeholder", "error_activation_generic", "error_activation_generic_copy", "error_activation_generic_copy_2", "error_activation_generic_title", "error_activation_partner_contact", "error_activation_partner_copy", "error_activation_partner_title", "error_add_remove_watchlist_copy", "error_addtowatchlist_title", "error_avplayer_hdcp", "error_bin_blocked", "error_bin_blocked_title", "error_cd_firmwareupdate_copy", "error_cd_firmwareupdate_header", "error_cd_update_copy", "error_cd_update_header", "error_chromecast_deprecation", "error_collection_unavailable", "error_content_unavailable", "error_copy", "error_download_blacklist_header", "error_duplicate_profile_name", "error_generic", "error_genericplaybackfailure", "error_header_playstore_subscription_expired", "error_invalid_profile_name", "error_medianotallowed_parental-control", "error_medianotallowed_stream-concurrency", "error_mediaunavailable", "error_message_playstore_subscription_expired", "error_no_error_details", "error_pagenotallowed_parental-control", "error_playback_blacklist", "error_playback_blacklist_header", "error_playback_greylist", "error_playback_greylist_cta", "error_playback_greylist_header", "error_purchase_refunded", "error_purchase_refunded_guest_blocked", "error_purchase_refunded_title", "error_removefromwatchlist_title", "error_unsaved_changes_title", "eup_login_note", "expiringpaymentmethod_banner", "expiringpaymentmethod_banner_title", "expiringpaymentmethod_billingdetails_banner", "expiringpaymentmethod_copy", "expiringpaymentmethod_title", "explore_label", "failed_download_retry", "failed_download_retry_title", "failed_download_season_copy", "failed_download_season_header", "failed_download_start", "failed_download_start_title", "failedpayment_notnow", "failedpaymentmethod_banner", "failedpaymentmethod_banner_title", "failedpaymentmethod_billingdetails_banner", "failedpaymentmethod_copy", "failedpaymentmethod_title", "fat_finger_email_copy", "fatal_error_auto_exit_title", "fatal_error_generic_title", "feature_avail_date", "footer_about_us", "footer_eup_login_cookie_policy", "footer_eup_login_eu_privacy_rights", "footer_eup_login_privacy_policy", "footer_eup_login_terms_of_use", "footer_help", "footer_interest_based_ads", "footer_manage_preferences", "footer_ways_to_watch", "forgot_password", "founding_member_badge", "freetrial_fraud_prevention_copy", "freetrial_fraud_prevention_title", "genre_300000", "genre_300001", "genre_300002", "genre_300003", "genre_300004", "genre_300005", "genre_300006", "genre_300007", "genre_300008", "genre_300009", "genre_300010", "genre_300011", "genre_300012", "genre_300013", "genre_300014", "genre_300015", "genre_300017", "genre_300018", "genre_300019", "genre_300020", "genre_300021", "genre_300050", "genre_300051", "genre_300052", "genre_300053", "genre_300054", "genre_300055", "genre_300056", "genre_300057", "genre_300058", "genre_300059", "genre_300060", "genre_300061", "genre_300062", "genre_300063", "genre_300064", "genre_300065", "genre_300066", "genre_300067", "genre_300068", "genre_300069", "genre_300070", "genre_300071", "genre_300072", "genre_300073", "google_home_link_confirm_CTA", "google_home_link_info_text", "google_home_link_legal_text_1", "google_home_link_legal_text_2", "google_home_link_legal_text_3", "google_home_link_legal_text_3_link_1_target", "google_home_link_legal_text_3_link_1_text", "google_home_link_legal_text_3_link_1_url", "google_home_profile_change_text", "google_home_profile_select_confirmation_text", "google_home_profile_select_question_text", "google_home_profile_select_text", "groupwatch_change_episode_btn", "groupwatch_continue_cta", "groupwatch_ctv_invite_cta", "groupwatch_details_first_time_tooltip", "groupwatch_details_rejoin_tooltip", "groupwatch_group_ended_body", "groupwatch_group_ended_header", "groupwatch_group_ended_primary_cta", "groupwatch_group_ended_secondary_cta", "groupwatch_group_full", "groupwatch_gw_not_available_header", "groupwatch_host_label", "groupwatch_hp_gw_tile_cta", "groupwatch_hp_gw_tile_header", "groupwatch_join_multiple_groups_body", "groupwatch_join_multiple_groups_header", "groupwatch_join_stream_btn", "groupwatch_join_stream_message", "groupwatch_leave_group_btn", "groupwatch_leave_group_confirm_body_end", "groupwatch_leave_group_confirm_body_rejoin", "groupwatch_leave_group_confirm_header", "groupwatch_leave_group_confirm_leave_cta", "groupwatch_never_mind_cta", "groupwatch_ok_cta", "groupwatch_player_controls_tooltip", "groupwatch_player_event_join", "groupwatch_player_event_leave", "groupwatch_player_event_pause", "groupwatch_player_event_play", "groupwatch_player_event_seek", "groupwatch_player_postplay_complete_header", "groupwatch_player_postplay_complete_subheader", "groupwatch_player_postplay_episode_desc", "groupwatch_player_postplay_episode_name", "groupwatch_player_postplay_leave_cta", "groupwatch_player_postplay_nextepisode_cta", "groupwatch_player_postplay_series_header", "groupwatch_player_reaction_receive", "groupwatch_player_reactions_toast", "groupwatch_player_synchronizing", "groupwatch_player_viewer", "groupwatch_player_viewers_profile", "groupwatch_player_viewers_total", "groupwatch_profile_not_allowed", "groupwatch_room_full_message", "groupwatch_room_header", "groupwatch_start_multiple_groups_body", "groupwatch_start_multiple_groups_header", "groupwatch_start_stream_btn", "groupwatch_title_not_available", "groupwatch_wait_start_stream_message", "groupwatch_whos_joining", "groupwatch_whos_joining_subheader", "groupwatch_you_are_host_flash_message", "have_account", "have_account_2", "header_disney_skyuk", "help", "help_link_1_target", "help_link_1_text", "help_link_1_url", "homecountrywarn_copy", "homecountrywarn_title", "hulu_linking_flash_message", "idfa_debug", "image_account_hold", "image_detelekom_logo", "image_disney_orange_cobrand_logo", "image_disney_plus_standalone_logo", "image_disney_sfr_cobrand_logo", "image_disney_skyuk_cobrand_logo", "image_get_amazon_app", "image_media_feature_dolby_atmos", "image_media_feature_dolby_vision", "image_media_feature_dolby_vision_dolby_atmos", "image_movistar_logo", "image_o2_logo", "image_service_unavailable", "image_skyuk_logo", "image_starz", "image_starz_play", "image_tim_logo", "image_verizon_logo", "interrupt_subscription", "interrupt_subscription_title", "invalid_email", "keyboard_continue", "keyboard_delete_all", "keyboard_done", "keyboard_move_to_pin", "kidsprofile", "kidsprofile_restrictedsearch", "kidsprofile_restrictedsearch_smallcopy", "kidsprofile_subcopy", "lang_dutch", "lang_english_intl", "lang_english_us", "lang_french", "lang_german", "lang_italian", "lang_spanish", "learn_more", "leaving_soon_set_title", "legal", "legal_cd_iap_copy", "legal_copy", "legal_copy_2", "legal_opt_in_form_subheading", "legal_opt_in_form_title", "legal_subscriber_agreement_acceptance", "legalcenter_title", "license_expired_fail_title", "license_expired_renew", "license_expired_title", "link_footer_eup_login_cookie_policy", "link_footer_eup_login_eu_privacy_rights", "link_footer_eup_login_privacy_policy", "link_footer_eup_login_terms_of_use", "locked_out_copy", "locked_out_title", "log_in_and_link_cta", "log_in_email_error_no_account", "log_in_noaccount", "log_in_noaccount_2", "log_in_noaccount_subcopy", "log_in_partner_noaccount_subcopy", "log_in_preexisting_account_2", "log_in_pwd_error_none", "log_in_title", "log_in_title_2", "log_out", "log_out_all_devices_change_email_copy", "log_out_all_devices_change_password_copy", "log_out_all_devices_confirmation_copy", "log_out_all_devices_confirmation_title", "log_out_all_devices_cta", "log_out_all_devices_logged_out_copy", "log_out_all_devices_logged_out_password_copy", "log_out_all_devices_logged_out_title", "log_out_confirmation_copy", "log_out_confirmation_title", "log_out_try_again", "log_out_try_again_link_1_target", "log_out_try_again_link_1_text", "log_out_try_again_link_1_url", "loggedoutnavigation", "login", "login_2", "login_hide_password_asterisk", "manage_account", "manage_account_link_1_target", "manage_account_link_1_text", "manage_account_link_1_url", "manage_downloads", "marketing_opt_in_form_subheading", "marketing_opt_in_form_title", "marketing_opt_in_submit_button_text", "media_content_fetch_failure", "media_empty", "media_feature_dolby_51", "media_feature_hdr", "media_feature_hdr_10", "media_format_hd", "media_format_uhd", "media_playback_total_runtime", "media_player_fetch_failure", "media_settings_message_series_prefer_remastered_false", "media_settings_message_series_prefer_remastered_true", "media_settings_subcopy_series_prefer_remastered", "media_settings_title_series_prefer_remastered", "message_error_restart", "message_error_unexpected", "meta_description_copy", "meta_description_title", "mobile_prompt_copy", "mobile_prompt_title", "modal_multiexternalstorage_label", "model_debug", "month", "month_unit", "nav_account", "nav_audio", "nav_details", "nav_episodes", "nav_extras", "nav_help", "nav_home", "nav_info", "nav_log_out", "nav_more", "nav_movies", "nav_movies_title", "nav_originals", "nav_originals_title", "nav_pcon", "nav_related", "nav_search", "nav_season", "nav_series", "nav_series_title", "nav_settings", "nav_settings_title", "nav_subtitle_styling", "nav_subtitles", "nav_synopsis", "nav_watchlist", "nav_watchlist_title", "network_error_header", "network_error_message", "network_error_message_noretry", "new_episode_set_title", "new_to_disney", "next_episode", "next_episode_avail_date", "no", "no_downloads", "no_internet_connection", "no_password", "no_search_results", "no_search_results_copy", "offline_copy", "offline_flash_message", "offline_title", "onboarding_stepper", "or", "os_version_debug", "otp_placeholder", "otp_placeholder_spaced", "partner_activate_account_copy_1", "partner_activate_account_copy_2", "partner_activate_account_title", "partner_success_copy", "password", "password_changed_banner_message", "password_create_password_banner_message", "password_creation_error_empty", "password_rating_fair", "password_rating_good", "password_rating_great", "password_rating_normal", "password_rating_ok", "password_rating_strong", "password_rating_weak", "password_reqs", "payment_confirmation_success_title", "payment_error_copy", "payment_error_title", "paymentcountryterms_title", "paywall_copy", "paywall_copy_2", "paywall_mobile_link", "pcon_copy_1", "pcon_copy_2", "pcon_title", "peekpop_details", "peekpop_list", "peekpop_play", "peekpop_share", "portability_granted_flashmessage", "postplay_becauseyouwatched", "postplay_castdevice", "postplay_contenttitle", "postplay_countdown", "postplay_countdown_text", "postplay_episodetitle", "postplay_playondevice", "postplay_shortdescription", "postplay_sneakpeek", "postplay_sunriseday", "postplay_upnext", "primaryprofile", "primaryprofileexplainer", "privacy", "profile_copy", "profile_icon", "profile_name_placeholder", "profile_selection_title", "promo_cominglater", "promo_cominglater_unauth", "promo_comingsoon_episode", "promo_comingsoon_movie", "promo_comingsoon_movie_header", "promo_comingsoon_movie_subcopy", "promo_comingsoon_payone_movie", "promo_comingsoon_series", "promo_comingsoon_short-form", "promo_comingsoon_short-form_header", "promo_comingsoon_short-form_subcopy", "promo_exclusivetrailer", "promo_exclusivetrailer_unauth", "promo_existing_sub_stacking_billing", "promo_existing_sub_stacking_billing_link_1_target", "promo_existing_sub_stacking_billing_link_1_text", "promo_existing_sub_stacking_billing_link_1_url", "promo_newlyadded_season", "promocode", "purchase_success", "purchase_success_copy", "rated", "ratings_delimiter", "recent_search_title", "related_search", "remember", "resend_email", "resend_email_copy", "resend_email_copy_2", "reset_app_debug", "reset_password_copy", "reset_password_title", "restart_copy", "restart_sub", "restart_sub_2", "restart_sub_3", "restart_subscription_cddirect_legal_copy", "restart_subscription_web_legal_copy", "restart_title", "restore_purchase", "returninglatertitle_copy", "runtime_hours", "runtime_minutes", "runtime_seconds", "save_badge", "save_payment", "save_payment_disneyrewards", "save_payment_ideal", "save_payment_paypal", "search_call_to_action", "search_noresults", "search_placeholder", "search_results_trending", "search_results_youmaylike_label", "search_trysearching", "searcheasteregg_multipleresults", "searcheasteregg_singleresult", "season_episode_title_placeholder", "season_number", "select_all_label", "select_content_remove", "selected_placeholder", "selected_size_placeholder", "series_season_episode", "series_year_range", "server_error_header", "server_error_message", "service_availability", "service_availability_url", "service_name", "service_unavailable_image", "service_unavailable_subtitle", "service_unavailable_title", "set_up_profiles_copy", "settings_amazon_linktext_link_1_url", "settings_apple_linktext_link_1_url", "settings_background_video", "settings_background_video_subcopy", "settings_bouygues_linktext_link_1_url", "settings_canal_linktext_link_1_url", "settings_datausage_help", "settings_datausage_pageheader", "settings_datausage_tier1_body", "settings_datausage_tier1_body_hd", "settings_datausage_tier1_header", "settings_datausage_tier2_body", "settings_datausage_tier2_header", "settings_datausage_tier3_body", "settings_datausage_tier3_header", "settings_detelekom_linktext_link_1_url", "settings_faq", "settings_free_linktext_link_1_url", "settings_google_linktext_link_1_url", "settings_header", "settings_helpscreen_copy", "settings_helpscreen_title", "settings_helpscreen_url", "settings_hulu_linktext_link_1_url", "settings_movistar_linktext_link_1_url", "settings_notifications", "settings_o2_linktext_link_1_url", "settings_orange_linktext_link_1_url", "settings_roku_linktext_link_1_url", "settings_sfr_linktext_link_1_url", "settings_skyuk_linktext_link_1_url", "settings_tim_linktext_link_1_url", "settings_title", "settings_verizon_bundle_linktext", "settings_verizon_bundle_linktext_link_1_target", "settings_verizon_bundle_linktext_link_1_text", "settings_verizon_bundle_linktext_link_1_url", "settings_verizon_linktext_link_1_url", "setup_profiles_later", "sign_up", "sign_up_caps", "sign_up_on_web", "sign_up_title", "signup_existing_user_copy", "signup_existing_user_copy_2", "signup_existing_user_title", "signup_freetrial", "signup_iap_legal", "signup_legal_disclaimer", "signup_new_user", "single_sign_on_header", "single_sign_on_instructions", "single_sign_on_password_placeholder", "single_sign_on_username_placeholder", "size_episodes_placeholder", "size_runtime_placeholder", "sponsoredby_copy", "starz_buy_now", "starz_buy_now_link_1_target", "starz_buy_now_link_1_text", "starz_buy_now_link_1_url", "starz_cd_visit_starz", "starz_tagline", "starz_tagline_us", "stillwatching_question", "stop_casting", "store_app_rating", "store_soft_prompt", "store_support_request", "stored_payment_confirm_billing_details", "stored_payment_edit", "stored_payment_flash_message", "stream_concurrency_error", "stream_concurrency_error_too_many_videos", "subscribe_copy", "subscribe_expired_copy", "subscribe_expired_title", "subscribe_title", "subscriber_agreement", "subscriber_agreement_header", "subscription", "subscription_annual", "subscription_monthly", "subscription_period_duration_default", "subscription_period_unit_default", "subscription_valid_until_date", "subtitle_styling_background_color", "subtitle_styling_background_opacity", "subtitle_styling_example", "subtitle_styling_font", "subtitle_styling_font_casual", "subtitle_styling_font_color", "subtitle_styling_font_color_black", "subtitle_styling_font_color_blue", "subtitle_styling_font_color_cyan", "subtitle_styling_font_color_green", "subtitle_styling_font_color_magenta", "subtitle_styling_font_color_red", "subtitle_styling_font_color_white", "subtitle_styling_font_color_yellow", "subtitle_styling_font_default", "subtitle_styling_font_edge_styling", "subtitle_styling_font_edge_styling_depressed", "subtitle_styling_font_edge_styling_drop_shadow", "subtitle_styling_font_edge_styling_none", "subtitle_styling_font_edge_styling_raised", "subtitle_styling_font_edge_styling_uniform", "subtitle_styling_font_monospace_sans_serif", "subtitle_styling_font_monospace_serif", "subtitle_styling_font_opacity", "subtitle_styling_font_opacity_0", "subtitle_styling_font_opacity_100", "subtitle_styling_font_opacity_25", "subtitle_styling_font_opacity_75", "subtitle_styling_font_proportional_sans_serif", "subtitle_styling_font_proportional_serif", "subtitle_styling_font_script", "subtitle_styling_font_size", "subtitle_styling_font_size_100", "subtitle_styling_font_size_200", "subtitle_styling_font_size_50", "subtitle_styling_font_small_caps", "subtitle_styling_reset", "subtitle_styling_window_color", "subtitle_styling_window_opacity", "subtitles_media_player", "success_copy", "success_nofreetrial_title", "success_title", "switch_annual_account_settings", "switch_annual_confirmation_legal", "switch_annual_confirmation_price", "switch_annual_confirmation_title", "switch_annual_flash_message", "switch_monthly_account_settings", "switch_monthly_confirmation_copy", "switch_monthly_confirmation_date", "switch_monthly_confirmation_price", "switch_monthly_confirmation_title", "switch_monthly_flash_message", "terms", "terms_copy", "terms_copy_2", "text_exit_confirm", "text_exit_disney", "title_stream_concurrency_error_too_many_videos", "toggle_off", "toggle_on", "trending_set_title", "trial_title", "ui_language_copy", "ui_language_setting", "unauth_brand_disney", "unauth_brand_marvel", "unauth_brand_natgeo", "unauth_brand_pixar", "unauth_brand_starwars", "unauth_explore_generic", "unauthcollectionpage_signupcta", "unauthdetail_modal_copy", "unauthdetail_signupcta", "unauthdetail_you_may_also_like", "unsupported_device_title", "unsupported_device_title_copy", "unsupported_device_title_copy_link_1_target", "unsupported_device_title_copy_link_1_text", "unsupported_device_title_copy_link_1_url", "unsupportedbrowser_banner", "unsupportedbrowser_banner_link_1_target", "unsupportedbrowser_banner_link_1_text", "unsupportedbrowser_banner_link_1_url", "unsupportedbrowser_banner_link_2_target", "unsupportedbrowser_banner_link_2_text", "unsupportedbrowser_banner_link_2_url", "unsupportedbrowser_banner_link_3_target", "unsupportedbrowser_banner_link_3_text", "unsupportedbrowser_banner_link_3_url", "unsupportedbrowser_banner_link_4_target", "unsupportedbrowser_banner_link_4_text", "unsupportedbrowser_banner_link_4_url", "update_app_body", "update_app_title", "updatepayment", "upgrade_instructions", "upgrade_title", "use_this_email_copy", "validating", "verify_account_banner", "verify_account_cta", "video_duration_fallback", "video_episode_title", "video_error_message", "video_error_templated_message", "video_error_title", "video_playback_title", "video_quality_label", "video_quality_label_high", "video_quality_label_medium", "video_quality_label_standard", "video_season_episode", "video_time_remaining", "video_time_remaining_under_minute", "videolabel_hd", "videoplayer_audio", "videoplayer_off", "videoplayer_subtitles", "watchlist_copy", "watchlist_set_title", "watchlist_subcopy", "watchlist_title", "webview_error_message", "webview_error_title", "week", "week_unit", "welcome_copy_2", "welcome_sign_up_web", "welcome_subcta_copy", "welcome_subcta_loginonly_copy", "welcome_tagline_copy", "welcome_tagline_loginonly", "welcome_template", "welcome_to_disney", "welcomeback_email_title", "welcomeback_title", "wifi_required", "wifi_required_title", "wifi_streaming_only_message", "wifionly_disabled", "wifionly_label", "xbox_store_support_request", "year", "year_unit", "yes", "zero_auth_pending_charge", "zero_auth_title"]
+						}
+					},
+					"required":	["createdDate", "version", "entries_json"]
+				}
+			},
+			"required":	["DictionaryByResourceKey"]
+		}
+	},
+	"required":	["data"]
+}

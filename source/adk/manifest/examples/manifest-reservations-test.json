@@ -1,0 +1,43 @@
+{
+  "v1": {
+    "options": [
+      {
+        "bundle": [
+          {
+            "file": "build/bundle/rust_app.bundle.zip"
+          }
+        ],
+        "runtime_config": {
+          "sys_params": {
+            "memory_reservations": {
+              "low": {
+                "runtime": 11,
+                "rhi": 22,
+                "render_device": 33,
+                "bundle": 777,
+                "canvas": 44,
+                "canvas_font_scratchpad": 55,
+                "cncbus": 66,
+                "curl": 77,
+                "curl_fragment_buffers": 7777,
+                "net" : 44,
+                "json_deflate": 99,
+                "default_thread_pool": 1010,
+                "http2": 1111,
+                "httpx": 1212,
+                "httpx_fragment_buffers": 1414,
+                "reporting": 1414,
+                "unused-field-example": 0
+              },
+              "high": {
+                "canvas": 123456
+              }
+            },
+            "guard_page_mode": "minimal",
+            "http_max_pooled_connections": 3
+          }
+        }
+      }
+    ]
+  }
+}

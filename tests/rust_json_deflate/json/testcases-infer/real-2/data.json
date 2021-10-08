@@ -1,0 +1,3274 @@
+{
+	"data": {
+		"SetBySetId": {
+			"meta": {
+				"hits": 25,
+				"page_size": 10,
+				"offset": 0
+			},
+			"experimentToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2YXJpYW50VHlwZSI6IkdMT0JBTF9JVEVNUyIsInBhcnRuZXIiOiJkaXNuZXkiLCJzZXRWZXJzaW9uIjoiMjAyMDA3MDYxMTAxMTUiLCJjb3VudHJ5Q29kZSI6InVzIiwiaXNzIjoicDEzbiIsImV4cGVyaW1lbnRJZCI6MTM5NywiYXJtSWQiOjQyNzUsInZhcmlhbnRJZCI6Im1saS1kaXNuZXktcmZnLWNvbGRzdGFydC1jb21tb24tc3JmeTMtREVGQVVMVC1pbnRyYSIsIm9jY3VycmVkT24iOiIxNTk0MDUyNzE3ODA4In0.1qUi-CztJquBJrQ9S-lg7Y110_PGYMRoFu4Jr-xdhB8",
+			"type": "RecommendationSet",
+			"setId": "7894d9c6-43ab-4691-b349-cf72362095dd",
+			"encodedSetId": "4J0S4y5Gk1xW",
+			"contentClass": "RecommendationSet",
+			"texts": [{
+				"field": "title",
+				"type": "full",
+				"language": "en",
+				"content": "Recommended For You",
+				"targetEntity": "set",
+				"sourceEntity": "set"
+			}],
+			"items": [{
+				"contentId": "6fffa028-8c70-43f1-9e7a-364e8c4562c4",
+				"encodedContentId": "3ZoBZ52QHb4x",
+				"type": "DmcSeries",
+				"encodedSeriesId": "3ZoBZ52QHb4x",
+				"seriesId": "6fffa028-8c70-43f1-9e7a-364e8c4562c4",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2019-11-11T08:00:00Z",
+					"minPromotionalStartDate": "2019-11-11T08:00:00Z",
+					"kidsMode": false
+				},
+				"encodedTextExperienceId": "7fHvaigsvUGM",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Comedy", "Animation"],
+				"images": [{
+					"aspectRatio": 3.0,
+					"locales": ["no", "fi", "sv", "en", "da", "nl", "en-GB"],
+					"masterId": "510BBD1F8C7B1C6D991A05534401F6559F359EDDD661EF51DFB9A593F2E1D39E",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/510BBD1F8C7B1C6D991A05534401F6559F359EDDD661EF51DFB9A593F2E1D39E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB", "nl"],
+					"masterId": "0EF97FA2A5FFF7367DA8CAF188245605161B1EAE7EE52A2FFDDDEBBD6482D70D",
+					"masterWidth": 1920,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0EF97FA2A5FFF7367DA8CAF188245605161B1EAE7EE52A2FFDDDEBBD6482D70D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "1B2D758A5B46FA0465029D869A615A39181F35A24C77F7CEC316AD2FC6F4BF73",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1B2D758A5B46FA0465029D869A615A39181F35A24C77F7CEC316AD2FC6F4BF73",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "fi", "sv", "en", "da", "nl", "en-GB"],
+					"masterId": "F3A3DB6A7B0A3AE0E97A33304294F44F15100DD81A75C77B5F7763D63C155729",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F3A3DB6A7B0A3AE0E97A33304294F44F15100DD81A75C77B5F7763D63C155729",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "065ECC8AA3F6147F3EDFC4D14CBCBFE78293B7EB78F1A6D5497B4D0D492E620A",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/065ECC8AA3F6147F3EDFC4D14CBCBFE78293B7EB78F1A6D5497B4D0D492E620A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["fr-FR"],
+					"masterId": "DE705AD72BE246CEE47F20D0741B1FAFF6607F034546A68A609D32F71833D077",
+					"masterWidth": 3840,
+					"purpose": "tile_fixed",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/DE705AD72BE246CEE47F20D0741B1FAFF6607F034546A68A609D32F71833D077",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["fr-FR"],
+					"masterId": "75F73F6CC23F0047B98DBC8E111F4E964951514D9585210AFA28832AC5EA2251",
+					"masterWidth": 2880,
+					"purpose": "tile_fixed",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/75F73F6CC23F0047B98DBC8E111F4E964951514D9585210AFA28832AC5EA2251",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB", "nl"],
+					"masterId": "D96C164A778B618215B370CC551734BCFCA19D7ABE7B5428ABD88CE3E1586D9C",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D96C164A778B618215B370CC551734BCFCA19D7ABE7B5428ABD88CE3E1586D9C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.75,
+					"locales": ["en", "en-GB"],
+					"masterId": "451C69B3173DB070DB6FA264C96808F8CD566131A1E763B0C679CF0CD5956B0D",
+					"masterWidth": 600,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/451C69B3173DB070DB6FA264C96808F8CD566131A1E763B0C679CF0CD5956B0D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB", "nl"],
+					"masterId": "60848337EBCD9935FFC70E916D6D58763A434C46834A850B6FECFB414A82570E",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/60848337EBCD9935FFC70E916D6D58763A434C46834A850B6FECFB414A82570E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB", "nl"],
+					"masterId": "7B8E0D6ACEF6401735EB03BD3741E738A594A0282B58AC7FC06E64BCDDE05FEB",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7B8E0D6ACEF6401735EB03BD3741E738A594A0282B58AC7FC06E64BCDDE05FEB",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "C6FC5F52B060CA84AB7956B78364DA895B9834737CF997BE7FFA4C12B30DB5C4",
+					"masterWidth": 1920,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C6FC5F52B060CA84AB7956B78364DA895B9834737CF997BE7FFA4C12B30DB5C4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "380694CEDB60D69B41FE533DCC83627E3EA3EE16276836640B816CFDC296DAD5",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/380694CEDB60D69B41FE533DCC83627E3EA3EE16276836640B816CFDC296DAD5",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "78C2ACFE729011B6B5381F258E369F24CC26148C4C955520367A024992AE4D42",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/78C2ACFE729011B6B5381F258E369F24CC26148C4C955520367A024992AE4D42",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "es-419", "nl", "en-GB"],
+					"masterId": "EF2BAE26B11B4B7A15D0D9A0ABE2D80C6F9141335F7D893B9DC9EA7C19BBF203",
+					"masterWidth": 3420,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/EF2BAE26B11B4B7A15D0D9A0ABE2D80C6F9141335F7D893B9DC9EA7C19BBF203",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "2795D4438E0569DAD440E740475FE00D0704DE020B14C6DB47A6B73A2D68702D",
+					"masterWidth": 3420,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2795D4438E0569DAD440E740475FE00D0704DE020B14C6DB47A6B73A2D68702D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "8E829EE8EA20F403A377FC5DD49969501E5CA4269D028ADAF6BAA146B9B6599C",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8E829EE8EA20F403A377FC5DD49969501E5CA4269D028ADAF6BAA146B9B6599C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "207DFBB37452CDA3D4EC7228F247073A0EF2673223AA3E50B38CA13B3C644A1A",
+					"masterWidth": 2880,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/207DFBB37452CDA3D4EC7228F247073A0EF2673223AA3E50B38CA13B3C644A1A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "3FB2F26D8633C111B9C59D54619BC70E665831486AAAC8511D5EDD3A396F7CFA",
+					"masterWidth": 3840,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/3FB2F26D8633C111B9C59D54619BC70E665831486AAAC8511D5EDD3A396F7CFA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "1D92267AF6A4D64F0CA21AA9B6B9FCDFFC5E843093AF4F3140B2EEF9AC60C35F",
+					"masterWidth": 1920,
+					"purpose": "thumbnail_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1D92267AF6A4D64F0CA21AA9B6B9FCDFFC5E843093AF4F3140B2EEF9AC60C35F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 2.89,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "5CA1F05726807EE469A5E8D1EC32F864C208DD3724F77695C0081228B3D46907",
+					"masterWidth": 3840,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/5CA1F05726807EE469A5E8D1EC32F864C208DD3724F77695C0081228B3D46907",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "C7869687C876D6ED701D14E0789304491D9497A2373401EA92D58A610DF9BBF5",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C7869687C876D6ED701D14E0789304491D9497A2373401EA92D58A610DF9BBF5",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 2.29,
+					"locales": ["fr-FR"],
+					"masterId": "C8D9204A3326784F15C9518AB024CA6E6F7E2E2AC463F1BF0045ED985658DC68",
+					"masterWidth": 3840,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C8D9204A3326784F15C9518AB024CA6E6F7E2E2AC463F1BF0045ED985658DC68",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Comedy",
+					"partnerId": "300054"
+				}, {
+					"type": "BOLT",
+					"name": "Animation",
+					"partnerId": "300001"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 1989,
+					"releaseDate": null
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkwNTc1",
+				"family": {
+					"encodedFamilyId": "3fKxql8eyZYJ",
+					"encodedPartnerFamilyId": "6pjA6r1IUtcm",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:190575",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkwNTc1",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "3fKxql8eyZYJ",
+					"encodedPartnerFamilyId": "6pjA6r1IUtcm",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:190575",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkwNTc1",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "ImageAspectRatio=133"
+					}, {
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-PG",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "false",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "The Simpsons",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "The world’s favorite nuclear family, in the award-winning, history-making series.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "This animated comedy focuses on the eponymous family in the town of Springfield. The head of the Simpson family, Homer, is not a typical family man. A nuclear-plant employee, he does his best to lead his family but often finds that they are leading him. The family includes loving, blue-haired matriarch Marge, troublemaking son Bart, overachieving daughter Lisa and baby Maggie.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "simpsons, the",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "Winner of the 2019 Emmy® Award for Outstanding Animated Program, THE SIMPSONS continues to strike a chord with viewers for irreverently poking fun at anything and everything.  With its subversive humor and delightful wit, the series has made an indelible imprint on American pop culture, and its family members – Homer (Dan Castellaneta), Marge (Julie Kavner), Bart (Nancy Cartwright), Lisa (Yeardley Smith) and Maggie – are television icons.  Already the longest-running scripted series in television history, the Emmy® Award-, Annie Award- and Peabody Award-winning animated comedy has surpassed Gunsmoke’s record of the most episodes for a scripted primetime television series.  THE SIMPSONS is a Gracie Films Production in association with 20th Century Fox Television.  The series was created by Matt Groening and developed by James L. Brooks, Matt Groening and Sam Simon.  James L. Brooks and Matt Groening are executive producers.  Al Jean also serves as an executive producer and the series’ showrunner.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "the-simpsons",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": []
+			}, {
+				"contentId": "d19725bd-03fd-410a-967e-a8eff3434f35",
+				"encodedContentId": "5iD5lXOdr1lj",
+				"type": "DmcSeries",
+				"encodedSeriesId": "5iD5lXOdr1lj",
+				"seriesId": "d19725bd-03fd-410a-967e-a8eff3434f35",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2019-11-12T05:00:00Z",
+					"minPromotionalStartDate": "2019-11-12T05:00:00Z",
+					"kidsMode": null
+				},
+				"encodedTextExperienceId": "5N5Xk0zWkzsH",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Kids", "Animation"],
+				"images": [{
+					"aspectRatio": 1.78,
+					"locales": ["en", "en-GB"],
+					"masterId": "073663ED4DFEA657E37C4E51BE9083BFE5F2F9B05F433242086C98F2613F9B74",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/073663ED4DFEA657E37C4E51BE9083BFE5F2F9B05F433242086C98F2613F9B74",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["en", "en-GB"],
+					"masterId": "D61447E984F879BE4030DAB8807947AB55E7413DBF7AF2F8BE88218CA3CFBEE8",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D61447E984F879BE4030DAB8807947AB55E7413DBF7AF2F8BE88218CA3CFBEE8",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["en", "en-GB"],
+					"masterId": "65BDEEAD4FB5C77F32CD7DB83EA009427345A665F8F53DAE4328A63AAD123E58",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/65BDEEAD4FB5C77F32CD7DB83EA009427345A665F8F53DAE4328A63AAD123E58",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["en", "en-GB"],
+					"masterId": "5E77C9605120F823271EB974BCCFD3BC767C6AC5A484A34129EC80C748853456",
+					"masterWidth": 724,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/5E77C9605120F823271EB974BCCFD3BC767C6AC5A484A34129EC80C748853456",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["en", "en-GB"],
+					"masterId": "8E50805A0AF163E0CD5191743BBEFCABA34A23ACFF34B60314DF0312615C2271",
+					"masterWidth": 1344,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8E50805A0AF163E0CD5191743BBEFCABA34A23ACFF34B60314DF0312615C2271",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["en", "en-GB"],
+					"masterId": "D91CE4B04C702CA08EEB486A9E7FF46A1B3FA2F479E9D49D9CB864269BAFE53C",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D91CE4B04C702CA08EEB486A9E7FF46A1B3FA2F479E9D49D9CB864269BAFE53C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["en", "en-GB"],
+					"masterId": "D75C5D1E403271A6605AB3B03CEB72132D72B4CDE0A89878E5F1F8CB6442EB77",
+					"masterWidth": 767,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D75C5D1E403271A6605AB3B03CEB72132D72B4CDE0A89878E5F1F8CB6442EB77",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["en", "en-GB"],
+					"masterId": "D85033D3E825C2B5F2C15C84DDE86F5D165C4EEE80529AAC5B331ECE43177592",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D85033D3E825C2B5F2C15C84DDE86F5D165C4EEE80529AAC5B331ECE43177592",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "253851C2237773CDA25C418225F23A4A1F0A59A5A1AFA04C6878A9360F36D37B",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/253851C2237773CDA25C418225F23A4A1F0A59A5A1AFA04C6878A9360F36D37B",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["en", "en-GB"],
+					"masterId": "EF6763AC142C3E0457AE9CF07EF200C0147E25800E249C550AB6FBC87B8CA62A",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/EF6763AC142C3E0457AE9CF07EF200C0147E25800E249C550AB6FBC87B8CA62A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["en", "en-GB"],
+					"masterId": "815A168921B9151B8AF11CF66CE6D950AE810876DDB56AD57F9715EE0C381A42",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/815A168921B9151B8AF11CF66CE6D950AE810876DDB56AD57F9715EE0C381A42",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["en", "en-GB"],
+					"masterId": "2591212DD27C8A449F8513ECBB66C8395C1E237F7C51338B063B9C27236D752A",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2591212DD27C8A449F8513ECBB66C8395C1E237F7C51338B063B9C27236D752A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "227159D6E65371EC132F7A1FE18F6F5C263200E0D797CBBE5C02CE9058DF7824",
+					"masterWidth": 1920,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/227159D6E65371EC132F7A1FE18F6F5C263200E0D797CBBE5C02CE9058DF7824",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["en", "en-GB"],
+					"masterId": "A11D80F7F4D4BEA5A13E5374FD4E4175EA2F7B8C8A2061704AD4D5BFADF92B72",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/A11D80F7F4D4BEA5A13E5374FD4E4175EA2F7B8C8A2061704AD4D5BFADF92B72",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "fi", "sv", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "CAFBDF94A4B9F31C0146341F33A518A301256D7A55A71F552D776F424C34BD90",
+					"masterWidth": 1440,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CAFBDF94A4B9F31C0146341F33A518A301256D7A55A71F552D776F424C34BD90",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "C0134BD3BDFF46AA477667F4DE3DA09D213F46D2A2C23F996BF5789F37823CBF",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C0134BD3BDFF46AA477667F4DE3DA09D213F46D2A2C23F996BF5789F37823CBF",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "B16ECDF0FFF2974741A5A6BC8343A5798D77D2582E24EA71F8B76E10D26D428A",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B16ECDF0FFF2974741A5A6BC8343A5798D77D2582E24EA71F8B76E10D26D428A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "es-419", "nl", "en-GB"],
+					"masterId": "F179F3DA6DEA6C05705F0211B2D47C0A27DDB52380B4799A8D050293E5E4384D",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F179F3DA6DEA6C05705F0211B2D47C0A27DDB52380B4799A8D050293E5E4384D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.75,
+					"locales": ["en", "en-GB"],
+					"masterId": "FA5A2EF7C52475F1DF14934A23F52EA1AD2A311F025759707D161082BA5833AA",
+					"masterWidth": 600,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FA5A2EF7C52475F1DF14934A23F52EA1AD2A311F025759707D161082BA5833AA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "0B8E97E1BD10844D90ED5A4D08EC3EB6756BFE2E7FB93FB4B22F8C464C64F5FE",
+					"masterWidth": 1920,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0B8E97E1BD10844D90ED5A4D08EC3EB6756BFE2E7FB93FB4B22F8C464C64F5FE",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "C5A1F775750EDBEE1554B5C02750151804DAFA1EC02E03F6328E5248218DB09B",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C5A1F775750EDBEE1554B5C02750151804DAFA1EC02E03F6328E5248218DB09B",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "293764FB04A07DCC7BB90C39B30BD52667E0EE3371BCD54A473C1456806B0966",
+					"masterWidth": 1920,
+					"purpose": "thumbnail_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/293764FB04A07DCC7BB90C39B30BD52667E0EE3371BCD54A473C1456806B0966",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["no", "de", "fi", "sv", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "4762F5C3EAD00B1E525B5C32382F1B4586218D75F6386923D3DF79D01836900B",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4762F5C3EAD00B1E525B5C32382F1B4586218D75F6386923D3DF79D01836900B",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Kids",
+					"partnerId": "300010"
+				}, {
+					"type": "BOLT",
+					"name": "Animation",
+					"partnerId": "300001"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2005,
+					"releaseDate": "2005-06-01"
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6OTY5NjE",
+				"family": {
+					"encodedFamilyId": "6KDlzsIe5Wfb",
+					"encodedPartnerFamilyId": "6Lm4ynIX1vEq",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:96961",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6OTY5NjE",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "6KDlzsIe5Wfb",
+					"encodedPartnerFamilyId": "6Lm4ynIX1vEq",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:96961",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6OTY5NjE",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-Y",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "false",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "mickey mouse clubhouse, disney",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "Mickey entertains preschoolers by inviting them to join him and his friends for a date at the Clubhouse. Using early math learning and problem solving skills, he leads kids on an interactive adventure of learning and fun.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "Mickey leads kids on an interactive adventure of learning.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Disney Mickey Mouse Clubhouse",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "disney-mickey-mouse-clubhouse",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "Mickey entertains a new generation of preschoolers for the first time by inviting them to join him and his favorite friends (Goofy, Donald, Minnie, Daisy & Pluto) for a date at the Clubhouse. Using early math learning and problem solving skills, he leads kids on an interactive adventure of learning and fun.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": [{
+					"purpose": "full_bleed",
+					"mediaMetadata": {
+						"urls": [{
+							"regions": ["PR", "VI", "MQ", "MF", "GP", "BL", "CA", "US", "GF"],
+							"url": "https://vod-bgc-na-east-1.media.dssott.com/bgui/ps01/disney/bgui/2019/08/27/1566944126-96961.mp4"
+						}]
+					}
+				}]
+			}, {
+				"contentId": "1b934ef8-8891-4b7b-a540-e3d1ea741cda",
+				"encodedContentId": "1wYXzjabXGVZ",
+				"type": "DmcSeries",
+				"encodedSeriesId": "1wYXzjabXGVZ",
+				"seriesId": "1b934ef8-8891-4b7b-a540-e3d1ea741cda",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2019-11-12T05:00:00Z",
+					"minPromotionalStartDate": "2019-11-12T05:00:00Z",
+					"kidsMode": false
+				},
+				"encodedTextExperienceId": "2oz2xRX1T2Ys",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Science Fiction", "Animation", "Action-Adventure"],
+				"images": [{
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "78143B7738DACB2B6E921B6280138F027447C5E1A906CBCB361F296B580665F2",
+					"masterWidth": 2880,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/78143B7738DACB2B6E921B6280138F027447C5E1A906CBCB361F296B580665F2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "ADBFAD6AB1D3A3ABAA399E635DDB141CD078CAAC37936A03F6045DE1E3CF4517",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/ADBFAD6AB1D3A3ABAA399E635DDB141CD078CAAC37936A03F6045DE1E3CF4517",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "85892EFD18881E6FCE8E604E1969328A278323293A82C7ED9B587FF0C28503EC",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/85892EFD18881E6FCE8E604E1969328A278323293A82C7ED9B587FF0C28503EC",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB"],
+					"masterId": "DEF778A7C3CED58B8D42AE3278C63A4A6341316547EEBC136165CDD1BC9B0690",
+					"masterWidth": 2880,
+					"purpose": "tile_fixed",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/DEF778A7C3CED58B8D42AE3278C63A4A6341316547EEBC136165CDD1BC9B0690",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "59DB86BAE668AA3BECCF7A1BCB875B577F662F7D244189B72B8EFE4A7D70AF28",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/59DB86BAE668AA3BECCF7A1BCB875B577F662F7D244189B72B8EFE4A7D70AF28",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB"],
+					"masterId": "E51CDFED1B268CE6EE730A0B927BFE5575AC726F301487726B7BDF71645A11BA",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/E51CDFED1B268CE6EE730A0B927BFE5575AC726F301487726B7BDF71645A11BA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "7487003D1E4A6FE0B6B90EF0FCE10F7A86A03D3317DEB86E2AE20BE10A594976",
+					"masterWidth": 1920,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7487003D1E4A6FE0B6B90EF0FCE10F7A86A03D3317DEB86E2AE20BE10A594976",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "5862E13B1523B81BDD4516D20C03D2BFC2E9D0368AE82EEB765E5FC82AB349DC",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/5862E13B1523B81BDD4516D20C03D2BFC2E9D0368AE82EEB765E5FC82AB349DC",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "F8FA937CD0E3ABF6703400BDC09ADB6333C6E80B5A5EEA4519EAAEC8536DF4C3",
+					"masterWidth": 1920,
+					"purpose": "thumbnail_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F8FA937CD0E3ABF6703400BDC09ADB6333C6E80B5A5EEA4519EAAEC8536DF4C3",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB"],
+					"masterId": "6B971EE55E96A145BF7065EA7FE8E9A660BD5BA95055DBA2D829B5D0B5CD75E6",
+					"masterWidth": 2880,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6B971EE55E96A145BF7065EA7FE8E9A660BD5BA95055DBA2D829B5D0B5CD75E6",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "2F2FCFE2C811C1EFF92F83E4AA040C8FB82A93CFA09AF1C7EF7C533CF74D5CA8",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2F2FCFE2C811C1EFF92F83E4AA040C8FB82A93CFA09AF1C7EF7C533CF74D5CA8",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB"],
+					"masterId": "C0A56D231D1AA051A957547BB7A4E7AAF6F87FAE22E45C8448AB90AC07744445",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C0A56D231D1AA051A957547BB7A4E7AAF6F87FAE22E45C8448AB90AC07744445",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "8BA314A72799BC82EBF59D298701D3830533E59D9B99B07445B2180935061CB4",
+					"masterWidth": 2000,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8BA314A72799BC82EBF59D298701D3830533E59D9B99B07445B2180935061CB4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "es-419", "nl", "en-GB"],
+					"masterId": "5BC8AEE634897D023CEEDE9575154E20FEE71B6610D8441F4C9E39B0B83625E2",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/5BC8AEE634897D023CEEDE9575154E20FEE71B6610D8441F4C9E39B0B83625E2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "63BF456A2FD7C05172CBAF46FEB85F74D22B8E33E98F4DC54F33ADD1C4FA2B04",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/63BF456A2FD7C05172CBAF46FEB85F74D22B8E33E98F4DC54F33ADD1C4FA2B04",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "C3A2AC6F32F681566E922D075CA5F2EDE299E872BAF646EDE55EFA1FBAB62B7D",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C3A2AC6F32F681566E922D075CA5F2EDE299E872BAF646EDE55EFA1FBAB62B7D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "ABC6FCBCD4F87B87C3A990E25B3762143C7FB748F9190CBC3001CE1A8CF76BD2",
+					"masterWidth": 3840,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/ABC6FCBCD4F87B87C3A990E25B3762143C7FB748F9190CBC3001CE1A8CF76BD2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["it"],
+					"masterId": "51FC08B30A5328F6B0B00A9503E46AC2F62DE5B8DC46DF68BDED54EDCEBBE069",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/51FC08B30A5328F6B0B00A9503E46AC2F62DE5B8DC46DF68BDED54EDCEBBE069",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "1ACDD9485384936C9A153FD664B2FC030433E2742706760F967AC11E58D82B0B",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1ACDD9485384936C9A153FD664B2FC030433E2742706760F967AC11E58D82B0B",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 2.89,
+					"locales": ["no", "de", "sv", "fi", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "492D576AAA8DBD08C2FC94407BB7152036EED72CA5D319A21EABBDA86F977BA1",
+					"masterWidth": 3840,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/492D576AAA8DBD08C2FC94407BB7152036EED72CA5D319A21EABBDA86F977BA1",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "7D2C78DE1DF4A1776DBF9F2DC140567F1E85D33A67FE7E2E5B16D58C81B7CA3C",
+					"masterWidth": 1920,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7D2C78DE1DF4A1776DBF9F2DC140567F1E85D33A67FE7E2E5B16D58C81B7CA3C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.75,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB"],
+					"masterId": "FE7A7B6D2D61C350647CF0099B76B81603ABCF35A87879663272F249C0723CD4",
+					"masterWidth": 2160,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FE7A7B6D2D61C350647CF0099B76B81603ABCF35A87879663272F249C0723CD4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "sv", "fi", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "6CF91B517B4BFAC45E0E5D7AF8972D2FF5FABEF0D838C33349ACD401DF117348",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6CF91B517B4BFAC45E0E5D7AF8972D2FF5FABEF0D838C33349ACD401DF117348",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "453A7346F48A8C99A72FDCE8F6C3C81E2308B3A1B3FDA4A06D7764EEC5E70C9C",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/453A7346F48A8C99A72FDCE8F6C3C81E2308B3A1B3FDA4A06D7764EEC5E70C9C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "964EF2E8EAC222C65B63D2FA378822FFA0762BB7D5BCC14CF33CBFE7D2042EFE",
+					"masterWidth": 3840,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/964EF2E8EAC222C65B63D2FA378822FFA0762BB7D5BCC14CF33CBFE7D2042EFE",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "0CF0FA8CBADD646B468469D18D7252FD9CEA5835285E00FD5D8FA5CDA991912A",
+					"masterWidth": 3840,
+					"purpose": "background_up_next",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0CF0FA8CBADD646B468469D18D7252FD9CEA5835285E00FD5D8FA5CDA991912A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "FE7030713103A0B9A8319A98105F59BF495CCF85715A985CFB2E032511CD850C",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FE7030713103A0B9A8319A98105F59BF495CCF85715A985CFB2E032511CD850C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB"],
+					"masterId": "8DC487ECB9CC286D1164AE82E3E05778B889AE8EE8E92BE827155B05E8702E7E",
+					"masterWidth": 3840,
+					"purpose": "tile_fixed",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8DC487ECB9CC286D1164AE82E3E05778B889AE8EE8E92BE827155B05E8702E7E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["da"],
+					"masterId": "793B4DE097ECB4FBB4B37C190E11A2107788CF13823D0C42A65D98BC51FED73D",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/793B4DE097ECB4FBB4B37C190E11A2107788CF13823D0C42A65D98BC51FED73D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 2.29,
+					"locales": ["fr-FR"],
+					"masterId": "8D9981BF5E2A116F7301398E3C410877128C73FC390D5F6E2234DDAA531DBF9F",
+					"masterWidth": 3840,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8D9981BF5E2A116F7301398E3C410877128C73FC390D5F6E2234DDAA531DBF9F",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Science Fiction",
+					"partnerId": "300067"
+				}, {
+					"type": "BOLT",
+					"name": "Animation",
+					"partnerId": "300001"
+				}, {
+					"type": "BOLT",
+					"name": "Action-Adventure",
+					"partnerId": "300000"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2008,
+					"releaseDate": "2008-10-03"
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTM4MTgz",
+				"family": {
+					"encodedFamilyId": "5Z6viDt9w836",
+					"encodedPartnerFamilyId": "1i77R6A4Xl4f",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:138183",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTM4MTgz",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "5Z6viDt9w836",
+					"encodedPartnerFamilyId": "1i77R6A4Xl4f",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:138183",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTM4MTgz",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-PG",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "true",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "star-wars-the-clone-wars",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Star Wars: The Clone Wars",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "The Star Wars saga continues from Executive Producer George Lucas and Lucasfilm Animation! With cutting-edge, feature-film quality computer animation, classic characters, astounding action, and the timeless battle between good and evil, Star Wars: The Clone Wars expands the Star Wars story with all new adventures set in a galaxy far, far away.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "The saga continues, set in a faraway galaxy!",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "The Star Wars saga continues with cutting-edge, feature-film quality computer animation, classic characters, astounding action, and the timeless battle between good and evil, set in a faraway galaxy!",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "star wars: the clone wars",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": [{
+					"purpose": "full_bleed",
+					"mediaMetadata": {
+						"urls": [{
+							"regions": ["PR", "VI", "MQ", "GP", "MF", "BL", "CA", "US", "GF"],
+							"url": "https://vod-bgc-na-east-1.media.dssott.com/bgui/ps01/disney/bgui/2020/02/20/1582223193-138183.mp4"
+						}]
+					}
+				}]
+			}, {
+				"contentId": "3258ad4d-9de7-4574-b4b4-2e1501a7d202",
+				"encodedContentId": "1Vl0AKTYhC6U",
+				"type": "DmcSeries",
+				"encodedSeriesId": "1Vl0AKTYhC6U",
+				"seriesId": "3258ad4d-9de7-4574-b4b4-2e1501a7d202",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2019-11-12T05:00:00Z",
+					"minPromotionalStartDate": "2019-11-12T05:00:00Z",
+					"kidsMode": null
+				},
+				"encodedTextExperienceId": "FaLpfSXLfO6J",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Comedy", "Kids", "Animation", "Action-Adventure"],
+				"images": [{
+					"aspectRatio": 1.78,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "87B2BDD82A904920C35F0D68662D9FD1F16F919A9FB57937AA59ED2A77C46A12",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/87B2BDD82A904920C35F0D68662D9FD1F16F919A9FB57937AA59ED2A77C46A12",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "F3CFAC8EC64CC266680B5FD599C7024D40CAE7C7E0DCED4A7BBB1FC108746030",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F3CFAC8EC64CC266680B5FD599C7024D40CAE7C7E0DCED4A7BBB1FC108746030",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "1D96A70DA17D1E1719164B1E20C07A4B99FF82BE1457CB1FA46FF5100F013498",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1D96A70DA17D1E1719164B1E20C07A4B99FF82BE1457CB1FA46FF5100F013498",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "978DCCF8D665DB75F56B373BEB8796ADE769A23F8B2BC265F4CF7B16B99B8E0B",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/978DCCF8D665DB75F56B373BEB8796ADE769A23F8B2BC265F4CF7B16B99B8E0B",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "EFEEBE2468525D02A3575563FBE5C2B9D4AAEDABBEFA0A287898AA6F8CF885AE",
+					"masterWidth": 1344,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/EFEEBE2468525D02A3575563FBE5C2B9D4AAEDABBEFA0A287898AA6F8CF885AE",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "792FF297424FAC2785EBD03A420E6415DA2B321D4ED8B76776A9A6C08F528FB8",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/792FF297424FAC2785EBD03A420E6415DA2B321D4ED8B76776A9A6C08F528FB8",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "6411ED3BA8A33229DD598E89820537B696C0463AF83B29F691228745CB552EFD",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6411ED3BA8A33229DD598E89820537B696C0463AF83B29F691228745CB552EFD",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "38BB34BB0CD2C9DEB9CECC5E392553776D06EFB77074C126594FEC09B6F9F65F",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/38BB34BB0CD2C9DEB9CECC5E392553776D06EFB77074C126594FEC09B6F9F65F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "9385DB987CB7F933B52F1497E109C6024C0113D14FDFF8BA8F3F79BF542AEFD6",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/9385DB987CB7F933B52F1497E109C6024C0113D14FDFF8BA8F3F79BF542AEFD6",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "DE3A92028E1F6B918B4E5DDD56436A9F00DEF4D5D8B596D662BD24810D60E9A3",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/DE3A92028E1F6B918B4E5DDD56436A9F00DEF4D5D8B596D662BD24810D60E9A3",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "B8DA3E79F0A6F087C677B8C8D37A7588A16943088C35FBA1489A610E05A092C7",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B8DA3E79F0A6F087C677B8C8D37A7588A16943088C35FBA1489A610E05A092C7",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "CAA1EC1B313E0D3F2958D143EF18A7FD44F90A2DFFD908CE3DE214F71FBCA2D6",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CAA1EC1B313E0D3F2958D143EF18A7FD44F90A2DFFD908CE3DE214F71FBCA2D6",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "A4002B0B9EB2601CD197AEF4F7B391C1B85426FD0C55720E325644D9C3A01414",
+					"masterWidth": 1920,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/A4002B0B9EB2601CD197AEF4F7B391C1B85426FD0C55720E325644D9C3A01414",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "2A7CACF4AA70FD485B63EF3055D093DD729987CC2BE1FFF64BA75FB16BFA3896",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2A7CACF4AA70FD485B63EF3055D093DD729987CC2BE1FFF64BA75FB16BFA3896",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "262D25BF742F44B7966BA234C7D46F5572334353323C67528E79FA92F8EFFE8E",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/262D25BF742F44B7966BA234C7D46F5572334353323C67528E79FA92F8EFFE8E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.75,
+					"locales": ["en", "en-GB"],
+					"masterId": "0217C244DBEC1AF807D6BC81E63B92125299909D0C8FD5E8B88FCFC06398A2B7",
+					"masterWidth": 600,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0217C244DBEC1AF807D6BC81E63B92125299909D0C8FD5E8B88FCFC06398A2B7",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["sv", "en", "en-GB"],
+					"masterId": "72979E0864FDAA3E683D2827A505EA55699299D6AD56839F68D2A21D1154EDA2",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/72979E0864FDAA3E683D2827A505EA55699299D6AD56839F68D2A21D1154EDA2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "7706E81B23770DF1859545FCA3FB7C69CEBA75475FA61FABFF307799EC30B7E2",
+					"masterWidth": 1920,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7706E81B23770DF1859545FCA3FB7C69CEBA75475FA61FABFF307799EC30B7E2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "D1F8E42481A05B74EF65112EA1D544E4357ADA37A25A037C07904FBF60BE9B8E",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D1F8E42481A05B74EF65112EA1D544E4357ADA37A25A037C07904FBF60BE9B8E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "801741874ABD6691AC8BBDACBD1203FA5070455EDAAC5EEA1B1C0BB0F833AB93",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/801741874ABD6691AC8BBDACBD1203FA5070455EDAAC5EEA1B1C0BB0F833AB93",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["en", "en-GB"],
+					"masterId": "C60631288D108045EE894A7343E000C62A70FB080A2BBFA117B4DF8AC50C5E65",
+					"masterWidth": 1428,
+					"purpose": "title_treatment_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C60631288D108045EE894A7343E000C62A70FB080A2BBFA117B4DF8AC50C5E65",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "05E16334409A98DA5310C3CE40C1FEA1AA90BBAA70A57C18E09ECFA950AE279E",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/05E16334409A98DA5310C3CE40C1FEA1AA90BBAA70A57C18E09ECFA950AE279E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "B3649D7CCEAB3DA2F6986EA7B567AA7E9C9EEF205F184CBC66D8E40E4CBE8AC7",
+					"masterWidth": 1920,
+					"purpose": "thumbnail_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B3649D7CCEAB3DA2F6986EA7B567AA7E9C9EEF205F184CBC66D8E40E4CBE8AC7",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "D2C5AFC99C3877634B6DCCA508919461CF492BB85D039A50ABF6CEBA795C60D4",
+					"masterWidth": 1440,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D2C5AFC99C3877634B6DCCA508919461CF492BB85D039A50ABF6CEBA795C60D4",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Comedy",
+					"partnerId": "300054"
+				}, {
+					"type": "BOLT",
+					"name": "Kids",
+					"partnerId": "300010"
+				}, {
+					"type": "BOLT",
+					"name": "Animation",
+					"partnerId": "300001"
+				}, {
+					"type": "BOLT",
+					"name": "Action-Adventure",
+					"partnerId": "300000"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2007,
+					"releaseDate": "2007-08-01"
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTA1MzA4",
+				"family": {
+					"encodedFamilyId": "67I7nk88TVKW",
+					"encodedPartnerFamilyId": "78YEIAJlbV61",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:105308",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTA1MzA4",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "67I7nk88TVKW",
+					"encodedPartnerFamilyId": "78YEIAJlbV61",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:105308",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTA1MzA4",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-G",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "false",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "Phineas and Ferb take on ambitious projects in order to have the best summer vacation possible. Meanwhile, Dr. Doofenshmirtz attempts to take over the Tri-State area, and Perry, a secret agent, must foil his plans.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "Phineas and Ferb have big summertime adventures with friends.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "phineas-and-ferb",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Phineas and Ferb",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "Phineas and Ferb, an animated comedy series, follows the adventures of Phineas Flynn and his English stepbrother, Ferb Fletcher, on their summer vacation. Each day, the boys and their friends take on some ambitious new project, sometimes to help someone in need, but often just to create something fun. This annoys the boys' sister, Candace, who constantly attempts to get them in trouble by revealing their actions to Mom. Meanwhile, across town, the wannabe-evil scientist Dr. Doofenshmirtz continually attempts to take over the Tri-State area with his various inator devices, and Perry the Platypus, the boys' pet and a secret agent, consistently foils his plans on behalf of the O.W.C.A and his commanding officer, Major Mongram. At the end of each episode, the two plots intersect to erase all traces of the boys' project just before Candace can successfully show it to Mom.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "phineas and ferb",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": [{
+					"purpose": "full_bleed",
+					"mediaMetadata": {
+						"urls": [{
+							"regions": ["PR", "VI", "MQ", "MF", "GP", "BL", "US", "CA", "GF"],
+							"url": "https://vod-bgc-na-east-1.media.dssott.com/bgui/ps01/disney/bgui/2019/08/28/1567013749-105308.mp4"
+						}]
+					}
+				}]
+			}, {
+				"contentId": "98bdd944-df7a-4679-933d-43b371cc1a9f",
+				"encodedContentId": "3EgfU1UpcfP6",
+				"type": "DmcSeries",
+				"encodedSeriesId": "3EgfU1UpcfP6",
+				"seriesId": "98bdd944-df7a-4679-933d-43b371cc1a9f",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2019-11-12T05:00:00Z",
+					"minPromotionalStartDate": "2019-11-12T05:00:00Z",
+					"kidsMode": null
+				},
+				"encodedTextExperienceId": "6eDUa13eygrw",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Coming of age", "Family", "Comedy", "Kids"],
+				"images": [{
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "es-419", "nl", "en-GB"],
+					"masterId": "4D2ECC465DFB541C890F88BA62B232234DD6CFBF115B4DB342E0E1E395CE3447",
+					"masterWidth": 1344,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4D2ECC465DFB541C890F88BA62B232234DD6CFBF115B4DB342E0E1E395CE3447",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "de", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "FBAB08A0972A65B55B4721AE800B0D90DA6AB7456E9CB888BD6D0942CFA7C82B",
+					"masterWidth": 767,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FBAB08A0972A65B55B4721AE800B0D90DA6AB7456E9CB888BD6D0942CFA7C82B",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "CC3D7C2B83C5104DDFE888DCCEF685D92F4CE55B20EEAB1D03BF61DC35417534",
+					"masterWidth": 1440,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CC3D7C2B83C5104DDFE888DCCEF685D92F4CE55B20EEAB1D03BF61DC35417534",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "pt-PT", "fi", "sv", "es-ES", "en", "it", "da", "en-GB"],
+					"masterId": "C69A8CF53B688BAF16B9EFE6F134248C59F5E2418BB5F0C6F2C67E5570AFECFF",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C69A8CF53B688BAF16B9EFE6F134248C59F5E2418BB5F0C6F2C67E5570AFECFF",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["en", "en-GB"],
+					"masterId": "35B964F1273BA2C94707849011F1A5D4D6AC8D843B6B0727712EC084CE91E8DA",
+					"masterWidth": 1428,
+					"purpose": "title_treatment_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/35B964F1273BA2C94707849011F1A5D4D6AC8D843B6B0727712EC084CE91E8DA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "708299CB6323A4EA3503BFFE65CFF573FD5C84E795C666263A7D96BCB0820A73",
+					"masterWidth": 1920,
+					"purpose": "thumbnail_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/708299CB6323A4EA3503BFFE65CFF573FD5C84E795C666263A7D96BCB0820A73",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "D70ED3642B69B1489BEE72A71749754210061FCF72CED3FD458CF16C32E8C152",
+					"masterWidth": 3000,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D70ED3642B69B1489BEE72A71749754210061FCF72CED3FD458CF16C32E8C152",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "287C90CB73EA4BD5024672138388E0E044D9A0594C2A0D59FCCC32928F8369F3",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/287C90CB73EA4BD5024672138388E0E044D9A0594C2A0D59FCCC32928F8369F3",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["no", "de", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "345C0114A7FAB3B53BD700387BE70BD3DDD2E8119AD4B19100D7439C050D6D58",
+					"masterWidth": 2000,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/345C0114A7FAB3B53BD700387BE70BD3DDD2E8119AD4B19100D7439C050D6D58",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "5366A872C819C49F94CAB80C71DC95A9EF9043C4E921251B21B01EBA19C73EDC",
+					"masterWidth": 1920,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/5366A872C819C49F94CAB80C71DC95A9EF9043C4E921251B21B01EBA19C73EDC",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "057CCFB0B48EA4119394EC1AFF7BDF3F1FD8CB638164FA3DBE639DBC356666BC",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/057CCFB0B48EA4119394EC1AFF7BDF3F1FD8CB638164FA3DBE639DBC356666BC",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.75,
+					"locales": ["en", "en-GB"],
+					"masterId": "F9445075F36D1E08218152A6C7E322E0EE93F6C428AB5496F9480D3097C2DF05",
+					"masterWidth": 600,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F9445075F36D1E08218152A6C7E322E0EE93F6C428AB5496F9480D3097C2DF05",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "84259A074E3A369B78F74E9EE92F6D554E81CF0624DF86869580CC81468550B8",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/84259A074E3A369B78F74E9EE92F6D554E81CF0624DF86869580CC81468550B8",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "7D5398AA533CBC57A29E621EC970DDB1830E7F44B68E9F96BDB94C4F7BCFEDBA",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7D5398AA533CBC57A29E621EC970DDB1830E7F44B68E9F96BDB94C4F7BCFEDBA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "64DE18B70D9F8A25B2C5A79A095D3BCB3B1C4F0FBD51D3CA1DA7A7A82264552F",
+					"masterWidth": 1920,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/64DE18B70D9F8A25B2C5A79A095D3BCB3B1C4F0FBD51D3CA1DA7A7A82264552F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "F34477EAB5D5357474E4F6385B3E8EAC2AD356BF1C0679ECF2B8B7B72C0BE807",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F34477EAB5D5357474E4F6385B3E8EAC2AD356BF1C0679ECF2B8B7B72C0BE807",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "pt-PT", "fi", "sv", "es-ES", "en", "it", "da", "en-GB"],
+					"masterId": "B1BAFA6D6DAAE0B290D76F2E88C13DD0A1AD46B4B76B77C81993B09E19B4CCAA",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B1BAFA6D6DAAE0B290D76F2E88C13DD0A1AD46B4B76B77C81993B09E19B4CCAA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "7586B7B295D984627C52DABFD9B2B4D738A097CF56E9CE2731DAC70B4DEC2296",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7586B7B295D984627C52DABFD9B2B4D738A097CF56E9CE2731DAC70B4DEC2296",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "87093E58C5915A2C27CCA7E485F04FAE1B7D89CB110028E52B3FADDD0CB81E10",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/87093E58C5915A2C27CCA7E485F04FAE1B7D89CB110028E52B3FADDD0CB81E10",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "4A97E855616DBE8A5C73AA46855B9F1B815A3EA48D0B963737A705F7143C5677",
+					"masterWidth": 1440,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4A97E855616DBE8A5C73AA46855B9F1B815A3EA48D0B963737A705F7143C5677",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "56188340C31C48C24F762F2EC1CECF288080A7E8A06BF91A2D0F721637C52302",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/56188340C31C48C24F762F2EC1CECF288080A7E8A06BF91A2D0F721637C52302",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "E95044815F696F1F3D04C0BE480AF4088C530D137D26E542291092F65B94744E",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/E95044815F696F1F3D04C0BE480AF4088C530D137D26E542291092F65B94744E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "AB4D55D77A88356A408D6429F412C8475F6882BB714AA6DD492E9239C653B47B",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/AB4D55D77A88356A408D6429F412C8475F6882BB714AA6DD492E9239C653B47B",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "pt-PT", "fi", "sv", "en", "es-ES", "it", "da", "en-GB"],
+					"masterId": "CA3A8034533986DF3943460C4251121980C29685D48522B1569A85D82F4E9981",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CA3A8034533986DF3943460C4251121980C29685D48522B1569A85D82F4E9981",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Coming of age",
+					"partnerId": "300003"
+				}, {
+					"type": "BOLT",
+					"name": "Family",
+					"partnerId": "300059"
+				}, {
+					"type": "BOLT",
+					"name": "Comedy",
+					"partnerId": "300054"
+				}, {
+					"type": "BOLT",
+					"name": "Kids",
+					"partnerId": "300010"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2011,
+					"releaseDate": "2011-12-01"
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTI1Mzc5",
+				"family": {
+					"encodedFamilyId": "2moKsUvFNXjR",
+					"encodedPartnerFamilyId": "4SNbypPq3R66",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:125379",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTI1Mzc5",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "2moKsUvFNXjR",
+					"encodedPartnerFamilyId": "4SNbypPq3R66",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:125379",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTI1Mzc5",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-PG",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "false",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Jessie",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "A small-town girl becomes a nanny for a quirky, rich family.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "jessie",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "Jessie accepts a job as a nanny for the Ross family and moves into a multi-million dollar penthouse in Manhattan. She embarks on new adventures, and grows to rely on the love of the rambunctious children in her care.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "jessie",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "Jessie, an 18-year-old girl from a small town in Texas, decides to follow her dreams by moving to glamorous New York City. She accepts a job as a nanny for the wealthy Ross family and moves into a multi-million dollar penthouse right on Central Park. With the father, Morgan, a famous movie director, and the mother, Christina, a supermodel turned fashion mogul, always jet-setting all over the world, Jessie is often left to fend for herself in caring for their four rambunctious children: Emma, Luke, Ravi and Zuri, along with the family pet, Mrs. Kipling, a seven-foot lizard. With a whole new world of experiences open to her, Jessie embarks on new adventures in the big city, and grows to rely on the love and support of the children in her care. Assisting her are Bertram, the family’s sarcastic butler, and Tony, the building's quirky young doorman.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": []
+			}, {
+				"contentId": "c454df44-18b3-4110-9959-5a998d8e553f",
+				"encodedContentId": "1xy9TAOQ0M3r",
+				"type": "DmcSeries",
+				"encodedSeriesId": "1xy9TAOQ0M3r",
+				"seriesId": "c454df44-18b3-4110-9959-5a998d8e553f",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2020-06-19T07:00:00Z",
+					"minPromotionalStartDate": "2020-06-19T07:00:00Z",
+					"kidsMode": null
+				},
+				"encodedTextExperienceId": "7AyAXoUXL9Em",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Kids", "Animation"],
+				"images": [{
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "3DED0D262EC13394A52F98FE085F2FACD2B76E315D8868954F3BFD345565720F",
+					"masterWidth": 3843,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/3DED0D262EC13394A52F98FE085F2FACD2B76E315D8868954F3BFD345565720F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "E6FE0E5E9C750233884368077BAFCA699C952924F12A9F2C72CE1990A2B33A63",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/E6FE0E5E9C750233884368077BAFCA699C952924F12A9F2C72CE1990A2B33A63",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "B40858E952B6DF601A169DFD164134E522BC0EC1ABF09CD1F0C1315475CC3BC2",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B40858E952B6DF601A169DFD164134E522BC0EC1ABF09CD1F0C1315475CC3BC2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "347B6FFA5C73A6E3E38AB7E821CCD157ED258419C90C7E81055EFA35299029F2",
+					"masterWidth": 1920,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/347B6FFA5C73A6E3E38AB7E821CCD157ED258419C90C7E81055EFA35299029F2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "47A63F86889F0DD147E71DB69BEC901C20BF1955B1B17DF62F615C872E350EC6",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/47A63F86889F0DD147E71DB69BEC901C20BF1955B1B17DF62F615C872E350EC6",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "0DBC52C336A007F24D0A68FB7951ADF855E05A7163CE5D0A0B7E0F3AF984FD59",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0DBC52C336A007F24D0A68FB7951ADF855E05A7163CE5D0A0B7E0F3AF984FD59",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "8FF0FBE6CE993B2F0EEB88246017C5553AA255071ACB22C1C1E13E28AD9663F6",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8FF0FBE6CE993B2F0EEB88246017C5553AA255071ACB22C1C1E13E28AD9663F6",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["de", "no", "sv", "fi", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "45F7BD76A9B8F7BB9EB461741CBB454CA7331342F2698A4F63D0C97FF2DCDFEB",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/45F7BD76A9B8F7BB9EB461741CBB454CA7331342F2698A4F63D0C97FF2DCDFEB",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "B65FDA515B5560E9EA378FEEDD22F09D4BCC8ED0214A7EEBBB19EDB7BC209CC5",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B65FDA515B5560E9EA378FEEDD22F09D4BCC8ED0214A7EEBBB19EDB7BC209CC5",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["no", "de", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "8AB5CBAEBDF3276DB6DD2AFC46903C4697B2D3A5528F00AB256312237F1E98E4",
+					"masterWidth": 3843,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8AB5CBAEBDF3276DB6DD2AFC46903C4697B2D3A5528F00AB256312237F1E98E4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "40A173971E0A29426B0692F0DC1E1FFA4C89DC98CDE6E70E4553E84AE9832815",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/40A173971E0A29426B0692F0DC1E1FFA4C89DC98CDE6E70E4553E84AE9832815",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["no", "de", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "C78D4AA14B82B9B758B6D298038599F2302CBFF18FAF7DEE0CD44EB8BBDD5FEB",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C78D4AA14B82B9B758B6D298038599F2302CBFF18FAF7DEE0CD44EB8BBDD5FEB",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "A26DFD1D669B92777A2747377D9CA0431AA555836C46D46BFE06819E13DDA0B8",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/A26DFD1D669B92777A2747377D9CA0431AA555836C46D46BFE06819E13DDA0B8",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "de", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "7E3DE1600DA312C760EE69E6B5DDD8606C1402BAEC027967A301E8B2AEF3B55D",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7E3DE1600DA312C760EE69E6B5DDD8606C1402BAEC027967A301E8B2AEF3B55D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "FAE31D18F5483D05750EE9EB27FC01957574109525FB900922609A6079A144AE",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FAE31D18F5483D05750EE9EB27FC01957574109525FB900922609A6079A144AE",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "9E8E642E38914773DD0320C3D16E6B69B660DC80AC1BAE92E9E89E3B548ECF59",
+					"masterWidth": 1440,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/9E8E642E38914773DD0320C3D16E6B69B660DC80AC1BAE92E9E89E3B548ECF59",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "527279B50516304956D5EA625CDF613F35ED25D970747E1C5C89F71586C4B24A",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/527279B50516304956D5EA625CDF613F35ED25D970747E1C5C89F71586C4B24A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "fi", "sv", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "12DE54276BB16543EAB9F81975A29E64F235DE921DD87B77A73E0F71DB094AB9",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/12DE54276BB16543EAB9F81975A29E64F235DE921DD87B77A73E0F71DB094AB9",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "AEED039DA9E60A0330636F295F07AD364B7AC6A50379E4C87568B4FD1E36A149",
+					"masterWidth": 1920,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/AEED039DA9E60A0330636F295F07AD364B7AC6A50379E4C87568B4FD1E36A149",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "pt-PT", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "8EED03C74C9537B099667CB3E28D22B1AFCF534A7B384D1AC1398D246A523571",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8EED03C74C9537B099667CB3E28D22B1AFCF534A7B384D1AC1398D246A523571",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Kids",
+					"partnerId": "300010"
+				}, {
+					"type": "BOLT",
+					"name": "Animation",
+					"partnerId": "300001"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2019,
+					"releaseDate": null
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MjAyMDYw",
+				"family": {
+					"encodedFamilyId": "4wd7VQ8b1Gf9",
+					"encodedPartnerFamilyId": "5eN9stXLazN2",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:202060",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MjAyMDYw",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "4wd7VQ8b1Gf9",
+					"encodedPartnerFamilyId": "5eN9stXLazN2",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:202060",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MjAyMDYw",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-Y",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "false",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "bluey (overall series)",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "bluey",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Bluey",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "Bluey is an inexhaustible six year-old Blue Heeler dog, who loves to play and turns everyday family life into extraordinary adventures, developing her imagination as well as her mental, physical and emotional resilience.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "Bluey is a six year-old Blue Heeler dog, who turns everyday family life into adventures.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "This funny and honest look at modern family life celebrates how imaginative play helps shape healthy children. Australian blue heeler puppy Bluey has a boundless imagination and loves to turn daily life into playful adventures. She and little sister Bingo throw themselves into exploring their world, using gameplay to conquer their fears and try out adult roles. And they like nothing more than pulling their parents – particularly Dad – into their fun and games. Mum Chilli’s gone back to work and Dad Bandit juggles childcare with working from home. But though he might think he’s in charge, the girls are definitely calling the shots when it comes to playtime – and pretty much everything else!",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": []
+			}, {
+				"contentId": "0b9b3cb3-5dc5-4171-9020-e856afe84c6e",
+				"encodedContentId": "6PWutGrMQzCI",
+				"type": "DmcSeries",
+				"encodedSeriesId": "6PWutGrMQzCI",
+				"seriesId": "0b9b3cb3-5dc5-4171-9020-e856afe84c6e",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2020-06-26T07:00:00Z",
+					"minPromotionalStartDate": "2020-06-26T07:00:00Z",
+					"kidsMode": false
+				},
+				"encodedTextExperienceId": "4S3FG9GfIVz0",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Family", "Docuseries"],
+				"images": [{
+					"aspectRatio": 3.32,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "5E682697077A160864DF0905352EAAA1B60A253E73BFB8552F336520D0E8F818",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/5E682697077A160864DF0905352EAAA1B60A253E73BFB8552F336520D0E8F818",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB", "nl"],
+					"masterId": "76C8014EB33EF9AB5B4E1A650920007A3DD8B13061020EC875DD2E21AB8ADD45",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/76C8014EB33EF9AB5B4E1A650920007A3DD8B13061020EC875DD2E21AB8ADD45",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB", "nl"],
+					"masterId": "FC2DCD483BE77FB39DD0548EE5872EF7B510941272ED520C86F5BF70B422FFAE",
+					"masterWidth": 2000,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FC2DCD483BE77FB39DD0548EE5872EF7B510941272ED520C86F5BF70B422FFAE",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "069ECF6DECE952E3EA10C82AAD625924D6162028230814B9AB5CF818CE632619",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/069ECF6DECE952E3EA10C82AAD625924D6162028230814B9AB5CF818CE632619",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "3C07CA5DD08266EAAF89DC7BC5D5F537A2015E9FDCD3E04FCC4D7B8BA00FC228",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/3C07CA5DD08266EAAF89DC7BC5D5F537A2015E9FDCD3E04FCC4D7B8BA00FC228",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["no", "fi", "sv", "en", "da", "nl", "en-GB"],
+					"masterId": "BB64D3A1202E26AC3081C6501FC90B32F8DAD5CC4A3CBEA6AA57D99878326C5F",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/BB64D3A1202E26AC3081C6501FC90B32F8DAD5CC4A3CBEA6AA57D99878326C5F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "en-GB", "nl"],
+					"masterId": "CF339C2DEFD9496D2AA2F7CF498BAA517666D365D470DE76EA030A44E92AC206",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CF339C2DEFD9496D2AA2F7CF498BAA517666D365D470DE76EA030A44E92AC206",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "fr-FR", "pl", "da", "nl", "en-GB", "es-419"],
+					"masterId": "4089507783E4BED87EBDA9230ED55E6C46DDED400A20D1A6BD5FCDEC0752C71A",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4089507783E4BED87EBDA9230ED55E6C46DDED400A20D1A6BD5FCDEC0752C71A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["fr-FR"],
+					"masterId": "F9DA4230DE72D24248CB67C26CF838B6F72102B8AEBED87F4B6DE4BB084EEAA3",
+					"masterWidth": 3840,
+					"purpose": "tile_fixed",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F9DA4230DE72D24248CB67C26CF838B6F72102B8AEBED87F4B6DE4BB084EEAA3",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "en", "es-ES", "it", "pt-PT", "fr-FR", "pl", "da", "nl", "es-419", "en-GB"],
+					"masterId": "F476DE4751FA732D839016C5318960915CDF9E01C7ED756BB76FB95FF9549727",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F476DE4751FA732D839016C5318960915CDF9E01C7ED756BB76FB95FF9549727",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "CF16E6A99C5D91F499DFFE90A128582EF14FD2F57C302014406E27852813203C",
+					"masterWidth": 3840,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CF16E6A99C5D91F499DFFE90A128582EF14FD2F57C302014406E27852813203C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["no", "fi", "sv", "en", "da", "nl", "en-GB"],
+					"masterId": "475EBF6E26858ECBE4DBF7B296255DC2F7168D921254A538226CE201D5C62923",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/475EBF6E26858ECBE4DBF7B296255DC2F7168D921254A538226CE201D5C62923",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "sv", "fi", "en", "da", "nl", "en-GB"],
+					"masterId": "F17E6D21405A5608FC2072EBB8B898BCCFE03DA3CE5E1B14B5D41A764560ECFF",
+					"masterWidth": 1920,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F17E6D21405A5608FC2072EBB8B898BCCFE03DA3CE5E1B14B5D41A764560ECFF",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB", "nl"],
+					"masterId": "D479B759C8A731524D0827082BFA8E47E1084F8701865938819AE0F52E1D13D6",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D479B759C8A731524D0827082BFA8E47E1084F8701865938819AE0F52E1D13D6",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB", "nl"],
+					"masterId": "883EF198688C6A678CF43CD083861FCDBC1AA3EFA4240304EECE1AE922C16DD4",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/883EF198688C6A678CF43CD083861FCDBC1AA3EFA4240304EECE1AE922C16DD4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "1E4AC82666B85D0DBF8F21814C5CCE3860C78B22D96EE4D36D52D07749E9A898",
+					"masterWidth": 2880,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1E4AC82666B85D0DBF8F21814C5CCE3860C78B22D96EE4D36D52D07749E9A898",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "fi", "sv", "en", "da", "en-GB", "nl"],
+					"masterId": "2829278C1613CC8F2682E1C9C23032345506E46CBC7881ADC2DACD003BF4242F",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2829278C1613CC8F2682E1C9C23032345506E46CBC7881ADC2DACD003BF4242F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "fr-FR", "pl", "da", "es-419", "en-GB", "nl"],
+					"masterId": "1A0C95096EBC8E2D86E5FCD544799FD1FF9E62A0DA9318C56BE123CD6F0A1014",
+					"masterWidth": 3840,
+					"purpose": "background_up_next",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1A0C95096EBC8E2D86E5FCD544799FD1FF9E62A0DA9318C56BE123CD6F0A1014",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "fr-FR", "pl", "da", "es-419", "nl", "en-GB"],
+					"masterId": "8B731C11C2417C840518AF089D809E036DCA5A5F96EF80DDAB3058976A643559",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/8B731C11C2417C840518AF089D809E036DCA5A5F96EF80DDAB3058976A643559",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "pt-PT", "fr-FR", "pl", "da", "es-419", "nl", "en-GB"],
+					"masterId": "47DE66FAF7574A7E11A5FEB64B2F7CD1B145F185EEDC26668C50B01B7D4CED63",
+					"masterWidth": 3840,
+					"purpose": "background_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/47DE66FAF7574A7E11A5FEB64B2F7CD1B145F185EEDC26668C50B01B7D4CED63",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "pt-BR", "en", "es-ES", "it", "pt-PT", "pl", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "D4DCD6AB1EEC53FB328BE528E37600C92EF3BABD86CA4E38DBB0836B16B99F54",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D4DCD6AB1EEC53FB328BE528E37600C92EF3BABD86CA4E38DBB0836B16B99F54",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["fr-FR"],
+					"masterId": "97FCD158B265E5EE304662A44EF8FF8156B35DCD68B1FF7D0B50A2CF0A2F6106",
+					"masterWidth": 2880,
+					"purpose": "tile_fixed",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/97FCD158B265E5EE304662A44EF8FF8156B35DCD68B1FF7D0B50A2CF0A2F6106",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "en", "es-ES", "it", "pt-PT", "fr-FR", "pl", "da", "nl", "es-419", "en-GB"],
+					"masterId": "28C987AC19946CCD5CD653D427EDB7BC4D1F563CE270D685D330D20DE518734D",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/28C987AC19946CCD5CD653D427EDB7BC4D1F563CE270D685D330D20DE518734D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "fr-FR", "pl", "da", "nl", "en-GB", "es-419"],
+					"masterId": "A6D1E4271B377AA14DF25E702125271BBEDBDC9366D9B4ED4FF84120CA7F554E",
+					"masterWidth": 3840,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/A6D1E4271B377AA14DF25E702125271BBEDBDC9366D9B4ED4FF84120CA7F554E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.75,
+					"locales": ["en", "en-GB"],
+					"masterId": "A2BDD49F9E93BB16445F9154B043A6008148C92904566583F0EAF225083B7AE0",
+					"masterWidth": 600,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/A2BDD49F9E93BB16445F9154B043A6008148C92904566583F0EAF225083B7AE0",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "en", "es-ES", "it", "pt-PT", "pl", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "C7CF156CF1C513DC1DB09C4B8B3A7F113451A6E5FEDDDD79E0FEF5104D892A56",
+					"masterWidth": 3840,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C7CF156CF1C513DC1DB09C4B8B3A7F113451A6E5FEDDDD79E0FEF5104D892A56",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "fi", "sv", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "9A40DAB14342EA62F93734B2D87B5427E628A016D29C66839D1FCBA8FC08CC4D",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/9A40DAB14342EA62F93734B2D87B5427E628A016D29C66839D1FCBA8FC08CC4D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 2.29,
+					"locales": ["fr-FR"],
+					"masterId": "18C5306DEEF17137178341CE82F1B432738226CABC41F2483793D987995D17E3",
+					"masterWidth": 3840,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/18C5306DEEF17137178341CE82F1B432738226CABC41F2483793D987995D17E3",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Family",
+					"partnerId": "300059"
+				}, {
+					"type": "BOLT",
+					"name": "Docuseries",
+					"partnerId": "300058"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2020,
+					"releaseDate": "2020-06-26"
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkxNjEz",
+				"family": {
+					"encodedFamilyId": "4CRxTXfTfqqh",
+					"encodedPartnerFamilyId": "3ankkzYJSoGu",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:191613",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkxNjEz",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "4CRxTXfTfqqh",
+					"encodedPartnerFamilyId": "3ankkzYJSoGu",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:191613",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkxNjEz",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-PG",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "true",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "With the clock ticking and less than a year until the world premiere of Frozen 2, the creative team opens their doors to cameras for a 6-part series to reveal what it takes to create the #1 animated film of all time. For the first time, cameras capture the challenges and breakthroughs, the artistry and complexity of creating a Walt Disney Animation Studios feature film.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "With the clock ticking and less than a year until the world premiere of Frozen 2, the filmmakers, artists, songwriters and cast open their doors to cameras for a six-part documentary series to reveal the hard work, heart, and collaboration it takes to create one of the most highly-anticipated films in Walt Disney Animation Studios’ near-century of moviemaking. For the first time, cameras were there to capture an eye-opening - and at times jaw-dropping - view of the challenges and the breakthroughs, the artistry, creativity and the complexity of creating the #1 animated feature of all time. The series follows director/writer/chief creative officer Jennifer Lee, director Chris Buck, producer Peter Del Vecho, songwriters Kristen Anderson-Lopez and Robert Lopez, actors Kristen Bell (“Anna”), Idina Menzel (“Elsa”), Josh Gad (“Olaf”), Jonathan Groff (“Kristoff”), Sterling K. Brown (“Lieutenant Mattias”), Evan Rachel Wood (“Iduna”) and the talented artists and technicians of Disney Animation as they race against time to finish the film, with both creative breakthroughs and frustrations along the way. Produced by Lincoln Square Productions and Walt Disney Animation Studios.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "into-the-unknown-making-frozen-2",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "into the unknown: making frozen 2",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Into the Unknown: Making Frozen 2",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "For the first time, go behind-the-scenes into the making of the #1 animated film, Frozen 2.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": [{
+					"purpose": "full_bleed",
+					"mediaMetadata": {
+						"urls": [{
+							"regions": ["PR", "VI", "MQ", "GP", "MF", "BL", "US", "CA", "GF"],
+							"url": "https://vod-bgc-na-east-1.media.dssott.com/bgui/ps01/disney/bgui/2020/06/02/1591108013-191613.mp4"
+						}]
+					}
+				}]
+			}, {
+				"contentId": "817579b6-102b-473b-b840-e13a67ef427c",
+				"encodedContentId": "1xWMloV5umHG",
+				"type": "DmcSeries",
+				"encodedSeriesId": "1xWMloV5umHG",
+				"seriesId": "817579b6-102b-473b-b840-e13a67ef427c",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2019-11-12T05:00:00Z",
+					"minPromotionalStartDate": "2019-11-12T05:00:00Z",
+					"kidsMode": null
+				},
+				"encodedTextExperienceId": "25q5DuDzW6Ni",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Kids", "Animation"],
+				"images": [{
+					"aspectRatio": 1.78,
+					"locales": ["fi", "en", "it", "es-419", "en-GB"],
+					"masterId": "FB9C837E6702B8C985BDF01BC4C4D6F26686BFAE0772B1BF40457C60C48FD097",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FB9C837E6702B8C985BDF01BC4C4D6F26686BFAE0772B1BF40457C60C48FD097",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["fi", "en", "it", "en-GB", "es-419"],
+					"masterId": "11283B5A6D29B978C62818C80AB1FC6F510094A6C641EEE29BC9481C759E64AA",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/11283B5A6D29B978C62818C80AB1FC6F510094A6C641EEE29BC9481C759E64AA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "C8C1F33B9A7235ABB31A2C522AD8CDD3F43D79736E2A3F83F37D816C5C763EFC",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C8C1F33B9A7235ABB31A2C522AD8CDD3F43D79736E2A3F83F37D816C5C763EFC",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["fi", "en", "it", "es-419", "en-GB"],
+					"masterId": "52019701424FFF709EB5002FEEFD11C07B31D541B5C003AF41637C5CA1DCA918",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/52019701424FFF709EB5002FEEFD11C07B31D541B5C003AF41637C5CA1DCA918",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["fi", "en", "it", "es-419", "en-GB"],
+					"masterId": "1FEF49F96C38ED58498B4A04ABF6180E473D820956B1B88D026E0D46D5FB2F20",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1FEF49F96C38ED58498B4A04ABF6180E473D820956B1B88D026E0D46D5FB2F20",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["fi", "en", "it", "en-GB", "es-419"],
+					"masterId": "E218D61D9F151F6AA7BA2A080AD75039889D45F1BE128DC03106B0778FBE062A",
+					"masterWidth": 767,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/E218D61D9F151F6AA7BA2A080AD75039889D45F1BE128DC03106B0778FBE062A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["fi", "en", "it", "en-GB", "es-419"],
+					"masterId": "5779DC6D39EA83A84E7B4FE114E7A03DA88A83BFABBF69F2624B3D89E061F0B9",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/5779DC6D39EA83A84E7B4FE114E7A03DA88A83BFABBF69F2624B3D89E061F0B9",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["fi", "en", "it", "es-419", "en-GB"],
+					"masterId": "3C59D52525DF451A1891452F9E793AAC9888D112FF2A6E5E04BBB1EA4180A733",
+					"masterWidth": 3420,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/3C59D52525DF451A1891452F9E793AAC9888D112FF2A6E5E04BBB1EA4180A733",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["fi", "en", "it", "es-419", "en-GB"],
+					"masterId": "395A87AFFA0CD5CD26B9003890F313469F84A2963A6420A8F851EC6533E4E01D",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/395A87AFFA0CD5CD26B9003890F313469F84A2963A6420A8F851EC6533E4E01D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "fi", "sv", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "C412F1330B8F595CB6683D1D7085DF1CA9610342A09D8E711938A7073C8D6F58",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C412F1330B8F595CB6683D1D7085DF1CA9610342A09D8E711938A7073C8D6F58",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["fi", "en", "it", "es-419", "en-GB"],
+					"masterId": "EB33AABA70E3D6B2E65D4968A069E33E594E8DFF1DD60A7AD19738B50A60472D",
+					"masterWidth": 1344,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/EB33AABA70E3D6B2E65D4968A069E33E594E8DFF1DD60A7AD19738B50A60472D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["fi", "en", "it", "es-419", "en-GB"],
+					"masterId": "CDDC544BF5AEA7206FC6A40DA36A59C5D460BE3346236E521EAB5AA60B485F3E",
+					"masterWidth": 724,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CDDC544BF5AEA7206FC6A40DA36A59C5D460BE3346236E521EAB5AA60B485F3E",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["fi", "en", "it", "en-GB"],
+					"masterId": "BB276ED3D46C10543F8878441E6772A8880522CEEE77FFE44E8B628F029D8124",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/BB276ED3D46C10543F8878441E6772A8880522CEEE77FFE44E8B628F029D8124",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["es-ES", "es-419"],
+					"masterId": "4B4ABFA2B21B1AFC9E358000A3F9ECD7708B132A2FB22005F3113B56CAB14C2F",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4B4ABFA2B21B1AFC9E358000A3F9ECD7708B132A2FB22005F3113B56CAB14C2F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "sv", "fi", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "7F85B1D1E594491B809EB8E5C776810324DE1CE7CE7E2E747D1D47A902F411F4",
+					"masterWidth": 3420,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/7F85B1D1E594491B809EB8E5C776810324DE1CE7CE7E2E747D1D47A902F411F4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["en", "en-GB"],
+					"masterId": "9B869F1785222EF42119402A14C3034E3A4AB8BBADCC68B208BCB14E3E0922B3",
+					"masterWidth": 3000,
+					"purpose": "banner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/9B869F1785222EF42119402A14C3034E3A4AB8BBADCC68B208BCB14E3E0922B3",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "B944CB1E0E2D5067B2AE0AEB3BF277F9A136970CD8B7B1E7B76F46B5652206C7",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B944CB1E0E2D5067B2AE0AEB3BF277F9A136970CD8B7B1E7B76F46B5652206C7",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["de", "no", "sv", "fi", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "1AAE3B51C6D5780003955ECC954C4371EC33779769D285AB76636CBE45D91D13",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1AAE3B51C6D5780003955ECC954C4371EC33779769D285AB76636CBE45D91D13",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "76C0A8F50DA077E0B0A10826C39DAEC629DAA44B0D46CD7B556056B1B67621A5",
+					"masterWidth": 1920,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/76C0A8F50DA077E0B0A10826C39DAEC629DAA44B0D46CD7B556056B1B67621A5",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "da", "nl", "es-419", "en-GB"],
+					"masterId": "6DB28B5C707376CF2DDBF5D39FB3CE824A33F1A5AF1D9EBA6E05FAA454DC2166",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6DB28B5C707376CF2DDBF5D39FB3CE824A33F1A5AF1D9EBA6E05FAA454DC2166",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "C25332C0814D959054DDE1D6490E3DF15F7EDCB14F5732D06E94395FF184246A",
+					"masterWidth": 1440,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/C25332C0814D959054DDE1D6490E3DF15F7EDCB14F5732D06E94395FF184246A",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Kids",
+					"partnerId": "300010"
+				}, {
+					"type": "BOLT",
+					"name": "Animation",
+					"partnerId": "300001"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2016,
+					"releaseDate": null
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTU3NDI5",
+				"family": {
+					"encodedFamilyId": "79KJpVdTyZsh",
+					"encodedPartnerFamilyId": "7b6wkVnTcXbe",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:157429",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTU3NDI5",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "79KJpVdTyZsh",
+					"encodedPartnerFamilyId": "7b6wkVnTcXbe",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:157429",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTU3NDI5",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-G",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "false",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "puppy-dog-pals",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "Two puppies are on a mission for fun and adventure!",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "Two fun-loving Pug puppies, Bingo and Rolly, are brothers on a mission for fun and adventure!",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "Two fun-loving Pug puppies, Bingo and Rolly, are brothers with an appetite for adventure! Whether it's helping their owner Bob or aiding an animal friend-in-need, their \"pawsome\" missions take the pups all around the neighborhood and even around the world! No matter where they go, Bingo and Rolly know that life is so much more exciting (and a lot more silly!) with your best friend and brother by your side.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Puppy Dog Pals",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "puppy dog pals",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": []
+			}, {
+				"contentId": "8d1e0119-1ede-47f0-a0b1-dca5e9af0619",
+				"encodedContentId": "4tVWs1lVtwL8",
+				"type": "DmcSeries",
+				"encodedSeriesId": "4tVWs1lVtwL8",
+				"seriesId": "8d1e0119-1ede-47f0-a0b1-dca5e9af0619",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2019-11-12T05:00:00Z",
+					"minPromotionalStartDate": "2019-11-12T05:00:00Z",
+					"kidsMode": null
+				},
+				"encodedTextExperienceId": "2Dr2Wue2ILnf",
+				"seasonsMinYear": null,
+				"seasonsMaxYear": null,
+				"genres": ["Reality", "Family", "Anthology", "Comedy"],
+				"images": [{
+					"aspectRatio": 0.71,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "62376C54016CD88F6C48534BE4464ACCEFA47F475467CC49CC4D42EAA20E5A5A",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/62376C54016CD88F6C48534BE4464ACCEFA47F475467CC49CC4D42EAA20E5A5A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "6441D84C7814E7DC8D35FC045F44F8CBE3E2CB74FE3A65C28614E66A21B6CA3D",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6441D84C7814E7DC8D35FC045F44F8CBE3E2CB74FE3A65C28614E66A21B6CA3D",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "00411E4CD600DAF86E62817AB4D6138024D6DBA102702C7B676A63934BC471DF",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/00411E4CD600DAF86E62817AB4D6138024D6DBA102702C7B676A63934BC471DF",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "756615D43CA7373F8DAEB774C29CBFAF567D88D8AA9E3BEB6C3259487BEADD8B",
+					"masterWidth": 1920,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/756615D43CA7373F8DAEB774C29CBFAF567D88D8AA9E3BEB6C3259487BEADD8B",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "2BD49674C4ED9779C08C1FE231B03C39B6291F03B692D04FBB38037509EB9E2C",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2BD49674C4ED9779C08C1FE231B03C39B6291F03B692D04FBB38037509EB9E2C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "D4791D8EC96C3818156BDA9044797CC4C9A69DFCE2116377DFA512767B6B1AC5",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D4791D8EC96C3818156BDA9044797CC4C9A69DFCE2116377DFA512767B6B1AC5",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.75,
+					"locales": ["en", "en-GB"],
+					"masterId": "0E8AD243E18E7C5511AAF207D1E0873C5F1D0001B900EB942E04EC03DAB46481",
+					"masterWidth": 600,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0E8AD243E18E7C5511AAF207D1E0873C5F1D0001B900EB942E04EC03DAB46481",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.0,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "FDE97BB7212E95B700E05D3423111D87D508D9DC2BB60199AFD2CC39A6C8C1E4",
+					"masterWidth": 3000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/FDE97BB7212E95B700E05D3423111D87D508D9DC2BB60199AFD2CC39A6C8C1E4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "54FDBB774A6F0E17810CBB3D5247724F24683DE302242F4C115A479041D06DC2",
+					"masterWidth": 2880,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/54FDBB774A6F0E17810CBB3D5247724F24683DE302242F4C115A479041D06DC2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "A5FBC63B35FB9254CC113E7FC044FD026EAC0263921B3E2DC06A4C850B52C414",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/A5FBC63B35FB9254CC113E7FC044FD026EAC0263921B3E2DC06A4C850B52C414",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "F959C03C25B83C52717275453562C86B7A9F5505C9CE44D436CD0E917F829E26",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F959C03C25B83C52717275453562C86B7A9F5505C9CE44D436CD0E917F829E26",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "78DAC534A29C6E459935EDA6B2DBFDC4F93CDCA139D9CFEED735952D4E7EB0F7",
+					"masterWidth": 4320,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/78DAC534A29C6E459935EDA6B2DBFDC4F93CDCA139D9CFEED735952D4E7EB0F7",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "fr-FR", "pl", "da", "nl", "es-419", "en-GB"],
+					"masterId": "92092CD1FEF9804002F7C3116F645EEBA5D38D1EC870EFD608002C7977792E6A",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/92092CD1FEF9804002F7C3116F645EEBA5D38D1EC870EFD608002C7977792E6A",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "38DE5B2320B2A7D9F45BEF217DEFDC6341523728C1C816D3399B134329DDE5AE",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/38DE5B2320B2A7D9F45BEF217DEFDC6341523728C1C816D3399B134329DDE5AE",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "286C48C644A0DE43E835D26726A649429BE9CE36EDF23DF8E23D0A677FD4CB08",
+					"masterWidth": 1920,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/286C48C644A0DE43E835D26726A649429BE9CE36EDF23DF8E23D0A677FD4CB08",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["de", "en", "en-GB"],
+					"masterId": "0F5F636696C6540555D2BD5B4DD8C83AE975717D489C8F6AD609E60AA69CE9E6",
+					"masterWidth": 2000,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0F5F636696C6540555D2BD5B4DD8C83AE975717D489C8F6AD609E60AA69CE9E6",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "59782E4B350984EB425D2DFBBE50BB57D684C8B7137378158E8496E59A43A6E4",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/59782E4B350984EB425D2DFBBE50BB57D684C8B7137378158E8496E59A43A6E4",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "en", "es-ES", "it", "pt-PT", "fr-FR", "pl", "da", "en-GB", "nl", "es-419"],
+					"masterId": "D50245A7EF5C0D7008A3EA32202DD8B0D648C28C50317FE80E4C21B88E50FD61",
+					"masterWidth": 3840,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D50245A7EF5C0D7008A3EA32202DD8B0D648C28C50317FE80E4C21B88E50FD61",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "en", "es-ES", "it", "pt-PT", "fr-FR", "pl", "da", "nl", "en-GB", "es-419"],
+					"masterId": "AF0F2C83D53979599D8F2A9A5FDF2255B39B45C99E7B259805A94E5C796E2970",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/AF0F2C83D53979599D8F2A9A5FDF2255B39B45C99E7B259805A94E5C796E2970",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["it"],
+					"masterId": "DD00ADAAE016BE31F8087F2EE79A3DE5F7317FF9F6E7D0D450B4C7F4D025DD1F",
+					"masterWidth": 2000,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/DD00ADAAE016BE31F8087F2EE79A3DE5F7317FF9F6E7D0D450B4C7F4D025DD1F",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "137B098F88C2AFE91C169C16D327D92150AB5D73E067FC1E2C71C7A249102D7C",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/137B098F88C2AFE91C169C16D327D92150AB5D73E067FC1E2C71C7A249102D7C",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "BDE0C9BD7A787A2F65EA512D8D1930453E4ACD0AEC426DDA6614E8E278D03D28",
+					"masterWidth": 3840,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/BDE0C9BD7A787A2F65EA512D8D1930453E4ACD0AEC426DDA6614E8E278D03D28",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "fr-FR", "pl", "da", "es-419", "nl", "en-GB"],
+					"masterId": "9CF380F079BAC01FBB04B55C99AB03E75F0AA8B08E2F6F832E96A44B3865C3AA",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/9CF380F079BAC01FBB04B55C99AB03E75F0AA8B08E2F6F832E96A44B3865C3AA",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "F80D3E5EFA8C431ACF5A21F88DFFD315B4173C75C179D7CCA1DCF62960F4F447",
+					"masterWidth": 1920,
+					"purpose": "thumbnail_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/F80D3E5EFA8C431ACF5A21F88DFFD315B4173C75C179D7CCA1DCF62960F4F447",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "E3F043B5ADAFFE8052619A777C3CE1797D5DFBD2CB87246621ED0423287D3934",
+					"masterWidth": 2880,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/E3F043B5ADAFFE8052619A777C3CE1797D5DFBD2CB87246621ED0423287D3934",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "6B30DF640CA94B7C7F90ECAE0B079262EE9DC961DD21187FCCF70F6795E0ED16",
+					"masterWidth": 3840,
+					"purpose": "background_up_next",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/6B30DF640CA94B7C7F90ECAE0B079262EE9DC961DD21187FCCF70F6795E0ED16",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "en-GB", "es-419", "nl"],
+					"masterId": "1C46469A3F7F1375051135DC393C18B215F929B43CB0A5501A5C11C9992CD5F2",
+					"masterWidth": 1920,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/1C46469A3F7F1375051135DC393C18B215F929B43CB0A5501A5C11C9992CD5F2",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["it"],
+					"masterId": "B9566D673B3922644578C58A0494F61B094817273CB0BDC6F692EC1B8E39FB78",
+					"masterWidth": 1440,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/B9566D673B3922644578C58A0494F61B094817273CB0BDC6F692EC1B8E39FB78",
+					"sourceEntity": "series"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "87D9DA8C72721AEA5E1B9A545CDE006FF06EE86B74440450B30F2543E5EA992F",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/87D9DA8C72721AEA5E1B9A545CDE006FF06EE86B74440450B30F2543E5EA992F",
+					"sourceEntity": "series"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Reality",
+					"partnerId": "300065"
+				}, {
+					"type": "BOLT",
+					"name": "Family",
+					"partnerId": "300059"
+				}, {
+					"type": "BOLT",
+					"name": "Anthology",
+					"partnerId": "300002"
+				}, {
+					"type": "BOLT",
+					"name": "Comedy",
+					"partnerId": "300054"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2019,
+					"releaseDate": null
+				}],
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkyMDIy",
+				"family": {
+					"encodedFamilyId": "XDTo8vg6WaUP",
+					"encodedPartnerFamilyId": "40pPN3IjNFW8",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:192022",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkyMDIy",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "XDTo8vg6WaUP",
+					"encodedPartnerFamilyId": "40pPN3IjNFW8",
+					"parent": true,
+					"parentRef": null,
+					"partnerFamilyId": "org:disney.com:radar:192022",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTkyMDIy",
+					"sequenceNumber": null
+				}],
+				"mediaMetadata": {
+					"facets": [{
+						"label": "default"
+					}]
+				},
+				"ratings": [{
+					"value": "TV-G",
+					"system": "TVPG",
+					"advisories": [],
+					"description": null
+				}],
+				"tags": [{
+					"type": "disneyPlusOriginal",
+					"value": "true",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Pixar In Real Life",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "Characters and moments from Pixar films are brought to life to the surprise of real people.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "pixar-in-real-life",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "This live action series brings iconic characters and moments from Pixar films into the real world. Filmed on location in and around New York City, the series surprises and delights real people in real locations when they least expect it.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "This live action series brings iconic characters and moments from Pixar films into the real world. Filmed on location in and around New York City, the series surprises and delights real people in real locations when they least expect it.",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "pixar in real life",
+					"targetEntity": "series",
+					"sourceEntity": "series"
+				}],
+				"videoArt": [{
+					"purpose": "full_bleed",
+					"mediaMetadata": {
+						"urls": [{
+							"regions": ["PR", "VI", "MQ", "MF", "GP", "BL", "US", "CA", "GF"],
+							"url": "https://vod-bgc-na-east-1.media.dssott.com/bgui/ps01/disney/bgui/2019/10/30/1572458389-192022.mp4"
+						}]
+					}
+				}]
+			}, {
+				"type": "DmcVideo",
+				"meta": null,
+				"videoId": "86e2f689-ff98-4c4f-831d-b8185aa01ec4",
+				"encodedVideoId": "fNylQj2uJz22",
+				"contentId": "826379aa-6b31-40ed-9377-b9699cb676fd",
+				"encodedContentId": "397oShCO9wbA",
+				"audioTracks": [{
+					"name": null,
+					"trackType": "PRIMARY",
+					"renditionName": "English",
+					"language": "en",
+					"features": ["dolby_51", "dolby_20", "dolby_atmos"]
+				}, {
+					"name": null,
+					"trackType": "NARRATION",
+					"renditionName": "English [Audio Description]",
+					"language": "en",
+					"features": ["dolby_20"]
+				}],
+				"encodedChildOf": "",
+				"contentType": "full",
+				"currentAvailability": {
+					"region": "US",
+					"appears": "2020-07-03T07:00:00Z",
+					"minPromotionalStartDate": "2020-06-22T03:00:00Z",
+					"kidsMode": false
+				},
+				"episodeSequenceNumber": null,
+				"genres": ["Musical", "Historical"],
+				"groups": [{
+					"partnerGroupId": "427641",
+					"type": "disneyPlusStorefrontBrand",
+					"name": "Disney"
+				}],
+				"images": [{
+					"aspectRatio": 0.71,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "es-419", "nl"],
+					"masterId": "CEA4A0BE0D08D86A814D5B9AC4599FF381B0D0F311A88701AA4DC0F57E5B8CDF",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CEA4A0BE0D08D86A814D5B9AC4599FF381B0D0F311A88701AA4DC0F57E5B8CDF",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "pt-PT", "fi", "sv", "pt-BR", "en", "pl", "da", "es-419"],
+					"masterId": "E3D747E65914D8FA7AE9D661188EE1703A195D8E9C87B1BBC5474EB66EE31BAD",
+					"masterWidth": 1440,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/E3D747E65914D8FA7AE9D661188EE1703A195D8E9C87B1BBC5474EB66EE31BAD",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "en-GB", "es-419", "nl"],
+					"masterId": "CC47AB5FA0DF1F1D73AE0E0C059AD9E9DF10891EA09A0131D61994296E454D47",
+					"masterWidth": 1920,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CC47AB5FA0DF1F1D73AE0E0C059AD9E9DF10891EA09A0131D61994296E454D47",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 0.67,
+					"locales": ["no", "pt-PT", "fi", "sv", "pt-BR", "en", "pl", "da", "es-419"],
+					"masterId": "EE6F55FA2DF18C672C753F0084B8C20937CCD4EA1FD5A4F87FF9CEE44D592231",
+					"masterWidth": 2000,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/EE6F55FA2DF18C672C753F0084B8C20937CCD4EA1FD5A4F87FF9CEE44D592231",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "nl", "es-419"],
+					"masterId": "84838D04AC523980DDF1CF04584116E6791825B06E5DDAF8F45D48DA0E2A00B7",
+					"masterWidth": 1920,
+					"purpose": "title_treatment",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/84838D04AC523980DDF1CF04584116E6791825B06E5DDAF8F45D48DA0E2A00B7",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "CAF4E656927333F3BD10A6B5B9797C6A982BAD512F538DF6DB94C76DAAD1C683",
+					"masterWidth": 3840,
+					"purpose": "hero_collection",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CAF4E656927333F3BD10A6B5B9797C6A982BAD512F538DF6DB94C76DAAD1C683",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "pt-PT", "fi", "sv", "pt-BR", "en", "pl", "da", "es-419"],
+					"masterId": "AC49AAF5C0C42349B98142492029457AFC51415856124212F97B499E2AA4A634",
+					"masterWidth": 3840,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/AC49AAF5C0C42349B98142492029457AFC51415856124212F97B499E2AA4A634",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 0.71,
+					"locales": ["no", "pt-PT", "sv", "fi", "pt-BR", "en", "pl", "da", "es-419"],
+					"masterId": "9787FBFAFED937A498005B59F32D396F7F2BC98E33E14E3DCE87DC9A945E3364",
+					"masterWidth": 2000,
+					"purpose": "tile_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/9787FBFAFED937A498005B59F32D396F7F2BC98E33E14E3DCE87DC9A945E3364",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "en-GB", "nl", "es-419"],
+					"masterId": "385C7CC4F8C4E53B9E712D7142B8CDE23BE927B9CD89B86D13F7C86C91DA6D63",
+					"masterWidth": 3840,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/385C7CC4F8C4E53B9E712D7142B8CDE23BE927B9CD89B86D13F7C86C91DA6D63",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "nl", "en-GB", "es-419"],
+					"masterId": "2523FE4AF86155BD9A6E64A4FD5278A757371D609BA67484B688241D530EB590",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2523FE4AF86155BD9A6E64A4FD5278A757371D609BA67484B688241D530EB590",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 0.46,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "nl", "es-419", "en-GB"],
+					"masterId": "92EDE89981A3423D38BF2A745DEF10AD97F6E5BDEEC07BB3E4354116C156EFF4",
+					"masterWidth": 1680,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/92EDE89981A3423D38BF2A745DEF10AD97F6E5BDEEC07BB3E4354116C156EFF4",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "55044FF43E9403A2B3FE97F8153DCDDC6A93F60679B77B94D7DFAF76E5B41203",
+					"masterWidth": 3840,
+					"purpose": "background_up_next",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/55044FF43E9403A2B3FE97F8153DCDDC6A93F60679B77B94D7DFAF76E5B41203",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 3.32,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "nl", "es-419"],
+					"masterId": "38DFFEE8710113178E39533D058095C6B8497D46D7A25D8E728B181263FBEF4E",
+					"masterWidth": 4320,
+					"purpose": "title_treatment_mono",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/38DFFEE8710113178E39533D058095C6B8497D46D7A25D8E728B181263FBEF4E",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "fi", "sv", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "es-419", "nl"],
+					"masterId": "41107CB3732BB355D15B9A5319A8D4AF9F5286AB886AFAF038D531115744EDD0",
+					"masterWidth": 3840,
+					"purpose": "tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/41107CB3732BB355D15B9A5319A8D4AF9F5286AB886AFAF038D531115744EDD0",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "nl", "en-GB", "es-419"],
+					"masterId": "21E031AFE07C25352D3B30937DA36363C7AF3AC5A3AC8C9F19BBE73B113DF0E9",
+					"masterWidth": 3840,
+					"purpose": "thumbnail_partner",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/21E031AFE07C25352D3B30937DA36363C7AF3AC5A3AC8C9F19BBE73B113DF0E9",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["no", "de", "fi", "sv", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "es-419", "en-GB", "nl"],
+					"masterId": "0E591D0178306BA2A112BDA433FD1837E741452A4CA9CCCBC73A8DDF25673290",
+					"masterWidth": 3840,
+					"purpose": "background",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/0E591D0178306BA2A112BDA433FD1837E741452A4CA9CCCBC73A8DDF25673290",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "es-419", "nl", "en-GB"],
+					"masterId": "3089318FAA723434028ED25A9101EA849112AAA1DBE91AD6324903C3F4280EB6",
+					"masterWidth": 3840,
+					"purpose": "hero_tile",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/3089318FAA723434028ED25A9101EA849112AAA1DBE91AD6324903C3F4280EB6",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.78,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "en-GB", "es-419", "nl"],
+					"masterId": "CD0048069B91A949E42082112D1A7550FB4958EF4980F1D84A9DE4A9A7B06FCA",
+					"masterWidth": 1920,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CD0048069B91A949E42082112D1A7550FB4958EF4980F1D84A9DE4A9A7B06FCA",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "2890B4887FA320BFE02C5CCB481C4219F3FD57337F518C1B27F50A08BA8AD3F4",
+					"masterWidth": 2880,
+					"purpose": "background_details",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/2890B4887FA320BFE02C5CCB481C4219F3FD57337F518C1B27F50A08BA8AD3F4",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 3.91,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "pl", "fr-FR", "da", "es-419", "en-GB", "nl"],
+					"masterId": "ABDA16286A58542C6C859E4899CF18E7214D732AE47B201C3E50EFCAB92BE25F",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/ABDA16286A58542C6C859E4899CF18E7214D732AE47B201C3E50EFCAB92BE25F",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 3.0,
+					"locales": ["de", "no", "sv", "fi", "pt-BR", "en", "es-ES", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "nl", "en-GB", "es-419"],
+					"masterId": "41971B992F7BB9F23408B8157E113CF49BEA26FA9F7D620B054200C6B5363302",
+					"masterWidth": 3840,
+					"purpose": "title_treatment_layer",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/41971B992F7BB9F23408B8157E113CF49BEA26FA9F7D620B054200C6B5363302",
+					"sourceEntity": "program"
+				}, {
+					"aspectRatio": 1.33,
+					"locales": ["no", "de", "sv", "fi", "pt-BR", "es-ES", "en", "it", "fr-CA", "pt-PT", "fr-FR", "pl", "da", "es-419", "nl", "en-GB"],
+					"masterId": "630EEA5F1CD934D2C14F3DBA95967F7A3D19DE8A06BB14C33B909EDF0C9515A2",
+					"masterWidth": 4320,
+					"purpose": "hero",
+					"url": "https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/630EEA5F1CD934D2C14F3DBA95967F7A3D19DE8A06BB14C33B909EDF0C9515A2",
+					"sourceEntity": "program"
+				}],
+				"internalTitle": "Hamilton - movie - 826379aa-6b31-40ed-9377-b9699cb676fd",
+				"labels": [],
+				"mediaConfig": {
+					"state": "ON"
+				},
+				"mediaFormat": "UHD",
+				"mediaMetadata": {
+					"activeAspectRatio": 1.86,
+					"facets": [{
+						"label": "default",
+						"activeAspectRatio": 1.86
+					}],
+					"audioTracks": [{
+						"name": null,
+						"trackType": "PRIMARY",
+						"renditionName": "English",
+						"language": "en",
+						"features": ["dolby_51", "dolby_20", "dolby_atmos"]
+					}, {
+						"name": null,
+						"trackType": "NARRATION",
+						"renditionName": "English [Audio Description]",
+						"language": "en",
+						"features": ["dolby_20"]
+					}],
+					"captions": [{
+						"name": null,
+						"trackType": "SDH",
+						"language": "en",
+						"renditionName": "English [CC]"
+					}],
+					"features": ["hdr_10", "hdr", "dolby_vision"],
+					"format": "UHD",
+					"mediaId": "24d75e77-ad96-4642-99c2-891f4f5283d2",
+					"phase": "active",
+					"playbackUrls": [{
+						"rel": "video",
+						"href": "https://global.edge.bamgrid.com/media/24d75e77-ad96-4642-99c2-891f4f5283d2/scenarios/{scenario}",
+						"templated": true,
+						"params": [{
+							"name": "scenario",
+							"description": "Playback scenario"
+						}]
+					}],
+					"productType": "VOD",
+					"runtimeMillis": 9615000,
+					"state": "ON",
+					"type": "VIDEO"
+				},
+				"mediaRights": {
+					"violations": [],
+					"downloadBlocked": false,
+					"rewind": true
+				},
+				"mediaId": "24d75e77-ad96-4642-99c2-891f4f5283d2",
+				"originalLanguage": "en",
+				"parentOf": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTk0MTM1",
+				"encodedParentOf": "3uPmBHWlO6HJ",
+				"family": {
+					"encodedFamilyId": "3uPmBHWlO6HJ",
+					"encodedPartnerFamilyId": "2kbbEyknj3Kd",
+					"parent": true,
+					"parentRef": {
+						"encodedProgramId": "6EQ19l68HxTY",
+						"encodedSeasonId": null,
+						"encodedSeriesId": null,
+						"programId": "2102dfac-198f-49b5-ad2a-4401e6fea3e1",
+						"seasonId": null,
+						"seriesId": null
+					},
+					"partnerFamilyId": "org:disney.com:radar:194135",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTk0MTM1",
+					"sequenceNumber": null
+				},
+				"families": [{
+					"encodedFamilyId": "3uPmBHWlO6HJ",
+					"encodedPartnerFamilyId": "2kbbEyknj3Kd",
+					"parent": true,
+					"parentRef": {
+						"encodedProgramId": "6EQ19l68HxTY",
+						"encodedSeasonId": null,
+						"encodedSeriesId": null,
+						"programId": "2102dfac-198f-49b5-ad2a-4401e6fea3e1",
+						"seasonId": null,
+						"seriesId": null
+					},
+					"partnerFamilyId": "org:disney.com:radar:194135",
+					"familyId": "ZGlzbmV5b3JnOmRpc25leS5jb206cmFkYXI6MTk0MTM1",
+					"sequenceNumber": null
+				}],
+				"playbackUrls": [{
+					"href": "https://global.edge.bamgrid.com/media/24d75e77-ad96-4642-99c2-891f4f5283d2/scenarios/{scenario}"
+				}],
+				"programId": "2102dfac-198f-49b5-ad2a-4401e6fea3e1",
+				"encodedProgramId": "6EQ19l68HxTY",
+				"programType": "movie",
+				"ratings": [{
+					"value": "PG-13",
+					"system": "MPAA",
+					"advisories": [],
+					"description": "For language and some suggestive material"
+				}],
+				"runtimeMillis": 9615000,
+				"seasonId": null,
+				"encodedSeasonId": null,
+				"seasonSequenceNumber": null,
+				"encodedSeriesId": null,
+				"seriesId": null,
+				"tags": [{
+					"type": "titleEidr",
+					"value": "0536-0A84-9B78-3123-0545-E",
+					"displayName": null
+				}, {
+					"type": "disneyPlusOriginal",
+					"value": "false",
+					"displayName": null
+				}],
+				"texts": [{
+					"field": "description",
+					"type": "full",
+					"language": "en",
+					"content": "An unforgettable cinematic stage performance, the filmed version of the original Broadway production of “Hamilton” combines the best elements of live theater, film and streaming to bring the cultural phenomenon to homes around the world for a thrilling, once-in-a-lifetime experience. “Hamilton” is the story of America then, told by America now. Featuring a score that blends hip-hop, jazz, R&B and Broadway, “Hamilton” has taken the story of American founding father Alexander Hamilton and created a revolutionary moment in theatre—a musical that has had a profound impact on culture, politics, and education. Filmed at The Richard Rodgers Theatre on Broadway in June of 2016, the film transports its audience into the world of the Broadway show in a uniquely intimate way. With book, music, and lyrics by Lin-Manuel Miranda and direction by Thomas Kail, “Hamilton” is inspired by the book “Alexander Hamilton” by Ron Chernow and produced by Thomas Kail, Lin-Manuel Miranda and Jeffrey Seller, with Sander Jacobs and Jill Furman serving as executive producers. The 11-time-Tony Award®-, GRAMMY Award®-, Olivier Award- and Pulitzer Prize-winning stage musical stars: Daveed Diggs as Marquis de Lafayette/Thomas Jefferson; Renée Elise Goldsberry as Angelica Schuyler; Jonathan Groff as King George; Christopher Jackson as George Washington; Jasmine Cephas Jones as Peggy Schuyler/Maria Reynolds; Lin-Manuel Miranda as Alexander Hamilton; Leslie Odom, Jr. as Aaron Burr; Okieriete Onaodowan as Hercules Mulligan/James Madison; Anthony Ramos as John Laurens/Philip Hamilton; and Phillipa Soo as Eliza Hamilton.",
+					"targetEntity": "program",
+					"sourceEntity": "program"
+				}, {
+					"field": "title",
+					"type": "full",
+					"language": "en",
+					"content": "Hamilton",
+					"targetEntity": "program",
+					"sourceEntity": "program"
+				}, {
+					"field": "title",
+					"type": "slug",
+					"language": "en",
+					"content": "hamilton",
+					"targetEntity": "program",
+					"sourceEntity": "program"
+				}, {
+					"field": "description",
+					"type": "brief",
+					"language": "en",
+					"content": "The filmed version of Broadway original “Hamilton” that soars in music and tale.",
+					"targetEntity": "program",
+					"sourceEntity": "program"
+				}, {
+					"field": "title",
+					"type": "sort",
+					"language": "en",
+					"content": "hamilton",
+					"targetEntity": "program",
+					"sourceEntity": "program"
+				}, {
+					"field": "description",
+					"type": "medium",
+					"language": "en",
+					"content": "The filmed version of the original Broadway smash hit “Hamilton” combines the best elements of live theater, film and streaming in an astounding blend of hip-hop, jazz, R&B and Broadway. Presenting the tale of American founding father Alexander Hamilton, this revolutionary moment in theatre is the story of America then, told by America now.",
+					"targetEntity": "program",
+					"sourceEntity": "program"
+				}],
+				"typedGenres": [{
+					"type": "BOLT",
+					"name": "Historical",
+					"partnerId": "300009"
+				}, {
+					"type": "BOLT",
+					"name": "Musical",
+					"partnerId": "300012"
+				}],
+				"releases": [{
+					"releaseType": "original",
+					"territory": null,
+					"releaseYear": 2020,
+					"releaseDate": "2020-07-03"
+				}],
+				"milestones": [{
+					"id": "f18f0616-dde6-4b26-8e09-8956f1364c49",
+					"milestoneTime": [{
+						"startMillis": 9599210,
+						"type": "offset"
+					}],
+					"milestoneType": "up_next"
+				}],
+				"videoArt": [{
+					"purpose": "full_bleed",
+					"mediaMetadata": {
+						"urls": [{
+							"regions": ["PR", "VI", "MQ", "MF", "GP", "BL", "US", "CA", "GF"],
+							"url": "https://vod-bgc-na-east-1.media.dssott.com/bgui/ps01/disney/bgui/2020/06/18/1592494238-194135.mp4"
+						}]
+					}
+				}]
+			}]
+		}
+	}
+}

@@ -1,0 +1,1327 @@
+{
+    "application": {
+        "id": "",
+        "name": ""
+    },
+    "commonHeaders": {
+        "X-BAMSDK-Client-ID": "launchpad",
+        "X-BAMSDK-Platform": "{SDKPlatform}",
+        "X-BAMSDK-Version": "{SDKVersion}"
+    },
+    "logger": {
+        "logLevel": "debug"
+    },
+    "services": {
+        "account": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "createAccount": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "createAccountGrant": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/grant",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "createUserProfile": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/profiles",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "deleteAccountAttributes": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/attributes",
+                        "method": "DELETE",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "deleteUserProfile": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/profiles/{profileId}",
+                        "method": "DELETE",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getActiveUserProfile": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/active-profile",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getCurrentAccount": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getUserProfile": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/profiles/{profileId}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getUserProfiles": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/profiles",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "setActiveUserProfile": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/active-profile/{profileId}",
+                        "method": "PUT",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "updateAccountAttributes": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/attributes",
+                        "method": "PATCH",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "updateUserProfile": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/accounts/me/profiles/{profileId}",
+                        "method": "PATCH",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "adEngine": {
+            "client": {
+                "baseUrl": "",
+                "endpoints": {
+                    "setToken": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "setTokenRedirect": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            },
+            "disabled": true,
+            "extras": {
+                "adTargeting": {}
+            }
+        },
+        "adobeIdentity": {
+            "client": {
+                "baseUrl": "",
+                "endpoints": {
+                    "createIdToken": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "createRegistrationCode": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "bamIdentity": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "changeEmail": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {identityToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/email",
+                        "method": "PATCH",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "changePassword": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {identityToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/password",
+                        "method": "PATCH",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "check": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/check",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "createIdentity": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/register",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getIdentity": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {identityToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/me",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "identityLogin": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/login",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "otpRedeem": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/otp/redeem",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "otpRequest": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/otp/request",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "resetPassword": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/password/reset/confirm",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "startPasswordReset": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/password/reset/request",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "updateAttributes": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {identityToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/idp/me/attributes",
+                        "method": "PATCH",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            },
+            "extras": {
+                "expirationBufferSeconds": 15
+            }
+        },
+        "commerce": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "createKlarnaPaymentMethod": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/commerceutilities/klarna/redirecturl",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "createPayPalPaymentMethod": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/paypalToken/expressCheckoutDetails",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "createPaymentMethod": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/tokens/sps",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getDefaultPaymentMethod": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/wallet/payment-methods/default",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getOrderStatus": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/v2/orders/{guid}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getPayPalExpress": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/wallet/paypal-express/{paymentMethodId}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getPaymentCard": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/wallet/payment-methods/{paymentMethodId}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "listPaymentCards": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/wallet/payment-cards",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "lookupByZipCode": {
+                        "headers": {
+                            "Accept": "application/json"
+                        },
+                        "href": "https://s3.amazonaws.com/skynet-dss-commerce-zipcode/fed-web-app/assets/resources/zipcodes/{zipcode}.json",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "priceOrder": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/vnd.pes-v3.0+json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/priceOrder",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "redeem": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/redeem",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "resumeAccount": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/v2/order/resume",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "setPayPalExpressCheckoutDetails": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/paypalToken",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "submitOrderWithPaymentMethod": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/v2/order",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "updatePaymentCard": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/wallet/payment-cards/{paymentMethodId}",
+                        "method": "PATCH",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                },
+                "extras": {
+                    "clientId": "launchpad",
+                    "createPaymentMethodRegionalEndpoints": {},
+                    "namespace": "launchpad",
+                    "namespaceId": 0
+                }
+            },
+            "extras": {
+                "checkOrderStatusDelay": 4,
+                "retryPolicy": {
+                    "retryBasePeriod": 2,
+                    "retryMaxAttempts": 48,
+                    "retryMaxPeriod": 2,
+                    "retryMultiplier": 1
+                }
+            }
+        },
+        "content": {
+            "client": {
+                "baseUrl": "https://search-api-launchpad-qa.bamgrid.com",
+                "endpoints": {
+                    "bookmarks": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/search/v2/graphql",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "bookmarksPersisted": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/search/v2/graphql/persisted/query/{queryId}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "dmcVideos": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/search/v2/graphql/persisted/query/{queryId}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "search": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/search/v2/graphql",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "searchPersisted": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/search/v2/graphql/persisted/query/{queryId}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "searchSuggestions": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/suggest/v1/{dictionary}/{query}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "sportsData": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "watchlist": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/search/v2/graphql",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "watchlistPersisted": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://search-api-launchpad-qa.bamgrid.com/svc/search/v2/graphql/persisted/query/{queryId}",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                },
+                "extras": {
+                    "urlSizeLimit": 8192
+                }
+            },
+            "extras": {
+                "queryIdDefaults": {
+                    "addToWatchlist": "core/AddToWatchlist",
+                    "clearWatchlist": "core/ClearWatchlist",
+                    "removeFromWatchlist": "core/DeleteFromWatchlist"
+                }
+            }
+        },
+        "customerService": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "createSupportCode": {
+                        "headers": {
+                            "Accept": "text/plain",
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/customer-service/codes",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "device": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "createDeviceGrant": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {apiKey}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/devices",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "drm": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com/",
+                "endpoints": {
+                    "fairPlayCertificate": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://playback-certs.bamgrid.com/static/v1.0/fairplay.cer",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "fairPlayLicense": {
+                        "headers": {
+                            "Accept": "application/octet-stream",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/fairplay/v1/obtain-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "nagraCertificate": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://playback-certs.bamgrid.com/static/v1.0/disney/nagra-beta.json",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "nagraLicense": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/nagra/v1/obtain-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "offlineFairPlayLicense": {
+                        "headers": {
+                            "Accept": "application/octet-stream",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/fairplay/v1/obtain-offline-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "offlineFairPlayLicenseRelease": {
+                        "headers": {
+                            "Accept": "application/octet-stream",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/fairplay/v1/release-offline-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "offlineFairPlayLicenseRenew": {
+                        "headers": {
+                            "Accept": "application/octet-stream",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/fairplay/v1/renew-offline-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "offlineWidevineLicense": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/widevine/v1/obtain-offline-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "offlineWidevineLicenseRelease": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/widevine/v1/release-offline-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "offlineWidevineLicenseRenew": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/widevine/v1/renew-offline-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "playReadyLicense": {
+                        "headers": {
+                            "Accept": "application/xml, application/vnd.media-service+json; version=2",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "text/xml; charset=utf-8",
+                            "SOAPAction": "http://schemas.microsoft.com/DRM/2007/03/protocols/AcquireLicense"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/playready/v1/obtain-license.asmx?SL=150",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "silkKey": {
+                        "headers": {
+                            "Accept": "application/octet-stream, application/vnd.media-service+json; version=2",
+                            "Authorization": "{accessToken}"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "widevineCertificate": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}"
+                        },
+                        "href": "https://playback-certs.bamgrid.com/static/v1.0/widevine_qa.bin",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "widevineLicense": {
+                        "headers": {
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/octet-stream"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/widevine/v1/obtain-license",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "eligibility": {
+            "client": {
+                "baseUrl": "",
+                "endpoints": {
+                    "getEligibilityStatus": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "externalActivation": {
+            "client": {
+                "baseUrl": "",
+                "endpoints": {
+                    "activateBundle": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "",
+                        "method": "POST",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "activateToken": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "",
+                        "method": "POST",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getActivationToken": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "media": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "bifThumbnail": {
+                        "headers": {},
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "bifThumbnails": {
+                        "headers": {
+                            "Authorization": "{accessToken}"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "bookmarks": {
+                        "headers": {
+                            "Accept": "application/vnd.bookmark-read-service+json; version=1",
+                            "Authorization": "{accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/content/{contentId}/bookmark",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "key": {
+                        "headers": {
+                            "Accept": "application/octet-stream, application/vnd.media-service+json; version=2",
+                            "Authorization": "{accessToken}"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "mediaPayload": {
+                        "headers": {
+                            "Accept": "application/vnd.media-service+json; version=2",
+                            "Authorization": "{accessToken}"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "playbackCookie": {
+                        "headers": {
+                            "Authorization": "{accessToken}"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/playback/cookie",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "spriteSheetThumbnail": {
+                        "headers": {},
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "spriteSheetThumbnails": {
+                        "headers": {
+                            "Authorization": "{accessToken}"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            },
+            "extras": {
+                "isUhdAllowed": false,
+                "playbackScenarioDefault": "restricted-drm-ctr-sw",
+                "playbackScenarios": {},
+                "playbackSession": {
+                    "streamSampleInterval": 15
+                }
+            }
+        },
+        "paywall": {
+            "client": {
+                "baseUrl": "",
+                "endpoints": {
+                    "paywall": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "purchase": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "redeemPurchases": {
+                        "headers": {
+                            "Accept": "application/json; profile=vnd.bamtech.activation; version=1",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; profile=vnd.bamtech.receipt; version=1"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/stores/{store}/purchases",
+                        "method": "POST",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "restorePurchases": {
+                        "headers": {
+                            "Accept": "application/json; profile=vnd.bamtech.activation; version=1",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; profile=vnd.bamtech.receipt; version=1"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/stores/{store}/restorations",
+                        "method": "POST",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            },
+            "extras": {
+                "retryPolicy": {
+                    "retryBasePeriod": 5,
+                    "retryMaxAttempts": 30,
+                    "retryMaxPeriod": 900,
+                    "retryMultiplier": 1.6
+                }
+            }
+        },
+        "pushMessaging": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "registerChannel": {
+                        "headers": {
+                            "Authorization": "{accessToken}",
+                            "X-BAMTech-App-Id": "launchpad"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/v1/push-channels/{pushChannelId}",
+                        "method": "PUT",
+                        "templated": true,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "session": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "getInfo": {
+                        "headers": {
+                            "Accept": "application/vnd.session-service+json; version=1",
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/session",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "getLocation": {
+                        "headers": {
+                            "Accept": "application/vnd.session-service+json; version=1",
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/sessions/me/location",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "sockets": {
+            "client": {
+                "baseUrl": "wss://qa.global.edge.bamgrid.com",
+                "endpoints": {
+                    "socketConnectionEuWestOne": {
+                        "href": "wss://qa.global.edge.bamgrid.com/dfcc3f/connection",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "socketConnectionUsEastOne": {
+                        "href": "wss://qa.global.edge.bamgrid.com/c800b6/connection",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "socketConnectionUsWestTwo": {
+                        "href": "wss://qa.global.edge.bamgrid.com/66990c/connection",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                },
+                "extras": {
+                    "protocolHeaders": {
+                        "json": "vnd.dss.edge+json",
+                        "protobuf": "vnd.dss.edge+protobuf"
+                    },
+                    "regionalEndpointMapping": {
+                        "eu-west-1": "socketConnectionEuWestOne",
+                        "us-east-1": "socketConnectionUsEastOne",
+                        "us-west-2": "socketConnectionUsWestTwo"
+                    },
+                    "supportedProtocols": []
+                }
+            },
+            "disabled": true,
+            "extras": {
+                "retryPolicy": {
+                    "retryBasePeriod": 5,
+                    "retryMaxAttempts": 3,
+                    "retryMaxPeriod": 900,
+                    "retryMultiplier": 1.6
+                }
+            }
+        },
+        "subscription": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "getSubscriptions": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/subscriptions",
+                        "method": "GET",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "linkSubscriptionsFromDevice": {
+                        "headers": {
+                            "Accept": "application/json; charset=utf-8",
+                            "Authorization": "Bearer {accessToken}",
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/subscriptions/copy/device",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            }
+        },
+        "telemetry": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "dustEvent": {
+                        "headers": {
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json; event=\"urn:bamtech:api:batch\"; version=1"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/dust",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    },
+                    "postEvent": {
+                        "headers": {
+                            "Authorization": "{accessToken}",
+                            "Content-Type": "application/json; event=\"urn:bamtech:api:batch\"; version=1"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/telemetry",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                }
+            },
+            "disabled": true,
+            "extras": {
+                "batchLimit": 20,
+                "bufferConfigurationDefault": {
+                    "batchLimit": 20,
+                    "disabled": true,
+                    "minimumBatchSize": 10,
+                    "replyAfterFallback": 30
+                },
+                "eventBufferConfiguration": {
+                    "batchLimit": 20,
+                    "disabled": false,
+                    "minimumBatchSize": 10,
+                    "replyAfterFallback": 30
+                },
+                "fastTrack": {
+                    "urns": [
+                        "urn:dss:glimpse:event:app-lifecycle:app-launched",
+                        "urn:dss:telemetry-service:event:stream-sample",
+                        "urn:bamtech:api:stream-sample",
+                        "urn:dss:glimpse:event:track-state:eligibility-timeout-occurred"
+                    ]
+                },
+                "permitAppDustEvents": false,
+                "prohibited": {
+                    "urns": []
+                },
+                "replyAfterFallback": 30
+            }
+        },
+        "token": {
+            "client": {
+                "baseUrl": "https://qa.us.edge.bamgrid.com",
+                "endpoints": {
+                    "exchange": {
+                        "headers": {
+                            "Accept": "application/json",
+                            "Authorization": "Bearer {apiKey}",
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        "href": "https://qa.us.edge.bamgrid.com/token",
+                        "method": "POST",
+                        "templated": false,
+                        "timeout": 15,
+                        "ttl": 0
+                    }
+                },
+                "extras": {
+                    "platformId": "rust"
+                },
+                "platformId": ""
+            },
+            "extras": {
+                "autoRefreshRetryPolicy": {
+                    "retryBasePeriod": 2,
+                    "retryMaxAttempts": 20,
+                    "retryMaxPeriod": 120,
+                    "retryMultiplier": 1.5
+                },
+                "refreshThreshold": 0.9,
+                "subjectTokenTypes": {
+                    "account": "urn:bamtech:params:oauth:token-type:account",
+                    "device": "urn:bamtech:params:oauth:token-type:device",
+                    "temporary": "urn:ietf:params:oauth:token-type:jwt"
+                }
+            }
+        }
+    }
+}

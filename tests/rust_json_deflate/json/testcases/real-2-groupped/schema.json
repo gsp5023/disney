@@ -1,0 +1,1144 @@
+{
+	"type":	"object",
+	"properties":	{
+		"collectionsAllowList":	{
+			"type":	"array",
+			"items":	{
+				"type":	"string"
+			}
+		},
+		"setsAllowList":	{
+			"type":	"array",
+			"items":	{
+				"type":	"string"
+			}
+		},
+		"containersAllowList":	{
+			"type":	"array",
+			"items":	{
+				"type":	"string"
+			}
+		},
+		"configs":	{
+			"type":	"object",
+			"properties":	{
+				"avatars":	{
+					"type":	"object",
+					"properties":	{
+						"filters":	{
+							"type":	"object",
+							"properties":	{
+								"purpose":	{
+									"type":	"array",
+									"items":	{
+										"type":	"string"
+									}
+								},
+								"aspectRatio":	{
+									"type":	"array",
+									"items":	{
+										"type":	"number"
+									}
+								},
+								"text_field":	{
+									"type":	"array",
+									"items":	{
+										"type":	"string"
+									}
+								},
+								"text_type":	{
+									"type":	"array",
+									"items":	{
+										"type":	"string"
+									}
+								}
+							},
+							"required":	["purpose", "aspectRatio"]
+						},
+						"sets":	{
+							"type":	"object",
+							"properties":	{
+								"default":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"texts":	{
+													"type":	"object",
+													"properties":	{
+														"title":	{
+															"type":	"object",
+															"properties":	{
+																"field":	{
+																	"type":	"string"
+																},
+																"type":	{
+																	"type":	"string"
+																},
+																"sourceEntity":	{
+																	"type":	"string"
+																}
+															},
+															"required":	["field", "type", "sourceEntity"]
+														}
+													},
+													"required":	["title"]
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				},
+																				"format":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		},
+																		"background":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "roundedCorners"]
+																		},
+																		"logo":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		}
+																	},
+																	"required":	["tile"]
+																},
+																"texts":	{
+																	"type":	"object",
+																	"properties":	{
+																		"title":	{
+																			"type":	"object",
+																			"properties":	{
+																				"field":	{
+																					"type":	"string"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				},
+																				"sourceEntity":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["field", "type", "sourceEntity"]
+																		}
+																	},
+																	"required":	["title"]
+																},
+																"videoArt":	{
+																	"type":	"object",
+																	"properties":	{
+																		"background":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		}
+																	},
+																	"required":	["background"]
+																}
+															},
+															"required":	["tiles", "images"]
+														}
+													},
+													"required":	["all"]
+												},
+												"renderTitle":	{
+													"type":	"boolean"
+												}
+											},
+											"required":	["breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								},
+								"episode":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"texts":	{
+													"type":	"object",
+													"properties":	{
+														"title":	{
+															"type":	"object",
+															"properties":	{
+																"field":	{
+																	"type":	"string"
+																},
+																"type":	{
+																	"type":	"string"
+																},
+																"sourceEntity":	{
+																	"type":	"string"
+																}
+															},
+															"required":	["field", "type", "sourceEntity"]
+														}
+													},
+													"required":	["title"]
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		}
+																	},
+																	"required":	["tile"]
+																},
+																"texts":	{
+																	"type":	"object",
+																	"properties":	{
+																		"titleSeries":	{
+																			"type":	"object",
+																			"properties":	{
+																				"field":	{
+																					"type":	"string"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				},
+																				"sourceEntity":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["field", "type", "sourceEntity"]
+																		},
+																		"titleEpisode":	{
+																			"type":	"object",
+																			"properties":	{
+																				"field":	{
+																					"type":	"string"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				},
+																				"sourceEntity":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["field", "type", "sourceEntity"]
+																		}
+																	},
+																	"required":	["titleSeries", "titleEpisode"]
+																}
+															},
+															"required":	["tiles", "images", "texts"]
+														}
+													},
+													"required":	["all"]
+												}
+											},
+											"required":	["texts", "breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								},
+								"category":	{
+									"type":	"object",
+									"properties":	{
+										"render":	{
+											"type":	"boolean"
+										}
+									},
+									"required":	["render"]
+								},
+								"contentType":	{
+									"type":	"object",
+									"properties":	{
+										"render":	{
+											"type":	"boolean"
+										}
+									},
+									"required":	["render"]
+								},
+								"brand":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"renderTitle":	{
+													"type":	"boolean"
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"hover":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "hover"]
+																		},
+																		"tile_animated":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"isRaw":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "isRaw"]
+																		},
+																		"focus":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format"]
+																		}
+																	},
+																	"required":	["tile", "tile_animated", "focus"]
+																}
+															},
+															"required":	["tiles", "images"]
+														}
+													},
+													"required":	["all"]
+												}
+											},
+											"required":	["renderTitle", "breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								},
+								"ContinueWatchingSet":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"texts":	{
+													"type":	"object",
+													"properties":	{
+														"title":	{
+															"type":	"object",
+															"properties":	{
+																"field":	{
+																	"type":	"string"
+																},
+																"type":	{
+																	"type":	"string"
+																},
+																"sourceEntity":	{
+																	"type":	"string"
+																}
+															},
+															"required":	["field", "type", "sourceEntity"]
+														}
+													},
+													"required":	["title"]
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		},
+																		"focus":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		},
+																		"focus_any":	{
+																			"type":	"object",
+																			"properties":	{
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["purpose"]
+																		},
+																		"focus_sd":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		}
+																	},
+																	"required":	["tile", "focus", "focus_any", "focus_sd"]
+																},
+																"texts":	{
+																	"type":	"object",
+																	"properties":	{
+																		"titleMovie":	{
+																			"type":	"object",
+																			"properties":	{
+																				"field":	{
+																					"type":	"string"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				},
+																				"sourceEntity":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["field", "type", "sourceEntity"]
+																		},
+																		"titleSeries":	{
+																			"type":	"object",
+																			"properties":	{
+																				"field":	{
+																					"type":	"string"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				},
+																				"sourceEntity":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["field", "type", "sourceEntity"]
+																		},
+																		"titleEpisode":	{
+																			"type":	"object",
+																			"properties":	{
+																				"field":	{
+																					"type":	"string"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				},
+																				"sourceEntity":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["field", "type", "sourceEntity"]
+																		}
+																	},
+																	"required":	["titleMovie", "titleSeries", "titleEpisode"]
+																}
+															},
+															"required":	["tiles", "images", "texts"]
+														}
+													},
+													"required":	["all"]
+												}
+											},
+											"required":	["texts", "breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								},
+								"featured":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"renderTitle":	{
+													"type":	"boolean"
+												},
+												"texts":	{
+													"type":	"object",
+													"properties":	{
+														"title":	{
+															"type":	"object",
+															"properties":	{
+																"field":	{
+																	"type":	"string"
+																},
+																"type":	{
+																	"type":	"string"
+																},
+																"sourceEntity":	{
+																	"type":	"string"
+																}
+															},
+															"required":	["field", "type", "sourceEntity"]
+														}
+													},
+													"required":	["title"]
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		}
+																	},
+																	"required":	["tile"]
+																}
+															},
+															"required":	["tiles", "images"]
+														}
+													},
+													"required":	["all"]
+												}
+											},
+											"required":	["renderTitle", "texts", "breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								},
+								"hero":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"renderTitle":	{
+													"type":	"boolean"
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		},
+																		"logo":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		},
+																		"logo_collection":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		},
+																		"tile_full_bleed":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		},
+																		"logo_full_bleed":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		},
+																		"logo_full_bleed_collection":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		}
+																	},
+																	"required":	["tile", "logo", "logo_collection", "tile_full_bleed", "logo_full_bleed", "logo_full_bleed_collection"]
+																}
+															},
+															"required":	["tiles", "images"]
+														}
+													},
+													"required":	["all"]
+												}
+											},
+											"required":	["renderTitle", "breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								},
+								"HeroContainer":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"renderTitle":	{
+													"type":	"boolean"
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		},
+																		"logo":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		},
+																		"logo_collection":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		}
+																	},
+																	"required":	["tile", "logo", "logo_collection"]
+																}
+															},
+															"required":	["tiles", "images"]
+														}
+													},
+													"required":	["all"]
+												}
+											},
+											"required":	["renderTitle", "breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								},
+								"HeroFullBleedContainer":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"renderTitle":	{
+													"type":	"boolean"
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		},
+																		"logo":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		},
+																		"logo_collection":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"format":	{
+																					"type":	"string"
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose", "format", "roundedCorners"]
+																		}
+																	},
+																	"required":	["tile", "logo", "logo_collection"]
+																}
+															},
+															"required":	["tiles", "images"]
+														}
+													},
+													"required":	["all"]
+												}
+											},
+											"required":	["renderTitle", "breakpoints"]
+										}
+									},
+									"required":	["shelf_grid"]
+								}
+							},
+							"required":	["default"]
+						},
+						"images":	{
+							"type":	"object",
+							"properties":	{
+								"background":	{
+									"type":	"object",
+									"properties":	{
+										"aspectRatio":	{
+											"type":	"number"
+										},
+										"purpose":	{
+											"type":	"array",
+											"items":	{
+												"type":	"string"
+											}
+										},
+										"roundedCorners":	{
+											"type":	"boolean"
+										},
+										"format":	{
+											"type":	"string"
+										}
+									},
+									"required":	["aspectRatio", "purpose", "roundedCorners"]
+								},
+								"logo":	{
+									"type":	"object",
+									"properties":	{
+										"aspectRatio":	{
+											"type":	"number"
+										},
+										"purpose":	{
+											"type":	"array",
+											"items":	{
+												"type":	"string"
+											}
+										},
+										"format":	{
+											"type":	"string"
+										},
+										"roundedCorners":	{
+											"type":	"boolean"
+										}
+									},
+									"required":	["purpose", "format", "roundedCorners"]
+								}
+							},
+							"required":	["logo"]
+						},
+						"videoArt":	{
+							"type":	"object",
+							"properties":	{
+								"background":	{
+									"type":	"object",
+									"properties":	{
+										"purpose":	{
+											"type":	"array",
+											"items":	{
+												"type":	"string"
+											}
+										}
+									},
+									"required":	["purpose"]
+								}
+							},
+							"required":	["background"]
+						},
+						"texts":	{
+							"type":	"object",
+							"properties":	{
+								"title":	{
+									"type":	"object",
+									"properties":	{
+										"field":	{
+											"type":	"string"
+										},
+										"type":	{
+											"type":	"string"
+										},
+										"sourceEntity":	{
+											"type":	"string"
+										}
+									},
+									"required":	["field", "type", "sourceEntity"]
+								}
+							},
+							"required":	["title"]
+						}
+					},
+					"required":	["filters", "sets"],
+					"name":	"CollectionConfig"
+				},
+				"brand":	{
+					"type":	"/configs/avatars"
+				},
+				"character":	{
+					"type":	"/configs/avatars"
+				},
+				"editorial":	{
+					"type":	"/configs/avatars"
+				},
+				"franchise":	{
+					"type":	"/configs/avatars"
+				},
+				"watchlist":	{
+					"type":	"/configs/avatars"
+				},
+				"contentType":	{
+					"type":	"/configs/avatars"
+				},
+				"explore":	{
+					"type":	"/configs/avatars"
+				},
+				"home":	{
+					"type":	"/configs/avatars"
+				},
+				"originals":	{
+					"type":	"/configs/avatars"
+				}
+			},
+			"required":	["avatars", "brand", "character", "editorial", "franchise", "watchlist", "contentType", "explore", "home", "originals"]
+		}
+	},
+	"required":	["collectionsAllowList", "setsAllowList", "containersAllowList", "configs"]
+}

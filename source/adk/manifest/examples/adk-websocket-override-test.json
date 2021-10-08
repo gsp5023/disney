@@ -1,0 +1,30 @@
+{
+  "v1": {
+    "options": [
+      {
+        "bundle": [
+          {
+            "file": "build/bundle/rust_app.bundle.zip"
+          }
+        ],
+        "runtime_config": {
+          "sys_params": {
+            "adk_websocket": {
+              "backend": "websocket",
+              "websocket_config": {
+                "ping_timeout": 1,
+                "no_activity_wait_period": 2,
+                "max_handshake_timeout": 3,
+                "max_receivable_message_size": 4,
+                "receive_buffer_size": 5,
+                "send_buffer_size": 6,
+                "header_buffer_size": 7,
+                "maximum_redirects": 8
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

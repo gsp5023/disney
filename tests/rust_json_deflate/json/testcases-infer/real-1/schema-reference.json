@@ -1,0 +1,981 @@
+{
+	"type":	"object",
+	"properties":	{
+		"data":	{
+			"type":	"object",
+			"properties":	{
+				"CollectionBySlug":	{
+					"type":	"object",
+					"properties":	{
+						"collectionGroupId":	{
+							"type":	"string"
+						},
+						"encodedCollectionGroupId":	{
+							"type":	"string"
+						},
+						"collectionGroup":	{
+							"type":	"object",
+							"properties":	{
+								"encodedCollectionGroupId":	{
+									"type":	"string"
+								},
+								"collectionGroupId":	{
+									"type":	"string"
+								},
+								"contentClass":	{
+									"type":	"string"
+								},
+								"key":	{
+									"type":	"string"
+								},
+								"slugs":	{
+									"type":	"array",
+									"items":	{
+										"type":	"object",
+										"properties":	{
+											"language":	{
+												"type":	"string"
+											},
+											"value":	{
+												"type":	"string"
+											}
+										},
+										"required":	["language", "value"]
+									}
+								}
+							},
+							"required":	["encodedCollectionGroupId", "collectionGroupId", "contentClass", "key", "slugs"]
+						},
+						"collectionId":	{
+							"type":	"string"
+						},
+						"encodedCollectionId":	{
+							"type":	"string"
+						},
+						"availability":	{
+							"type":	"array",
+							"items":	{
+								"type":	"object",
+								"properties":	{
+									"region":	{
+										"type":	"string"
+									},
+									"appears":	{
+										"type":	"string"
+									},
+									"expires":	{
+										"type":	[]
+									},
+									"minPromotionalStartDate":	{
+										"type":	[]
+									},
+									"kidsMode":	{
+										"type":	"boolean"
+									}
+								},
+								"required":	["region", "appears", "kidsMode"]
+							}
+						},
+						"type":	{
+							"type":	"string"
+						},
+						"containers":	{
+							"type":	"array",
+							"items":	{
+								"type":	"object",
+								"properties":	{
+									"type":	{
+										"type":	"string"
+									},
+									"background":	{
+										"type":	[]
+									},
+									"set":	{
+										"type":	"object",
+										"properties":	{
+											"meta":	{
+												"type":	"object",
+												"properties":	{
+													"hits":	{
+														"type":	"integer"
+													},
+													"page_size":	{
+														"type":	"integer"
+													},
+													"offset":	{
+														"type":	"integer"
+													},
+													"errors":	{
+														"type":	"array",
+														"items":	{
+															"type":	[]
+														}
+													}
+												},
+												"required":	["hits", "page_size", "offset", "errors"]
+											},
+											"texts":	{
+												"type":	"array",
+												"items":	{
+													"type":	[]
+												}
+											},
+											"type":	{
+												"type":	"string"
+											},
+											"setId":	{
+												"type":	"string"
+											},
+											"encodedSetId":	{
+												"type":	"string"
+											},
+											"contentClass":	{
+												"type":	"string"
+											},
+											"searchQuery":	{
+												"type":	"string"
+											},
+											"items":	{
+												"type":	"array",
+												"items":	{
+													"type":	"object",
+													"properties":	{
+														"type":	{
+															"type":	"string"
+														},
+														"meta":	{
+															"type":	[]
+														},
+														"videoId":	{
+															"type":	"string"
+														},
+														"encodedVideoId":	{
+															"type":	"string"
+														},
+														"contentId":	{
+															"type":	"string"
+														},
+														"encodedContentId":	{
+															"type":	"string"
+														},
+														"audioTracks":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"name":	{
+																		"type":	[]
+																	},
+																	"trackType":	{
+																		"type":	"string"
+																	},
+																	"renditionName":	{
+																		"type":	"string"
+																	},
+																	"language":	{
+																		"type":	"string"
+																	},
+																	"features":	{
+																		"type":	"array",
+																		"items":	{
+																			"type":	"string"
+																		}
+																	}
+																},
+																"required":	["trackType", "renditionName", "language", "features"]
+															}
+														},
+														"captions":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"name":	{
+																		"type":	[]
+																	},
+																	"trackType":	{
+																		"type":	"string"
+																	},
+																	"language":	{
+																		"type":	"string"
+																	},
+																	"renditionName":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["trackType", "language", "renditionName"]
+															}
+														},
+														"childOf":	{
+															"type":	"array",
+															"items":	{
+																"type":	[]
+															}
+														},
+														"encodedChildOf":	{
+															"type":	"string"
+														},
+														"contentSource":	{
+															"type":	"string"
+														},
+														"contentType":	{
+															"type":	"string"
+														},
+														"currentAvailability":	{
+															"type":	"object",
+															"properties":	{
+																"region":	{
+																	"type":	"string"
+																},
+																"appears":	{
+																	"type":	"string"
+																},
+																"minPromotionalStartDate":	{
+																	"type":	"string"
+																},
+																"kidsMode":	{
+																	"type":	"boolean"
+																}
+															},
+															"required":	["region", "appears", "minPromotionalStartDate"]
+														},
+														"distributionContext":	{
+															"type":	"string"
+														},
+														"episodeNumber":	{
+															"type":	[]
+														},
+														"episodeSequenceNumber":	{
+															"type":	"integer"
+														},
+														"episodeSeriesSequenceNumber":	{
+															"type":	"integer"
+														},
+														"family":	{
+															"type":	"object",
+															"properties":	{
+																"encodedFamilyId":	{
+																	"type":	"string"
+																},
+																"encodedPartnerFamilyId":	{
+																	"type":	"string"
+																},
+																"parent":	{
+																	"type":	"boolean"
+																},
+																"parentRef":	{
+																	"type":	"object",
+																	"properties":	{
+																		"encodedProgramId":	{
+																			"type":	"string"
+																		},
+																		"encodedSeasonId":	{
+																			"type":	"string"
+																		},
+																		"encodedSeriesId":	{
+																			"type":	"string"
+																		},
+																		"programId":	{
+																			"type":	"string"
+																		},
+																		"seasonId":	{
+																			"type":	"string"
+																		},
+																		"seriesId":	{
+																			"type":	"string"
+																		}
+																	},
+																	"required":	["encodedProgramId", "programId"]
+																},
+																"partnerFamilyId":	{
+																	"type":	"string"
+																},
+																"familyId":	{
+																	"type":	"string"
+																},
+																"sequenceNumber":	{
+																	"type":	[]
+																}
+															},
+															"required":	["encodedFamilyId", "encodedPartnerFamilyId", "parent", "partnerFamilyId", "familyId"]
+														},
+														"families":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"encodedFamilyId":	{
+																		"type":	"string"
+																	},
+																	"encodedPartnerFamilyId":	{
+																		"type":	"string"
+																	},
+																	"parent":	{
+																		"type":	"boolean"
+																	},
+																	"parentRef":	{
+																		"type":	"object",
+																		"properties":	{
+																			"encodedProgramId":	{
+																				"type":	"string"
+																			},
+																			"encodedSeasonId":	{
+																				"type":	"string"
+																			},
+																			"encodedSeriesId":	{
+																				"type":	"string"
+																			},
+																			"programId":	{
+																				"type":	"string"
+																			},
+																			"seasonId":	{
+																				"type":	"string"
+																			},
+																			"seriesId":	{
+																				"type":	"string"
+																			}
+																		},
+																		"required":	["encodedProgramId", "programId"]
+																	},
+																	"partnerFamilyId":	{
+																		"type":	"string"
+																	},
+																	"familyId":	{
+																		"type":	"string"
+																	},
+																	"sequenceNumber":	{
+																		"type":	[]
+																	}
+																},
+																"required":	["encodedFamilyId", "encodedPartnerFamilyId", "parent", "partnerFamilyId", "familyId"]
+															}
+														},
+														"feedSubType":	{
+															"type":	"string"
+														},
+														"feedType":	{
+															"type":	"string"
+														},
+														"genres":	{
+															"type":	"array",
+															"items":	{
+																"type":	"string"
+															}
+														},
+														"groupingId":	{
+															"type":	[]
+														},
+														"groups":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"partnerGroupId":	{
+																		"type":	"string"
+																	},
+																	"type":	{
+																		"type":	"string"
+																	},
+																	"name":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["partnerGroupId", "type", "name"]
+															}
+														},
+														"images":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"aspectRatio":	{
+																		"type":	"number"
+																	},
+																	"locales":	{
+																		"type":	"array",
+																		"items":	{
+																			"type":	"string"
+																		}
+																	},
+																	"masterHeight":	{
+																		"type":	"integer"
+																	},
+																	"masterId":	{
+																		"type":	"string"
+																	},
+																	"masterWidth":	{
+																		"type":	"integer"
+																	},
+																	"purpose":	{
+																		"type":	"string"
+																	},
+																	"sourceEntity":	{
+																		"type":	"string"
+																	},
+																	"url":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["aspectRatio", "locales", "masterHeight", "masterId", "masterWidth", "purpose", "url"]
+															}
+														},
+														"internalTitle":	{
+															"type":	"string"
+														},
+														"labels":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"region":	{
+																		"type":	"string"
+																	},
+																	"value":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["region", "value"]
+															}
+														},
+														"mediaConfig":	{
+															"type":	"object",
+															"properties":	{
+																"type":	{
+																	"type":	"string"
+																},
+																"state":	{
+																	"type":	"string"
+																},
+																"productType":	{
+																	"type":	"string"
+																}
+															},
+															"required":	["type", "state", "productType"]
+														},
+														"mediaFormat":	{
+															"type":	"string"
+														},
+														"mediaMetadata":	{
+															"type":	"object",
+															"properties":	{
+																"activeAspectRatio":	{
+																	"type":	"number"
+																},
+																"facets":	{
+																	"type":	"array",
+																	"items":	{
+																		"type":	"object",
+																		"properties":	{
+																			"label":	{
+																				"type":	"string"
+																			},
+																			"activeAspectRatio":	{
+																				"type":	"number"
+																			}
+																		},
+																		"required":	["label"]
+																	}
+																},
+																"audioTracks":	{
+																	"type":	"array",
+																	"items":	{
+																		"type":	"object",
+																		"properties":	{
+																			"name":	{
+																				"type":	[]
+																			},
+																			"trackType":	{
+																				"type":	"string"
+																			},
+																			"renditionName":	{
+																				"type":	"string"
+																			},
+																			"language":	{
+																				"type":	"string"
+																			},
+																			"features":	{
+																				"type":	"array",
+																				"items":	{
+																					"type":	"string"
+																				}
+																			}
+																		},
+																		"required":	["trackType", "renditionName", "language", "features"]
+																	}
+																},
+																"captions":	{
+																	"type":	"array",
+																	"items":	{
+																		"type":	"object",
+																		"properties":	{
+																			"name":	{
+																				"type":	[]
+																			},
+																			"trackType":	{
+																				"type":	"string"
+																			},
+																			"language":	{
+																				"type":	"string"
+																			},
+																			"renditionName":	{
+																				"type":	"string"
+																			}
+																		},
+																		"required":	["trackType", "language", "renditionName"]
+																	}
+																},
+																"features":	{
+																	"type":	"array",
+																	"items":	{
+																		"type":	"string"
+																	}
+																},
+																"format":	{
+																	"type":	"string"
+																},
+																"mediaId":	{
+																	"type":	"string"
+																},
+																"phase":	{
+																	"type":	"string"
+																},
+																"playbackUrls":	{
+																	"type":	"array",
+																	"items":	{
+																		"type":	"object",
+																		"properties":	{
+																			"rel":	{
+																				"type":	"string"
+																			},
+																			"href":	{
+																				"type":	"string"
+																			},
+																			"templated":	{
+																				"type":	"boolean"
+																			},
+																			"params":	{
+																				"type":	"array",
+																				"items":	{
+																					"type":	"object",
+																					"properties":	{
+																						"name":	{
+																							"type":	"string"
+																						},
+																						"description":	{
+																							"type":	"string"
+																						}
+																					},
+																					"required":	["name", "description"]
+																				}
+																			}
+																		},
+																		"required":	["rel", "href", "templated", "params"]
+																	}
+																},
+																"productType":	{
+																	"type":	"string"
+																},
+																"runtimeMillis":	{
+																	"type":	"integer"
+																},
+																"state":	{
+																	"type":	"string"
+																},
+																"type":	{
+																	"type":	"string"
+																}
+															},
+															"required":	["facets"]
+														},
+														"mediaRights":	{
+															"type":	"object",
+															"properties":	{
+																"violations":	{
+																	"type":	"array",
+																	"items":	{
+																		"type":	[]
+																	}
+																},
+																"downloadBlocked":	{
+																	"type":	"boolean"
+																},
+																"rewind":	{
+																	"type":	"boolean"
+																}
+															},
+															"required":	["violations", "downloadBlocked", "rewind"]
+														},
+														"mediaId":	{
+															"type":	"string"
+														},
+														"originalLanguage":	{
+															"type":	"string"
+														},
+														"parentOf":	{
+															"type":	"string"
+														},
+														"encodedParentOf":	{
+															"type":	"string"
+														},
+														"partnerContentId":	{
+															"type":	"string"
+														},
+														"partnerExclusions":	{
+															"type":	[]
+														},
+														"partnerProgramId":	{
+															"type":	"string"
+														},
+														"partnerSeasonId":	{
+															"type":	"string"
+														},
+														"partnerSeriesId":	{
+															"type":	"string"
+														},
+														"partnerVideoId":	{
+															"type":	"string"
+														},
+														"playbackUrls":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"rel":	{
+																		"type":	"string"
+																	},
+																	"href":	{
+																		"type":	"string"
+																	},
+																	"templated":	{
+																		"type":	"boolean"
+																	},
+																	"params":	{
+																		"type":	"array",
+																		"items":	{
+																			"type":	"object",
+																			"properties":	{
+																				"name":	{
+																					"type":	"string"
+																				},
+																				"description":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["name", "description"]
+																		}
+																	}
+																},
+																"required":	["rel", "href", "templated", "params"]
+															}
+														},
+														"programId":	{
+															"type":	"string"
+														},
+														"encodedProgramId":	{
+															"type":	"string"
+														},
+														"programType":	{
+															"type":	"string"
+														},
+														"ratings":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"advisories":	{
+																		"type":	"array",
+																		"items":	{
+																			"type":	[]
+																		}
+																	},
+																	"description":	{
+																		"type":	"string"
+																	},
+																	"system":	{
+																		"type":	"string"
+																	},
+																	"value":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["advisories", "system", "value"]
+															}
+														},
+														"runtimeMillis":	{
+															"type":	"integer"
+														},
+														"seasonId":	{
+															"type":	"string"
+														},
+														"encodedSeasonId":	{
+															"type":	"string"
+														},
+														"seasonSequenceNumber":	{
+															"type":	"integer"
+														},
+														"encodedSeriesId":	{
+															"type":	"string"
+														},
+														"seriesId":	{
+															"type":	"string"
+														},
+														"tags":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"displayName":	{
+																		"type":	[]
+																	},
+																	"type":	{
+																		"type":	"string"
+																	},
+																	"value":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["type", "value"]
+															}
+														},
+														"texts":	{
+															"type":	"array",
+															"items":	{
+																"type":	[]
+															}
+														},
+														"typedGenres":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"type":	{
+																		"type":	"string"
+																	},
+																	"name":	{
+																		"type":	"string"
+																	},
+																	"partnerId":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["type", "name", "partnerId"]
+															}
+														},
+														"releases":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"releaseType":	{
+																		"type":	"string"
+																	},
+																	"territory":	{
+																		"type":	[]
+																	},
+																	"releaseYear":	{
+																		"type":	"integer"
+																	},
+																	"releaseDate":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["releaseType", "releaseYear"]
+															}
+														},
+														"milestones":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"id":	{
+																		"type":	"string"
+																	},
+																	"milestoneTime":	{
+																		"type":	"array",
+																		"items":	{
+																			"type":	"object",
+																			"properties":	{
+																				"startMillis":	{
+																					"type":	"integer"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["startMillis", "type"]
+																		}
+																	},
+																	"milestoneType":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["id", "milestoneTime", "milestoneType"]
+															}
+														},
+														"videoArt":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"mediaMetadata":	{
+																		"type":	"object",
+																		"properties":	{
+																			"urls":	{
+																				"type":	"array",
+																				"items":	{
+																					"type":	"object",
+																					"properties":	{
+																						"regions":	{
+																							"type":	"array",
+																							"items":	{
+																								"type":	"string"
+																							}
+																						},
+																						"url":	{
+																							"type":	"string"
+																						}
+																					},
+																					"required":	["regions", "url"]
+																				}
+																			}
+																		},
+																		"required":	["urls"]
+																	},
+																	"purpose":	{
+																		"type":	"string"
+																	}
+																},
+																"required":	["mediaMetadata", "purpose"]
+															}
+														},
+														"textExperienceId":	{
+															"type":	"string"
+														},
+														"encodedTextExperienceId":	{
+															"type":	"string"
+														},
+														"seasonsMinYear":	{
+															"type":	[]
+														},
+														"seasonsMaxYear":	{
+															"type":	[]
+														},
+														"collectionGroupId":	{
+															"type":	"string"
+														},
+														"encodedCollectionGroupId":	{
+															"type":	"string"
+														},
+														"collectionGroup":	{
+															"type":	"object",
+															"properties":	{
+																"collectionGroupId":	{
+																	"type":	"string"
+																},
+																"encodedCollectionGroupId":	{
+																	"type":	"string"
+																},
+																"contentClass":	{
+																	"type":	"string"
+																},
+																"key":	{
+																	"type":	"string"
+																},
+																"slugs":	{
+																	"type":	"array",
+																	"items":	{
+																		"type":	"object",
+																		"properties":	{
+																			"language":	{
+																				"type":	"string"
+																			},
+																			"value":	{
+																				"type":	"string"
+																			}
+																		},
+																		"required":	["language", "value"]
+																	}
+																}
+															},
+															"required":	["collectionGroupId", "encodedCollectionGroupId", "contentClass", "key", "slugs"]
+														},
+														"collectionId":	{
+															"type":	"string"
+														},
+														"encodedCollectionId":	{
+															"type":	"string"
+														},
+														"availability":	{
+															"type":	"array",
+															"items":	{
+																"type":	"object",
+																"properties":	{
+																	"region":	{
+																		"type":	"string"
+																	},
+																	"appears":	{
+																		"type":	"string"
+																	},
+																	"expires":	{
+																		"type":	[]
+																	},
+																	"minPromotionalStartDate":	{
+																		"type":	[]
+																	},
+																	"kidsMode":	{
+																		"type":	"boolean"
+																	}
+																},
+																"required":	["region", "appears"]
+															}
+														}
+													},
+													"required":	["type", "images", "texts", "videoArt"]
+												}
+											},
+											"refType":	{
+												"type":	"string"
+											},
+											"refSubType":	{
+												"type":	[]
+											},
+											"refId":	{
+												"type":	"string"
+											},
+											"refIdType":	{
+												"type":	"string"
+											}
+										},
+										"required":	["meta", "texts", "type", "contentClass"]
+									}
+								},
+								"required":	["type", "set"]
+							}
+						},
+						"texts":	{
+							"type":	"array",
+							"items":	{
+								"type":	[]
+							}
+						},
+						"images":	{
+							"type":	"array",
+							"items":	{
+								"type":	[]
+							}
+						},
+						"videoArt":	{
+							"type":	"array",
+							"items":	{
+								"type":	[]
+							}
+						}
+					},
+					"required":	["collectionGroupId", "encodedCollectionGroupId", "collectionGroup", "collectionId", "encodedCollectionId", "availability", "type", "containers", "texts", "images", "videoArt"]
+				}
+			},
+			"required":	["CollectionBySlug"]
+		}
+	},
+	"required":	["data"]
+}

@@ -1,0 +1,16 @@
+{
+  "v1": {
+    "default_persona": "persona1",
+    "personas": [
+      {
+        "id": "persona1"
+      },
+      {
+        "id": "persona2"
+      },
+      {
+        "id": "persona3"
+      }
+    ]
+  }
+}

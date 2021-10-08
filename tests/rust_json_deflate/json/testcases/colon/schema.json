@@ -1,0 +1,18 @@
+{
+	"type":	"object",
+	"properties":	{
+		"alpha:1":	{
+            "type":	"string"
+		},
+		"alpha+1":	{
+            "type":	"string"
+		},
+		"alpha.1":	{
+            "type":	"string"
+		},
+		"alpha+":	{
+            "type":	"string"
+		}
+    },
+    "required": ["alpha:1", "alpha+1", "alpha.1", "alpha+"]
+}

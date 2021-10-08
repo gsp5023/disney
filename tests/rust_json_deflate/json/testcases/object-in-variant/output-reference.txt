@@ -1,0 +1,1 @@
+Ok(Root { a: Some(IsString("hello")), b: Some(IsObject(RootA { c: Some("string") })) })

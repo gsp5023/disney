@@ -1,0 +1,31 @@
+{
+    "type": "object",
+    "properties":   {
+        "abc-string-xyz":   {
+            "type": "string"
+        },
+        "abc-integer-xyz":  {
+            "type": "integer"
+        },
+        "abc-number-xyz":   {
+            "type": "number"
+        },
+        "abc-boolean-xyz":  {
+            "type": "boolean"
+        },
+        "abc-array-xyz":    {
+            "type": "array",
+            "items":    {
+                "type": "integer"
+            }
+        },
+        "abc-object-xyz":   {
+            "type": "object",
+            "properties":   {
+                "abc-inner-xyz":    {
+                    "type": "boolean"
+                }
+            }
+        }
+    }
+}

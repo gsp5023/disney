@@ -1,0 +1,40 @@
+{
+  "v1": {
+    "options": [
+      {
+        "rules": {
+          "device_id": "e04f432955f1"
+        },
+        "bundle": [
+          {
+            "url": "https://cdn.disney.com/app1.bundle.zip"
+          }
+        ]
+      },
+       {
+        "rules": {
+          "device_id": [
+            "e04f432955f5",
+            "e04f432955f6",
+            "e04f432955f7",
+            "e04f432955f8",
+            "e04f432955f2",
+            "e04f432955fa"
+          ]
+        },
+        "bundle": [
+          {
+            "url": "https://cdn.disney.com/app2.bundle.zip"
+          }
+        ]
+      },
+      {
+        "bundle": [
+          {
+            "url": "https://cdn.disney.com/app3.bundle.zip"
+          }
+        ]
+      }
+    ]
+  }
+}

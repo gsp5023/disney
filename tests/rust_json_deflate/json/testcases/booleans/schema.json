@@ -1,0 +1,57 @@
+{
+	"type":	"object",
+	"properties":	{
+		"regular-true":	{
+			"type":	"boolean"
+		},
+		"regular-false": {
+			"type": "boolean"
+		},
+		"optional-some-true": {
+			"type": "boolean"
+        },
+        "optional-some-false": {
+			"type": "boolean"
+        },
+        "optional-none": {
+			"type": "boolean"
+        },
+        "catch-ok-true": {
+			"type": "boolean"
+        },
+        "catch-ok-false": {
+			"type": "boolean"
+		},
+        "catch-err": {
+			"type": "boolean"
+		},
+        "optional-catch-some-ok-true": {
+			"type": "boolean"
+		},
+        "optional-catch-some-ok-false": {
+			"type": "boolean"
+		},
+        "optional-catch-some-err": {
+			"type": "boolean"
+		},
+        "optional-catch-none": {
+			"type": "boolean"
+        }
+    },
+	"required":	[
+        "regular-true",
+        "regular-false",
+        "catch-ok-true",
+        "catch-ok-false",
+        "catch-err"
+    ],
+    "catch": [
+        "catch-ok-true",
+        "catch-ok-false",
+        "catch-err",
+        "optional-catch-some-ok-true",
+        "optional-catch-some-ok-false",
+        "optional-catch-some-err",
+        "optional-catch-none"
+    ]
+}

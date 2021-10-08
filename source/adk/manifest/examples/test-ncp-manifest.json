@@ -1,0 +1,210 @@
+{
+  "v1": {
+    "options": [
+      {
+        "rules": {
+          "vendor": "UNKNOWN",
+          "device": "Desktop PC",
+          "revision": "1.0",
+          "software": "Debian 10",
+          "core_version": "0",
+          "gpu": "Nvidia 680",
+          "cpu": "X86_64",
+          "config": "dev"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Sony",
+          "device": "PS4",
+          "revision": "1.0",
+          "cpu": "X86_64",
+          "gpu": "AMD RDNA 2",
+          "config": "dev",
+          "software": "PS4",
+          "core_version": "0"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Sony",
+          "device": "PS5",
+          "revision": "1.0",
+          "cpu": "X86_64",
+          "gpu": "AMD RDNA 2",
+          "config": "dev",
+          "software": "PS5",
+          "core_version": "0"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Broadcom",
+          "device": "RPI",
+          "revision": "1.0",
+          "cpu": "ARM32",
+          "gpu": "Broadcom IV",
+          "config": "dev",
+          "software": "raspbian",
+          "core_version": "0"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Broadcom",
+          "device": "RPI",
+          "revision": "1.0",
+          "cpu": "ARM64",
+          "config": "dev",
+          "software": "raspbian",
+          "core_version": "0",
+          "gpu": "Broadcom IV"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Broadcom",
+          "device": "NEXUS_PLATFORM",
+          "core_version": "0",
+          "cpu": "MIPS64",
+          "config": "dev",
+          "software": "URSR_18.2_20180717",
+          "revision": "1",
+          "gpu": "Broadcom Video IV"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Broadcom",
+          "device": "NEXUS_PLATFORM",
+          "core_version": "0",
+          "cpu": "MIPS64",
+          "config": "dev",
+          "software": "URSR_16.2_20160630",
+          "revision": "B2",
+          "gpu": "Broadcom Video IV"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Broadcom",
+          "device": "NEXUS_PLATFORM",
+          "core_version": "0",
+          "cpu": "MIPS64",
+          "config": "dev",
+          "software": "URSR_19.1_20190406",
+          "revision": "B0",
+          "gpu": "Broadcom Video IV"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Broadcom",
+          "device": "NEXUS_PLATFORM",
+          "core_version": "0",
+          "cpu": "MIPS64",
+          "config": "dev",
+          "software": "URSR_19.2.1_20200201",
+          "revision": "B2",
+          "gpu": "Broadcom Video IV"
+        },
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Microsoft Windows",
+          "device": "Desktop PC",
+          "revision": "10.0",
+          "software": "Windows 10",
+          "core_version": "0",
+          "gpu": "NVIDIA",
+          "cpu": "X86_64",
+          "config": "dev"
+        },
+        "bundle": [
+          {
+            "sample": 0.45,
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          },
+          {
+            "sample": 0.55,
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/rust_app.bundle.zip"
+          }
+        ]
+      },
+      {
+        "rules": {
+          "vendor": "Microsoft Windows",
+          "device": "Desktop PC",
+          "revision": "10.0",
+          "software": "Windows 10",
+          "core_version": "0",
+          "gpu": "NVIDIA",
+          "cpu": "X86_64",
+          "config": "debug"
+        },
+        "bundle": [
+          {
+            "sample": 0.45,
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/dplus_demo.bundle.zip"
+          },
+          {
+            "sample": 0.55,
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/rust_app.bundle.zip"
+          }
+        ]
+      },
+      {
+        "bundle": [
+          {
+            "url": "https://cd-ncp-v2-test.s3.amazonaws.com/test/samples/rust_app.bundle.zip"
+          }
+        ]
+      }
+    ]
+  }
+}

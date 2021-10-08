@@ -1,0 +1,79 @@
+{
+    "$id": "https://disneystreaming.com/persona.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "required": [
+        "v1"
+    ],
+    "title": "DSS Persona Mapping Schema",
+    "type": "object",
+    "properties": {
+        "v1": {
+            "$id": "#/properties/v1",
+            "description": "Version 1 of the persona mapping schema",
+            "required": [
+                "default_persona",
+                "personas"
+            ],
+            "title": "The v1 schema",
+            "type": "object",
+            "properties": {
+                "default_persona": {
+                    "$id": "#/properties/v1/properties/default_persona",
+                    "description": "The default persona ID that will be selected if no explicit persona ID is provided. Must match the id field of only one object in the personas array.",
+                    "examples": [
+                        "dplus"
+                    ],
+                    "title": "The default_persona schema",
+                    "type": "string"
+                },
+                "personas": {
+                    "$id": "#/properties/v1/properties/personas",
+                    "description": "Array of possible mappings",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "type": "array",
+                    "additionalItems": true,
+                    "items": {
+                        "$id": "#/properties/v1/properties/personas/items",
+                        "type": [],
+                        "anyOf": [
+                            {
+                                "$id": "#/properties/v1/properties/personas/items/anyOf/0",
+                                "description": "A mapping between a persona ID and manifest URL",
+                                "examples": [
+                                    {
+                                        "id": "dplus",
+                                        "manifest_url": "https://example.com/manifest"
+                                    }
+                                ],
+                                "required": [
+                                    "id",
+                                    "manifest_url"
+                                ],
+                                "title": "Persona Mapping",
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "$id": "#/properties/v1/properties/personas/items/anyOf/0/properties/id",
+                                        "description": "Persona ID. Must consist only of characters A-Z, a-z, 0-9, and _",
+                                        "title": "The id schema",
+                                        "type": "string"
+                                    },
+                                    "manifest_url": {
+                                        "$id": "#/properties/v1/properties/personas/items/anyOf/0/properties/manifest_url",
+                                        "description": "A valid URL pointing to a manifest file",
+                                        "title": "The manifest_url schema",
+                                        "type": "string"
+                                    }
+                                },
+                                "additionalProperties": true
+                            }
+                        ]
+                    }
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "additionalProperties": true
+}

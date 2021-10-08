@@ -1,0 +1,99 @@
+{
+	"type":	"object",
+	"properties":	{
+		"boolean-or-integer-pick-boolean-true":	{
+			"type":	["boolean", "integer"]
+		},
+		"boolean-or-integer-pick-boolean-false":	{
+			"type":	["boolean", "integer"]
+		},
+		"boolean-or-integer-pick-integer":	{
+			"type":	["boolean", "integer"]
+		},
+		"boolean-or-number-pick-boolean-true":	{
+			"type":	["boolean", "number"]
+		},
+		"boolean-or-number-pick-boolean-false":	{
+			"type":	["boolean", "number"]
+		},
+		"boolean-or-number-pick-number":	{
+			"type":	["boolean", "number"]
+		},
+		"boolean-or-string-pick-boolean-true":	{
+			"type":	["boolean", "string"]
+		},
+		"boolean-or-string-pick-boolean-false":	{
+			"type":	["boolean", "string"]
+		},
+		"boolean-or-string-pick-string":	{
+			"type":	["boolean", "string"]
+		},
+		"integer-or-boolean-pick-integer":	{
+			"type":	["integer", "boolean"]
+		},
+		"integer-or-boolean-pick-boolean-true":	{
+			"type":	["integer", "boolean"]
+		},
+		"integer-or-boolean-pick-boolean-false":	{
+			"type":	["integer", "boolean"]
+		},
+		"integer-or-number-pick-integer":	{
+			"type":	["integer", "number"]
+		},
+		"integer-or-number-pick-number":	{
+			"type":	["integer", "number"]
+		},
+		"integer-or-string-pick-integer":	{
+			"type":	["integer", "string"]
+		},
+		"integer-or-string-pick-string":	{
+			"type":	["integer", "string"]
+		},
+		"string-or-boolean-pick-string":	{
+			"type":	["string", "boolean"]
+		},
+		"string-or-boolean-pick-boolean-true":	{
+			"type":	["string", "boolean"]
+		},
+		"string-or-boolean-pick-boolean-false":	{
+			"type":	["string", "boolean"]
+		},
+		"string-or-integer-pick-string":	{
+			"type":	["string", "integer"]
+		},
+		"string-or-integer-pick-integer":	{
+			"type":	["string", "integer"]
+		},
+		"string-or-number-pick-string":	{
+			"type":	["string", "number"]
+		},
+		"string-or-number-pick-number":	{
+			"type":	["string", "number"]
+		}
+    },
+	"required":	[
+		"boolean-or-integer-pick-boolean-true",
+		"boolean-or-integer-pick-boolean-false",
+		"boolean-or-integer-pick-integer",
+		"boolean-or-number-pick-boolean-true",
+		"boolean-or-number-pick-boolean-false",
+		"boolean-or-number-pick-number",
+		"boolean-or-string-pick-boolean-true",
+		"boolean-or-string-pick-boolean-false",
+		"boolean-or-string-pick-string",
+		"integer-or-boolean-pick-integer",
+		"integer-or-boolean-pick-boolean-true",
+		"integer-or-boolean-pick-boolean-false",
+		"integer-or-number-pick-integer",
+		"integer-or-number-pick-number",
+		"integer-or-string-pick-integer",
+		"integer-or-string-pick-string",
+		"string-or-boolean-pick-string",
+		"string-or-boolean-pick-boolean-true",
+		"string-or-boolean-pick-boolean-false",
+		"string-or-integer-pick-string",
+		"string-or-integer-pick-integer",
+		"string-or-number-pick-string",
+		"string-or-number-pick-number"
+    ]
+}

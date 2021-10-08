@@ -1,0 +1,96 @@
+{
+	"type":	"object",
+	"properties":	{
+		"a":	{
+			"type":	"map",
+			"items":	{
+				"type":	"integer"
+			}
+		},
+		"b":	{
+			"type":	"map",
+			"items":	{
+				"type":	"string"
+			}
+		},
+		"c":	{
+			"type":	"map",
+			"items":	{
+				"type":	["boolean", "integer"]
+			}
+		},
+		"e":	{
+			"type":	"map",
+			"items":	{
+				"type":	"number"
+			}
+		},
+		"f":	{
+			"type":	"map",
+			"items":	{
+				"type":	[]
+			}
+		},
+		"g":	{
+			"type":	"map",
+			"items":	{
+				"type":	"array",
+				"items":	{
+					"type":	"string"
+				}
+			}
+		},
+		"h":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"map",
+					"items":	{
+						"type":	"integer"
+					}
+				},
+				"b":	{
+					"type":	"map",
+					"items":	{
+						"type":	"integer"
+					}
+				},
+				"c":	{
+					"type":	"map",
+					"items":	{
+						"type":	"integer"
+					}
+				},
+				"d":	{
+					"type":	"map",
+					"items":	{
+						"type":	"object",
+						"properties":	{
+							"x":	{
+								"type":	"integer"
+							},
+							"y":	{
+								"type":	"integer"
+							},
+							"z":	{
+								"type":	"integer"
+							}
+						},
+						"required":	["x", "y", "z"]
+					}
+				},
+				"e":	{
+					"type":	"map",
+					"items":	{
+						"type":	"map",
+						"items":	{
+							"type":	"integer"
+						}
+					}
+				}
+			},
+			"required":	["a", "b", "c", "d", "e"]
+		}
+	},
+	"required":	["a", "b", "c", "e", "f", "g", "h"]
+}

@@ -1,0 +1,503 @@
+{
+    "type": "object",
+    "properties": {
+        "data": {
+            "type": "object",
+            "properties": {
+                "CollectionBySlug": {
+                    "type": "object",
+                    "properties": {
+                        "encodedCollectionGroupId": {
+                            "type": "string"
+                        },
+                        "collectionGroup": {
+                            "type": "object",
+                            "properties": {
+                                "encodedCollectionGroupId": {
+                                    "type": "string"
+                                },
+                                "collectionGroupId": {
+                                    "type": "string"
+                                },
+                                "contentClass": {
+                                    "type": "string"
+                                },
+                                "key": {
+                                    "type": "string"
+                                },
+                                "slugs": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "language": {
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": ["language", "value"]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "encodedCollectionGroupId",
+                                "collectionGroupId",
+                                "contentClass",
+                                "key",
+                                "slugs"
+                            ]
+                        },
+                        "collectionGroupId": {
+                            "type": "string"
+                        },
+                        "collectionId": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "encodedCollectionId": {
+                            "type": "string"
+                        },
+                        "texts": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "language": {
+                                        "type": "string"
+                                    },
+                                    "sourceEntity": {
+                                        "type": "string"
+                                    },
+                                    "targetEntity": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "field": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "language",
+                                    "sourceEntity",
+                                    "targetEntity",
+                                    "type",
+                                    "field",
+                                    "content"
+                                ]
+                            }
+                        },
+                        "images": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "aspectRatio": {
+                                        "type": "number"
+                                    },
+                                    "locales": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "masterHeight": {
+                                        "type": "integer"
+                                    },
+                                    "masterId": {
+                                        "type": "string"
+                                    },
+                                    "masterWidth": {
+                                        "type": "integer"
+                                    },
+                                    "purpose": {
+                                        "type": "string"
+                                    },
+                                    "sourceEntity": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "aspectRatio",
+                                    "locales",
+                                    "masterId",
+                                    "masterWidth",
+                                    "purpose",
+                                    "url"
+                                ]
+                            },
+                            "name": "CollectionImage"
+                        },
+                        "videoArt": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "mediaMetadata": {
+                                        "type": "object",
+                                        "properties": {
+                                            "urls": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "regions": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "url": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "regions",
+                                                        "url"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "required": ["urls"]
+                                    },
+                                    "purpose": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["mediaMetadata", "purpose"]
+                            }
+                        },
+                        "containers": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "container_type": {
+                                        "type": "string"
+                                    },
+                                    "background": {
+                                        "type": "string"
+                                    },
+                                    "set": {
+                                        "type": "object",
+                                        "properties": {
+                                            "meta": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "hits": {
+                                                        "type": "integer"
+                                                    },
+                                                    "page_size": {
+                                                        "type": "integer"
+                                                    },
+                                                    "offset": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "hits",
+                                                    "page_size",
+                                                    "offset"
+                                                ]
+                                            },
+                                            "texts": {
+                                                "type": "/data/CollectionBySlug/texts"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "setId": {
+                                                "type": "string"
+                                            },
+                                            "encodedSetId": {
+                                                "type": "string"
+                                            },
+                                            "contentClass": {
+                                                "type": "string"
+                                            },
+                                            "searchQuery": {
+                                                "type": "string"
+                                            },
+                                            "refType": {
+                                                "type": "string"
+                                            },
+                                            "refSubType": {
+                                                "type": "string"
+                                            },
+                                            "refId": {
+                                                "type": "string"
+                                            },
+                                            "refIdType": {
+                                                "type": "string"
+                                            },
+                                            "items": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "type": {
+                                                            "type": "string"
+                                                        },
+                                                        "avatarId": {
+                                                            "type": "string"
+                                                        },
+                                                        "collectionGroup": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "encodedCollectionGroupId": {
+                                                                    "type": "string"
+                                                                },
+                                                                "collectionGroupId": {
+                                                                    "type": "string"
+                                                                },
+                                                                "contentClass": {
+                                                                    "type": "string"
+                                                                },
+                                                                "key": {
+                                                                    "type": "string"
+                                                                },
+                                                                "slugs": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "type": "object",
+                                                                        "properties": {
+                                                                            "value": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "language": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        },
+                                                                        "required": [
+                                                                            "value",
+                                                                            "language"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "encodedCollectionGroupId",
+                                                                "collectionGroupId",
+                                                                "contentClass",
+                                                                "key",
+                                                                "slugs"
+                                                            ]
+                                                        },
+                                                        "encodedAvatarId": {
+                                                            "type": "string"
+                                                        },
+                                                        "groupingId": {
+                                                            "type": "string"
+                                                        },
+                                                        "images": {
+                                                            "type": "/data/CollectionBySlug/images"
+                                                        },
+                                                        "texts": {
+                                                            "type": "/data/CollectionBySlug/texts"
+                                                        },
+                                                        "videoArt": {
+                                                            "type": "/data/CollectionBySlug/videoArt"
+                                                        },
+                                                        "programType": {
+                                                            "type": "string"
+                                                        },
+                                                        "contentId": {
+                                                            "type": "string"
+                                                        },
+                                                        "playbackUrls": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "rel": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "href": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "templated": {
+                                                                        "type": "boolean"
+                                                                    },
+                                                                    "params": {
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "name": {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                "description": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "required": [
+                                                                                "name",
+                                                                                "description"
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "rel",
+                                                                    "href",
+                                                                    "templated",
+                                                                    "params"
+                                                                ]
+                                                            }
+                                                        },
+                                                        "meta": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "bookmarkData": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "userId": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "ccMedia": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "ccDefault": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "deviceId": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "occurredOn": {
+                                                                            "type": "number"
+                                                                        },
+                                                                        "playhead": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "runtime": {
+                                                                            "type": "integer"
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "userId",
+                                                                        "ccMedia",
+                                                                        "ccDefault",
+                                                                        "deviceId",
+                                                                        "occurredOn",
+                                                                        "playhead",
+                                                                        "runtime"
+                                                                    ]
+                                                                },
+                                                                "labels": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "promoLabels": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "object",
+                                                                                "properties": {
+                                                                                    "type": {
+                                                                                        "type": "string",
+                                                                                        "name": "label_type"
+                                                                                    },
+                                                                                    "sub_type": {
+                                                                                        "type": "string"
+                                                                                    },
+                                                                                    "sunset": {
+                                                                                        "type": "string"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "watchlistLabel": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "content_id": {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                "encoded_content_id": {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                "on_watchlist": {
+                                                                                    "type": "boolean"
+                                                                                }
+                                                                            },
+                                                                            "required": ["content_id", "encoded_content_id", "on_watchlist"]
+                                                                        }
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "bookmarkData",
+                                                                "labels"
+                                                            ]
+                                                        },
+                                                        "encodedSeriesId": {
+                                                            "type": "string"
+                                                        },
+                                                        "family": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "encodedFamilyId": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "encodedFamilyId"
+                                                            ]
+                                                        },
+                                                        "seasonSequenceNumber": {
+                                                            "type": "integer"
+                                                        },
+                                                        "episodeSequenceNumber": {
+                                                            "type": "integer"
+                                                        },
+                                                        "runtimeMillis": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "type",
+                                                        "images",
+                                                        "texts"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "meta",
+                                            "texts",
+                                            "type",
+                                            "contentClass"
+                                        ]
+                                    }
+                                },
+                                "required": ["set"]
+                            }
+                        }
+                    },
+                    "required": [
+                        "encodedCollectionGroupId",
+                        "collectionGroup",
+                        "collectionGroupId",
+                        "collectionId",
+                        "type",
+                        "encodedCollectionId",
+                        "containers",
+                        "texts",
+                        "images",
+                        "videoArt"
+                    ]
+                }
+            },
+            "required": ["CollectionBySlug"]
+        }
+    },
+    "required": ["data"]
+}

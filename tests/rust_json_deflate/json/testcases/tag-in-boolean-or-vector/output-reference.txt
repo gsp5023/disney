@@ -1,0 +1,1 @@
+Ok(Root { one_false: Some(RootOneFalse { a: false, b: [1, 2] }), one_true: Some(RootOneTrue { a: true, b: [1, 2] }), one_none: None, two_false: Some(RootTwoFalse { a: [1, 2], b: false }), two_true: Some(RootTwoTrue { a: [1, 2], b: true }), two_none: None, three: None })

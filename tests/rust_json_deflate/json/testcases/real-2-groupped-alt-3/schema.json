@@ -1,0 +1,348 @@
+{
+	"type":	"object",
+	"properties":	{
+		"configs":	{
+			"type":	"object",
+			"properties":	{
+				"avatars":	{
+					"type":	"object",
+					"properties":	{
+						"filters":	{
+							"type":	"object",
+							"properties":	{
+								"purpose":	{
+									"type":	"array",
+									"items":	{
+										"type":	"string"
+									}
+								},
+								"aspectRatio":	{
+									"type":	"array",
+									"items":	{
+										"type":	"number"
+									}
+								},
+								"text_field":	{
+									"type":	"array",
+									"items":	{
+										"type":	"string"
+									}
+								},
+								"text_type":	{
+									"type":	"array",
+									"items":	{
+										"type":	"string"
+									}
+								}
+							},
+							"required":	["purpose", "aspectRatio"]
+						},
+						"sets":	{
+							"type":	"object",
+							"properties":	{
+								"default":	{
+									"type":	"object",
+									"properties":	{
+										"shelf_grid":	{
+											"type":	"object",
+											"properties":	{
+												"texts":	{
+													"type":	"object",
+													"properties":	{
+														"title":	{
+															"type":	"object",
+															"properties":	{
+																"field":	{
+																	"type":	"string"
+																},
+																"type":	{
+																	"type":	"string"
+																},
+																"sourceEntity":	{
+																	"type":	"string"
+																}
+															},
+															"required":	["field", "type", "sourceEntity"]
+														}
+													}
+												},
+												"breakpoints":	{
+													"type":	"object",
+													"properties":	{
+														"all":	{
+															"type":	"object",
+															"properties":	{
+																"tiles":	{
+																	"type":	"integer"
+																},
+																"images":	{
+																	"type":	"object",
+																	"properties":	{
+																		"tile":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				},
+																				"roundedCorners":	{
+																					"type":	"boolean"
+																				},
+																				"format":	{
+																					"type":	"string"
+                                                                                },
+                                                                                "isRaw":	{
+																					"type":	"boolean"
+																				}
+																			},
+																			"required":	["purpose"]
+                                                                        },
+                                                                        "tile_animated":	{
+                                                                            "type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+                                                                        },
+                                                                        "tile_full_bleed":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+																		},
+                                                                        "focus":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+                                                                        },
+                                                                        "focus_any":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+                                                                        },
+                                                                        "focus_sd":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+                                                                        },
+																		"background":	{
+                                                                            "type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+																		},
+																		"logo":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+                                                                        },
+                                                                        "logo_collection":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+                                                                        },
+                                                                        "logo_full_bleed":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+                                                                        },
+                                                                        "logo_full_bleed_collection":	{
+																			"type":	"/configs/avatars/sets/default/shelf_grid/breakpoints/all/images/tile"
+																		}
+																	}
+																},
+																"texts":	{
+																	"type":	"object",
+																	"properties":	{
+																		"title":	{
+																			"type":	"object",
+																			"properties":	{
+																				"field":	{
+																					"type":	"string"
+																				},
+																				"type":	{
+																					"type":	"string"
+																				},
+																				"sourceEntity":	{
+																					"type":	"string"
+																				}
+																			},
+																			"required":	["field", "type", "sourceEntity"]
+																		}
+																	}
+																},
+																"videoArt":	{
+																	"type":	"object",
+																	"properties":	{
+																		"background":	{
+																			"type":	"object",
+																			"properties":	{
+																				"aspectRatio":	{
+																					"type":	"number"
+																				},
+																				"purpose":	{
+																					"type":	"array",
+																					"items":	{
+																						"type":	"string"
+																					}
+																				}
+																			},
+																			"required":	["aspectRatio", "purpose"]
+																		}
+																	},
+																	"required":	["background"]
+																}
+															},
+															"required":	["tiles", "images"]
+														}
+													},
+													"required":	["all"]
+												},
+												"renderTitle":	{
+													"type":	"boolean"
+												}
+											},
+											"required":	["breakpoints"]
+                                        },
+                                        "render":	{
+                                            "type":	"boolean"
+                                        }
+									}
+								},
+								"episode":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"category":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"contentType":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"brand":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"ContinueWatchingSet":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"featured":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"hero":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"HeroContainer":	{
+									"type":	"/configs/avatars/sets/default"
+								},
+								"HeroFullBleedContainer":	{
+									"type":	"/configs/avatars/sets/default"
+								}
+                            },
+                            "required": ["default"]
+						},
+						"images":	{
+							"type":	"object",
+							"properties":	{
+								"background":	{
+									"type":	"object",
+									"properties":	{
+										"aspectRatio":	{
+											"type":	"number"
+										},
+										"purpose":	{
+											"type":	"array",
+											"items":	{
+												"type":	"string"
+											}
+										},
+										"roundedCorners":	{
+											"type":	"boolean"
+										},
+										"format":	{
+											"type":	"string"
+										}
+									},
+									"required":	["aspectRatio", "purpose", "roundedCorners"]
+								},
+								"logo":	{
+									"type":	"object",
+									"properties":	{
+										"aspectRatio":	{
+											"type":	"number"
+										},
+										"purpose":	{
+											"type":	"array",
+											"items":	{
+												"type":	"string"
+											}
+										},
+										"format":	{
+											"type":	"string"
+										},
+										"roundedCorners":	{
+											"type":	"boolean"
+										}
+									},
+									"required":	["purpose", "format", "roundedCorners"]
+								}
+							},
+							"required":	["logo"]
+						},
+						"videoArt":	{
+							"type":	"object",
+							"properties":	{
+								"background":	{
+									"type":	"object",
+									"properties":	{
+										"purpose":	{
+											"type":	"array",
+											"items":	{
+												"type":	"string"
+											}
+										}
+									},
+									"required":	["purpose"]
+								}
+							},
+							"required":	["background"]
+						},
+						"texts":	{
+							"type":	"object",
+							"properties":	{
+								"title":	{
+									"type":	"object",
+									"properties":	{
+										"field":	{
+											"type":	"string"
+										},
+										"type":	{
+											"type":	"string"
+										},
+										"sourceEntity":	{
+											"type":	"string"
+										}
+									},
+									"required":	["field", "type", "sourceEntity"]
+								}
+							},
+							"required":	["title"]
+						}
+					},
+					"required":	["filters", "sets"],
+					"name":	"CollectionConfig"
+				},
+				"brand":	{
+					"type":	"/configs/avatars"
+				},
+				"character":	{
+					"type":	"/configs/avatars"
+				},
+				"editorial":	{
+					"type":	"/configs/avatars"
+				},
+				"franchise":	{
+					"type":	"/configs/avatars"
+				},
+				"watchlist":	{
+					"type":	"/configs/avatars"
+				},
+				"contentType":	{
+					"type":	"/configs/avatars"
+				},
+				"explore":	{
+					"type":	"/configs/avatars"
+				},
+				"home":	{
+					"type":	"/configs/avatars"
+				},
+				"originals":	{
+					"type":	"/configs/avatars"
+				}
+			},
+			"required":	["avatars", "brand", "character", "editorial", "franchise", "watchlist", "contentType", "explore", "home", "originals"]
+		}
+	},
+	"required":	["configs"]
+}

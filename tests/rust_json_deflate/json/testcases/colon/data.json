@@ -1,0 +1,6 @@
+{
+    "alpha:1": "foo",
+    "alpha+1": "bar",
+    "alpha.1": "baz",
+    "alpha+": "plus"
+}

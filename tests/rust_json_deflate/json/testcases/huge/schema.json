@@ -1,0 +1,206 @@
+{
+    "type": "object",
+    "properties":   {
+        "enter":    {
+            "type": "object",
+            "properties":   {
+                "f01":   {
+                    "type": "object",
+                    "properties":   {
+                        "g01":   {
+                            "type": "object",
+                            "properties":   {
+                                "h01":   {
+                                    "type": "string"
+                                },
+                                "h02":   {
+                                    "type": "string"
+                                },
+                                "h03":   {
+                                    "type": "string"
+                                },
+                                "h04":   {
+                                    "type": "string"
+                                },
+                                "h05":   {
+                                    "type": "string"
+                                },
+                                "h06":   {
+                                    "type": "string"
+                                },
+                                "h07":   {
+                                    "type": "string"
+                                },
+                                "h08":   {
+                                    "type": "string"
+                                },
+                                "h09":   {
+                                    "type": "string"
+                                },
+                                "h10":   {
+                                    "type": "string"
+                                },
+                                "h11":   {
+                                    "type": "string"
+                                },
+                                "h12":   {
+                                    "type": "string"
+                                },
+                                "h13":   {
+                                    "type": "string"
+                                },
+                                "h14":   {
+                                    "type": "string"
+                                },
+                                "h15":   {
+                                    "type": "string"
+                                },
+                                "h16":   {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "g02":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g03":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g04":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g05":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g06":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g07":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g08":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g09":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g10":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g11":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g12":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g13":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g14":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g15":   {
+                            "type": "/enter/f01/g01"
+                        },
+                        "g16":   {
+                            "type": "/enter/f01/g01"
+                        }
+                    }
+                },
+                "f02":   {
+                    "type": "/enter/f01"
+                },
+                "f03":   {
+                    "type": "/enter/f01"
+                },
+                "f04":   {
+                    "type": "/enter/f01"
+                },
+                "f05":   {
+                    "type": "/enter/f01"
+                },
+                "f06":   {
+                    "type": "/enter/f01"
+                },
+                "f07":   {
+                    "type": "/enter/f01"
+                },
+                "f08":   {
+                    "type": "/enter/f01"
+                },
+                "f09":   {
+                    "type": "/enter/f01"
+                },
+                "f10":   {
+                    "type": "/enter/f01"
+                },
+                "f11":   {
+                    "type": "/enter/f01"
+                },
+                "f12":   {
+                    "type": "/enter/f01"
+                },
+                "f13":   {
+                    "type": "/enter/f01"
+                },
+                "f14":   {
+                    "type": "/enter/f01"
+                },
+                "f15":   {
+                    "type": "/enter/f01"
+                },
+                "f16":   {
+                    "type": "/enter/f01"
+                },
+                "f17":   {
+                    "type": "/enter/f01"
+                },
+                "f18":   {
+                    "type": "/enter/f01"
+                },
+                "f19":   {
+                    "type": "/enter/f01"
+                },
+                "f20":   {
+                    "type": "/enter/f01"
+                },
+                "f21":   {
+                    "type": "/enter/f01"
+                },
+                "f22":   {
+                    "type": "/enter/f01"
+                },
+                "f23":   {
+                    "type": "/enter/f01"
+                },
+                "f24":   {
+                    "type": "/enter/f01"
+                },
+                "f25":   {
+                    "type": "/enter/f01"
+                },
+                "f26":   {
+                    "type": "/enter/f01"
+                },
+                "f27":   {
+                    "type": "/enter/f01"
+                },
+                "f28":   {
+                    "type": "/enter/f01"
+                },
+                "f29":   {
+                    "type": "/enter/f01"
+                },
+                "f30":   {
+                    "type": "/enter/f01"
+                },
+                "f31":   {
+                    "type": "/enter/f01"
+                },
+                "f32":   {
+                    "type": "/enter/f01"
+                }
+            }
+        }
+    }
+}

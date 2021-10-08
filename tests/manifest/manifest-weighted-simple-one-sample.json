@@ -1,0 +1,17 @@
+{
+  "v1": {
+    "options": [{
+      "bundle": [
+        {
+          "url": "http://0.0.0.0:8000/build/bundle/ONE.bundle.zip",
+          "signature": "aFsnm+NY2pNgPm+lWZWP8cxuJEA2rr2ifAbBk7neWE4=",
+          "sample":3
+        },
+        {
+          "url": "http://0.0.0.0:8000/build/bundle/TWO.bundle.zip",
+          "signature": "aFsnm+NY2pNgPm+lWZWP8cxuJEA2rr2ifAbBk7neWE4="
+        }
+      ]
+    }]
+  }
+}

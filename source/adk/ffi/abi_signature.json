@@ -1,0 +1,6484 @@
+{
+  "types": [
+    {
+      "name": "i16",
+      "size": 2,
+      "align": 2
+    },
+    {
+      "name": "i32",
+      "size": 4,
+      "align": 4
+    },
+    {
+      "name": "i64",
+      "size": 8,
+      "align": 8
+    },
+    {
+      "name": "i8",
+      "size": 1,
+      "align": 1
+    },
+    {
+      "name": "u16",
+      "size": 2,
+      "align": 2
+    },
+    {
+      "name": "u32",
+      "size": 4,
+      "align": 4
+    },
+    {
+      "name": "u64",
+      "size": 8,
+      "align": 8
+    },
+    {
+      "name": "u8",
+      "size": 1,
+      "align": 1
+    }
+  ],
+  "enums": [
+    {
+      "name": "CGFontFillOptions",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "AlignBotton",
+          "constant": 16
+        },
+        {
+          "name": "AlignCenter",
+          "constant": 2
+        },
+        {
+          "name": "AlignLeft",
+          "constant": 1
+        },
+        {
+          "name": "AlignRight",
+          "constant": 4
+        },
+        {
+          "name": "AlignTop",
+          "constant": 8
+        }
+      ]
+    },
+    {
+      "name": "CGPathOptions",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "Concave",
+          "constant": 1
+        },
+        {
+          "name": "NoFethering",
+          "constant": 2
+        },
+        {
+          "name": "None",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "Device",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "Device_Console",
+          "constant": 2
+        },
+        {
+          "name": "Device_Desktop",
+          "constant": 1
+        },
+        {
+          "name": "Device_Mobile",
+          "constant": 4
+        },
+        {
+          "name": "Device_Settop",
+          "constant": 3
+        },
+        {
+          "name": "Device_SmartTV",
+          "constant": 6
+        },
+        {
+          "name": "Device_Tablet",
+          "constant": 5
+        },
+        {
+          "name": "Device_Unknown",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_analytics_log_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "log_debug",
+          "constant": 4
+        },
+        {
+          "name": "log_error",
+          "constant": 1
+        },
+        {
+          "name": "log_info",
+          "constant": 3
+        },
+        {
+          "name": "log_none",
+          "constant": 0
+        },
+        {
+          "name": "log_warn",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "adk_app_notify_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "dismiss_system_loading_screen",
+          "constant": 3
+        },
+        {
+          "name": "logged_in_and_entitled",
+          "constant": 2
+        },
+        {
+          "name": "logged_in_not_entitled",
+          "constant": 1
+        },
+        {
+          "name": "logged_out",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_app_state_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "adk_app_state_background",
+          "constant": 0
+        },
+        {
+          "name": "adk_app_state_foreground",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_application_event_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_application_event_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_application_event_background",
+          "constant": 1
+        },
+        {
+          "name": "adk_application_event_focus_gained",
+          "constant": 5
+        },
+        {
+          "name": "adk_application_event_focus_lost",
+          "constant": 6
+        },
+        {
+          "name": "adk_application_event_foreground",
+          "constant": 2
+        },
+        {
+          "name": "adk_application_event_link_down",
+          "constant": 8
+        },
+        {
+          "name": "adk_application_event_link_up",
+          "constant": 7
+        },
+        {
+          "name": "adk_application_event_quit",
+          "constant": 0
+        },
+        {
+          "name": "adk_application_event_resume",
+          "constant": 4
+        },
+        {
+          "name": "adk_application_event_suspend",
+          "constant": 3
+        }
+      ]
+    },
+    {
+      "name": "adk_curl_handle_buffer_mode_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "BUFFER_HTTP_BODY",
+          "constant": 1
+        },
+        {
+          "name": "BUFFER_HTTP_HEADER",
+          "constant": 2
+        },
+        {
+          "name": "BUFFER_OFF",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_curl_info_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "CONNECT_TIME",
+          "constant": 3145733
+        },
+        {
+          "name": "CONTENT_LENGTH_DOWNLOAD",
+          "constant": 3145743
+        },
+        {
+          "name": "CONTENT_LENGTH_UPLOAD",
+          "constant": 3145744
+        },
+        {
+          "name": "CONTENT_TYPE",
+          "constant": 1048594
+        },
+        {
+          "name": "EFFECTIVE_URL",
+          "constant": 1048577
+        },
+        {
+          "name": "FILETIME",
+          "constant": 2097166
+        },
+        {
+          "name": "HEADER_SIZE",
+          "constant": 2097163
+        },
+        {
+          "name": "HTTPAUTH_AVAIL",
+          "constant": 2097175
+        },
+        {
+          "name": "HTTP_CONNECT_CODE",
+          "constant": 2097174
+        },
+        {
+          "name": "LASTONE",
+          "constant": 28
+        },
+        {
+          "name": "NAME_LOOKUP_TIME",
+          "constant": 3145732
+        },
+        {
+          "name": "NONE",
+          "constant": 0
+        },
+        {
+          "name": "NUM_CONNECTS",
+          "constant": 2097178
+        },
+        {
+          "name": "OS_ERRNO",
+          "constant": 2097177
+        },
+        {
+          "name": "PRETRANSFER_TIME",
+          "constant": 3145734
+        },
+        {
+          "name": "PRIVATE",
+          "constant": 1048597
+        },
+        {
+          "name": "PROXY_AUTH_AVAIL",
+          "constant": 2097176
+        },
+        {
+          "name": "REDIRECT_COUNT",
+          "constant": 2097172
+        },
+        {
+          "name": "REDIRECT_TIME",
+          "constant": 3145747
+        },
+        {
+          "name": "REQUEST_SIZE",
+          "constant": 2097164
+        },
+        {
+          "name": "RESPONSE_CODE",
+          "constant": 2097154
+        },
+        {
+          "name": "SIZE_DOWNLOAD",
+          "constant": 3145736
+        },
+        {
+          "name": "SIZE_UPLOAD",
+          "constant": 3145735
+        },
+        {
+          "name": "SPEED_DOWNLOAD",
+          "constant": 3145737
+        },
+        {
+          "name": "SPEED_UPLOAD",
+          "constant": 3145738
+        },
+        {
+          "name": "SSL_ENGINES",
+          "constant": 4194331
+        },
+        {
+          "name": "SSL_VERIFY_RESULT",
+          "constant": 2097165
+        },
+        {
+          "name": "START_TRANSFER_TIME",
+          "constant": 3145745
+        },
+        {
+          "name": "TOTAL_TIME",
+          "constant": 3145731
+        }
+      ]
+    },
+    {
+      "name": "adk_curl_option_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "ACCEPT_ENCODING",
+          "constant": 10102
+        },
+        {
+          "name": "AUTO_REFERER",
+          "constant": 58
+        },
+        {
+          "name": "BUFFER_SIZE",
+          "constant": 98
+        },
+        {
+          "name": "CAINFO",
+          "constant": 10065
+        },
+        {
+          "name": "CAPATH",
+          "constant": 10097
+        },
+        {
+          "name": "CONNECT_TIMEOUT",
+          "constant": 78
+        },
+        {
+          "name": "COOKIE",
+          "constant": 10022
+        },
+        {
+          "name": "COOKIE_FILE",
+          "constant": 10031
+        },
+        {
+          "name": "COOKIE_JAR",
+          "constant": 10082
+        },
+        {
+          "name": "COOKIE_SESSION",
+          "constant": 96
+        },
+        {
+          "name": "CRLF",
+          "constant": 27
+        },
+        {
+          "name": "CUSTOM_REQUEST",
+          "constant": 10036
+        },
+        {
+          "name": "DNS_CACHE_TIMEOUT",
+          "constant": 92
+        },
+        {
+          "name": "DNS_USE_GLOBAL_CACHE",
+          "constant": 91
+        },
+        {
+          "name": "ERROR_BUFFER",
+          "constant": 10010
+        },
+        {
+          "name": "FAIL_ON_ERROR",
+          "constant": 45
+        },
+        {
+          "name": "FILE_TIME",
+          "constant": 69
+        },
+        {
+          "name": "FOLLOW_LOCATION",
+          "constant": 52
+        },
+        {
+          "name": "FORBID_REUSE",
+          "constant": 75
+        },
+        {
+          "name": "FRESH_CONNECT",
+          "constant": 74
+        },
+        {
+          "name": "HTTP_200_ALIASES",
+          "constant": 10104
+        },
+        {
+          "name": "HTTP_AUTH",
+          "constant": 107
+        },
+        {
+          "name": "HTTP_GET",
+          "constant": 80
+        },
+        {
+          "name": "HTTP_HEADER",
+          "constant": 10023
+        },
+        {
+          "name": "HTTP_POST",
+          "constant": 10024
+        },
+        {
+          "name": "HTTP_PROXY_TUNNEL",
+          "constant": 61
+        },
+        {
+          "name": "HTTP_VERSION",
+          "constant": 84
+        },
+        {
+          "name": "INTERFACE",
+          "constant": 10062
+        },
+        {
+          "name": "IN_FILE_SIZE",
+          "constant": 14
+        },
+        {
+          "name": "IP_RESOLVE",
+          "constant": 113
+        },
+        {
+          "name": "LOW_SPEED_LIMIT",
+          "constant": 19
+        },
+        {
+          "name": "LOW_SPEED_TIME",
+          "constant": 20
+        },
+        {
+          "name": "MAX_CONNECTS",
+          "constant": 71
+        },
+        {
+          "name": "MAX_FILE_SIZE",
+          "constant": 114
+        },
+        {
+          "name": "MAX_REDIRS",
+          "constant": 68
+        },
+        {
+          "name": "NOBODY",
+          "constant": 44
+        },
+        {
+          "name": "NO_PROGRESS",
+          "constant": 43
+        },
+        {
+          "name": "NO_SIGNAL",
+          "constant": 99
+        },
+        {
+          "name": "PORT",
+          "constant": 3
+        },
+        {
+          "name": "POST",
+          "constant": 47
+        },
+        {
+          "name": "POST_FIELDS",
+          "constant": 10015
+        },
+        {
+          "name": "POST_FIELD_SIZE",
+          "constant": 60
+        },
+        {
+          "name": "POST_QUOTE",
+          "constant": 10039
+        },
+        {
+          "name": "PRE_QUOTE",
+          "constant": 10093
+        },
+        {
+          "name": "PRIVATE",
+          "constant": 10103
+        },
+        {
+          "name": "PROXY",
+          "constant": 10004
+        },
+        {
+          "name": "PROXY_AUTH",
+          "constant": 111
+        },
+        {
+          "name": "PROXY_PORT",
+          "constant": 59
+        },
+        {
+          "name": "PROXY_TYPE",
+          "constant": 101
+        },
+        {
+          "name": "PROXY_USER_PWD",
+          "constant": 10006
+        },
+        {
+          "name": "PUT",
+          "constant": 54
+        },
+        {
+          "name": "QUOTE",
+          "constant": 10028
+        },
+        {
+          "name": "RANDOM_FILE",
+          "constant": 10076
+        },
+        {
+          "name": "RANGE",
+          "constant": 10007
+        },
+        {
+          "name": "READ_DATA",
+          "constant": 10009
+        },
+        {
+          "name": "READ_FUNCTION",
+          "constant": 20012
+        },
+        {
+          "name": "REFERER",
+          "constant": 10016
+        },
+        {
+          "name": "RESUME_FROM",
+          "constant": 21
+        },
+        {
+          "name": "SHARE",
+          "constant": 10100
+        },
+        {
+          "name": "SOURCE_HOST",
+          "constant": 10122
+        },
+        {
+          "name": "SOURCE_PATH",
+          "constant": 10124
+        },
+        {
+          "name": "SOURCE_PORT",
+          "constant": 125
+        },
+        {
+          "name": "SOURCE_POST_QUOTE",
+          "constant": 10128
+        },
+        {
+          "name": "SOURCE_PRE_QUOTE",
+          "constant": 10127
+        },
+        {
+          "name": "SOURCE_QUOTE",
+          "constant": 10133
+        },
+        {
+          "name": "SOURCE_URL",
+          "constant": 10132
+        },
+        {
+          "name": "SOURCE_USERPWD",
+          "constant": 10123
+        },
+        {
+          "name": "SSL_CERT",
+          "constant": 10025
+        },
+        {
+          "name": "SSL_CERT_PASSWD",
+          "constant": 10026
+        },
+        {
+          "name": "SSL_CERT_TYPE",
+          "constant": 10086
+        },
+        {
+          "name": "SSL_CIPHER_LIST",
+          "constant": 10083
+        },
+        {
+          "name": "SSL_ENGINE",
+          "constant": 10089
+        },
+        {
+          "name": "SSL_ENGINE_DEFAULT",
+          "constant": 90
+        },
+        {
+          "name": "SSL_KEY",
+          "constant": 10087
+        },
+        {
+          "name": "SSL_KEYPASSWD",
+          "constant": 10026
+        },
+        {
+          "name": "SSL_KEYTYPE",
+          "constant": 10088
+        },
+        {
+          "name": "SSL_VERIFY_HOST",
+          "constant": 81
+        },
+        {
+          "name": "SSL_VERIFY_PEER",
+          "constant": 64
+        },
+        {
+          "name": "SSL_VERSION",
+          "constant": 32
+        },
+        {
+          "name": "TCP_NODELAY",
+          "constant": 121
+        },
+        {
+          "name": "TIMEOUT",
+          "constant": 13
+        },
+        {
+          "name": "TIME_CONDITION",
+          "constant": 33
+        },
+        {
+          "name": "TIME_VALUE",
+          "constant": 34
+        },
+        {
+          "name": "TRANSFER_TEXT",
+          "constant": 53
+        },
+        {
+          "name": "UNRESTRICTED_AUTH",
+          "constant": 105
+        },
+        {
+          "name": "UPLOAD",
+          "constant": 46
+        },
+        {
+          "name": "URL",
+          "constant": 10002
+        },
+        {
+          "name": "USER_AGENT",
+          "constant": 10018
+        },
+        {
+          "name": "USER_PWD",
+          "constant": 10005
+        },
+        {
+          "name": "VERBOSE",
+          "constant": 41
+        }
+      ]
+    },
+    {
+      "name": "adk_curl_result_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "ABORTED_BY_CALLBACK",
+          "constant": 42
+        },
+        {
+          "name": "BAD_CALLING_ORDER",
+          "constant": 44
+        },
+        {
+          "name": "BAD_CONTENT_ENCODING",
+          "constant": 61
+        },
+        {
+          "name": "BAD_DOWNLOAD_RESUME",
+          "constant": 36
+        },
+        {
+          "name": "BAD_FUNCTION_ARGUMENT",
+          "constant": 43
+        },
+        {
+          "name": "BAD_PASSWORD_ENTERED",
+          "constant": 46
+        },
+        {
+          "name": "BUSY",
+          "constant": -1
+        },
+        {
+          "name": "COULDNT_CONNECT",
+          "constant": 7
+        },
+        {
+          "name": "COULDNT_RESOLVE_HOST",
+          "constant": 6
+        },
+        {
+          "name": "COULDNT_RESOLVE_PROXY",
+          "constant": 5
+        },
+        {
+          "name": "FAILED_INIT",
+          "constant": 2
+        },
+        {
+          "name": "FILESIZE_EXCEEDED",
+          "constant": 63
+        },
+        {
+          "name": "FILE_COULDNT_READ_FILE",
+          "constant": 37
+        },
+        {
+          "name": "FUNCTION_NOT_FOUND",
+          "constant": 41
+        },
+        {
+          "name": "GOT_NOTHING",
+          "constant": 52
+        },
+        {
+          "name": "HTTP_POST_ERROR",
+          "constant": 34
+        },
+        {
+          "name": "HTTP_RANGE_ERROR",
+          "constant": 33
+        },
+        {
+          "name": "HTTP_RETURNED_ERROR",
+          "constant": 22
+        },
+        {
+          "name": "INTERFACE_FAILED",
+          "constant": 45
+        },
+        {
+          "name": "OK",
+          "constant": 0
+        },
+        {
+          "name": "OPERATION_TIMEOUTED",
+          "constant": 28
+        },
+        {
+          "name": "OUT_OF_MEMORY",
+          "constant": 27
+        },
+        {
+          "name": "PARTIAL_FILE",
+          "constant": 18
+        },
+        {
+          "name": "PEER_FAILED_VALIDATION",
+          "constant": 60
+        },
+        {
+          "name": "READ_ERROR",
+          "constant": 26
+        },
+        {
+          "name": "RECV_ERROR",
+          "constant": 56
+        },
+        {
+          "name": "SEND_ERROR",
+          "constant": 55
+        },
+        {
+          "name": "SEND_FAIL_REWIND",
+          "constant": 65
+        },
+        {
+          "name": "SHARE_IN_USE",
+          "constant": 57
+        },
+        {
+          "name": "SSL_CERTPROBLEM",
+          "constant": 58
+        },
+        {
+          "name": "SSL_CIPHER",
+          "constant": 59
+        },
+        {
+          "name": "SSL_CONNECT_ERROR",
+          "constant": 35
+        },
+        {
+          "name": "SSL_ENGINE_INITFAILED",
+          "constant": 66
+        },
+        {
+          "name": "SSL_ENGINE_NOTFOUND",
+          "constant": 53
+        },
+        {
+          "name": "SSL_ENGINE_SETFAILED",
+          "constant": 54
+        },
+        {
+          "name": "SSL_PEER_CERTIFICATE",
+          "constant": 51
+        },
+        {
+          "name": "TOO_MANY_REDIRECTS",
+          "constant": 47
+        },
+        {
+          "name": "UNSUPPORTED_PROTOCOL",
+          "constant": 1
+        },
+        {
+          "name": "URL_MALFORMAT",
+          "constant": 3
+        },
+        {
+          "name": "URL_MALFORMAT_USER",
+          "constant": 4
+        },
+        {
+          "name": "WRITE_ERROR",
+          "constant": 23
+        }
+      ]
+    },
+    {
+      "name": "adk_device_class_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_device_class_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_device_class_desktop_pc",
+          "constant": 1
+        },
+        {
+          "name": "adk_device_class_dvr",
+          "constant": 5
+        },
+        {
+          "name": "adk_device_class_game_console",
+          "constant": 2
+        },
+        {
+          "name": "adk_device_class_minature_sbc",
+          "constant": 7
+        },
+        {
+          "name": "adk_device_class_mobile",
+          "constant": 6
+        },
+        {
+          "name": "adk_device_class_stb",
+          "constant": 3
+        },
+        {
+          "name": "adk_device_class_tv",
+          "constant": 4
+        }
+      ]
+    },
+    {
+      "name": "adk_directory_delete_error_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "does_not_exist",
+          "constant": -2
+        },
+        {
+          "name": "error",
+          "constant": -1
+        },
+        {
+          "name": "invalid_input",
+          "constant": -3
+        },
+        {
+          "name": "success",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_display_modes_flags_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_display_modes_flags_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "sb_display_modes_current_display_mode",
+          "constant": 2
+        },
+        {
+          "name": "sb_display_modes_primary_display",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_dump_heap_flags_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "ALL",
+          "constant": 239
+        },
+        {
+          "name": "CANVAS",
+          "constant": 4
+        },
+        {
+          "name": "HTTP2",
+          "constant": 64
+        },
+        {
+          "name": "HTTP_CURL",
+          "constant": 8
+        },
+        {
+          "name": "JSON_DEFLATE",
+          "constant": 32
+        },
+        {
+          "name": "RHI_AND_RENDERER",
+          "constant": 2
+        },
+        {
+          "name": "RUNTIME",
+          "constant": 1
+        },
+        {
+          "name": "WASM",
+          "constant": 128
+        }
+      ]
+    },
+    {
+      "name": "adk_file_directory_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": ")",
+          "constant": 2
+        },
+        {
+          "name": "adk_app_config_directory",
+          "constant": 1
+        },
+        {
+          "name": "adk_app_root_directory",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_file_mode_bits_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__sb_file_mode_bits_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "directory",
+          "constant": 8
+        },
+        {
+          "name": "executable",
+          "constant": 4
+        },
+        {
+          "name": "none",
+          "constant": 0
+        },
+        {
+          "name": "readable",
+          "constant": 1
+        },
+        {
+          "name": "regular_file",
+          "constant": 16
+        },
+        {
+          "name": "sym_link",
+          "constant": 32
+        },
+        {
+          "name": "writable",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "adk_future_status_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "pending",
+          "constant": 0
+        },
+        {
+          "name": "ready",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_fwrite_error_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_fwrite_error_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "error_element_too_large_for_rate_limit",
+          "constant": -3
+        },
+        {
+          "name": "error_rate_limited",
+          "constant": -1
+        },
+        {
+          "name": "error_read_only",
+          "constant": -2
+        },
+        {
+          "name": "success",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_gamepad_axis_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_gamepad_axis_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "last",
+          "constant": 5
+        },
+        {
+          "name": "left_trigger",
+          "constant": 4
+        },
+        {
+          "name": "left_x",
+          "constant": 0
+        },
+        {
+          "name": "left_y",
+          "constant": 1
+        },
+        {
+          "name": "right_trigger",
+          "constant": 5
+        },
+        {
+          "name": "right_x",
+          "constant": 2
+        },
+        {
+          "name": "right_y",
+          "constant": 3
+        }
+      ]
+    },
+    {
+      "name": "adk_gamepad_button_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_gamepad_button_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "a",
+          "constant": 0
+        },
+        {
+          "name": "b",
+          "constant": 1
+        },
+        {
+          "name": "back",
+          "constant": 6
+        },
+        {
+          "name": "circle",
+          "constant": 1
+        },
+        {
+          "name": "cross",
+          "constant": 0
+        },
+        {
+          "name": "dpad_down",
+          "constant": 13
+        },
+        {
+          "name": "dpad_left",
+          "constant": 14
+        },
+        {
+          "name": "dpad_right",
+          "constant": 12
+        },
+        {
+          "name": "dpad_up",
+          "constant": 11
+        },
+        {
+          "name": "guide",
+          "constant": 8
+        },
+        {
+          "name": "last",
+          "constant": 17
+        },
+        {
+          "name": "left_bumper",
+          "constant": 4
+        },
+        {
+          "name": "left_thumb",
+          "constant": 9
+        },
+        {
+          "name": "left_trigger",
+          "constant": 16
+        },
+        {
+          "name": "right_bumper",
+          "constant": 5
+        },
+        {
+          "name": "right_thumb",
+          "constant": 10
+        },
+        {
+          "name": "right_trigger",
+          "constant": 17
+        },
+        {
+          "name": "square",
+          "constant": 2
+        },
+        {
+          "name": "start",
+          "constant": 7
+        },
+        {
+          "name": "touchpad",
+          "constant": 15
+        },
+        {
+          "name": "triangle",
+          "constant": 3
+        },
+        {
+          "name": "x",
+          "constant": 2
+        },
+        {
+          "name": "y",
+          "constant": 3
+        }
+      ]
+    },
+    {
+      "name": "adk_gamepad_button_event_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_gamepad_button_event_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_gamepad_button_event_down",
+          "constant": 0
+        },
+        {
+          "name": "adk_gamepad_button_event_up",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_gpu_ready_texture_formats_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_gpu_ready_texture_formats_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_gpu_ready_texture_format_bc1",
+          "constant": 2
+        },
+        {
+          "name": "adk_gpu_ready_texture_format_bc3",
+          "constant": 4
+        },
+        {
+          "name": "adk_gpu_ready_texture_format_etc1",
+          "constant": 1
+        },
+        {
+          "name": "adk_gpu_ready_texture_format_none",
+          "constant": 0
+        },
+        {
+          "name": "adk_gpu_ready_texture_format_vader",
+          "constant": 8
+        }
+      ]
+    },
+    {
+      "name": "adk_httpx_method_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "delete",
+          "constant": 4
+        },
+        {
+          "name": "get",
+          "constant": 0
+        },
+        {
+          "name": "head",
+          "constant": 5
+        },
+        {
+          "name": "patch",
+          "constant": 3
+        },
+        {
+          "name": "post",
+          "constant": 1
+        },
+        {
+          "name": "put",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "adk_httpx_result_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "error",
+          "constant": 2
+        },
+        {
+          "name": "ok",
+          "constant": 0
+        },
+        {
+          "name": "timeout",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_key_event_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_key_event_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_key_event_key_down",
+          "constant": 0
+        },
+        {
+          "name": "adk_key_event_key_up",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_keycode_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "KEY_0",
+          "constant": 48
+        },
+        {
+          "name": "KEY_1",
+          "constant": 49
+        },
+        {
+          "name": "KEY_2",
+          "constant": 50
+        },
+        {
+          "name": "KEY_3",
+          "constant": 51
+        },
+        {
+          "name": "KEY_4",
+          "constant": 52
+        },
+        {
+          "name": "KEY_5",
+          "constant": 53
+        },
+        {
+          "name": "KEY_6",
+          "constant": 54
+        },
+        {
+          "name": "KEY_7",
+          "constant": 55
+        },
+        {
+          "name": "KEY_8",
+          "constant": 56
+        },
+        {
+          "name": "KEY_9",
+          "constant": 57
+        },
+        {
+          "name": "KEY_A",
+          "constant": 65
+        },
+        {
+          "name": "KEY_APOSTROPHE",
+          "constant": 39
+        },
+        {
+          "name": "KEY_B",
+          "constant": 66
+        },
+        {
+          "name": "KEY_BACKSLASH",
+          "constant": 92
+        },
+        {
+          "name": "KEY_BACKSPACE",
+          "constant": 259
+        },
+        {
+          "name": "KEY_C",
+          "constant": 67
+        },
+        {
+          "name": "KEY_CAPS_LOCK",
+          "constant": 280
+        },
+        {
+          "name": "KEY_COMMA",
+          "constant": 44
+        },
+        {
+          "name": "KEY_D",
+          "constant": 68
+        },
+        {
+          "name": "KEY_DELETE",
+          "constant": 261
+        },
+        {
+          "name": "KEY_DOWN",
+          "constant": 264
+        },
+        {
+          "name": "KEY_E",
+          "constant": 69
+        },
+        {
+          "name": "KEY_END",
+          "constant": 269
+        },
+        {
+          "name": "KEY_ENTER",
+          "constant": 257
+        },
+        {
+          "name": "KEY_EQUAL",
+          "constant": 61
+        },
+        {
+          "name": "KEY_ESCAPE",
+          "constant": 256
+        },
+        {
+          "name": "KEY_F",
+          "constant": 70
+        },
+        {
+          "name": "KEY_F1",
+          "constant": 290
+        },
+        {
+          "name": "KEY_F10",
+          "constant": 299
+        },
+        {
+          "name": "KEY_F11",
+          "constant": 300
+        },
+        {
+          "name": "KEY_F12",
+          "constant": 301
+        },
+        {
+          "name": "KEY_F13",
+          "constant": 302
+        },
+        {
+          "name": "KEY_F14",
+          "constant": 303
+        },
+        {
+          "name": "KEY_F15",
+          "constant": 304
+        },
+        {
+          "name": "KEY_F16",
+          "constant": 305
+        },
+        {
+          "name": "KEY_F17",
+          "constant": 306
+        },
+        {
+          "name": "KEY_F18",
+          "constant": 307
+        },
+        {
+          "name": "KEY_F19",
+          "constant": 308
+        },
+        {
+          "name": "KEY_F2",
+          "constant": 291
+        },
+        {
+          "name": "KEY_F20",
+          "constant": 309
+        },
+        {
+          "name": "KEY_F21",
+          "constant": 310
+        },
+        {
+          "name": "KEY_F22",
+          "constant": 311
+        },
+        {
+          "name": "KEY_F23",
+          "constant": 312
+        },
+        {
+          "name": "KEY_F24",
+          "constant": 313
+        },
+        {
+          "name": "KEY_F25",
+          "constant": 314
+        },
+        {
+          "name": "KEY_F3",
+          "constant": 292
+        },
+        {
+          "name": "KEY_F4",
+          "constant": 293
+        },
+        {
+          "name": "KEY_F5",
+          "constant": 294
+        },
+        {
+          "name": "KEY_F6",
+          "constant": 295
+        },
+        {
+          "name": "KEY_F7",
+          "constant": 296
+        },
+        {
+          "name": "KEY_F8",
+          "constant": 297
+        },
+        {
+          "name": "KEY_F9",
+          "constant": 298
+        },
+        {
+          "name": "KEY_G",
+          "constant": 71
+        },
+        {
+          "name": "KEY_GRAVE_ACCENT",
+          "constant": 96
+        },
+        {
+          "name": "KEY_H",
+          "constant": 72
+        },
+        {
+          "name": "KEY_HOME",
+          "constant": 268
+        },
+        {
+          "name": "KEY_I",
+          "constant": 73
+        },
+        {
+          "name": "KEY_INSERT",
+          "constant": 260
+        },
+        {
+          "name": "KEY_J",
+          "constant": 74
+        },
+        {
+          "name": "KEY_K",
+          "constant": 75
+        },
+        {
+          "name": "KEY_KP_0",
+          "constant": 320
+        },
+        {
+          "name": "KEY_KP_1",
+          "constant": 321
+        },
+        {
+          "name": "KEY_KP_2",
+          "constant": 322
+        },
+        {
+          "name": "KEY_KP_3",
+          "constant": 323
+        },
+        {
+          "name": "KEY_KP_4",
+          "constant": 324
+        },
+        {
+          "name": "KEY_KP_5",
+          "constant": 325
+        },
+        {
+          "name": "KEY_KP_6",
+          "constant": 326
+        },
+        {
+          "name": "KEY_KP_7",
+          "constant": 327
+        },
+        {
+          "name": "KEY_KP_8",
+          "constant": 328
+        },
+        {
+          "name": "KEY_KP_9",
+          "constant": 329
+        },
+        {
+          "name": "KEY_KP_ADD",
+          "constant": 334
+        },
+        {
+          "name": "KEY_KP_DECIMAL",
+          "constant": 330
+        },
+        {
+          "name": "KEY_KP_DIVIDE",
+          "constant": 331
+        },
+        {
+          "name": "KEY_KP_ENTER",
+          "constant": 335
+        },
+        {
+          "name": "KEY_KP_EQUAL",
+          "constant": 336
+        },
+        {
+          "name": "KEY_KP_MULTIPLY",
+          "constant": 332
+        },
+        {
+          "name": "KEY_KP_SUBTRACT",
+          "constant": 333
+        },
+        {
+          "name": "KEY_L",
+          "constant": 76
+        },
+        {
+          "name": "KEY_LAST",
+          "constant": 348
+        },
+        {
+          "name": "KEY_LEFT",
+          "constant": 263
+        },
+        {
+          "name": "KEY_LEFT_ALT",
+          "constant": 342
+        },
+        {
+          "name": "KEY_LEFT_BRACKET",
+          "constant": 91
+        },
+        {
+          "name": "KEY_LEFT_CONTROL",
+          "constant": 341
+        },
+        {
+          "name": "KEY_LEFT_SHIFT",
+          "constant": 340
+        },
+        {
+          "name": "KEY_LEFT_SUPER",
+          "constant": 343
+        },
+        {
+          "name": "KEY_M",
+          "constant": 77
+        },
+        {
+          "name": "KEY_MENU",
+          "constant": 348
+        },
+        {
+          "name": "KEY_MINUS",
+          "constant": 45
+        },
+        {
+          "name": "KEY_N",
+          "constant": 78
+        },
+        {
+          "name": "KEY_NONE",
+          "constant": 0
+        },
+        {
+          "name": "KEY_NUM_LOCK",
+          "constant": 282
+        },
+        {
+          "name": "KEY_O",
+          "constant": 79
+        },
+        {
+          "name": "KEY_P",
+          "constant": 80
+        },
+        {
+          "name": "KEY_PAGE_DOWN",
+          "constant": 267
+        },
+        {
+          "name": "KEY_PAGE_UP",
+          "constant": 266
+        },
+        {
+          "name": "KEY_PAUSE",
+          "constant": 284
+        },
+        {
+          "name": "KEY_PERIOD",
+          "constant": 46
+        },
+        {
+          "name": "KEY_PRINT_SCREEN",
+          "constant": 283
+        },
+        {
+          "name": "KEY_Q",
+          "constant": 81
+        },
+        {
+          "name": "KEY_R",
+          "constant": 82
+        },
+        {
+          "name": "KEY_RIGHT",
+          "constant": 262
+        },
+        {
+          "name": "KEY_RIGHT_ALT",
+          "constant": 346
+        },
+        {
+          "name": "KEY_RIGHT_BRACKET",
+          "constant": 93
+        },
+        {
+          "name": "KEY_RIGHT_CONTROL",
+          "constant": 345
+        },
+        {
+          "name": "KEY_RIGHT_SHIFT",
+          "constant": 344
+        },
+        {
+          "name": "KEY_RIGHT_SUPER",
+          "constant": 347
+        },
+        {
+          "name": "KEY_S",
+          "constant": 83
+        },
+        {
+          "name": "KEY_SCROLL_LOCK",
+          "constant": 281
+        },
+        {
+          "name": "KEY_SEMICOLON",
+          "constant": 59
+        },
+        {
+          "name": "KEY_SLASH",
+          "constant": 47
+        },
+        {
+          "name": "KEY_SPACE",
+          "constant": 32
+        },
+        {
+          "name": "KEY_T",
+          "constant": 84
+        },
+        {
+          "name": "KEY_TAB",
+          "constant": 258
+        },
+        {
+          "name": "KEY_U",
+          "constant": 85
+        },
+        {
+          "name": "KEY_UP",
+          "constant": 265
+        },
+        {
+          "name": "KEY_V",
+          "constant": 86
+        },
+        {
+          "name": "KEY_W",
+          "constant": 87
+        },
+        {
+          "name": "KEY_WORLD_1",
+          "constant": 161
+        },
+        {
+          "name": "KEY_WORLD_2",
+          "constant": 162
+        },
+        {
+          "name": "KEY_X",
+          "constant": 88
+        },
+        {
+          "name": "KEY_Y",
+          "constant": 89
+        },
+        {
+          "name": "KEY_Z",
+          "constant": 90
+        },
+        {
+          "name": "__ADK_KEYCODE_E__FORCE_INT32",
+          "constant": -2147483648
+        }
+      ]
+    },
+    {
+      "name": "adk_memory_mode_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "high",
+          "constant": 3
+        },
+        {
+          "name": "low",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "adk_mod_keys_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "MOD_ALT",
+          "constant": 4
+        },
+        {
+          "name": "MOD_CONTROL",
+          "constant": 2
+        },
+        {
+          "name": "MOD_SHIFT",
+          "constant": 1
+        },
+        {
+          "name": "MOD_SUPER",
+          "constant": 8
+        },
+        {
+          "name": "__ADK_MOD_KEYS_E__FORCE_INT32",
+          "constant": -2147483648
+        }
+      ]
+    },
+    {
+      "name": "adk_mouse_button_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "MOUSE_BUTTON_1",
+          "constant": 0
+        },
+        {
+          "name": "MOUSE_BUTTON_2",
+          "constant": 1
+        },
+        {
+          "name": "MOUSE_BUTTON_3",
+          "constant": 2
+        },
+        {
+          "name": "MOUSE_BUTTON_4",
+          "constant": 3
+        },
+        {
+          "name": "MOUSE_BUTTON_5",
+          "constant": 4
+        },
+        {
+          "name": "MOUSE_BUTTON_6",
+          "constant": 5
+        },
+        {
+          "name": "MOUSE_BUTTON_7",
+          "constant": 6
+        },
+        {
+          "name": "MOUSE_BUTTON_8",
+          "constant": 7
+        },
+        {
+          "name": "MOUSE_BUTTON_LAST",
+          "constant": 7
+        },
+        {
+          "name": "MOUSE_BUTTON_LEFT",
+          "constant": 0
+        },
+        {
+          "name": "MOUSE_BUTTON_MIDDLE",
+          "constant": 2
+        },
+        {
+          "name": "MOUSE_BUTTON_RIGHT",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_mouse_button_event_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_mouse_button_event_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_mouse_button_event_down",
+          "constant": 0
+        },
+        {
+          "name": "adk_mouse_button_event_up",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_mouse_button_mask_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "MOUSE_BUTTON_MASK_LEFT",
+          "constant": 1
+        },
+        {
+          "name": "MOUSE_BUTTON_MASK_MIDDLE",
+          "constant": 4
+        },
+        {
+          "name": "MOUSE_BUTTON_MASK_RIGHT",
+          "constant": 2
+        },
+        {
+          "name": "__ADK_MOUSE_BUTTON_MASK_E__FORCE_INT32",
+          "constant": -2147483648
+        }
+      ]
+    },
+    {
+      "name": "adk_mouse_motion_event_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_mouse_motion_event_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_mouse_motion_event_enter",
+          "constant": 1
+        },
+        {
+          "name": "adk_mouse_motion_event_leave",
+          "constant": 2
+        },
+        {
+          "name": "adk_mouse_motion_event_move",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_power_mode_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_power_mode_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_power_mode_balanced",
+          "constant": 1
+        },
+        {
+          "name": "adk_power_mode_low_power",
+          "constant": 2
+        },
+        {
+          "name": "adk_power_mode_performance",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_seek_mode_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "adk_seek_cur",
+          "constant": 2
+        },
+        {
+          "name": "adk_seek_end",
+          "constant": 1
+        },
+        {
+          "name": "adk_seek_set",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_stat_error_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__sb_stat_error_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "error_no_entry",
+          "constant": -1
+        },
+        {
+          "name": "error_unknown",
+          "constant": -2
+        },
+        {
+          "name": "success",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "adk_stb_key_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "ADK_STB_KEY_BACK",
+          "constant": 7
+        },
+        {
+          "name": "ADK_STB_KEY_BLUE",
+          "constant": 35
+        },
+        {
+          "name": "ADK_STB_KEY_CHAN_DOWN",
+          "constant": 15
+        },
+        {
+          "name": "ADK_STB_KEY_CHAN_UP",
+          "constant": 14
+        },
+        {
+          "name": "ADK_STB_KEY_CLEAR",
+          "constant": 6
+        },
+        {
+          "name": "ADK_STB_KEY_DOT",
+          "constant": 26
+        },
+        {
+          "name": "ADK_STB_KEY_DOWN",
+          "constant": 9
+        },
+        {
+          "name": "ADK_STB_KEY_EIGHT",
+          "constant": 23
+        },
+        {
+          "name": "ADK_STB_KEY_EXIT",
+          "constant": 40
+        },
+        {
+          "name": "ADK_STB_KEY_FAST_FORWARD",
+          "constant": 3
+        },
+        {
+          "name": "ADK_STB_KEY_FIVE",
+          "constant": 20
+        },
+        {
+          "name": "ADK_STB_KEY_FOUR",
+          "constant": 19
+        },
+        {
+          "name": "ADK_STB_KEY_GREEN",
+          "constant": 37
+        },
+        {
+          "name": "ADK_STB_KEY_GUIDE",
+          "constant": 28
+        },
+        {
+          "name": "ADK_STB_KEY_HOME",
+          "constant": 39
+        },
+        {
+          "name": "ADK_STB_KEY_INFO",
+          "constant": 27
+        },
+        {
+          "name": "ADK_STB_KEY_LEFT",
+          "constant": 11
+        },
+        {
+          "name": "ADK_STB_KEY_MENU",
+          "constant": 29
+        },
+        {
+          "name": "ADK_STB_KEY_NEXT",
+          "constant": 30
+        },
+        {
+          "name": "ADK_STB_KEY_NINE",
+          "constant": 24
+        },
+        {
+          "name": "ADK_STB_KEY_ONE",
+          "constant": 16
+        },
+        {
+          "name": "ADK_STB_KEY_PAUSE",
+          "constant": 2
+        },
+        {
+          "name": "ADK_STB_KEY_PLAY",
+          "constant": 1
+        },
+        {
+          "name": "ADK_STB_KEY_PLAY_FROM_START",
+          "constant": 42
+        },
+        {
+          "name": "ADK_STB_KEY_PLAY_PAUSE",
+          "constant": 41
+        },
+        {
+          "name": "ADK_STB_KEY_POWER",
+          "constant": 13
+        },
+        {
+          "name": "ADK_STB_KEY_PREV",
+          "constant": 31
+        },
+        {
+          "name": "ADK_STB_KEY_RED",
+          "constant": 34
+        },
+        {
+          "name": "ADK_STB_KEY_RETURN",
+          "constant": 38
+        },
+        {
+          "name": "ADK_STB_KEY_REWIND",
+          "constant": 4
+        },
+        {
+          "name": "ADK_STB_KEY_RIGHT",
+          "constant": 10
+        },
+        {
+          "name": "ADK_STB_KEY_SELECT",
+          "constant": 12
+        },
+        {
+          "name": "ADK_STB_KEY_SEVEN",
+          "constant": 22
+        },
+        {
+          "name": "ADK_STB_KEY_SIX",
+          "constant": 21
+        },
+        {
+          "name": "ADK_STB_KEY_STOP",
+          "constant": 5
+        },
+        {
+          "name": "ADK_STB_KEY_THREE",
+          "constant": 18
+        },
+        {
+          "name": "ADK_STB_KEY_TWO",
+          "constant": 17
+        },
+        {
+          "name": "ADK_STB_KEY_UP",
+          "constant": 8
+        },
+        {
+          "name": "ADK_STB_KEY_VOL_DOWN",
+          "constant": 33
+        },
+        {
+          "name": "ADK_STB_KEY_VOL_UP",
+          "constant": 32
+        },
+        {
+          "name": "ADK_STB_KEY_YELLOW",
+          "constant": 36
+        },
+        {
+          "name": "ADK_STB_KEY_ZERO",
+          "constant": 25
+        },
+        {
+          "name": "__ADK_STB_KEY_E__FORCE_INT32",
+          "constant": -2147483648
+        }
+      ]
+    },
+    {
+      "name": "adk_system_overlay_state_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_system_overlay_state_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_system_overlay_begin",
+          "constant": 0
+        },
+        {
+          "name": "adk_system_overlay_end",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "adk_system_overlay_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__adk_system_overlay_type_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "adk_system_overlay_alert",
+          "constant": 0
+        },
+        {
+          "name": "adk_system_overlay_reminder",
+          "constant": 1
+        },
+        {
+          "name": "adk_system_overlay_reserved",
+          "constant": 4
+        },
+        {
+          "name": "adk_system_overlay_text_search",
+          "constant": 2
+        },
+        {
+          "name": "adk_system_overlay_voice_search",
+          "constant": 3
+        }
+      ]
+    },
+    {
+      "name": "adk_websocket_message_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "binary",
+          "constant": 1
+        },
+        {
+          "name": "error",
+          "constant": -1
+        },
+        {
+          "name": "none",
+          "constant": 0
+        },
+        {
+          "name": "text",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "adk_websocket_status_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "connected",
+          "constant": 0
+        },
+        {
+          "name": "connecting",
+          "constant": 1
+        },
+        {
+          "name": "connection_closed",
+          "constant": -2
+        },
+        {
+          "name": "connection_closed_by_user",
+          "constant": -1
+        },
+        {
+          "name": "connection_failed",
+          "constant": -3
+        },
+        {
+          "name": "internal_error",
+          "constant": -4
+        }
+      ]
+    },
+    {
+      "name": "cg_blend_mode_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "alpha_test",
+          "constant": 3
+        },
+        {
+          "name": "blit",
+          "constant": 2
+        },
+        {
+          "name": "src_alpha_all",
+          "constant": 1
+        },
+        {
+          "name": "src_alpha_rgb",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "cg_clip_state_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "disabled",
+          "constant": 3
+        },
+        {
+          "name": "enabled",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "cg_font_async_load_status_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "aborted",
+          "constant": -2
+        },
+        {
+          "name": "complete",
+          "constant": 0
+        },
+        {
+          "name": "file_error",
+          "constant": -5
+        },
+        {
+          "name": "font_parse_error",
+          "constant": -4
+        },
+        {
+          "name": "http_fetch_error",
+          "constant": -3
+        },
+        {
+          "name": "out_of_memory",
+          "constant": -6
+        },
+        {
+          "name": "pending",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "cg_font_load_opts_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "http_verbose",
+          "constant": 1
+        },
+        {
+          "name": "none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "cg_image_animation_state_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "restart",
+          "constant": 2
+        },
+        {
+          "name": "running",
+          "constant": 1
+        },
+        {
+          "name": "stopped",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "cg_image_async_load_status_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "aborted",
+          "constant": -2
+        },
+        {
+          "name": "complete",
+          "constant": 0
+        },
+        {
+          "name": "file_error",
+          "constant": -5
+        },
+        {
+          "name": "http_fetch_error",
+          "constant": -3
+        },
+        {
+          "name": "out_of_memory",
+          "constant": -7
+        },
+        {
+          "name": "pending",
+          "constant": 1
+        },
+        {
+          "name": "ripcut_error",
+          "constant": -6
+        },
+        {
+          "name": "unrecognized_image_format",
+          "constant": -4
+        }
+      ]
+    },
+    {
+      "name": "cg_image_load_opts_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "http_verbose",
+          "constant": 1
+        },
+        {
+          "name": "none",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "cg_memory_region_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "high",
+          "constant": 0
+        },
+        {
+          "name": "high_to_low",
+          "constant": 2
+        },
+        {
+          "name": "low",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "cg_rotation_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "clock_wise",
+          "constant": 3
+        },
+        {
+          "name": "counter_clock_wise",
+          "constant": 2
+        }
+      ]
+    },
+    {
+      "name": "cg_text_block_options_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "align_line_center",
+          "constant": 2
+        },
+        {
+          "name": "align_line_left",
+          "constant": 1
+        },
+        {
+          "name": "align_line_right",
+          "constant": 4
+        },
+        {
+          "name": "align_text_bottom",
+          "constant": 32
+        },
+        {
+          "name": "align_text_center",
+          "constant": 16
+        },
+        {
+          "name": "align_text_top",
+          "constant": 8
+        },
+        {
+          "name": "allow_block_bounds_overflow",
+          "constant": 64
+        },
+        {
+          "name": "line_space_relative",
+          "constant": 128
+        },
+        {
+          "name": "no_options",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "image_save_file_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "png",
+          "constant": 0
+        },
+        {
+          "name": "tga",
+          "constant": 1
+        }
+      ]
+    },
+    {
+      "name": "json_deflate_parse_status_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__json_deflate_parse_status_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "json_deflate_parse_status_external_error",
+          "constant": -1
+        },
+        {
+          "name": "json_deflate_parse_status_invalid_binary_layout",
+          "constant": -4
+        },
+        {
+          "name": "json_deflate_parse_status_invalid_json",
+          "constant": -3
+        },
+        {
+          "name": "json_deflate_parse_status_out_of_target_memory",
+          "constant": -2
+        },
+        {
+          "name": "json_deflate_parse_status_success",
+          "constant": 0
+        }
+      ]
+    },
+    {
+      "name": "json_deflate_parse_target_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "native",
+          "constant": 1
+        },
+        {
+          "name": "wasm",
+          "constant": 0
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "adk_analytics_ad_end",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_ad_start",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_add_event_to_dictionary",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_attach_player",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_cleanup_session",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_create_dictionary",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_create_session",
+      "args": [],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_destroy_dictionary",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_detach_player",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_get_asset_name",
+      "args": [],
+      "return": "* mut i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_attached_player",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut ()",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_buffer_length",
+      "args": [],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_get_default_bitrate",
+      "args": [],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_get_default_cdn",
+      "args": [],
+      "return": "* mut i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_default_resource",
+      "args": [],
+      "return": "* mut i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_device_brand",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_device_manufacturer",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_device_model",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_device_type",
+      "args": [],
+      "return": "Device"
+    },
+    {
+      "name": "adk_analytics_get_device_version",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_duration",
+      "args": [],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_get_enable_player_state_inference",
+      "args": [],
+      "return": "bool"
+    },
+    {
+      "name": "adk_analytics_get_framework_name",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_framework_version",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_getway_url",
+      "args": [],
+      "return": "* mut i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_heartbeat_interval",
+      "args": [],
+      "return": "u32"
+    },
+    {
+      "name": "adk_analytics_get_is_live",
+      "args": [],
+      "return": "bool"
+    },
+    {
+      "name": "adk_analytics_get_log_level",
+      "args": [],
+      "return": "adk_analytics_log_e"
+    },
+    {
+      "name": "adk_analytics_get_min_buffer_length",
+      "args": [],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_get_operating_system_name",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_operating_system_version",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_playahead_time",
+      "args": [],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_get_player_name",
+      "args": [],
+      "return": "* mut i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_player_poll_interval",
+      "args": [],
+      "return": "u32"
+    },
+    {
+      "name": "adk_analytics_get_player_type",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_player_version",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_rendered_framerate",
+      "args": [],
+      "return": "f32"
+    },
+    {
+      "name": "adk_analytics_get_stream_url",
+      "args": [],
+      "return": "* mut i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_tag",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_get_viewer_id",
+      "args": [],
+      "return": "* mut i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_analytics_init_client",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_notify_network_connection_type",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_notify_network_signal_strength",
+      "args": [
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_notify_network_wifi_link_encryption",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_remove_session",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_seek_end",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_seek_start",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_send_event",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_send_session_event",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "adk_analytics_session_report_error",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_asset_name",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_buffering",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_default_bitrate",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_default_cdn",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_default_resource",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_device_brand",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_device_manufacturer",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_device_model",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_device_type",
+      "args": [
+        {
+          "rust_type": "Device",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_device_version",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_duration",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_enable_player_state_inference",
+      "args": [
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_framework_name",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_framework_version",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_gateway_url",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_heartbeat_interval",
+      "args": [
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_is_live",
+      "args": [
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_log_level",
+      "args": [
+        {
+          "rust_type": "adk_analytics_log_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_operating_system_name",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_operating_system_version",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_paused",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_player_name",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_player_poll_interval",
+      "args": [
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_playing",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_session_bitrate",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_session_duration",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_session_encoded_framerate",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_session_stream",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_session_video_size",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_stopped",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_stream_url",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_tag",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_set_viewer_id",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_analytics_update_content_info",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_app_request_restart",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "adk_capture_screenshot",
+      "args": [],
+      "return": "* mut adk_screenshot_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_coredump_add_data",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_coredump_add_data_public",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_crc_str_32",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "u32"
+    },
+    {
+      "name": "adk_create_directory_path",
+      "args": [
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_curl_async_perform_raw",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_curl_close_handle",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_curl_get_buffering_mode",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "adk_curl_handle_buffer_mode_e"
+    },
+    {
+      "name": "adk_curl_get_http_body",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "native_slice_t"
+    },
+    {
+      "name": "adk_curl_get_http_header",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "native_slice_t"
+    },
+    {
+      "name": "adk_curl_get_info_i32",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "adk_curl_info_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut i32",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "adk_curl_result_e"
+    },
+    {
+      "name": "adk_curl_open_handle",
+      "args": [],
+      "return": "* mut adk_curl_handle_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_curl_set_buffering_mode",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "adk_curl_handle_buffer_mode_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_curl_set_opt_i32",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "adk_curl_option_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_curl_set_opt_ptr",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "adk_curl_option_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_curl_set_opt_slist",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "adk_curl_option_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut adk_curl_slist_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_curl_slist_append",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_slist_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut adk_curl_slist_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_curl_slist_free_all",
+      "args": [
+        {
+          "rust_type": "* mut adk_curl_slist_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_delete_directory",
+      "args": [
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "adk_directory_delete_error_e"
+    },
+    {
+      "name": "adk_delete_file",
+      "args": [
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_dump_heap_usage",
+      "args": [
+        {
+          "rust_type": "adk_dump_heap_flags_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_enter_background_mode",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "adk_enumerate_display_modes",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut adk_enumerate_display_modes_result_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_fclose",
+      "args": [
+        {
+          "rust_type": "* mut adk_file_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_feof",
+      "args": [
+        {
+          "rust_type": "* mut adk_file_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_fopen",
+      "args": [
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut adk_file_handle_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_fread",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut adk_file_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "adk_fwrite",
+      "args": [
+        {
+          "rust_type": "* const ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut adk_file_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "adk_fwrite_result_t"
+    },
+    {
+      "name": "adk_generate_uuid",
+      "args": [],
+      "return": "sb_uuid_t"
+    },
+    {
+      "name": "adk_get_app_state",
+      "args": [],
+      "return": "adk_app_state_e"
+    },
+    {
+      "name": "adk_get_cpu_mem_status",
+      "args": [],
+      "return": "adk_cpu_mem_status_t"
+    },
+    {
+      "name": "adk_get_deeplink_buffer",
+      "args": [
+        {
+          "rust_type": "* const sb_deeplink_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "native_slice_t"
+    },
+    {
+      "name": "adk_get_env",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_get_locale",
+      "args": [],
+      "return": "_adk_locale_t"
+    },
+    {
+      "name": "adk_get_milliseconds_since_epoch",
+      "args": [],
+      "return": "u64"
+    },
+    {
+      "name": "adk_get_supported_refresh_rate",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "adk_get_system_metrics_native",
+      "args": [
+        {
+          "rust_type": "* mut adk_native_system_metrics_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_get_wasm_call_stack",
+      "args": [],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_get_wasm_heap_usage",
+      "args": [],
+      "return": "heap_metrics_t"
+    },
+    {
+      "name": "adk_http_append_header_list",
+      "args": [
+        {
+          "rust_type": "* mut adk_http_header_list_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut adk_http_header_list_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_http_set_proxy",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_http_set_socks",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_client_free",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_client_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_client_new",
+      "args": [],
+      "return": "* mut adk_httpx_client_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_httpx_client_request",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_client_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "adk_httpx_method_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut adk_httpx_request_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_httpx_client_tick",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_client_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_httpx_request_set_body",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_request_set_follow_location",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_request_set_header",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_request_set_preferred_receive_buffer_size",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_request_set_timeout",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_request_set_verbose",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_response_free",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_httpx_response_get_body_copy",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "u32"
+    },
+    {
+      "name": "adk_httpx_response_get_body_size",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "u32"
+    },
+    {
+      "name": "adk_httpx_response_get_error",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* const i8",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_httpx_response_get_headers_copy",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "u32"
+    },
+    {
+      "name": "adk_httpx_response_get_headers_size",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "u32"
+    },
+    {
+      "name": "adk_httpx_response_get_response_code",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i64"
+    },
+    {
+      "name": "adk_httpx_response_get_result",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "adk_httpx_result_e"
+    },
+    {
+      "name": "adk_httpx_response_get_status",
+      "args": [
+        {
+          "rust_type": "* const adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "adk_future_status_e"
+    },
+    {
+      "name": "adk_httpx_send",
+      "args": [
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut adk_httpx_response_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_init_main_display",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_leave_background_mode",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "adk_load_screenshot",
+      "args": [
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut adk_screenshot_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_log_msg",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_notify_app_status",
+      "args": [
+        {
+          "rust_type": "adk_app_notify_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_rand_create_generator",
+      "args": [],
+      "return": "adk_rand_generator_t"
+    },
+    {
+      "name": "adk_rand_create_generator_with_seed",
+      "args": [
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "adk_rand_generator_t"
+    },
+    {
+      "name": "adk_rand_next",
+      "args": [
+        {
+          "rust_type": "* mut adk_rand_generator_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "u64"
+    },
+    {
+      "name": "adk_read_microsecond_clock",
+      "args": [],
+      "return": "microseconds_t"
+    },
+    {
+      "name": "adk_read_millisecond_clock",
+      "args": [],
+      "return": "milliseconds_t"
+    },
+    {
+      "name": "adk_read_nanosecond_clock",
+      "args": [],
+      "return": "nanoseconds_t"
+    },
+    {
+      "name": "adk_release_deeplink",
+      "args": [
+        {
+          "rust_type": "* mut sb_deeplink_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_release_screenshot",
+      "args": [
+        {
+          "rust_type": "* mut adk_screenshot_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_report_app_metrics",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_save_screenshot",
+      "args": [
+        {
+          "rust_type": "* const adk_screenshot_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "image_save_file_type_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_screenshot_compare",
+      "args": [
+        {
+          "rust_type": "* const adk_screenshot_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const adk_screenshot_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_screenshot_dump_deltas",
+      "args": [
+        {
+          "rust_type": "* mut adk_screenshot_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut adk_screenshot_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "image_save_file_type_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_set_memory_mode",
+      "args": [
+        {
+          "rust_type": "adk_memory_mode_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_set_refresh_rate",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
+      "name": "adk_stat",
+      "args": [
+        {
+          "rust_type": "adk_file_directory_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "adk_stat_result_t"
+    },
+    {
+      "name": "adk_text_to_speech",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_websocket_begin_read_bridge",
+      "args": [
+        {
+          "rust_type": "* mut adk_websocket_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut native_slice_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "adk_websocket_message_type_e"
+    },
+    {
+      "name": "adk_websocket_close",
+      "args": [
+        {
+          "rust_type": "* mut adk_websocket_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_websocket_create_raw",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut adk_http_header_list_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut adk_websocket_handle_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "adk_websocket_end_read",
+      "args": [
+        {
+          "rust_type": "* mut adk_websocket_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "adk_websocket_get_status",
+      "args": [
+        {
+          "rust_type": "* mut adk_websocket_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "adk_websocket_status_e"
+    },
+    {
+      "name": "adk_websocket_send_raw",
+      "args": [
+        {
+          "rust_type": "* mut adk_websocket_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "adk_websocket_message_type_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "adk_websocket_status_e"
+    },
+    {
+      "name": "cg_context_arc",
+      "args": [
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "cg_rads_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_rads_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_rotation_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_arc_to",
+      "args": [
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_begin_path",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_blit_video_frame",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_clear_rect",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_close_path",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_create_font_context",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_file_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut cg_font_context_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "cg_context_draw_image",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_draw_image_9slice",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_margins_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_draw_image_rect",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_draw_image_rect_alpha_mask",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_draw_image_scale",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_end_path",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_feather",
+      "args": [],
+      "return": "f32"
+    },
+    {
+      "name": "cg_context_fill",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_fill_rect",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_fill_style",
+      "args": [
+        {
+          "rust_type": "cg_color_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_fill_style_hex",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_fill_style_image",
+      "args": [
+        {
+          "rust_type": "cg_color_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_fill_style_image_hex",
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_fill_text",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "cg_font_metrics_t"
+    },
+    {
+      "name": "cg_context_fill_text_block_with_options",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_text_block_options_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "cg_font_metrics_t"
+    },
+    {
+      "name": "cg_context_fill_text_with_options",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "CGFontFillOptions",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "cg_font_metrics_t"
+    },
+    {
+      "name": "cg_context_fill_with_options",
+      "args": [
+        {
+          "rust_type": "CGPathOptions",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_font_clear_glyph_cache",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_font_context_free",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_font_file_free",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_file_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_font_precache_glyphs",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_font_set_virtual_size",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_get_alpha_test_threshold",
+      "args": [],
+      "return": "f32"
+    },
+    {
+      "name": "cg_context_get_image_frame_count",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "u32"
+    },
+    {
+      "name": "cg_context_get_punchthrough_blend_mode",
+      "args": [],
+      "return": "cg_blend_mode_e"
+    },
+    {
+      "name": "cg_context_get_text_block_height",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_text_block_options_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "f32"
+    },
+    {
+      "name": "cg_context_get_text_block_page_offsets",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_text_block_options_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "cg_text_block_page_offsets_t"
+    },
+    {
+      "name": "cg_context_global_alpha",
+      "args": [],
+      "return": "f32"
+    },
+    {
+      "name": "cg_context_identity",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_image_free",
+      "args": [
+        {
+          "rust_type": "* mut cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_image_rect",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "cg_rect_t"
+    },
+    {
+      "name": "cg_context_image_set_repeat",
+      "args": [
+        {
+          "rust_type": "* mut cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_line_to",
+      "args": [
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_load_font_file_async",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_memory_region_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_font_load_opts_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut cg_font_file_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "cg_context_load_image_async",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_memory_region_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_image_load_opts_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut cg_image_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "cg_context_move_to",
+      "args": [
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_pattern",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "bool",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* const cg_pattern_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "cg_context_quad_bezier_to",
+      "args": [
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_rect",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_restore",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_rotate",
+      "args": [
+        {
+          "rust_type": "cg_rads_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_rounded_rect",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_save",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_scale",
+      "args": [
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_alpha_test_threshold",
+      "args": [
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_clip_rect",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_clip_state",
+      "args": [
+        {
+          "rust_type": "cg_clip_state_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_feather",
+      "args": [
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_font_context_missing_glyph_indicator",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_global_alpha",
+      "args": [
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_global_missing_glyph_indicator",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_image_animation_state",
+      "args": [
+        {
+          "rust_type": "* mut cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_image_animation_state_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_image_frame_index",
+      "args": [
+        {
+          "rust_type": "* mut cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_line_width",
+      "args": [
+        {
+          "rust_type": "f32",
+          "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_punchthrough_blend_mode",
+      "args": [
+        {
+          "rust_type": "cg_blend_mode_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_stroke",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_stroke_rect",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_stroke_style",
+      "args": [
+        {
+          "rust_type": "cg_color_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_stroke_with_options",
+      "args": [
+        {
+          "rust_type": "CGPathOptions",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_text_measure",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "cg_font_metrics_t"
+    },
+    {
+      "name": "cg_context_translate",
+      "args": [
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_get_context",
+      "args": [],
+      "return": "* mut cg_context_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "cg_get_font_load_status",
+      "args": [
+        {
+          "rust_type": "* const cg_font_file_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "cg_font_async_load_status_e"
+    },
+    {
+      "name": "cg_get_image_load_status",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "cg_image_async_load_status_e"
+    },
+    {
+      "name": "cg_get_image_ripcut_error_code",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "cg_set_context",
+      "args": [
+        {
+          "rust_type": "* mut cg_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cstrlen",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "json_deflate_async",
+      "args": [
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "json_deflate_parse_target_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "json_deflate_from_http_async",
+      "args": [
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut adk_curl_handle_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "json_deflate_parse_target_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "json_deflate_http_future_drop",
+      "args": [
+        {
+          "rust_type": "* mut json_deflate_http_future_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "json_deflate_http_future_get_response",
+      "args": [
+        {
+          "rust_type": "* const json_deflate_http_future_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "* mut adk_httpx_response_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "json_deflate_http_future_get_result",
+      "args": [
+        {
+          "rust_type": "* const json_deflate_http_future_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "json_deflate_parse_result_t"
+    },
+    {
+      "name": "json_deflate_http_future_get_status",
+      "args": [
+        {
+          "rust_type": "* const json_deflate_http_future_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "adk_future_status_e"
+    },
+    {
+      "name": "json_deflate_native_async",
+      "args": [
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "json_deflate_parse_target_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* mut ()",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "json_deflate_parse_httpx_async",
+      "args": [
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut adk_httpx_request_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "json_deflate_parse_target_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut json_deflate_http_future_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "json_deflate_parse_httpx_resize",
+      "args": [
+        {
+          "rust_type": "* mut json_deflate_http_future_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "json_deflate_parse_target_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "memcpy_n2r",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "read_events",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "strcpy_n2r",
+      "args": [
+        {
+          "rust_type": "* mut i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "i32"
+    },
+    {
+      "name": "strcpy_n2r_upto",
+      "args": [
+        {
+          "rust_type": "* mut i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "i32"
+    }
+  ],
+  "structs": [
+    {
+      "name": "_adk_locale_t",
+      "size": 128,
+      "align": 1,
+      "members": [
+        "language",
+        "region"
+      ]
+    },
+    {
+      "name": "adk_application_event_t",
+      "size": 4,
+      "align": 4,
+      "members": [
+        "event"
+      ]
+    },
+    {
+      "name": "adk_char_event_t",
+      "size": 4,
+      "align": 4,
+      "members": [
+        "codepoint_utf32"
+      ]
+    },
+    {
+      "name": "adk_cpu_mem_status_t",
+      "size": 24,
+      "align": 8,
+      "members": [
+        "cpu_utilization",
+        "memory_available",
+        "memory_used"
+      ]
+    },
+    {
+      "name": "adk_deeplink_event_t",
+      "size": 8,
+      "align": 8,
+      "members": [
+        "handle"
+      ]
+    },
+    {
+      "name": "adk_display_mode_t",
+      "size": 12,
+      "align": 4,
+      "members": [
+        "width",
+        "height",
+        "hz"
+      ]
+    },
+    {
+      "name": "adk_enumerate_display_modes_result_t",
+      "size": 16,
+      "align": 4,
+      "members": [
+        "display_mode",
+        "status"
+      ]
+    },
+    {
+      "name": "adk_event_data_t",
+      "size": 64,
+      "align": 8,
+      "members": [
+        "type",
+        ""
+      ]
+    },
+    {
+      "name": "adk_event_t",
+      "size": 72,
+      "align": 8,
+      "members": [
+        "time",
+        "event_data"
+      ]
+    },
+    {
+      "name": "adk_fwrite_result_t",
+      "size": 8,
+      "align": 4,
+      "members": [
+        "elements_written",
+        "error"
+      ]
+    },
+    {
+      "name": "adk_gamepad_axis_event_t",
+      "size": 12,
+      "align": 4,
+      "members": [
+        "axis",
+        "pressure",
+        "dead_zone"
+      ]
+    },
+    {
+      "name": "adk_gamepad_button_event_t",
+      "size": 8,
+      "align": 4,
+      "members": [
+        "event",
+        "button"
+      ]
+    },
+    {
+      "name": "adk_gamepad_event_data_t",
+      "size": 16,
+      "align": 4,
+      "members": [
+        "event",
+        ""
+      ]
+    },
+    {
+      "name": "adk_gamepad_event_t",
+      "size": 20,
+      "align": 4,
+      "members": [
+        "gamepad_index",
+        "event_data"
+      ]
+    },
+    {
+      "name": "adk_gamepad_state_t",
+      "size": 44,
+      "align": 4,
+      "members": [
+        "buttons",
+        "axis"
+      ]
+    },
+    {
+      "name": "adk_key_event_t",
+      "size": 16,
+      "align": 4,
+      "members": [
+        "event",
+        "key",
+        "mod_keys",
+        "repeat"
+      ]
+    },
+    {
+      "name": "adk_mouse_button_event_t",
+      "size": 8,
+      "align": 4,
+      "members": [
+        "event",
+        "button"
+      ]
+    },
+    {
+      "name": "adk_mouse_event_data_t",
+      "size": 12,
+      "align": 4,
+      "members": [
+        "event",
+        ""
+      ]
+    },
+    {
+      "name": "adk_mouse_event_t",
+      "size": 40,
+      "align": 8,
+      "members": [
+        "window",
+        "mouse_state",
+        "event_data"
+      ]
+    },
+    {
+      "name": "adk_mouse_state_t",
+      "size": 16,
+      "align": 4,
+      "members": [
+        "x",
+        "y",
+        "button_mask",
+        "mod_keys"
+      ]
+    },
+    {
+      "name": "adk_native_system_metrics_t",
+      "size": 3940,
+      "align": 4,
+      "members": [
+        "core_version",
+        "config",
+        "vendor",
+        "partner",
+        "device",
+        "firmware",
+        "software",
+        "revision",
+        "gpu",
+        "cpu",
+        "device_id",
+        "device_region",
+        "tenancy",
+        "partner_guid",
+        "advertising_id",
+        "main_memory_mbytes",
+        "video_memory_mbytes",
+        "num_hardware_threads",
+        "num_cores",
+        "device_class",
+        "gpu_ready_texture_formats",
+        "persistent_storage_available_bytes",
+        "persistent_storage_max_write_bytes_per_second",
+        "persona_id"
+      ]
+    },
+    {
+      "name": "adk_power_mode_t",
+      "size": 4,
+      "align": 4,
+      "members": [
+        "mode"
+      ]
+    },
+    {
+      "name": "adk_rand_generator_t",
+      "size": 32,
+      "align": 8,
+      "members": [
+        "state"
+      ]
+    },
+    {
+      "name": "adk_stat_result_t",
+      "size": 64,
+      "align": 8,
+      "members": [
+        "stat",
+        "error"
+      ]
+    },
+    {
+      "name": "adk_stat_t",
+      "size": 56,
+      "align": 8,
+      "members": [
+        "mode",
+        "access_time_s",
+        "modification_time_s",
+        "create_time_s",
+        "hard_links",
+        "size",
+        "user_id",
+        "group_id"
+      ]
+    },
+    {
+      "name": "adk_stb_input_event_t",
+      "size": 8,
+      "align": 4,
+      "members": [
+        "stb_key",
+        "repeat"
+      ]
+    },
+    {
+      "name": "adk_stb_rich_input_event_t",
+      "size": 12,
+      "align": 4,
+      "members": [
+        "stb_key",
+        "event",
+        "repeat"
+      ]
+    },
+    {
+      "name": "adk_system_overlay_event_t",
+      "size": 56,
+      "align": 4,
+      "members": [
+        "overlay_type",
+        "state",
+        "n_x",
+        "n_y",
+        "n_width",
+        "n_height",
+        "reserved"
+      ]
+    },
+    {
+      "name": "adk_window_event_data_t",
+      "size": 8,
+      "align": 4,
+      "members": [
+        "event",
+        ""
+      ]
+    },
+    {
+      "name": "adk_window_event_focus_changed_t",
+      "size": 4,
+      "align": 4,
+      "members": [
+        "new_focus"
+      ]
+    },
+    {
+      "name": "adk_window_event_t",
+      "size": 16,
+      "align": 8,
+      "members": [
+        "window",
+        "event_data"
+      ]
+    },
+    {
+      "name": "cg_color_t",
+      "size": 16,
+      "align": 4,
+      "members": [
+        "r",
+        "g",
+        "b",
+        "a"
+      ]
+    },
+    {
+      "name": "cg_font_metrics_t",
+      "size": 20,
+      "align": 4,
+      "members": [
+        "bounds",
+        "baseline"
+      ]
+    },
+    {
+      "name": "cg_margins_t",
+      "size": 16,
+      "align": 4,
+      "members": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+      ]
+    },
+    {
+      "name": "cg_rads_t",
+      "size": 4,
+      "align": 4,
+      "members": [
+        "rads"
+      ]
+    },
+    {
+      "name": "cg_rect_t",
+      "size": 16,
+      "align": 4,
+      "members": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ]
+    },
+    {
+      "name": "cg_text_block_page_offsets_t",
+      "size": 8,
+      "align": 4,
+      "members": [
+        "begin_offset",
+        "end_offset"
+      ]
+    },
+    {
+      "name": "cg_vec2_t",
+      "size": 8,
+      "align": 4,
+      "members": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "crypto_hmac_hex_t",
+      "size": 65,
+      "align": 1,
+      "members": [
+        "bytes"
+      ]
+    },
+    {
+      "name": "heap_metrics_t",
+      "size": 96,
+      "align": 8,
+      "members": [
+        "alignment",
+        "ptr_ofs",
+        "header_size",
+        "extra_header_bytes",
+        "min_block_size",
+        "heap_size",
+        "num_used_blocks",
+        "num_free_blocks",
+        "used_block_size",
+        "free_block_size",
+        "num_merged_blocks",
+        "max_used_size"
+      ]
+    },
+    {
+      "name": "json_deflate_parse_result_t",
+      "size": 12,
+      "align": 4,
+      "members": [
+        "status",
+        "offset",
+        "end"
+      ]
+    },
+    {
+      "name": "microseconds_t",
+      "size": 8,
+      "align": 8,
+      "members": [
+        "us"
+      ]
+    },
+    {
+      "name": "milliseconds_t",
+      "size": 4,
+      "align": 4,
+      "members": [
+        "ms"
+      ]
+    },
+    {
+      "name": "nanoseconds_t",
+      "size": 8,
+      "align": 8,
+      "members": [
+        "ns"
+      ]
+    },
+    {
+      "name": "native_slice_t",
+      "size": 16,
+      "align": 8,
+      "members": [
+        "ptr",
+        "size"
+      ]
+    },
+    {
+      "name": "sb_uuid_t",
+      "size": 16,
+      "align": 1,
+      "members": [
+        "id"
+      ]
+    },
+    {
+      "name": "u64",
+      "size": 8,
+      "align": 8,
+      "members": [
+        "ptr",
+        "adr",
+        "internal"
+      ]
+    },
+    {
+      "name": "xoroshiro256plusplus_t",
+      "size": 32,
+      "align": 8,
+      "members": [
+        "s"
+      ]
+    }
+  ]
+}

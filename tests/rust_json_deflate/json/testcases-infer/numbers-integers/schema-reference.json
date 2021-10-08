@@ -1,0 +1,34 @@
+{
+	"type":	"object",
+	"properties":	{
+		"integers":	{
+			"type":	"array",
+			"items":	{
+				"type":	"integer"
+			}
+		},
+		"numbers":	{
+			"type":	"array",
+			"items":	{
+				"type":	"number"
+			}
+		},
+		"numbers-again":	{
+			"type":	"array",
+			"items":	{
+				"type":	"number"
+			}
+		},
+		"numbers-group-1":	{
+			"type":	"array",
+			"items":	{
+				"type":	"number"
+			},
+			"name":	"NumbersGroup"
+		},
+		"numbers-group-2":	{
+			"type":	"/numbers-group-1"
+		}
+	},
+	"required":	["integers", "numbers", "numbers-again", "numbers-group-1", "numbers-group-2"]
+}

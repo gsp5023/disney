@@ -1,0 +1,24 @@
+{
+    "one-false": {
+        "a": false,
+        "b": [1, 2]
+    },
+    "one-true": {
+        "a": true,
+        "b": [1, 2]
+    },
+    "two-false": {
+        "a": [1, 2],
+        "b": false
+    },
+    "two-true": {
+        "a": [1, 2],
+        "b": true
+    },
+    "three-x": {
+        "a": 2.0,
+        "b": ["?"],
+        "c": true,
+        "d": "!"
+    }
+}

@@ -1,0 +1,54 @@
+{
+	"type":	"object",
+	"properties":	{
+		"i":	{
+			"type":	"object",
+			"properties":	{
+				"am":	{
+					"type":	"object",
+					"properties":	{
+						"ignored":	{
+							"type":	"object",
+							"properties":	{
+								"xyz":	{
+									"type":	"boolean"
+								}
+							},
+							"required":	["xyz"]
+						},
+						"root":	{
+							"type":	"object",
+							"properties":	{
+								"abc":	{
+									"type":	"boolean"
+								}
+							},
+							"required":	["abc"]
+						}
+					},
+					"required":	["ignored", "root"]
+				},
+				"ignored":	{
+					"type":	"object",
+					"properties":	{
+						"xyz":	{
+							"type":	"boolean"
+						}
+					},
+					"required":	["xyz"]
+				}
+			},
+			"required":	["am", "ignored"]
+		},
+		"ignored":	{
+			"type":	"object",
+			"properties":	{
+				"xyz":	{
+					"type":	"boolean"
+				}
+			},
+			"required":	["xyz"]
+		}
+	},
+	"required":	["i", "ignored"]
+}

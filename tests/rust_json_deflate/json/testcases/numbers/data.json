@@ -1,0 +1,8 @@
+{
+    "regular": 10,
+    "optional-some": 20,
+    "catch-ok": 30,
+    "catch-err": "40",
+    "optional-catch-some-ok": 50,
+    "optional-catch-some-err": "70"
+}

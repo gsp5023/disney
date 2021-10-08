@@ -1,0 +1,37 @@
+{
+  "v1": {
+    "options": [
+      {
+        "bundle": [
+          {
+            "file": "build/bundle/rust_app.bundle.zip"
+          }
+        ],
+        "runtime_config": {
+          "sys_params": {
+            "wasm_memory_size": 50331648,
+            "memory_reservations": {
+              "low": {
+                "runtime": 17408,
+                "rhi": 262144,
+                "render_device": 2167336,
+                "canvas": 14680064,
+                "canvas_font_scratchpad": 2097152,
+                "cncbus": 2097152,
+                "curl": 2097152,
+                "json_deflate": 10485760,
+                "default_thread_pool": 262144,
+                "http2": 2097152,
+                "httpx": 2097152
+              },
+              "high": {
+                "canvas": 31457280
+              }
+            },
+            "guard_page_mode": "disabled"
+          }
+        }
+      }
+    ]
+  }
+}

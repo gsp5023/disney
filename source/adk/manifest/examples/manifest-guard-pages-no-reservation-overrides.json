@@ -1,0 +1,18 @@
+{
+  "v1": {
+    "options": [
+      {
+        "bundle": [
+          {
+            "file": "build/bundle/rust_app.bundle.zip"
+          }
+        ],
+        "runtime_config": {
+          "sys_params": {
+            "guard_page_mode": "enabled"
+          }
+        }
+      }
+    ]
+  }
+}

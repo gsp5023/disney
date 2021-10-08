@@ -1,0 +1,36 @@
+{
+	"type":	"object",
+	"properties":	{
+		"a":	{
+			"type":	"object",
+			"properties":	{
+				"req-1":	{
+					"type":	"integer"
+				},
+				"opt-1":	{
+					"type":	"integer"
+				},
+				"req-2":	{
+					"type":	"integer"
+				},
+				"opt-2":	{
+					"type":	"integer"
+				},
+				"req-3":	{
+					"type":	"integer"
+				},
+				"opt-3":	{
+					"type":	"integer"
+				}
+			},
+			"required":	["req-1", "req-2", "req-3"],
+			"catch":	["req-1", "req-2", "req-3"],
+			"name":	"A"
+		},
+		"b":	{
+			"type":	"/a"
+		}
+	},
+	"required":	["a", "b"],
+	"catch":	["a", "b"]
+}

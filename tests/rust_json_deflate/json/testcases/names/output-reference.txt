@@ -1,0 +1,1 @@
+Ok(Root { alpha: Alpha { alpha_1: AlphaAlpha1 { alpha_1_a: "a", alpha_1_b: "b", alpha_1_c: "c" }, alpha_2: AlphaAlpha2 { alpha_2_a: "a", alpha_2_b: "b", alpha_2_c: "c" }, alpha_3: AlphaAlpha3 { alpha_3_a: "a", alpha_3_b: "b", alpha_3_c: "c" } } })

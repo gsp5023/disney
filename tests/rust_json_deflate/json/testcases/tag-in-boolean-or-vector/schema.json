@@ -1,0 +1,117 @@
+{
+	"type":	"object",
+	"properties":	{
+		"one-false":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"boolean"
+				},
+				"b":	{
+					"type":	"array",
+					"items":	{
+						"type":	"integer"
+					}
+				}
+			},
+			"required":	["a", "b"]
+		},
+		"one-true":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"boolean"
+				},
+				"b":	{
+					"type":	"array",
+					"items":	{
+						"type":	"integer"
+					}
+				}
+			},
+			"required":	["a", "b"]
+		},
+		"one-none":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"boolean"
+				},
+				"b":	{
+					"type":	"array",
+					"items":	{
+						"type":	"integer"
+					}
+				}
+			},
+			"required":	["a", "b"]
+		},
+		"two-false":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"array",
+					"items":	{
+						"type":	"integer"
+					}
+				},
+				"b":	{
+					"type":	"boolean"
+				}
+			},
+			"required":	["a", "b"]
+		},
+		"two-true":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"array",
+					"items":	{
+						"type":	"integer"
+					}
+				},
+				"b":	{
+					"type":	"boolean"
+				}
+			},
+			"required":	["a", "b"]
+		},
+		"two-none":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"array",
+					"items":	{
+						"type":	"integer"
+					}
+				},
+				"b":	{
+					"type":	"boolean"
+				}
+			},
+			"required":	["a", "b"]
+		},
+		"three":	{
+			"type":	"object",
+			"properties":	{
+				"a":	{
+					"type":	"number"
+				},
+				"b":	{
+					"type":	"array",
+					"items":	{
+						"type":	"string"
+					}
+				},
+				"c":	{
+					"type":	"boolean"
+				},
+				"d":	{
+					"type":	"string"
+				}
+			},
+			"required":	["a", "b", "c"]
+		}
+	},
+	"required":	[]
+}

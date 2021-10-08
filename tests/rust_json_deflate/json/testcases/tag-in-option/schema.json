@@ -1,0 +1,48 @@
+{
+	"type":	"object",
+	"properties":	{
+		"enter":	{
+			"type": "object",
+			"properties":	{
+				"one":	{
+					"type":	"object",
+					"properties":	{
+						"a":	{
+							"type":	"number"
+						},
+						"b":	{
+							"type":	"string"
+						},
+						"c":	{
+							"type":	"boolean"
+						},
+						"d":	{
+							"type":	"string"
+						}
+					},
+					"required":	["a", "b", "c"]
+				},
+				"two":	{
+					"type":	"object",
+					"properties":	{
+						"a":	{
+							"type":	"number"
+						},
+						"b":	{
+							"type":	"string"
+						},
+						"c":	{
+							"type":	"string"
+						},
+						"d":	{
+							"type":	"boolean"
+						}
+					},
+					"required":	["b", "c", "d"]
+				}		
+			},
+			"required":	["two"]
+		}
+	},
+	"required":	[]
+}

@@ -1,0 +1,18 @@
+{
+    "i":    {
+        "am":   {
+            "ignored":  {
+                "xyz":  false
+            },
+            "root": {
+                "abc":  true
+            }
+        },
+        "ignored":  {
+            "xyz":  false
+        }
+    },
+    "ignored":  {
+        "xyz":  false
+    }
+}

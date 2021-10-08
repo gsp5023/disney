@@ -1,0 +1,79 @@
+{
+	"type":	"object",
+	"properties":	{
+		"alpha":	{
+			"type":	"object",
+			"properties":	{
+				"alpha-1":	{
+					"type":	"object",
+					"properties":	{
+						"alpha-1-a":	{
+							"type":	["string", "boolean"]
+						},
+						"alpha-1-b":	{
+							"type":	"string"
+						},
+						"alpha-1-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["alpha-1-a", "alpha-1-b", "alpha-1-c"]
+				},
+				"alpha-2":	{
+					"type":	"object",
+					"properties":	{
+						"alpha-2-a":	{
+							"type":	"string"
+						},
+						"alpha-2-b":	{
+							"type":	"string"
+						},
+						"alpha-2-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["alpha-2-a", "alpha-2-c"]
+				},
+				"alpha-3":	{
+					"type":	"object",
+					"properties":	{
+						"alpha-3-a":	{
+							"type":	"string"
+						},
+						"alpha-3-b":	{
+							"type":	"string"
+						},
+						"alpha-3-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["alpha-3-a", "alpha-3-b"]
+				},
+				"alpha-4":	{
+					"type":	"boolean"
+				},
+				"alpha-5":	{
+					"type":	"array",
+					"items":	{
+						"type":	["integer", "boolean", "object"],
+						"properties":	{
+							"x":	{
+								"type":	"string"
+							}
+						},
+						"required":	["x"]
+					}
+				},
+				"alpha-6":	{
+					"type":	"boolean"
+				}
+			},
+			"required":	["alpha-1", "alpha-2", "alpha-3", "alpha-5"],
+			"name":	"Alpha"
+		},
+		"other-alpha":	{
+			"type":	"/alpha"
+		}
+	},
+	"required":	["alpha", "other-alpha"]
+}

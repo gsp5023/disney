@@ -1,0 +1,93 @@
+{
+	"type":	"object",
+	"properties":	{
+		"regular-empty":	{
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+		},
+		"regular-boolean": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+		},		
+		"regular-integer": {
+            "type":	"array",
+            "items": {
+                "type": "integer"
+            }
+		},
+		"regular-number": {
+            "type":	"array",
+            "items": {
+                "type": "number"
+            }
+		},
+		"regular-string": {
+            "type":	"array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "optional-some": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+        },
+        "optional-none": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+        },
+        "catch-ok": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+        },
+        "catch-err": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+        },
+        "optional-catch-some-ok": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+		},
+        "optional-catch-some-err": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+        },
+        "optional-catch-none": {
+            "type":	"array",
+            "items": {
+                "type": "boolean"
+            }
+		}
+    },
+	"required":	[
+        "regular-empty",
+        "regular-boolean",
+        "regular-integer",
+        "regular-number",
+        "regular-string",
+        "catch-ok",
+        "catch-err"
+    ],
+    "catch": [
+        "catch-ok",
+        "catch-err",
+        "optional-catch-some-ok",
+        "optional-catch-some-err",
+        "optional-catch-none"
+    ]
+}

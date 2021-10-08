@@ -1,0 +1,12 @@
+{
+    "regular-true": true,
+    "regular-false": false,
+    "optional-some-true": true,
+    "optional-some-false": false,
+    "catch-ok-true": true,
+    "catch-ok-false": false,
+    "catch-err": 2,
+    "optional-catch-some-ok-true": true,
+    "optional-catch-some-ok-false": false,
+    "optional-catch-some-err": 2
+}

@@ -1,0 +1,27 @@
+{
+	"type":	"object",
+	"properties":	{
+		"struct":	{
+			"type":	"boolean"
+		},
+		"enum":	{
+			"type":	"boolean"
+		},
+		"bool":	{
+			"type":	"boolean"
+		},
+		"type":	{
+			"type":	"boolean"
+		},
+		"vec":	{
+			"type":	"boolean"
+		},
+		"pub":	{
+			"type":	"boolean"
+		},
+		"await":	{
+			"type":	"boolean"
+		}
+	},
+	"required":	["struct", "enum", "bool", "type", "vec", "pub", "await"]
+}

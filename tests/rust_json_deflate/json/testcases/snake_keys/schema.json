@@ -1,0 +1,11 @@
+{
+    "type": "object",
+    "properties":   {
+        "ea_purchase_color_2jlgPK4K0ilR_end":   {
+            "type": "string"
+        }
+    },
+    "required" : [
+        "ea_purchase_color_2jlgPK4K0ilR_end"
+    ]
+}

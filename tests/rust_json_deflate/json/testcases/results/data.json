@@ -1,0 +1,67 @@
+{
+    "alpha": {
+        "alpha-1": {
+            "alpha-1-a": "a",
+            "alpha-1-b": "b",
+            "alpha-1-c": "c"
+        },
+        "alpha-2": {
+            "alpha-2-a": "a",
+            "alpha-2-b": "b",
+            "alpha-2-c": "c"
+        },
+        "alpha-3": {
+            "alpha-3-a": "a",
+            "alpha-3-b": "b",
+            "alpha-3-c": false
+        }
+    },
+    "beta": {
+        "beta-1": {
+            "beta-1-a": "a",
+            "beta-1-b": "b",
+            "beta-1-c": "c"
+        },
+        "beta-2": {
+            "beta-2-a": "a",
+            "beta-2-b": "b",
+            "beta-2-c": "c"
+        },
+        "beta-3": {
+            "beta-3-a": "a",
+            "beta-3-b": "b",
+            "beta-3-c": false
+        }
+    },
+    "gamma": {
+        "gamma-1": {
+            "gamma-1-a": "a",
+            "gamma-1-b": "b",
+            "gamma-1-c": "c"
+        },
+        "gamma-2": {
+            "gamma-2-a": "a",
+            "gamma-2-b": "b",
+            "gamma-2-c": "c"
+        },
+        "gamma-3": {
+            "gamma-3-a": "a",
+            "gamma-3-b": "b",
+            "gamma-3-c": false
+        }
+    },
+    "delta": {
+        "delta-1": {
+            "delta-1-b": "b",
+            "delta-1-c": "c"
+        },
+        "delta-2": {
+            "delta-2-a": "a",
+            "delta-2-c": "c"
+        },
+        "delta-3": {
+            "delta-3-a": "a",
+            "delta-3-b": "b"
+        }
+    }
+}

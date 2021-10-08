@@ -1,0 +1,12 @@
+{
+    "regular-empty": [],
+    "regular-boolean": [true, false, false, false, true],
+    "regular-integer": [39, 42],
+    "regular-number": [3.5],
+    "regular-string": ["Hello?", "Hey!"],
+    "optional-some": [true, false, true],
+    "catch-ok": [true, false, true],
+    "catch-err": [42],
+    "optional-catch-some-ok": [true, false, true],
+    "optional-catch-some-err": [42]
+}

@@ -1,0 +1,9 @@
+{
+	"type":	"object",
+	"properties":	{
+		"miss":	{
+			"type":	"string"
+		}
+	},
+	"required":	["miss"]
+}

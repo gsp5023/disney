@@ -1,0 +1,9 @@
+{
+    "regular-nonempty": "10",
+    "regular-empty": "",
+    "optional-some": "30",
+    "catch-ok": "40",
+    "catch-err": 50,
+    "optional-catch-some-ok": "60",
+    "optional-catch-some-err": 70
+}

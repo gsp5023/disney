@@ -1,0 +1,35 @@
+{
+    "type": "object",
+    "properties":   {
+        "enter":    {
+            "type":	"object",
+            "properties":	{
+                "images":	{
+                    "type":	"object",
+                    "properties":	{
+                        "tile":	{
+                            "type":	"object",
+                            "properties":	{
+                                "aspectRatio":	{
+                                    "type":	"number"
+                                },
+                                "purpose":	{
+                                    "type":	"array",
+                                    "items":	{
+                                        "type":	"string"
+                                    }
+                                },
+                                "roundedCorners":	{
+                                    "type":	"boolean"
+                                }
+                            },
+                            "required":	["aspectRatio", "purpose"]
+                        }
+                    },
+                    "required":	["tile"]
+                }
+            },
+            "required":	["images"]
+        }
+    }
+}

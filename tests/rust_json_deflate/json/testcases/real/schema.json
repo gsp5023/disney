@@ -1,0 +1,3996 @@
+{
+	"type":	"object",
+	"properties":	{
+		"application":	{
+			"type":	"object",
+			"properties":	{
+				"id":	{
+					"type":	"string"
+				},
+				"name":	{
+					"type":	"string"
+				}
+			},
+			"required":	["id", "name"]
+		},
+		"commonHeaders":	{
+			"type":	"object",
+			"properties":	{
+				"X-BAMSDK-Client-ID":	{
+					"type":	"string"
+				},
+				"X-BAMSDK-Platform":	{
+					"type":	"string"
+				},
+				"X-BAMSDK-Version":	{
+					"type":	"string"
+				}
+			},
+			"required":	["X-BAMSDK-Client-ID", "X-BAMSDK-Platform", "X-BAMSDK-Version"]
+		},
+		"logger":	{
+			"type":	"object",
+			"properties":	{
+				"logLevel":	{
+					"type":	"string"
+				}
+			},
+			"required":	["logLevel"]
+		},
+		"services":	{
+			"type":	"object",
+			"properties":	{
+				"account":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"createAccount":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"createAccountGrant":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"createUserProfile":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"deleteAccountAttributes":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"deleteUserProfile":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getActiveUserProfile":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getCurrentAccount":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getUserProfile":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getUserProfiles":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"setActiveUserProfile":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"updateAccountAttributes":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"updateUserProfile":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["createAccount", "createAccountGrant", "createUserProfile", "deleteAccountAttributes", "deleteUserProfile", "getActiveUserProfile", "getCurrentAccount", "getUserProfile", "getUserProfiles", "setActiveUserProfile", "updateAccountAttributes", "updateUserProfile"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"adEngine":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"setToken":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"setTokenRedirect":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["setToken", "setTokenRedirect"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						},
+						"disabled":	{
+							"type":	"boolean"
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"adTargeting":	{
+									"type":	"object",
+									"properties":	{
+									},
+									"required":	[]
+								}
+							},
+							"required":	["adTargeting"]
+						}
+					},
+					"required":	["client", "disabled", "extras"]
+				},
+				"adobeIdentity":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"createIdToken":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"createRegistrationCode":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["createIdToken", "createRegistrationCode"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"bamIdentity":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"changeEmail":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"changePassword":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"check":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"createIdentity":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getIdentity":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"identityLogin":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"otpRedeem":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"otpRequest":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"resetPassword":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"startPasswordReset":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"updateAttributes":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["changeEmail", "changePassword", "check", "createIdentity", "getIdentity", "identityLogin", "otpRedeem", "otpRequest", "resetPassword", "startPasswordReset", "updateAttributes"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"expirationBufferSeconds":	{
+									"type":	"integer"
+								}
+							},
+							"required":	["expirationBufferSeconds"]
+						}
+					},
+					"required":	["client", "extras"]
+				},
+				"commerce":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"createKlarnaPaymentMethod":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"createPayPalPaymentMethod":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"createPaymentMethod":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getDefaultPaymentMethod":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getOrderStatus":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getPayPalExpress":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getPaymentCard":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"listPaymentCards":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"lookupByZipCode":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"priceOrder":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"redeem":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"resumeAccount":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"setPayPalExpressCheckoutDetails":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"submitOrderWithPaymentMethod":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"updatePaymentCard":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["createKlarnaPaymentMethod", "createPayPalPaymentMethod", "createPaymentMethod", "getDefaultPaymentMethod", "getOrderStatus", "getPayPalExpress", "getPaymentCard", "listPaymentCards", "lookupByZipCode", "priceOrder", "redeem", "resumeAccount", "setPayPalExpressCheckoutDetails", "submitOrderWithPaymentMethod", "updatePaymentCard"]
+								},
+								"extras":	{
+									"type":	"object",
+									"properties":	{
+										"clientId":	{
+											"type":	"string"
+										},
+										"createPaymentMethodRegionalEndpoints":	{
+											"type":	"object",
+											"properties":	{
+											},
+											"required":	[]
+										},
+										"namespace":	{
+											"type":	"string"
+										},
+										"namespaceId":	{
+											"type":	"integer"
+										}
+									},
+									"required":	["clientId", "createPaymentMethodRegionalEndpoints", "namespace", "namespaceId"]
+								}
+							},
+							"required":	["baseUrl", "endpoints", "extras"]
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"checkOrderStatusDelay":	{
+									"type":	"integer"
+								},
+								"retryPolicy":	{
+									"type":	"object",
+									"properties":	{
+										"retryBasePeriod":	{
+											"type":	"integer"
+										},
+										"retryMaxAttempts":	{
+											"type":	"integer"
+										},
+										"retryMaxPeriod":	{
+											"type":	"integer"
+										},
+										"retryMultiplier":	{
+											"type":	"integer"
+										}
+									},
+									"required":	["retryBasePeriod", "retryMaxAttempts", "retryMaxPeriod", "retryMultiplier"]
+								}
+							},
+							"required":	["checkOrderStatusDelay", "retryPolicy"]
+						}
+					},
+					"required":	["client", "extras"]
+				},
+				"content":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"bookmarks":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"bookmarksPersisted":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"dmcVideos":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"search":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"searchPersisted":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"searchSuggestions":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"sportsData":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"watchlist":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"watchlistPersisted":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["bookmarks", "bookmarksPersisted", "dmcVideos", "search", "searchPersisted", "searchSuggestions", "sportsData", "watchlist", "watchlistPersisted"]
+								},
+								"extras":	{
+									"type":	"object",
+									"properties":	{
+										"urlSizeLimit":	{
+											"type":	"integer"
+										}
+									},
+									"required":	["urlSizeLimit"]
+								}
+							},
+							"required":	["baseUrl", "endpoints", "extras"]
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"queryIdDefaults":	{
+									"type":	"object",
+									"properties":	{
+										"addToWatchlist":	{
+											"type":	"string"
+										},
+										"clearWatchlist":	{
+											"type":	"string"
+										},
+										"removeFromWatchlist":	{
+											"type":	"string"
+										}
+									},
+									"required":	["addToWatchlist", "clearWatchlist", "removeFromWatchlist"]
+								}
+							},
+							"required":	["queryIdDefaults"]
+						}
+					},
+					"required":	["client", "extras"]
+				},
+				"customerService":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"createSupportCode":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["createSupportCode"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"device":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"createDeviceGrant":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["createDeviceGrant"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"drm":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"fairPlayCertificate":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"fairPlayLicense":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"nagraCertificate":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"nagraLicense":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"offlineFairPlayLicense":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"offlineFairPlayLicenseRelease":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"offlineFairPlayLicenseRenew":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"offlineWidevineLicense":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"offlineWidevineLicenseRelease":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"offlineWidevineLicenseRenew":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"playReadyLicense":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														},
+														"SOAPAction":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type", "SOAPAction"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"silkKey":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"widevineCertificate":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"widevineLicense":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["fairPlayCertificate", "fairPlayLicense", "nagraCertificate", "nagraLicense", "offlineFairPlayLicense", "offlineFairPlayLicenseRelease", "offlineFairPlayLicenseRenew", "offlineWidevineLicense", "offlineWidevineLicenseRelease", "offlineWidevineLicenseRenew", "playReadyLicense", "silkKey", "widevineCertificate", "widevineLicense"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"eligibility":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"getEligibilityStatus":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["getEligibilityStatus"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"externalActivation":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"activateBundle":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"activateToken":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getActivationToken":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["activateBundle", "activateToken", "getActivationToken"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"media":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"bifThumbnail":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+													},
+													"required":	[]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"bifThumbnails":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"bookmarks":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"key":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"mediaPayload":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"playbackCookie":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"spriteSheetThumbnail":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+													},
+													"required":	[]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"spriteSheetThumbnails":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["bifThumbnail", "bifThumbnails", "bookmarks", "key", "mediaPayload", "playbackCookie", "spriteSheetThumbnail", "spriteSheetThumbnails"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"isUhdAllowed":	{
+									"type":	"boolean"
+								},
+								"playbackScenarioDefault":	{
+									"type":	"string"
+								},
+								"playbackScenarios":	{
+									"type":	"object",
+									"properties":	{
+									},
+									"required":	[]
+								},
+								"playbackSession":	{
+									"type":	"object",
+									"properties":	{
+										"streamSampleInterval":	{
+											"type":	"integer"
+										}
+									},
+									"required":	["streamSampleInterval"]
+								}
+							},
+							"required":	["isUhdAllowed", "playbackScenarioDefault", "playbackScenarios", "playbackSession"]
+						}
+					},
+					"required":	["client", "extras"]
+				},
+				"paywall":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"paywall":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["paywall"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"purchase":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"redeemPurchases":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"restorePurchases":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["redeemPurchases", "restorePurchases"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"retryPolicy":	{
+									"type":	"object",
+									"properties":	{
+										"retryBasePeriod":	{
+											"type":	"integer"
+										},
+										"retryMaxAttempts":	{
+											"type":	"integer"
+										},
+										"retryMaxPeriod":	{
+											"type":	"integer"
+										},
+										"retryMultiplier":	{
+											"type":	"number"
+										}
+									},
+									"required":	["retryBasePeriod", "retryMaxAttempts", "retryMaxPeriod", "retryMultiplier"]
+								}
+							},
+							"required":	["retryPolicy"]
+						}
+					},
+					"required":	["client", "extras"]
+				},
+				"pushMessaging":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"registerChannel":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														},
+														"X-BAMTech-App-Id":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization", "X-BAMTech-App-Id"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["registerChannel"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"session":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"getInfo":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"getLocation":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["getInfo", "getLocation"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"sockets":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"socketConnectionEuWestOne":	{
+											"type":	"object",
+											"properties":	{
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["href", "method", "templated", "timeout", "ttl"]
+										},
+										"socketConnectionUsEastOne":	{
+											"type":	"object",
+											"properties":	{
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["href", "method", "templated", "timeout", "ttl"]
+										},
+										"socketConnectionUsWestTwo":	{
+											"type":	"object",
+											"properties":	{
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["socketConnectionEuWestOne", "socketConnectionUsEastOne", "socketConnectionUsWestTwo"]
+								},
+								"extras":	{
+									"type":	"object",
+									"properties":	{
+										"protocolHeaders":	{
+											"type":	"object",
+											"properties":	{
+												"json":	{
+													"type":	"string"
+												},
+												"protobuf":	{
+													"type":	"string"
+												}
+											},
+											"required":	["json", "protobuf"]
+										},
+										"regionalEndpointMapping":	{
+											"type":	"object",
+											"properties":	{
+												"eu-west-1":	{
+													"type":	"string"
+												},
+												"us-east-1":	{
+													"type":	"string"
+												},
+												"us-west-2":	{
+													"type":	"string"
+												}
+											},
+											"required":	["eu-west-1", "us-east-1", "us-west-2"]
+										},
+										"supportedProtocols":	{
+											"type":	"array",
+											"items":	{
+												"type":	["string"],
+												"properties":	{
+												}
+											}
+										}
+									},
+									"required":	["protocolHeaders", "regionalEndpointMapping", "supportedProtocols"]
+								}
+							},
+							"required":	["baseUrl", "endpoints", "extras"]
+						},
+						"disabled":	{
+							"type":	"boolean"
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"retryPolicy":	{
+									"type":	"object",
+									"properties":	{
+										"retryBasePeriod":	{
+											"type":	"integer"
+										},
+										"retryMaxAttempts":	{
+											"type":	"integer"
+										},
+										"retryMaxPeriod":	{
+											"type":	"integer"
+										},
+										"retryMultiplier":	{
+											"type":	"number"
+										}
+									},
+									"required":	["retryBasePeriod", "retryMaxAttempts", "retryMaxPeriod", "retryMultiplier"]
+								}
+							},
+							"required":	["retryPolicy"]
+						}
+					},
+					"required":	["client", "disabled", "extras"]
+				},
+				"subscription":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"getSubscriptions":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"linkSubscriptionsFromDevice":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["getSubscriptions", "linkSubscriptionsFromDevice"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						}
+					},
+					"required":	["client"]
+				},
+				"telemetry":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"dustEvent":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										},
+										"postEvent":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["dustEvent", "postEvent"]
+								}
+							},
+							"required":	["baseUrl", "endpoints"]
+						},
+						"disabled":	{
+							"type":	"boolean"
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"batchLimit":	{
+									"type":	"integer"
+								},
+								"bufferConfigurationDefault":	{
+									"type":	"object",
+									"properties":	{
+										"batchLimit":	{
+											"type":	"integer"
+										},
+										"disabled":	{
+											"type":	"boolean"
+										},
+										"minimumBatchSize":	{
+											"type":	"integer"
+										},
+										"replyAfterFallback":	{
+											"type":	"integer"
+										}
+									},
+									"required":	["batchLimit", "disabled", "minimumBatchSize", "replyAfterFallback"]
+								},
+								"eventBufferConfiguration":	{
+									"type":	"object",
+									"properties":	{
+										"batchLimit":	{
+											"type":	"integer"
+										},
+										"disabled":	{
+											"type":	"boolean"
+										},
+										"minimumBatchSize":	{
+											"type":	"integer"
+										},
+										"replyAfterFallback":	{
+											"type":	"integer"
+										}
+									},
+									"required":	["batchLimit", "disabled", "minimumBatchSize", "replyAfterFallback"]
+								},
+								"fastTrack":	{
+									"type":	"object",
+									"properties":	{
+										"urns":	{
+											"type":	"array",
+											"items":	{
+												"type":	"string",
+												"properties":	{
+												}
+											}
+										}
+									},
+									"required":	["urns"]
+								},
+								"permitAppDustEvents":	{
+									"type":	"boolean"
+								},
+								"prohibited":	{
+									"type":	"object",
+									"properties":	{
+										"urns":	{
+											"type":	"array",
+											"items":	{
+												"type":	["string"],
+												"properties":	{
+												}
+											}
+										}
+									},
+									"required":	["urns"]
+								},
+								"replyAfterFallback":	{
+									"type":	"integer"
+								}
+							},
+							"required":	["batchLimit", "bufferConfigurationDefault", "eventBufferConfiguration", "fastTrack", "permitAppDustEvents", "prohibited", "replyAfterFallback"]
+						}
+					},
+					"required":	["client", "disabled", "extras"]
+				},
+				"token":	{
+					"type":	"object",
+					"properties":	{
+						"client":	{
+							"type":	"object",
+							"properties":	{
+								"baseUrl":	{
+									"type":	"string"
+								},
+								"endpoints":	{
+									"type":	"object",
+									"properties":	{
+										"exchange":	{
+											"type":	"object",
+											"properties":	{
+												"headers":	{
+													"type":	"object",
+													"properties":	{
+														"Accept":	{
+															"type":	"string"
+														},
+														"Authorization":	{
+															"type":	"string"
+														},
+														"Content-Type":	{
+															"type":	"string"
+														}
+													},
+													"required":	["Accept", "Authorization", "Content-Type"]
+												},
+												"href":	{
+													"type":	"string"
+												},
+												"method":	{
+													"type":	"string"
+												},
+												"templated":	{
+													"type":	"boolean"
+												},
+												"timeout":	{
+													"type":	"integer"
+												},
+												"ttl":	{
+													"type":	"integer"
+												}
+											},
+											"required":	["headers", "href", "method", "templated", "timeout", "ttl"]
+										}
+									},
+									"required":	["exchange"]
+								},
+								"extras":	{
+									"type":	"object",
+									"properties":	{
+										"platformId":	{
+											"type":	"string"
+										}
+									},
+									"required":	["platformId"]
+								},
+								"platformId":	{
+									"type":	"string"
+								}
+							},
+							"required":	["baseUrl", "endpoints", "extras", "platformId"]
+						},
+						"extras":	{
+							"type":	"object",
+							"properties":	{
+								"autoRefreshRetryPolicy":	{
+									"type":	"object",
+									"properties":	{
+										"retryBasePeriod":	{
+											"type":	"integer"
+										},
+										"retryMaxAttempts":	{
+											"type":	"integer"
+										},
+										"retryMaxPeriod":	{
+											"type":	"integer"
+										},
+										"retryMultiplier":	{
+											"type":	"number"
+										}
+									},
+									"required":	["retryBasePeriod", "retryMaxAttempts", "retryMaxPeriod", "retryMultiplier"]
+								},
+								"refreshThreshold":	{
+									"type":	"number"
+								},
+								"subjectTokenTypes":	{
+									"type":	"object",
+									"properties":	{
+										"account":	{
+											"type":	"string"
+										},
+										"device":	{
+											"type":	"string"
+										},
+										"temporary":	{
+											"type":	"string"
+										}
+									},
+									"required":	["account", "device", "temporary"]
+								}
+							},
+							"required":	["autoRefreshRetryPolicy", "refreshThreshold", "subjectTokenTypes"]
+						}
+					},
+					"required":	["client", "extras"]
+				}
+			},
+			"required":	["account", "adEngine", "adobeIdentity", "bamIdentity", "commerce", "content", "customerService", "device", "drm", "eligibility", "externalActivation", "media", "paywall", "purchase", "pushMessaging", "session", "sockets", "subscription", "telemetry", "token"]
+		}
+	},
+	"required":	["application", "commonHeaders", "logger", "services"]
+}

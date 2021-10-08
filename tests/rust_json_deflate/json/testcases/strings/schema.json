@@ -1,0 +1,45 @@
+{
+	"type":	"object",
+	"properties":	{
+		"regular-nonempty":	{
+			"type":	"string"
+		},
+		"regular-empty":	{
+			"type":	"string"
+		},
+		"optional-some":	{
+			"type":	"string"
+		},
+		"optional-none":	{
+			"type":	"string"
+		},
+		"catch-ok":	{
+			"type":	"string"
+		},
+		"catch-err":	{
+			"type":	"string"
+		},
+		"optional-catch-some-ok":	{
+			"type":	"string"
+		},
+		"optional-catch-some-err":	{
+			"type":	"string"
+		},
+		"optional-catch-none":	{
+			"type":	"string"
+		}
+    },
+	"required":	[
+        "regular-nonempty",
+        "regular-empty",
+        "catch-ok",
+        "catch-err"
+    ],
+    "catch": [
+        "catch-ok",
+        "catch-err",
+        "optional-catch-some-ok",
+        "optional-catch-some-err",
+        "optional-catch-none"
+    ]
+}

@@ -1,0 +1,41 @@
+{
+	"type":	"object",
+	"properties":	{
+		"regular":	{
+			"type":	"integer"
+		},
+		"optional-some":	{
+			"type":	"integer"
+		},
+		"optional-none":	{
+			"type":	"integer"
+		},
+		"catch-ok":	{
+			"type":	"integer"
+		},
+		"catch-err":	{
+			"type":	"integer"
+		},
+		"optional-catch-some-ok":	{
+			"type":	"integer"
+		},
+		"optional-catch-some-err":	{
+			"type":	"integer"
+		},
+		"optional-catch-none":	{
+			"type":	"integer"
+		}
+    },
+	"required":	[
+        "regular",
+        "catch-ok",
+        "catch-err"
+    ],
+    "catch": [
+        "catch-ok",
+        "catch-err",
+        "optional-catch-some-ok",
+        "optional-catch-some-err",
+        "optional-catch-none"
+    ]
+}

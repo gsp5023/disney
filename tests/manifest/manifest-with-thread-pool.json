@@ -1,0 +1,30 @@
+{
+    "v1": {
+      "options": [
+        {
+          "bundle": [
+            {
+              "file": "build/bundle/dplus_demo.bundle.zip",
+              "signature": "JxlLCoJ7GCHY42E14gaHUCMXjWUJzX1fSIGXiuJIqxU="
+            }
+          ],
+          "runtime_config": {
+            "sys_params": {
+              "memory_reservations": {
+                "low": {
+                  "runtime": 32768,
+                  "render_device": 4334496,
+                  "canvas": 52428800
+                }
+              },
+              "guard_page_mode": "enabled",
+              "thread_pool_thread_count":2
+            }
+          }
+        }
+      ]
+    }
+  }
+
+
+

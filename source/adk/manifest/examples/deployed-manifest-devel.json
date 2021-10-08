@@ -1,0 +1,13 @@
+{
+  "v1": {
+    "options": [
+      {
+        "bundle": [
+          {
+            "url": "https://cd-dmgz.bamgrid.com/adk/v0.7.4/dmgz_adk_app.bundle.zip"
+          }
+        ]
+      }
+    ]
+  }
+}

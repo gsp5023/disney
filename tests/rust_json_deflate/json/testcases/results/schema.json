@@ -1,0 +1,217 @@
+{
+	"type":	"object",
+	"properties":	{
+		"alpha":	{
+			"type":	"object",
+			"properties":	{
+				"alpha-1":	{
+					"type":	"object",
+					"properties":	{
+						"alpha-1-a":	{
+							"type":	"string"
+						},
+						"alpha-1-b":	{
+							"type":	"string"
+						},
+						"alpha-1-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["alpha-1-a", "alpha-1-b", "alpha-1-c"],
+					"catch":	["alpha-1-a", "alpha-1-b", "alpha-1-c"]
+				},
+				"alpha-2":	{
+					"type":	"object",
+					"properties":	{
+						"alpha-2-a":	{
+							"type":	"string"
+						},
+						"alpha-2-b":	{
+							"type":	"string"
+						},
+						"alpha-2-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["alpha-2-a", "alpha-2-b", "alpha-2-c"],
+					"catch":	["alpha-2-a", "alpha-2-b", "alpha-2-c"]
+				},
+				"alpha-3":	{
+					"type":	"object",
+					"properties":	{
+						"alpha-3-a":	{
+							"type":	"string"
+						},
+						"alpha-3-b":	{
+							"type":	"string"
+						},
+						"alpha-3-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["alpha-3-a", "alpha-3-b", "alpha-3-c"],
+					"catch":	["alpha-3-a", "alpha-3-b", "alpha-3-c"]
+				}
+			},
+			"required":	["alpha-1", "alpha-2", "alpha-3"],
+			"catch":	["alpha-1", "alpha-2", "alpha-3"]
+		},
+		"beta":	{
+			"type":	"object",
+			"properties":	{
+				"beta-1":	{
+					"type":	"object",
+					"properties":	{
+						"beta-1-a":	{
+							"type":	"string"
+						},
+						"beta-1-b":	{
+							"type":	"string"
+						},
+						"beta-1-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["beta-1-a", "beta-1-b", "beta-1-c"]
+				},
+				"beta-2":	{
+					"type":	"object",
+					"properties":	{
+						"beta-2-a":	{
+							"type":	"string"
+						},
+						"beta-2-b":	{
+							"type":	"string"
+						},
+						"beta-2-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["beta-2-a", "beta-2-b", "beta-2-c"]
+				},
+				"beta-3":	{
+					"type":	"object",
+					"properties":	{
+						"beta-3-a":	{
+							"type":	"string"
+						},
+						"beta-3-b":	{
+							"type":	"string"
+						},
+						"beta-3-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["beta-3-a", "beta-3-b", "beta-3-c"]
+				}
+			},
+			"required":	["beta-1", "beta-2", "beta-3"],
+			"catch":	["beta-1", "beta-2", "beta-3"]
+		},
+		"gamma":	{
+			"type":	"object",
+			"properties":	{
+				"gamma-1":	{
+					"type":	"object",
+					"properties":	{
+						"gamma-1-a":	{
+							"type":	"string"
+						},
+						"gamma-1-b":	{
+							"type":	"string"
+						},
+						"gamma-1-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["gamma-1-a", "gamma-1-b", "gamma-1-c"]
+				},
+				"gamma-2":	{
+					"type":	"object",
+					"properties":	{
+						"gamma-2-a":	{
+							"type":	"string"
+						},
+						"gamma-2-b":	{
+							"type":	"string"
+						},
+						"gamma-2-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["gamma-2-a", "gamma-2-b", "gamma-2-c"]
+				},
+				"gamma-3":	{
+					"type":	"object",
+					"properties":	{
+						"gamma-3-a":	{
+							"type":	"string"
+						},
+						"gamma-3-b":	{
+							"type":	"string"
+						},
+						"gamma-3-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["gamma-3-a", "gamma-3-b", "gamma-3-c"]
+				}
+			},
+			"required":	["gamma-1", "gamma-2", "gamma-3"]
+		},
+		"delta":	{
+			"type":	"object",
+			"properties":	{
+				"delta-1":	{
+					"type":	"object",
+					"properties":	{
+						"delta-1-a":	{
+							"type":	"string"
+						},
+						"delta-1-b":	{
+							"type":	"string"
+						},
+						"delta-1-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["delta-1-a", "delta-1-b", "delta-1-c"]
+				},
+				"delta-2":	{
+					"type":	"object",
+					"properties":	{
+						"delta-2-a":	{
+							"type":	"string"
+						},
+						"delta-2-b":	{
+							"type":	"string"
+						},
+						"delta-2-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["delta-2-a", "delta-2-b", "delta-2-c"]
+				},
+				"delta-3":	{
+					"type":	"object",
+					"properties":	{
+						"delta-3-a":	{
+							"type":	"string"
+						},
+						"delta-3-b":	{
+							"type":	"string"
+						},
+						"delta-3-c":	{
+							"type":	"string"
+						}
+					},
+					"required":	["delta-3-a", "delta-3-b", "delta-3-c"]
+				}
+			},
+			"required":	["delta-1", "delta-2", "delta-3"],
+			"catch":	["delta-1", "delta-2", "delta-3"]
+		}
+	},
+	"required":	["alpha", "beta", "gamma", "delta"],
+	"catch":	["alpha", "beta", "gamma", "delta"]
+}
