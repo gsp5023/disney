@@ -107,7 +107,6 @@ FFI_THUNK(0x408A, int32_t, nve_current_profile_get, (FFI_NATIVE_PTR(void *) play
 
 #ifdef _NVE
 FFI_THUNK(0x1088, void, nve_dispatcher_bind_media_player_events, (FFI_NATIVE_PTR(void *) dispatcher_ptr, FFI_NATIVE_PTR(void *) media_player_ptr), {
-    ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, dispatcher_ptr), "dispatcher_ptr cannot be NULL");
     ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, media_player_ptr), "media_player_ptr cannot be NULL");
     nve_dispatcher_bind_media_player_events(FFI_GET_NATIVE_PTR(void *, dispatcher_ptr), FFI_GET_NATIVE_PTR(void *, media_player_ptr));
 })
@@ -130,7 +129,6 @@ FFI_THUNK(0x808, FFI_NATIVE_PTR(void *), nve_dispatcher_create, (FFI_NATIVE_PTR(
 
 #ifdef _NVE
 FFI_THUNK(0x1088, void, nve_dispatcher_unbind_media_player_events, (FFI_NATIVE_PTR(void *) dispatcher_ptr, FFI_NATIVE_PTR(void *) media_player_ptr), {
-    ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, dispatcher_ptr), "dispatcher_ptr cannot be NULL");
     ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, media_player_ptr), "media_player_ptr cannot be NULL");
     nve_dispatcher_unbind_media_player_events(FFI_GET_NATIVE_PTR(void *, dispatcher_ptr), FFI_GET_NATIVE_PTR(void *, media_player_ptr));
 })
@@ -370,7 +368,6 @@ FFI_THUNK(0x108A, void, nve_media_player_buffered_range_get, (FFI_NATIVE_PTR(voi
 
 #ifdef _NVE
 FFI_THUNK(0x808, FFI_NATIVE_PTR(void *), nve_media_player_create, (FFI_NATIVE_PTR(void *) dispatcher_ptr), {
-    ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, dispatcher_ptr), "dispatcher_ptr cannot be NULL");
     return FFI_SET_NATIVE_PTR(nve_media_player_create(FFI_GET_NATIVE_PTR(void *, dispatcher_ptr)));
 })
 #else

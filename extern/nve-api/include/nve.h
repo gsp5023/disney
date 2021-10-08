@@ -31,9 +31,9 @@ FFI_EXPORT_NVE void nve_mpi_config_subscribe_tag(FFI_PTR_NATIVE void * config_pt
 FFI_EXPORT_NVE FFI_PTR_NATIVE void * nve_media_resource_create(FFI_PTR_WASM const char * url, nve_media_resource_type_e media_resource_type, FFI_PTR_NATIVE FFI_CAN_BE_NULL void * metadata_ptr);
 FFI_EXPORT_NVE void nve_media_resource_release(FFI_PTR_NATIVE void * media_resource_ptr);
 FFI_EXPORT_NVE FFI_PTR_NATIVE void * nve_dispatcher_create(FFI_PTR_NATIVE void * callback_manager_ptr);
-FFI_EXPORT_NVE void nve_dispatcher_bind_media_player_events(FFI_PTR_NATIVE void * dispatcher_ptr, FFI_PTR_NATIVE void * media_player_ptr);
-FFI_EXPORT_NVE void nve_dispatcher_unbind_media_player_events(FFI_PTR_NATIVE void * dispatcher_ptr, FFI_PTR_NATIVE void * media_player_ptr);
-FFI_EXPORT_NVE FFI_PTR_NATIVE void * nve_media_player_create(FFI_PTR_NATIVE void * dispatcher_ptr);
+FFI_EXPORT_NVE void nve_dispatcher_bind_media_player_events(FFI_PTR_NATIVE FFI_CAN_BE_NULL void * dispatcher_ptr, FFI_PTR_NATIVE void * media_player_ptr);
+FFI_EXPORT_NVE void nve_dispatcher_unbind_media_player_events(FFI_PTR_NATIVE FFI_CAN_BE_NULL void * dispatcher_ptr, FFI_PTR_NATIVE void * media_player_ptr);
+FFI_EXPORT_NVE FFI_PTR_NATIVE void * nve_media_player_create(FFI_PTR_NATIVE FFI_CAN_BE_NULL void * dispatcher_ptr);
 FFI_EXPORT_NVE void nve_media_player_set_view(FFI_PTR_NATIVE void * player_ptr, FFI_PTR_NATIVE void * view_ptr);
 FFI_EXPORT_NVE FFI_PTR_NATIVE void * nve_media_player_get_view(FFI_PTR_NATIVE void * player_ptr);
 FFI_EXPORT_NVE void nve_media_player_replace_resource(FFI_PTR_NATIVE void * player_ptr, FFI_PTR_NATIVE void * resource_ptr, FFI_PTR_NATIVE void * config_ptr);
