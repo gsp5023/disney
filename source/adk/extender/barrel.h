@@ -8,6 +8,7 @@
 
 #include "source/adk/bundle/bundle.h"
 #include "source/adk/cncbus/cncbus.h"
+#include "source/adk/crypto/crypto.h"
 #include "source/adk/file/file.h"
 #include "source/adk/http/adk_http2.h"
 #include "source/adk/http/websockets/adk_websocket_backend_selector.h"
@@ -16,6 +17,7 @@
 #include "source/adk/log/private/log_p.h"
 #include "source/adk/log/private/log_receiver.h"
 #include "source/adk/renderer/renderer.h"
+#include "source/adk/runtime/app/app.h"
 #include "source/adk/runtime/hosted_app.h"
 #include "source/adk/runtime/memory.h"
 #include "source/adk/runtime/private/events.h"

@@ -25,6 +25,9 @@ extern "C" {
  * ==========================================================================*/
 
 struct cg_vec2_t;
+struct cg_sdf_rect_uniforms_t;
+struct cg_sdf_rect_border_uniforms_t;
+struct cg_ivec2_t;
 
 typedef struct cg_gl_texture_t {
     r_texture_t * texture;
@@ -53,18 +56,13 @@ typedef struct cg_gl_scissor_state_t {
 
 /* ------------------------------------------------------------------------- */
 
-enum {
-    cg_gl_num_vertex_banks = 2,
-    cg_gl_max_vertex_count = 1024 * 8,
-    cg_gl_max_textures = 256,
-    cg_gl_num_meshes = 256
-};
-
 struct cg_heap_t;
 
 typedef struct cg_gl_state_t {
-    cg_gl_vertex_t vertices[cg_gl_num_vertex_banks][cg_gl_max_vertex_count];
-    rb_fence_t gl_fences[cg_gl_num_vertex_banks];
+    runtime_configuration_canvas_gl_t config;
+
+    cg_gl_vertex_t ** vertices;
+    rb_fence_t * gl_fences;
 
     int active_bank;
     int map_ofs;
@@ -80,10 +78,16 @@ typedef struct cg_gl_state_t {
         r_program_t * color_alpha_mask;
         r_program_t * color_alpha_test;
         r_program_t * color_alpha_test_rgb_fill_alpha_red;
+        r_program_t * sdf_rect;
+        r_program_t * sdf_rect_border;
         r_program_t * video;
+        r_program_t * video_hdr;
     } shaders;
 
-    r_mesh_t * meshes[cg_gl_num_meshes];
+    const_mem_region_t mesh_null_buffer;
+
+    r_mesh_t ** meshes;
+    r_mesh_data_layout_t * mesh_layout;
 
     cg_gl_texture_t white;
 
@@ -131,6 +135,10 @@ void cg_gl_texture_free(cg_gl_state_t * const state, cg_gl_texture_t * const tex
 
 void cg_gl_texture_update(cg_gl_state_t * const state, cg_gl_texture_t * const tex, void * const pixels);
 
+#if !(defined(_VADER) || defined(_LEIA))
+void cg_gl_sub_texture_update(cg_gl_state_t * const state, cg_gl_texture_t * const tex, const image_mips_t image_mips);
+#endif
+
 void cg_gl_texture_update_sampler_state(cg_gl_state_t * const state, cg_gl_texture_t * const tex);
 
 /* ------------------------------------------------------------------------- */
@@ -151,15 +159,17 @@ void cg_gl_framebuffer_init(cg_gl_state_t * const state, cg_gl_framebuffer_t * c
 
 /* ------------------------------------------------------------------------- */
 
-void cg_gl_state_init(cg_gl_state_t * const state, struct cg_heap_t * const cg_heap, render_device_t * const render_device);
+void cg_gl_state_init(cg_gl_state_t * const state, struct cg_heap_t * const cg_heap, render_device_t * const render_device, const runtime_configuration_canvas_gl_t config);
 
 void cg_gl_state_free(cg_gl_state_t * const state);
 
-void cg_gl_state_begin(cg_gl_state_t * const state, const int width, const int height);
+void cg_gl_state_begin(cg_gl_state_t * const state, const int width, const int height, uint32_t clear_color);
 
 void cg_gl_state_end(cg_gl_state_t * const state);
 
 void cg_gl_state_draw(cg_gl_state_t * const state, const rhi_draw_mode_e prim, const int count, const int offset);
+
+void cg_gl_state_draw_mesh(cg_gl_state_t * const state, r_mesh_t * const mesh, const rhi_draw_mode_e prim, const int count, const int offset);
 
 static inline void cg_gl_state_draw_points(cg_gl_state_t * const state, const int count, const int offset) {
     cg_gl_state_draw(state, rhi_triangles, count, offset);
@@ -186,14 +196,17 @@ void cg_gl_state_bind_color_shader_alpha_test(cg_gl_state_t * const state, const
 void cg_gl_state_bind_color_shader_alpha_rgb_fill_alpha_red_test(cg_gl_state_t * const state, const cg_color_t * const fill, const cg_gl_texture_t * const tex, const float threshold);
 
 void cg_gl_state_bind_color_shader_raw(cg_gl_state_t * const state, const cg_color_t * const fill, rhi_texture_t * const * const tex);
-void cg_gl_state_bind_video_shader(cg_gl_state_t * const state, const cg_color_t * const fill, rhi_texture_t * const * const chroma, rhi_texture_t * const * const luma);
+void cg_gl_state_bind_video_shader(cg_gl_state_t * const state, const cg_color_t * const fill, rhi_texture_t * const * const chroma, rhi_texture_t * const * const luma, const cg_ivec2_t luma_tex_dim, const cg_ivec2_t chroma_tex_dim, const cg_ivec2_t framesize_dim);
+void cg_gl_state_bind_video_shader_hdr(cg_gl_state_t * const state, const cg_color_t * const fill, rhi_texture_t * const * const chroma, rhi_texture_t * const * const luma, const cg_ivec2_t luma_tex_dim, const cg_ivec2_t chroma_tex_dim, const cg_ivec2_t framesize_dim);
+
+void cg_gl_state_bind_sdf_rect_shader(cg_gl_state_t * const state, const cg_color_t * const fill, const cg_gl_texture_t * const tex, const struct cg_sdf_rect_uniforms_t uniforms);
+void cg_gl_state_bind_sdf_rect_border_shader(cg_gl_state_t * const state, const cg_color_t * const fill, const cg_gl_texture_t * const tex, const struct cg_sdf_rect_border_uniforms_t uniforms);
 
 cg_gl_vertex_t * cg_gl_state_map_vertex_range(cg_gl_state_t * const state, const int count);
 void cg_gl_state_finish_vertex_range(cg_gl_state_t * const state);
 void cg_gl_state_finish_vertex_range_with_count(cg_gl_state_t * const state, const int count);
 
 static inline void cg_set_vert(cg_gl_vertex_t * const v, const int idx, const struct cg_vec2_t * const pos, const cg_color_t * const col) {
-    ASSERT(idx < cg_gl_max_vertex_count);
     v[idx].x = pos->x;
     v[idx].y = pos->y;
     v[idx].r = col->r; // u

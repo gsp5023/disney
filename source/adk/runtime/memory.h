@@ -110,7 +110,7 @@ static inline void lba_init(linear_block_allocator_t * const lba, void * const b
     sprintf_s(lba->name, ARRAY_SIZE(lba->name), "%s", name);
 }
 
-static void * lba_allocate_unchecked(linear_block_allocator_t * const lba, const int alignment, const int size) {
+static inline void * lba_allocate_unchecked(linear_block_allocator_t * const lba, const int alignment, const int size) {
     // align offset
     const int aligned_ofs = ALIGN_INT(lba->ofs, alignment);
     if ((aligned_ofs + size) > lba->size) {
@@ -121,7 +121,7 @@ static void * lba_allocate_unchecked(linear_block_allocator_t * const lba, const
     return ((uint8_t *)lba->block) + aligned_ofs;
 }
 
-static void * lba_allocate(linear_block_allocator_t * const lba, const int alignment, const int size) {
+static inline void * lba_allocate(linear_block_allocator_t * const lba, const int alignment, const int size) {
     void * const ptr = lba_allocate_unchecked(lba, alignment, size);
     VERIFY_MSG(ptr, "LBA [%s] out of memory\nlba_size: %i\nlba_used: %i\nalloc_size: %i", lba->name, lba->size, lba->ofs, size);
     return ptr;
@@ -151,7 +151,7 @@ static inline void hlba_init(high_low_block_allocator_t * const hlba, void * con
     hlba->size = size;
 }
 
-static void * hlba_allocate_low(high_low_block_allocator_t * const hlba, const int alignment, const int size) {
+static inline void * hlba_allocate_low(high_low_block_allocator_t * const hlba, const int alignment, const int size) {
     // align offset
     const int aligned_ofs = ALIGN_INT(hlba->ofs_low, alignment);
     if ((aligned_ofs + size) > hlba->ofs_high) {
@@ -162,7 +162,7 @@ static void * hlba_allocate_low(high_low_block_allocator_t * const hlba, const i
     return ((uint8_t *)hlba->block) + aligned_ofs;
 }
 
-static void * hlba_allocate_high(high_low_block_allocator_t * const hlba, const int alignment, const int size) {
+static inline void * hlba_allocate_high(high_low_block_allocator_t * const hlba, const int alignment, const int size) {
     // align offset
     const int bottom = hlba->ofs_high - size;
     const int aligned_ofs = REV_ALIGN_INT(bottom, alignment);
@@ -381,7 +381,7 @@ static inline size_t heap_get_block_size(const heap_t * const heap, void * const
     return block_header->size - heap->internal.ptr_ofs;
 }
 
-static const char * heap_get_block_tag(const heap_t * const heap, void * const ptr) {
+static inline const char * heap_get_block_tag(const heap_t * const heap, void * const ptr) {
     const heap_block_header_t * const block_header = heap_get_block_header(heap, ptr);
     ASSERT(heap_is_valid_block(block_header));
     return block_header->tag;
@@ -454,7 +454,7 @@ void memory_pool_verify(const memory_pool_t * const pool);
 void memory_pool_verify_block(const memory_pool_t * const pool, const memory_pool_block_header_t * const block);
 void memory_pool_debug_print_leaks(const memory_pool_t * const pool, const char * const pool_name);
 
-static void * memory_pool_unchecked_calloc(memory_pool_t * const pool, const char * const tag) {
+static inline void * memory_pool_unchecked_calloc(memory_pool_t * const pool, const char * const tag) {
     void * const p = memory_pool_unchecked_alloc(pool, tag);
     if (p) {
         memset(p, 0, pool->internal.user_size);
@@ -511,14 +511,14 @@ static inline void memory_pool_verify_ptr(const memory_pool_t * const pool, void
     VERIFY(memory_pool_is_valid_ptr(pool, ptr));
 }
 
-PURE static size_t memory_pool_get_required_memory_size(const size_t num_blocks, const size_t block_size, const size_t alignment, const size_t block_header_size) {
+PURE static inline size_t memory_pool_get_required_memory_size(const size_t num_blocks, const size_t block_size, const size_t alignment, const size_t block_header_size) {
     ASSERT_POW2(alignment);
     const size_t ptr_ofs = ALIGN_INT(max_size_t(block_header_size, sizeof(memory_pool_block_header_t)), alignment);
     const size_t aligned_block_size = ALIGN_INT(block_size + ptr_ofs, alignment);
     return aligned_block_size * num_blocks;
 }
 
-PURE static size_t memory_pool_get_block_count(size_t memory_size, size_t block_size, size_t alignment, size_t block_header_size) {
+PURE static inline size_t memory_pool_get_block_count(size_t memory_size, size_t block_size, size_t alignment, size_t block_header_size) {
     ASSERT_POW2(alignment);
     const size_t ptr_ofs = ALIGN_INT(max_size_t(block_header_size, sizeof(memory_pool_block_header_t)), alignment);
     const size_t aligned_block_size = ALIGN_INT(block_size + ptr_ofs, alignment);

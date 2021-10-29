@@ -11,9 +11,9 @@
 #include "source/adk/interpreter/interp_common.h"
 #include "source/adk/wasm3/wasm3.h"
 
-IM3Environment wasm3_global_environment;
-IM3Runtime wasm3_global_runtime;
-IM3Module wasm3_app_module;
+extern IM3Environment wasm3_global_environment;
+extern IM3Runtime wasm3_global_runtime;
+extern IM3Module wasm3_app_module;
 
 IM3Environment m3_NewEnvironment(void);
 void m3_FreeEnvironment(IM3Environment i_environment);
@@ -77,14 +77,18 @@ const char * m3_GetCallStack(IM3Runtime runtime);
 wasm_memory_region_t load_wasm3(
     const sb_file_directory_e directory,
     const char * const wasm_filename,
-    const size_t sizeof_application_workingset);
+    const size_t wasm_low_heap_size,
+    const size_t wasm_high_heap_size,
+    const size_t alloction_threshold);
 
 // Loads wasm3 via given read function
 wasm_memory_region_t load_wasm3_fp(
     void * const file,
     const wasm_fread_t fread_func,
     const size_t wasm_file_content_size,
-    const size_t sizeof_application_workingset);
+    const size_t wasm_low_heap_size,
+    const size_t wasm_high_heap_size,
+    const size_t alloction_threshold);
 
 void unload_wasm3(wasm_memory_region_t wasm_memory);
 

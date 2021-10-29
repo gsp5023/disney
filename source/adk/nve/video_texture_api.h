@@ -23,6 +23,14 @@ extern "C" {
 typedef struct nve_video_frame_t {
     struct rhi_texture_t * const * chroma;
     struct rhi_texture_t * const * luma;
+
+    bool hdr10;
+    int luma_tex_width;
+    int luma_tex_height;
+    int chroma_tex_width;
+    int chroma_tex_height;
+    int framesize_width;
+    int framesize_height;
 } nve_video_frame_t;
 
 typedef struct nve_texture_api_rect_t {

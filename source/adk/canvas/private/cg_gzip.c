@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2020-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -28,7 +28,6 @@ STATIC_ASSERT(sizeof(gzip_header_t) == 10);
 
 typedef enum gzip_header_magic_code_e {
     gzip_header_magic_code = 0x8b1f,
-    gzip_internal_header_size = 8 * 1024, // sizeof(struct inflate_state) -- this is the only allocation that will be performed, and the struct is in an internal header.
 } gzip_header_magic_code_e;
 
 typedef struct gzip_alloc_user_t {
@@ -61,7 +60,7 @@ inflate_gzip_from_memory_errors_e inflate_gzip_from_memory(cg_heap_t * resource_
 
     // uncompressed size stored in last 4 bytes of file
     const uint32_t out_file_size = *(uint32_t *)(in_bytes.adr + in_bytes.size - 4);
-    gzip_alloc_user_t gzip_alloc_user = {.allocation = cg_unchecked_alloc(resource_heap, gzip_internal_header_size, MALLOC_TAG)};
+    gzip_alloc_user_t gzip_alloc_user = {.allocation = cg_unchecked_alloc(resource_heap, context->config.gzip_limits.working_space, MALLOC_TAG)};
     if (!gzip_alloc_user.allocation.region.ptr) {
         return inflate_gzip_from_memory_out_of_memory;
     }

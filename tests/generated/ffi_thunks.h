@@ -116,6 +116,14 @@ FFI_THUNK(0x108AA, void, wasm_test_func_Iww, (int64_t arg0, FFI_WASM_PTR const a
     wasm_test_func_Iww(arg0, FFI_PIN_WASM_PTR(arg1), FFI_PIN_WASM_PTR(arg2));
 })
 
+FFI_THUNK(0x108AA4, void, wasm_test_func_Iwwi, (int64_t arg0, FFI_WASM_PTR const arg1, FFI_WASM_PTR const arg2, int32_t arg3), {
+    FFI_ASSERT_ALIGNED_WASM_PTR(arg1, const int32_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(arg1), "arg1 cannot be NULL");
+    FFI_ASSERT_ALIGNED_WASM_PTR(arg2, const int32_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(arg2), "arg2 cannot be NULL");
+    wasm_test_func_Iwwi(arg0, FFI_PIN_WASM_PTR(arg1), FFI_PIN_WASM_PTR(arg2), arg3);
+})
+
 FFI_THUNK(0x108AA4A, void, wasm_test_func_Iwwiw, (int64_t arg0, FFI_WASM_PTR const arg1, FFI_WASM_PTR const arg2, int32_t arg3, FFI_WASM_PTR const arg4), {
     FFI_ASSERT_ALIGNED_WASM_PTR(arg1, const int32_t);
     ASSERT_MSG(FFI_PIN_WASM_PTR(arg1), "arg1 cannot be NULL");
@@ -188,6 +196,12 @@ FFI_THUNK(0x1044AA, void, wasm_test_func_iiww, (int32_t arg0, int32_t arg1, FFI_
     FFI_ASSERT_ALIGNED_WASM_PTR(arg3, const int32_t);
     ASSERT_MSG(FFI_PIN_WASM_PTR(arg3), "arg3 cannot be NULL");
     wasm_test_func_iiww(arg0, arg1, FFI_PIN_WASM_PTR(arg2), FFI_PIN_WASM_PTR(arg3));
+})
+
+FFI_THUNK(0x104A, void, wasm_test_func_iw, (int32_t arg0, FFI_WASM_PTR const arg1), {
+    FFI_ASSERT_ALIGNED_WASM_PTR(arg1, const int32_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(arg1), "arg1 cannot be NULL");
+    wasm_test_func_iw(arg0, FFI_PIN_WASM_PTR(arg1));
 })
 
 FFI_THUNK(0x104A4, void, wasm_test_func_iwi, (int32_t arg0, FFI_WASM_PTR const arg1, int32_t arg2), {
@@ -322,6 +336,10 @@ FFI_THUNK(0xF08FFA4, float, wasm_test_func_rf_Iffwi, (int64_t arg0, float arg1, 
     FFI_ASSERT_ALIGNED_WASM_PTR(arg3, const int32_t);
     ASSERT_MSG(FFI_PIN_WASM_PTR(arg3), "arg3 cannot be NULL");
     return wasm_test_func_rf_Iffwi(arg0, arg1, arg2, FFI_PIN_WASM_PTR(arg3), arg4);
+})
+
+FFI_THUNK(0xF04, float, wasm_test_func_rf_i, (int32_t arg0), {
+    return wasm_test_func_rf_i(arg0);
 })
 
 FFI_THUNK(0x40, int32_t, wasm_test_func_ri, (), {
@@ -504,6 +522,16 @@ FFI_THUNK(0x10A448A, void, wasm_test_func_wiiIw, (FFI_WASM_PTR const arg0, int32
     FFI_ASSERT_ALIGNED_WASM_PTR(arg4, const int32_t);
     ASSERT_MSG(FFI_PIN_WASM_PTR(arg4), "arg4 cannot be NULL");
     wasm_test_func_wiiIw(FFI_PIN_WASM_PTR(arg0), arg1, arg2, arg3, FFI_PIN_WASM_PTR(arg4));
+})
+
+FFI_THUNK(0x10A4A44A, void, wasm_test_func_wiwiiw, (FFI_WASM_PTR const arg0, int32_t arg1, FFI_WASM_PTR const arg2, int32_t arg3, int32_t arg4, FFI_WASM_PTR const arg5), {
+    FFI_ASSERT_ALIGNED_WASM_PTR(arg0, const int32_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(arg0), "arg0 cannot be NULL");
+    FFI_ASSERT_ALIGNED_WASM_PTR(arg2, const int32_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(arg2), "arg2 cannot be NULL");
+    FFI_ASSERT_ALIGNED_WASM_PTR(arg5, const int32_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(arg5), "arg5 cannot be NULL");
+    wasm_test_func_wiwiiw(FFI_PIN_WASM_PTR(arg0), arg1, FFI_PIN_WASM_PTR(arg2), arg3, arg4, FFI_PIN_WASM_PTR(arg5));
 })
 
 FFI_THUNK(0x10A4A4A4444A, void, wasm_test_func_wiwiwiiiiw, (FFI_WASM_PTR const arg0, int32_t arg1, FFI_WASM_PTR const arg2, int32_t arg3, FFI_WASM_PTR const arg4, int32_t arg5, int32_t arg6, int32_t arg7, int32_t arg8, FFI_WASM_PTR const arg9), {

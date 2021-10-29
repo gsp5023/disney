@@ -9,34 +9,22 @@
 
  canvas font backend
  */
+
 #include "cg_font.h"
 
 #include "source/adk/canvas/cg.h"
 #include "source/adk/file/file.h"
 #include "source/adk/http/adk_http.h"
 #include "source/adk/log/log.h"
+#include "source/adk/runtime/crc.h"
 #include "source/adk/runtime/runtime.h"
-
-#ifdef _CG_FONT_TRACE
+#include "source/adk/steamboat/sb_platform.h"
 #include "source/adk/telemetry/telemetry.h"
-#define CG_FONT_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...) TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ##__VA_ARGS__)
-#define CG_FONT_TIME_SPAN_END(_id) TRACE_TIME_SPAN_END(_id)
-#define CG_FONT_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define CG_FONT_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define CG_FONT_TRACE_POP() TRACE_POP()
-#define CG_FONT_TRACE_HEAP(_heap) TRACE_HEAP(_heap)
-#else
-#define CG_FONT_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...)
-#define CG_FONT_TIME_SPAN_END(_id)
-#define CG_FONT_TRACE_PUSH_FN()
-#define CG_FONT_TRACE_PUSH(_name)
-#define CG_FONT_TRACE_POP()
-#define CG_FONT_TRACE_HEAP(_heap)
-#endif
 
 enum {
     verts_per_quad = 6,
     non_breaking_space = 0xa0,
+    default_atlas_upload_queue_limit = 64,
 };
 
 extern struct cg_statics_t cg_statics;
@@ -82,6 +70,7 @@ struct cg_font_file_t {
 
     cg_font_async_load_status_e async_load_status;
     int32_t reference_count;
+    int32_t id;
 };
 
 /* ------------------------------------------------------------------------- */
@@ -175,8 +164,21 @@ cg_font_metrics_t cg_context_fill_text_with_options(cg_font_context_t * const fo
         y_off -= bounds.height * 0.5f;
     }
 
+    const cg_font_metrics_t metrics = cg_context_fill_text_block_with_options(font_ctx, (cg_rect_t){.x = x_off, .y = y_off, .width = INFINITY, .height = INFINITY}, 0, 0, text, NULL, cg_text_block_no_options);
     CG_FONT_TRACE_POP();
-    return cg_context_fill_text_block_with_options(font_ctx, (cg_rect_t){.x = x_off, .y = y_off, .width = INFINITY, .height = INFINITY}, 0, 0, text, NULL, cg_text_block_no_options);
+    return metrics;
+}
+
+void cg_context_fill_text_line(cg_font_context_t * const font_ctx, const cg_vec2_t pos, const char * const text) {
+    CG_FONT_TRACE_PUSH_FN();
+
+    ASSERT_MSG(strchr(text, '\n') == 0, "text shall not contain new-lines");
+
+    mosaic_context_font_bind(font_ctx->mosaic_ctx, font_ctx->font_index);
+
+    mosaic_context_draw_text_line(font_ctx->mosaic_ctx, (cg_rect_t){.x = pos.x, .y = pos.y, .width = INFINITY, .height = INFINITY}, text);
+
+    CG_FONT_TRACE_POP();
 }
 
 cg_rect_t cg_context_get_text_block_extents(cg_font_context_t * const font_ctx, const float max_line_width, const float extra_line_spacing, const char * const text, const cg_text_block_options_e options) {
@@ -211,6 +213,15 @@ float cg_context_get_text_block_height(cg_font_context_t * const font_ctx, const
         .height;
 }
 
+static cg_rect_t mosaic_context_draw_text_block_memoized(
+    cg_font_context_t * const font_ctx,
+    const cg_rect_t text_rect,
+    const float scroll_offset,
+    const float extra_line_spacing,
+    const char * const text,
+    const char * const optional_ellipses,
+    const cg_text_block_options_e options);
+
 cg_font_metrics_t cg_context_fill_text_block_with_options(
     cg_font_context_t * const font_ctx,
     const cg_rect_t text_rect,
@@ -220,26 +231,33 @@ cg_font_metrics_t cg_context_fill_text_block_with_options(
     const char * const optional_ellipses,
     const cg_text_block_options_e options) {
     CG_FONT_TRACE_PUSH_FN();
-    mosaic_context_font_bind(font_ctx->mosaic_ctx, font_ctx->font_index);
-    cg_rect_t text_input_rect = text_rect;
 
+    cg_rect_t text_input_rect = text_rect;
     mosaic_context_font_bind(font_ctx->mosaic_ctx, font_ctx->font_index);
-    float widest_line_ignored = 0;
-    const cg_rect_t text_extents = mosaic_context_get_text_block_extents(font_ctx->mosaic_ctx, text_rect.width, extra_line_spacing, text, &widest_line_ignored, options);
-    if (options & cg_text_block_align_text_bottom) {
-        if (text_extents.height < text_rect.height) {
-            text_input_rect.y += text_rect.height - text_extents.height;
-            text_input_rect.height = text_extents.height;
-        }
-    } else if (options & cg_text_block_align_text_center) {
-        if (text_extents.height < text_rect.height) {
-            text_input_rect.y += (text_rect.height - text_extents.height) / 2.f;
-            text_input_rect.height = text_extents.height;
+
+    // if neither bit is set, skip calculating the extents and the rest of this logic.
+    if (options & (cg_text_block_align_text_bottom | cg_text_block_align_text_center)) {
+        float widest_line_ignored = 0;
+        const cg_rect_t text_extents = mosaic_context_get_text_block_extents(font_ctx->mosaic_ctx, text_rect.width, extra_line_spacing, text, &widest_line_ignored, options);
+        if (options & cg_text_block_align_text_bottom) {
+            if (text_extents.height < text_rect.height) {
+                text_input_rect.y += text_rect.height - text_extents.height;
+                text_input_rect.height = text_extents.height;
+            }
+        } else {
+            if (text_extents.height < text_rect.height) {
+                text_input_rect.y += (text_rect.height - text_extents.height) / 2.f;
+                text_input_rect.height = text_extents.height;
+            }
         }
     }
 
-    const cg_rect_t bounds = mosaic_context_draw_text_block(font_ctx->mosaic_ctx, text_input_rect, text_scroll_offset, extra_line_spacing, text, optional_ellipses, options);
-
+    cg_rect_t bounds = {0};
+    if (cg_statics.ctx->config.text_mesh_cache.enabled) {
+        bounds = mosaic_context_draw_text_block_memoized(font_ctx, text_input_rect, text_scroll_offset, extra_line_spacing, text, optional_ellipses, options);
+    } else {
+        bounds = mosaic_context_draw_text_block(font_ctx->mosaic_ctx, text_input_rect, text_scroll_offset, extra_line_spacing, text, optional_ellipses, options);
+    }
     const mosaic_font_data_t * const font = &font_ctx->mosaic_ctx->fonts[font_ctx->mosaic_ctx->font_index];
 
     CG_FONT_TRACE_POP();
@@ -332,12 +350,21 @@ typedef struct cg_int16_rect_t {
     int16_t width, height;
 } cg_int16_rect_t;
 
+typedef struct cg_uvec2_t {
+    uint32_t x, y;
+} cg_uvec2_t;
+
 typedef enum codepoint_raster_state_e {
     codepoint_no_backing_glyph = -2,
     codepoint_packing_failed = -1,
     codepoint_uninit = 0,
     codepoint_rasterized = 1,
 } codepoint_raster_state_e;
+
+typedef enum codepoint_rasterizing_e {
+    codepoint_rasterizing_partial_failure,
+    codepoint_rasterizing_renderable_rasterized,
+} codepoint_rasterizing_e;
 
 typedef struct codepoint_info_t {
     cg_int16_rect_t tex_coords;
@@ -370,6 +397,10 @@ typedef struct mosaic_glyph_raster_t {
     font_glyph_cache_t * font_glyph_cache_tail;
 
     bool atlas_dirty;
+    struct {
+        cg_uvec2_t p00;
+        cg_uvec2_t p11;
+    } dirty_region;
 } mosaic_glyph_raster_t;
 
 static bool is_whitespace(const int32_t codepoint) {
@@ -398,18 +429,22 @@ static void mosaic_glyph_raster_emplace_init(mosaic_glyph_raster_t * const glyph
     ZEROMEM(glyph_raster);
 
     glyph_raster->mosaic_ctx = mosaic_ctx;
+    glyph_raster->dirty_region.p00 = (cg_uvec2_t){(uint32_t)-1, (uint32_t)-1};
+    glyph_raster->dirty_region.p11 = (cg_uvec2_t){0};
 
+#if defined(_VADER) || defined(_LEIA)
     // make sure any pending operations are complete on the atlas before we call stbtt_PackBegin (it has an implicit memset to zero on the supplied pointer)
     render_conditional_flush_cmd_stream_and_wait_fence(
         mosaic_ctx->cg_ctx->gl->render_device,
         &mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream,
-        mosaic_ctx->atlas_fence);
+        mosaic_ctx->atlas.image_fence);
+#endif
 
     stbtt_PackBegin(
         &glyph_raster->pack_context,
-        mosaic_ctx->atlas_image.pixel_buffer.region.ptr,
-        mosaic_ctx->atlas_image.image.width,
-        mosaic_ctx->atlas_image.image.height,
+        mosaic_ctx->atlas.image.pixel_buffer.region.ptr,
+        mosaic_ctx->atlas.image.image.width,
+        mosaic_ctx->atlas.image.image.height,
         0,
         1,
         glyph_raster->mosaic_ctx);
@@ -543,8 +578,6 @@ static mosaic_raster_insert_status_e mosaic_glyph_raster_try_push_codepoint(mosa
         return mosaic_raster_insert_exists;
     }
 
-    glyph_raster->atlas_dirty = true;
-
     if (glyph_cache->codepoints_size + 1 > glyph_cache->codepoints_capacity) {
         font_glyph_cache_grow(glyph_cache, &glyph_raster->mosaic_ctx->cg_ctx->cg_heap_low);
     }
@@ -555,7 +588,7 @@ static mosaic_raster_insert_status_e mosaic_glyph_raster_try_push_codepoint(mosa
     return mosaic_raster_insert_new;
 }
 
-static void mosaic_glyph_raster_rasterize_glyph_range(
+static codepoint_rasterizing_e mosaic_glyph_raster_rasterize_glyph_range(
     mosaic_glyph_raster_t * const glyph_raster,
     font_glyph_cache_t * const glyph_cache,
     const int32_t * const codepoints,
@@ -564,7 +597,7 @@ static void mosaic_glyph_raster_rasterize_glyph_range(
     const int32_t num_new_codepoints) {
     CG_FONT_TRACE_PUSH_FN();
     mosaic_font_data_t * const selected_font = &glyph_raster->mosaic_ctx->fonts[glyph_cache->font_id];
-
+    codepoint_rasterizing_e rasterizing_state = codepoint_rasterizing_renderable_rasterized;
     lba_reset(&glyph_raster->mosaic_ctx->atlas_lba);
     stbtt_packedchar glyph_packed_char_buff[max_unique_glyphs_per_stb_raster_pass];
 
@@ -598,16 +631,29 @@ static void mosaic_glyph_raster_rasterize_glyph_range(
             // but the xadvance is a valid value for advancing.
             const bool is_in_atlas = (packed_char->x0 != 0) || (packed_char->x1 != 0) || (packed_char->y0 != 0) || (packed_char->y1 != 0);
             curr_codepoint_info->state = is_in_atlas ? codepoint_rasterized : codepoint_packing_failed;
+            if (is_in_atlas) {
+                int padding = glyph_raster->pack_context.padding;
+                glyph_raster->dirty_region.p00.x = min_uint32_t(glyph_raster->dirty_region.p00.x, (uint32_t)max_int32_t(packed_char->x0 - padding, 0));
+                glyph_raster->dirty_region.p00.y = min_uint32_t(glyph_raster->dirty_region.p00.y, (uint32_t)max_int32_t(packed_char->y0 - padding, 0));
+
+                glyph_raster->dirty_region.p11.x = glyph_raster->dirty_region.p11.x == (uint32_t)-1 ? (uint32_t)packed_char->x1 : max_uint32_t(glyph_raster->dirty_region.p11.x, (uint32_t)packed_char->x1 + padding);
+                glyph_raster->dirty_region.p11.y = glyph_raster->dirty_region.p11.y == (uint32_t)-1 ? (uint32_t)packed_char->y1 : max_uint32_t(glyph_raster->dirty_region.p11.y, (uint32_t)packed_char->y1 + padding);
+
+                glyph_raster->atlas_dirty = true;
+            } else {
+                rasterizing_state = codepoint_rasterizing_partial_failure;
+            }
         }
     }
     CG_FONT_TRACE_POP();
+    return rasterizing_state;
 }
 
-static void mosaic_glyph_raster_rasterize_glyphs(mosaic_glyph_raster_t * const glyph_raster, font_glyph_cache_t * const glyph_cache, const int32_t first_codepoint_of_string) {
+static codepoint_rasterizing_e mosaic_glyph_raster_rasterize_glyphs(mosaic_glyph_raster_t * const glyph_raster, font_glyph_cache_t * const glyph_cache, const int32_t first_codepoint_of_string) {
     CG_FONT_TRACE_PUSH_FN();
     if (glyph_cache->num_unrasterized == 0) {
         CG_FONT_TRACE_POP();
-        return;
+        return codepoint_rasterizing_renderable_rasterized;
     }
 
     // always pack the first glyph, since stb can fail anywhere in our range of provided glyphs (this will ensure we can make progress with this current variant)
@@ -615,7 +661,7 @@ static void mosaic_glyph_raster_rasterize_glyphs(mosaic_glyph_raster_t * const g
     const int32_t first_codepoint_of_string_ind = font_glyph_cache_find_codepoint_index(first_codepoint_of_string, glyph_cache);
     const int32_t first_codepoint = glyph_cache->codepoints[first_codepoint_of_string_ind];
     int32_t first_codepoint_glyph_offset;
-    mosaic_glyph_raster_rasterize_glyph_range(glyph_raster, glyph_cache, &first_codepoint, &first_codepoint_glyph_offset, &first_codepoint_of_string_ind, 1);
+    codepoint_rasterizing_e rasterizing_state = mosaic_glyph_raster_rasterize_glyph_range(glyph_raster, glyph_cache, &first_codepoint, &first_codepoint_glyph_offset, &first_codepoint_of_string_ind, 1);
 
     int32_t uninit_codepoint_indices_buffer[max_unique_glyphs_per_stb_raster_pass];
     int32_t codepoint_buffer[max_unique_glyphs_per_stb_raster_pass];
@@ -631,12 +677,109 @@ static void mosaic_glyph_raster_rasterize_glyphs(mosaic_glyph_raster_t * const g
         }
 
         if (codepoint_buffer_ind > 0) {
-            mosaic_glyph_raster_rasterize_glyph_range(glyph_raster, glyph_cache, codepoint_buffer, glyph_offset_buffer, uninit_codepoint_indices_buffer, codepoint_buffer_ind);
+            rasterizing_state = mosaic_glyph_raster_rasterize_glyph_range(glyph_raster, glyph_cache, codepoint_buffer, glyph_offset_buffer, uninit_codepoint_indices_buffer, codepoint_buffer_ind) == codepoint_rasterizing_partial_failure ? codepoint_rasterizing_partial_failure : rasterizing_state;
         }
     }
 
     glyph_cache->num_unrasterized = 0;
     CG_FONT_TRACE_POP();
+    return rasterizing_state;
+}
+
+static void font_atlas_upload_region_push_free(mosaic_context_t * const mosaic_ctx, font_atlas_upload_region_t * const node) {
+    LL_REMOVE(node, prev, next, mosaic_ctx->atlas.upload_region.pending_head, mosaic_ctx->atlas.upload_region.pending_tail);
+    LL_ADD(node, prev, next, mosaic_ctx->atlas.upload_region.free_head, mosaic_ctx->atlas.upload_region.free_tail);
+}
+
+static font_atlas_upload_region_t * font_atlas_upload_region_try_pop_free(mosaic_context_t * const mosaic_ctx) {
+    font_atlas_upload_region_t * const node = mosaic_ctx->atlas.upload_region.free_head;
+    if (node) {
+        LL_REMOVE(node, prev, next, mosaic_ctx->atlas.upload_region.free_head, mosaic_ctx->atlas.upload_region.free_tail);
+        LL_ADD(node, prev, next, mosaic_ctx->atlas.upload_region.pending_head, mosaic_ctx->atlas.upload_region.pending_tail);
+    }
+    return node;
+}
+
+static font_atlas_upload_region_t * font_atlas_upload_get_last_signaled_node(mosaic_context_t * const mosaic_ctx) {
+    font_atlas_upload_region_t * curr = mosaic_ctx->atlas.upload_region.pending_head;
+    if (!curr || !render_check_fence(curr->fence)) {
+        return NULL;
+    }
+    while (curr) {
+        if (!curr->next || !render_check_fence(curr->next->fence)) {
+            break;
+        }
+        curr = curr->next;
+    }
+    return curr;
+}
+
+static void font_atlas_upload_region_free_mem_up_to_node(mosaic_context_t * const mosaic_ctx, font_atlas_upload_region_t * const node) {
+    font_atlas_upload_region_t * curr = mosaic_ctx->atlas.upload_region.pending_head;
+    while (curr && curr != node) {
+        font_atlas_upload_region_t * const next = curr->next;
+        // with the way nodes are currently created, we can try to make a new node, run out of memory for allocating the region for it, then we'll try to flush all the nodes.
+        // that newly created node will not have a memory region but be on this list.
+        // this check is to allow that to silently pass.
+        if (curr->region.ptr) {
+            heap_free(&mosaic_ctx->atlas.sub_image_heap, curr->region.ptr, MALLOC_TAG);
+        }
+        curr->fence = (rb_fence_t){0};
+        font_atlas_upload_region_push_free(mosaic_ctx, curr);
+        curr = next;
+    }
+}
+
+static font_atlas_upload_region_t * font_atlas_upload_region_conditional_flush_and_pop_free(mosaic_context_t * const mosaic_ctx, font_atlas_upload_region_t * const last_node_to_free) {
+    CG_FONT_TRACE_PUSH_FN();
+    font_atlas_upload_region_t * node = font_atlas_upload_region_try_pop_free(mosaic_ctx);
+    if (!node) {
+        render_conditional_flush_cmd_stream_and_wait_fence(
+            mosaic_ctx->cg_ctx->gl->render_device,
+            &mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream,
+            last_node_to_free->fence);
+
+        font_atlas_upload_region_free_mem_up_to_node(mosaic_ctx, last_node_to_free);
+        node = font_atlas_upload_region_try_pop_free(mosaic_ctx);
+        ASSERT(node); // logically this can't fail, but I'm paranoid right now incase we're miss handling linked lists.
+    }
+    CG_FONT_TRACE_POP();
+    return node;
+}
+
+static void mosaic_glyph_raster_copy_sub_image(const image_t * const src, const image_t * const dst) {
+    CG_FONT_TRACE_PUSH_FN();
+    for (int y = 0; y < dst->height; ++y) {
+        for (int x = 0; x < dst->width; ++x) {
+            ((char *)dst->data)[x + y * dst->width] = ((char *)src->data)[(dst->x + x) + (dst->y + y) * src->width];
+        }
+    }
+    CG_FONT_TRACE_POP();
+}
+
+static font_atlas_upload_region_t * mosaic_glyph_raster_alloc_sub_texture_region(mosaic_glyph_raster_t * const glyph_raster, const size_t region_size) {
+    CG_FONT_TRACE_PUSH_FN();
+    mosaic_context_t * const mosaic_ctx = glyph_raster->mosaic_ctx;
+    font_atlas_upload_region_t * const last_signaled_node = font_atlas_upload_get_last_signaled_node(mosaic_ctx);
+    font_atlas_upload_region_t * node = font_atlas_upload_region_conditional_flush_and_pop_free(mosaic_ctx, last_signaled_node ? last_signaled_node : mosaic_ctx->atlas.upload_region.pending_tail);
+    node->region = MEM_REGION(.ptr = heap_unchecked_alloc(&mosaic_ctx->atlas.sub_image_heap, region_size, MALLOC_TAG), .size = region_size);
+
+    if (!node->region.ptr) {
+        // we could have enough nodes, but not enough space so if we run out of mem we'll need to wait on the pendings to complete.
+        render_conditional_flush_cmd_stream_and_wait_fence(
+            mosaic_ctx->cg_ctx->gl->render_device,
+            &mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream,
+            mosaic_ctx->atlas.upload_region.pending_tail->fence);
+
+        font_atlas_upload_region_free_mem_up_to_node(mosaic_ctx, mosaic_ctx->atlas.upload_region.pending_tail);
+        node = font_atlas_upload_region_try_pop_free(mosaic_ctx);
+        ASSERT(node); // logically this can't fail, but I'm paranoid right now incase we're miss handling linked lists.
+
+        node->region = MEM_REGION(.ptr = heap_alloc(&mosaic_ctx->atlas.sub_image_heap, region_size, MALLOC_TAG), .size = region_size);
+    }
+    VERIFY(node->region.ptr);
+    CG_FONT_TRACE_POP();
+    return node;
 }
 
 static void mosaic_glyph_raster_flush_atlas(mosaic_glyph_raster_t * const glyph_raster) {
@@ -644,31 +787,55 @@ static void mosaic_glyph_raster_flush_atlas(mosaic_glyph_raster_t * const glyph_
     if (glyph_raster->atlas_dirty) {
         glyph_raster->atlas_dirty = false;
 
-        cg_image_t * const atlas_image = &glyph_raster->mosaic_ctx->atlas_image;
+        cg_image_t * const atlas_image = &glyph_raster->mosaic_ctx->atlas.image;
+#if !(defined(_VADER) || defined(_LEIA))
+        image_t image = atlas_image->image;
+        image = atlas_image->image;
+        image.width = glyph_raster->dirty_region.p11.x - glyph_raster->dirty_region.p00.x;
+        image.height = glyph_raster->dirty_region.p11.y - glyph_raster->dirty_region.p00.y;
+        image.x = glyph_raster->dirty_region.p00.x;
+        image.y = glyph_raster->dirty_region.p00.y;
 
+        font_atlas_upload_region_t * const upload_region = mosaic_glyph_raster_alloc_sub_texture_region(glyph_raster, image.width * image.height * 1);
+        image.data = upload_region->region.ptr;
+
+        image_mips_t image_mips = {0};
+        image_mips.num_levels = 1;
+        image_mips.levels[0] = image;
+
+        mosaic_glyph_raster_copy_sub_image(&atlas_image->image, &image);
+        cg_gl_sub_texture_update(glyph_raster->mosaic_ctx->cg_ctx->gl, &atlas_image->cg_texture, image_mips);
+
+        upload_region->fence = render_flush_cmd_stream(&glyph_raster->mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream, render_no_wait);
+#else
         render_conditional_flush_cmd_stream_and_wait_fence(
             glyph_raster->mosaic_ctx->cg_ctx->gl->render_device,
             &glyph_raster->mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream,
-            glyph_raster->mosaic_ctx->atlas_fence);
+            glyph_raster->mosaic_ctx->atlas.image_fence);
 
         cg_gl_texture_update(glyph_raster->mosaic_ctx->cg_ctx->gl, &atlas_image->cg_texture, atlas_image->image.data);
 
-        glyph_raster->mosaic_ctx->atlas_fence = render_flush_cmd_stream(&glyph_raster->mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream, render_no_wait);
+        glyph_raster->mosaic_ctx->atlas.image_fence = render_flush_cmd_stream(&glyph_raster->mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream, render_no_wait);
+
+#endif
+        glyph_raster->dirty_region.p00 = (cg_uvec2_t){(uint32_t)-1, (uint32_t)-1};
+        glyph_raster->dirty_region.p11 = (cg_uvec2_t){0};
     }
     CG_FONT_TRACE_POP();
 }
 
-static void mosaic_glyph_raster_try_rasterize_glyphs(mosaic_context_t * const mosaic_ctx, font_glyph_cache_t * const glyph_cache, const char * const text_begin, const char * const text_end) {
+static codepoint_rasterizing_e mosaic_glyph_raster_try_rasterize_glyphs(mosaic_context_t * const mosaic_ctx, font_glyph_cache_t * const glyph_cache, const char * const text_begin, const char * const text_end) {
     CG_FONT_TRACE_PUSH_FN();
     // tries to rasterize provided codepoints into glyphs but this could actually fail to rasterize any of the provided glyphs,
     // so a subsequent check will be needed to actually verify they're in the atlas (which is part of the normal draw_text_partial loop)
     mosaic_glyph_raster_try_push_codepoint(mosaic_ctx->glyph_raster, (int32_t)' ', glyph_cache);
 
+    codepoint_rasterizing_e rasterize_state = codepoint_rasterizing_renderable_rasterized;
     {
         // make sure to insert the missing glyph indicator, so if we encounter a missing glyph we will have a valid fallback character to use (assuming that this glyph is in the font itself...)
         const int32_t missing_glyph_codepoint = get_missing_glyph_codepoint(mosaic_ctx, &mosaic_ctx->fonts[glyph_cache->font_id]);
         mosaic_glyph_raster_try_push_codepoint(mosaic_ctx->glyph_raster, missing_glyph_codepoint, glyph_cache);
-        mosaic_glyph_raster_rasterize_glyphs(mosaic_ctx->glyph_raster, glyph_cache, missing_glyph_codepoint);
+        rasterize_state = mosaic_glyph_raster_rasterize_glyphs(mosaic_ctx->glyph_raster, glyph_cache, missing_glyph_codepoint);
     }
 
     const char * curr_text = text_begin;
@@ -687,22 +854,30 @@ static void mosaic_glyph_raster_try_rasterize_glyphs(mosaic_context_t * const mo
 
     int32_t first_codepoint;
     utf8_to_codepoint(text_begin, &first_codepoint);
-    mosaic_glyph_raster_rasterize_glyphs(mosaic_ctx->glyph_raster, glyph_cache, first_codepoint);
+    rasterize_state = mosaic_glyph_raster_rasterize_glyphs(mosaic_ctx->glyph_raster, glyph_cache, first_codepoint) == codepoint_rasterizing_partial_failure ? codepoint_rasterizing_partial_failure : rasterize_state;
     CG_FONT_TRACE_POP();
+
+    return rasterize_state;
 }
 
-static font_glyph_cache_t * mosaic_glyph_raster_rebuild_font_atlas(mosaic_context_t * const mosaic_ctx, const int32_t font_id, const char * const text_begin, const char * const text_end) {
+typedef struct mosaic_glyph_raster_rebuild_font_atlas_rets_t {
+    font_glyph_cache_t * glyph_cache;
+    codepoint_rasterizing_e rasterize_state;
+} mosaic_glyph_raster_rebuild_font_atlas_rets_t;
+
+static mosaic_glyph_raster_rebuild_font_atlas_rets_t mosaic_glyph_raster_rebuild_font_atlas(mosaic_context_t * const mosaic_ctx, const int32_t font_id, const char * const text_begin, const char * const text_end) {
     CG_FONT_TRACE_PUSH_FN();
     mosaic_glyph_raster_t * const glyph_raster = mosaic_ctx->glyph_raster;
 
     mosaic_glyph_raster_shutdown(glyph_raster);
     mosaic_glyph_raster_emplace_init(glyph_raster, mosaic_ctx);
 
-    font_glyph_cache_t * const glyph_cache = mosaic_glyph_raster_create_glyph_cache(glyph_raster, font_id);
+    mosaic_glyph_raster_rebuild_font_atlas_rets_t rebuild_rets;
+    rebuild_rets.glyph_cache = mosaic_glyph_raster_create_glyph_cache(glyph_raster, font_id);
 
-    mosaic_glyph_raster_try_rasterize_glyphs(mosaic_ctx, glyph_cache, text_begin, text_end);
+    rebuild_rets.rasterize_state = mosaic_glyph_raster_try_rasterize_glyphs(mosaic_ctx, rebuild_rets.glyph_cache, text_begin, text_end);
     CG_FONT_TRACE_POP();
-    return glyph_cache;
+    return rebuild_rets;
 }
 
 void mosaic_context_glyph_raster_debug_draw(const mosaic_context_t * const mosaic_ctx, const int32_t mouse_pos_x, const int32_t mouse_pos_y, const bool draw_rects) {
@@ -732,7 +907,7 @@ void mosaic_context_glyph_raster_debug_draw(const mosaic_context_t * const mosai
             if (draw_rects) {
                 cg_context_fill_rect(rect, MALLOC_TAG);
             } else {
-                cg_context_draw_image_rect(&mosaic_ctx->atlas_image, rect, rect);
+                cg_context_draw_image_rect(&mosaic_ctx->atlas.image, rect, rect);
             }
         }
         glyph_cache = glyph_cache->next;
@@ -926,7 +1101,7 @@ static void url_font_http_complete(adk_curl_handle_t * const handle, const adk_c
         }
     }
     if ((result == adk_curl_result_ok) && found_expected_http_status) {
-        CG_FONT_TIME_SPAN_BEGIN(font_user->url, "[file] %s", font_user->url);
+        CG_FONT_TIME_SPAN_BEGIN(user->url, "[file] %s", user->url);
         thread_pool_enqueue(cg_ctx->thread_pool, font_load_job, font_file_finalize_main_thread, user); // what do we even sanely do here? font loading appears to be directly bound to the main thread.
     } else {
         if (result != adk_curl_result_ok) {
@@ -983,6 +1158,7 @@ cg_font_file_t * cg_context_load_font_file_async(const char * const file_locatio
     font_user->cg_font = cg_alloc(&ctx->cg_heap_low, sizeof(cg_font_file_t), MALLOC_TAG);
     ZEROMEM(font_user->cg_font);
 
+    font_user->cg_font->id = ctx->mosaic_ctx->font_id_counter++;
     font_user->cg_font->cg_ctx = ctx;
     font_user->cg_font->reference_count = 1;
     font_user->cg_font->async_load_status = cg_font_async_load_pending;
@@ -1028,18 +1204,29 @@ cg_font_async_load_status_e cg_get_font_load_status(const cg_font_file_t * const
 
 /* ------------------------------------------------------------------------- */
 
-mosaic_context_t * mosaic_context_new(cg_context_t * const cg_ctx, const int32_t width, const int32_t height, const mem_region_t canvas_font_scratchpad, const system_guard_page_mode_e guard_page_mode, const char * const _tag) {
+static void text_mesh_cache_init_emplace(text_mesh_cache_t * const cache, uint32_t size, const char * const tag);
+
+mosaic_context_t * mosaic_context_new(
+    cg_context_t * const cg_ctx,
+    const int32_t width,
+    const int32_t height,
+    const mem_region_t canvas_font_scratchpad,
+    const system_guard_page_mode_e guard_page_mode,
+    const char * const tag) {
     CG_FONT_TRACE_PUSH_FN();
-    mosaic_context_t * const mosaic_ctx = cg_alloc(&cg_ctx->cg_heap_low, sizeof(mosaic_context_t), MALLOC_TAG);
+    mosaic_context_t * const mosaic_ctx = cg_alloc(&cg_ctx->cg_heap_low, sizeof(mosaic_context_t), tag);
     ZEROMEM(mosaic_ctx);
 
     mosaic_ctx->cg_ctx = cg_ctx;
     mosaic_ctx->max_width = width;
     mosaic_ctx->max_height = height;
 
+    if (cg_statics.ctx->config.text_mesh_cache.enabled) {
+        text_mesh_cache_init_emplace(&mosaic_ctx->text_mesh_cache, cg_statics.ctx->config.text_mesh_cache.size, MALLOC_TAG);
+    }
+
 #ifdef GUARD_PAGE_SUPPORT
     mosaic_ctx->guard_page_mode = guard_page_mode;
-
     if (guard_page_mode == system_guard_page_mode_enabled) {
         const size_t needed = ALIGN_INT(canvas_font_scratchpad.size, 8);
         const size_t page_size = get_sys_page_size();
@@ -1062,10 +1249,21 @@ mosaic_context_t * mosaic_context_new(cg_context_t * const cg_ctx, const int32_t
     }
 
     const size_t atlas_size = width * height * 1;
-    mosaic_ctx->atlas_image.pixel_buffer = (cg_allocation_t){{{.cg_heap = &cg_ctx->cg_heap_low, .region = MEM_REGION(.ptr = cg_alloc(&cg_ctx->cg_heap_low, atlas_size, MALLOC_TAG), .size = atlas_size)}}};
-    mosaic_ctx->atlas_image.status = cg_image_async_load_complete;
+    mosaic_ctx->atlas.image.pixel_buffer = (cg_allocation_t){{{.cg_heap = &cg_ctx->cg_heap_low, .region = MEM_REGION(.ptr = cg_alloc(&cg_ctx->cg_heap_low, atlas_size, MALLOC_TAG), .size = atlas_size)}}};
 
-    mosaic_ctx->atlas_image.image = (image_t){
+#if !(defined(_VADER) || defined(_LEIA))
+    mosaic_ctx->atlas.upload_region.buffer_size = default_atlas_upload_queue_limit;
+    mosaic_ctx->atlas.upload_region.buffer = cg_alloc(&cg_ctx->cg_heap_low, mosaic_ctx->atlas.upload_region.buffer_size * sizeof(font_atlas_upload_region_t), MALLOC_TAG);
+    for (uint32_t i = 0; i < mosaic_ctx->atlas.upload_region.buffer_size; ++i) {
+        LL_ADD(&mosaic_ctx->atlas.upload_region.buffer[i], prev, next, mosaic_ctx->atlas.upload_region.free_head, mosaic_ctx->atlas.upload_region.free_tail);
+    }
+
+    mosaic_ctx->atlas.sub_image_copy_buffer = (cg_allocation_t){{{.cg_heap = &cg_ctx->cg_heap_low, .region = MEM_REGION(.ptr = cg_alloc(&cg_ctx->cg_heap_low, atlas_size, MALLOC_TAG), .size = atlas_size)}}};
+
+    heap_init_with_region(&mosaic_ctx->atlas.sub_image_heap, mosaic_ctx->atlas.sub_image_copy_buffer.region, 8, 0, "mosaic_ctx_atlas_sub_image_heap");
+#endif
+    mosaic_ctx->atlas.image.status = cg_image_async_load_complete;
+    mosaic_ctx->atlas.image.image = (image_t){
         .encoding = image_encoding_uncompressed,
         .width = width,
         .height = height,
@@ -1074,7 +1272,7 @@ mosaic_context_t * mosaic_context_new(cg_context_t * const cg_ctx, const int32_t
         .pitch = 1 * width,
         .spitch = width * height * 1,
         .data_len = width * height * 1,
-        .data = mosaic_ctx->atlas_image.pixel_buffer.region.ptr,
+        .data = mosaic_ctx->atlas.image.pixel_buffer.region.ptr,
     };
 
     const rhi_sampler_state_desc_t atlas_sampler_state = (rhi_sampler_state_desc_t){
@@ -1089,11 +1287,10 @@ mosaic_context_t * mosaic_context_new(cg_context_t * const cg_ctx, const int32_t
     image_mips_t mipmaps;
     ZEROMEM(&mipmaps);
     mipmaps.num_levels = 1;
-    mipmaps.levels[0] = mosaic_ctx->atlas_image.image;
+    mipmaps.levels[0] = mosaic_ctx->atlas.image.image;
+    mipmaps.levels[0].data = NULL;
 
-    mosaic_ctx->atlas_image.cg_texture.texture = render_create_texture_2d(cg_ctx->gl->render_device, mipmaps, rhi_pixel_format_r8_unorm, rhi_usage_dynamic, atlas_sampler_state, MALLOC_TAG);
-
-    mosaic_ctx->atlas_fence = render_get_cmd_stream_fence(&mosaic_ctx->cg_ctx->gl->render_device->default_cmd_stream);
+    mosaic_ctx->atlas.image.cg_texture.texture = render_create_texture_2d(cg_ctx->gl->render_device, mipmaps, rhi_pixel_format_r8_unorm, rhi_usage_dynamic, atlas_sampler_state, MALLOC_TAG);
 
     mosaic_ctx->glyph_raster = cg_alloc(&cg_ctx->cg_heap_low, sizeof(mosaic_glyph_raster_t), MALLOC_TAG);
     mosaic_glyph_raster_emplace_init(mosaic_ctx->glyph_raster, mosaic_ctx);
@@ -1113,6 +1310,8 @@ void mosaic_context_font_free(mosaic_context_t * ctx, int32_t index) {
     CG_FONT_TRACE_POP();
 }
 
+static void text_mesh_cache_free(text_mesh_cache_t * const cache, const char * const tag);
+
 void mosaic_context_free(mosaic_context_t * ctx) {
     CG_FONT_TRACE_PUSH_FN();
     mosaic_glyph_raster_shutdown(ctx->glyph_raster);
@@ -1124,13 +1323,26 @@ void mosaic_context_free(mosaic_context_t * ctx) {
 #endif
 
     cg_free(&ctx->cg_ctx->cg_heap_low, ctx->glyph_raster, MALLOC_TAG);
-    cg_gl_texture_free(ctx->cg_ctx->gl, &ctx->atlas_image.cg_texture);
-    cg_free_alloc(ctx->atlas_image.pixel_buffer, MALLOC_TAG);
+    cg_gl_texture_free(ctx->cg_ctx->gl, &ctx->atlas.image.cg_texture);
+    cg_free_alloc(ctx->atlas.image.pixel_buffer, MALLOC_TAG);
+
+#if !(defined(_VADER) || defined(_LEIA))
+    // sub_image_heap has allocations lazily freed, so any reporting here would report leaks (that are not relavant)
+    // the underlying memory will be freed by freeing sub_image_copy_buffer, and the heap will be gone when the mosaic_context goes away.
+    cg_free_alloc(ctx->atlas.sub_image_copy_buffer, MALLOC_TAG);
+
+    cg_free(&ctx->cg_ctx->cg_heap_low, ctx->atlas.upload_region.buffer, MALLOC_TAG);
+#endif
 
     for (int i = 0; i < ctx->font_count; ++i) {
         mosaic_context_font_free(ctx, i);
     }
     CG_ARRAY_FREE(ctx->cg_ctx, ctx->fonts, MALLOC_TAG);
+
+    if (cg_statics.ctx->config.text_mesh_cache.enabled) {
+        text_mesh_cache_free(&ctx->text_mesh_cache, MALLOC_TAG);
+    }
+
     cg_free(&ctx->cg_ctx->cg_heap_low, ctx, MALLOC_TAG);
     CG_FONT_TRACE_POP();
 }
@@ -1247,15 +1459,6 @@ typedef enum draw_text_status_e {
 
     draw_text_complete = 0, // count the entire text line as consumed (either the glyphs were rendered to the screen, or culled because they would show up off screen)
 } draw_text_status_e;
-
-typedef struct text_mesh_t {
-    cg_gl_vertex_t * verts;
-    int32_t vert_index;
-    int32_t total_glyphs;
-    int32_t glyphs_drawn;
-    int32_t reserved_verts;
-} text_mesh_t;
-
 // returns a `draw_partial_text_return_e` indicating completion (or 'error' status)
 // if not all codepoints were drawn then `out_last_codepoint` and `out_last_x_offset` will point to the next drawable character and the offset to draw it at
 static draw_text_status_e draw_partial_text(
@@ -1378,11 +1581,11 @@ static void flush_and_draw_mesh(mosaic_context_t * const mosaic_ctx, text_mesh_t
 
     cg_gl_state_finish_vertex_range_with_count(cg_ctx->gl, text_mesh->reserved_verts);
 
-    cg_select_blend_and_shader(cg_ctx->gl, cg_ctx->cur_state, &cg_ctx->cur_state->fill_style, &mosaic_ctx->atlas_image.cg_texture, cg_rgb_fill_alpha_red_enabled);
+    cg_select_blend_and_shader(cg_ctx->gl, cg_ctx->cur_state, &cg_ctx->cur_state->fill_style, &mosaic_ctx->atlas.image.cg_texture, cg_rgb_fill_alpha_red_enabled);
     cg_gl_state_draw(cg_ctx->gl, rhi_triangles, text_mesh->vert_index, 0);
 
     if (text_mesh->glyphs_drawn < text_mesh->total_glyphs) {
-        text_mesh->reserved_verts = min_int((text_mesh->total_glyphs - text_mesh->glyphs_drawn) * verts_per_quad, cg_gl_max_vertex_count);
+        text_mesh->reserved_verts = min_int((text_mesh->total_glyphs - text_mesh->glyphs_drawn) * verts_per_quad, cg_ctx->gl->config.internal_limits.max_verts_per_vertex_bank);
         text_mesh->verts = cg_gl_state_map_vertex_range(cg_ctx->gl, text_mesh->reserved_verts);
         text_mesh->vert_index = 0;
     }
@@ -1544,7 +1747,7 @@ cg_rect_t mosaic_context_draw_text_block(
     const cg_context_t * const cg_ctx = mosaic_ctx->cg_ctx;
 
     const int text_len = (int)strlen(text);
-    const int initial_reserved_verts = min_int(text_len * verts_per_quad, cg_gl_max_vertex_count);
+    const int initial_reserved_verts = min_int(text_len * verts_per_quad, cg_ctx->gl->config.internal_limits.max_verts_per_vertex_bank);
     text_mesh_t text_mesh = {
         .reserved_verts = initial_reserved_verts,
         .vert_index = 0,
@@ -1637,7 +1840,7 @@ cg_rect_t mosaic_context_draw_text_block(
 
             } else if (draw_text_status == draw_text_glyph_not_in_atlas) {
                 flush_and_draw_mesh(mosaic_ctx, &text_mesh);
-                glyph_cache = mosaic_glyph_raster_rebuild_font_atlas(mosaic_ctx, mosaic_ctx->font_index, curr_text_position, linebreak_position);
+                glyph_cache = mosaic_glyph_raster_rebuild_font_atlas(mosaic_ctx, mosaic_ctx->font_index, curr_text_position, linebreak_position).glyph_cache;
 
             } else if (draw_text_status == draw_text_no_more_indices) {
                 flush_and_draw_mesh(mosaic_ctx, &text_mesh);
@@ -1678,13 +1881,13 @@ cg_rect_t mosaic_context_draw_text_block(
 
                 } else if (draw_text_status == draw_text_glyph_not_in_atlas) {
                     flush_and_draw_mesh(mosaic_ctx, &text_mesh);
-                    glyph_cache = mosaic_glyph_raster_rebuild_font_atlas(mosaic_ctx, mosaic_ctx->font_index, curr_ellipses_position, end_of_ellipses);
+                    glyph_cache = mosaic_glyph_raster_rebuild_font_atlas(mosaic_ctx, mosaic_ctx->font_index, curr_ellipses_position, end_of_ellipses).glyph_cache;
 
                 } else if (draw_text_status == draw_text_no_more_indices) {
                     flush_and_draw_mesh(mosaic_ctx, &text_mesh);
 
                     const int remaining_ellipses_len = (int)strlen(curr_ellipses_position);
-                    const int remaining_ellipses_vert = min_int(remaining_ellipses_len * verts_per_quad, cg_gl_max_vertex_count);
+                    const int remaining_ellipses_vert = min_int(remaining_ellipses_len * verts_per_quad, cg_ctx->gl->config.internal_limits.max_verts_per_vertex_bank);
                     text_mesh = (text_mesh_t){
                         .reserved_verts = remaining_ellipses_vert,
                         .vert_index = 0,
@@ -1721,6 +1924,77 @@ cg_rect_t mosaic_context_draw_text_block(
 
     CG_FONT_TRACE_POP();
     return box;
+}
+
+void mosaic_context_draw_text_line(
+    mosaic_context_t * const mosaic_ctx,
+    const cg_rect_t text_rect,
+    const char * const text) {
+    CG_FONT_TRACE_PUSH_FN();
+
+    if (*text == '\0') {
+        CG_FONT_TRACE_POP();
+        return;
+    }
+
+    font_glyph_cache_t * glyph_cache = mosaic_glyph_raster_find_glyph_cache(mosaic_ctx->glyph_raster, mosaic_ctx->font_index);
+    if (glyph_cache == NULL) {
+        glyph_cache = mosaic_glyph_raster_create_glyph_cache(mosaic_ctx->glyph_raster, mosaic_ctx->font_index);
+    }
+
+    const cg_context_t * const cg_ctx = mosaic_ctx->cg_ctx;
+
+    const int text_len = (int)strlen(text);
+    const char * const text_end = text + text_len;
+    const int initial_reserved_verts = min_int(text_len * verts_per_quad, cg_ctx->gl->config.internal_limits.max_verts_per_vertex_bank);
+    text_mesh_t text_mesh = {
+        .reserved_verts = initial_reserved_verts,
+        .vert_index = 0,
+        .verts = cg_gl_state_map_vertex_range(cg_ctx->gl, initial_reserved_verts),
+        .total_glyphs = text_len,
+        .glyphs_drawn = 0};
+
+    const char * curr_text_position = text;
+    const float displayable_glyph_width = min_float(text_rect.width, cg_ctx->width - text_rect.x);
+
+    while (*curr_text_position) {
+        float curr_x = text_rect.x;
+
+        draw_text_status_e draw_text_status = draw_text_incomplete;
+        while (draw_text_status != draw_text_complete) {
+            draw_text_status = draw_partial_text(
+                mosaic_ctx,
+                glyph_cache,
+                &text_mesh,
+                &cg_ctx->cur_state->transform,
+                (cg_vec2_t){.x = curr_x, .y = 0.0f},
+                displayable_glyph_width,
+                curr_text_position,
+                text_end,
+                &curr_text_position,
+                &curr_x);
+
+            if (draw_text_status == draw_text_codepoint_not_in_cache) {
+                mosaic_glyph_raster_try_rasterize_glyphs(mosaic_ctx, glyph_cache, curr_text_position, text_end);
+
+            } else if (draw_text_status == draw_text_glyph_not_in_atlas) {
+                flush_and_draw_mesh(mosaic_ctx, &text_mesh);
+                glyph_cache = mosaic_glyph_raster_rebuild_font_atlas(mosaic_ctx, mosaic_ctx->font_index, curr_text_position, text_end).glyph_cache;
+
+            } else if (draw_text_status == draw_text_no_more_indices) {
+                flush_and_draw_mesh(mosaic_ctx, &text_mesh);
+
+            } else {
+                ASSERT(draw_text_status == draw_text_complete);
+            }
+        }
+    }
+
+    if (text_mesh.vert_index > 0) {
+        flush_and_draw_mesh(mosaic_ctx, &text_mesh);
+    }
+
+    CG_FONT_TRACE_POP();
 }
 
 cg_rect_t mosaic_context_get_text_block_extents(
@@ -1863,13 +2137,17 @@ void cg_context_set_font_context_missing_glyph_indicator(cg_font_context_t * con
     CG_FONT_TRACE_POP();
 }
 
-void cg_context_font_precache_glyphs(FFI_PTR_NATIVE cg_font_context_t * const font_ctx, FFI_PTR_WASM const char * const characters) {
+static codepoint_rasterizing_e mosaic_context_precache_glyphs(cg_font_context_t * const font_ctx, const char * const characters) {
     mosaic_context_t * const mosaic_ctx = font_ctx->mosaic_ctx;
     font_glyph_cache_t * glyph_cache = mosaic_glyph_raster_find_glyph_cache(mosaic_ctx->glyph_raster, font_ctx->font_index);
     if (glyph_cache == NULL) {
         glyph_cache = mosaic_glyph_raster_create_glyph_cache(mosaic_ctx->glyph_raster, font_ctx->font_index);
     }
-    mosaic_glyph_raster_try_rasterize_glyphs(mosaic_ctx, glyph_cache, characters, characters + strlen(characters));
+    return mosaic_glyph_raster_try_rasterize_glyphs(mosaic_ctx, glyph_cache, characters, characters + strlen(characters));
+}
+
+void cg_context_font_precache_glyphs(cg_font_context_t * const font_ctx, const char * const characters) {
+    mosaic_context_precache_glyphs(font_ctx, characters);
 }
 
 void cg_context_font_clear_glyph_cache() {
@@ -1878,4 +2156,419 @@ void cg_context_font_clear_glyph_cache() {
 
     mosaic_glyph_raster_shutdown(glyph_raster);
     mosaic_glyph_raster_emplace_init(glyph_raster, mosaic_ctx);
+}
+
+static uint32_t string_get_num_codepoints(const char * const str) {
+    CG_FONT_TRACE_PUSH_FN();
+
+    const char * curr_utf8 = str;
+    uint32_t visible_codepoint_count = 0;
+    while (*curr_utf8) {
+        int32_t codepoint;
+        curr_utf8 += utf8_to_codepoint(curr_utf8, &codepoint);
+        visible_codepoint_count += !(is_whitespace(codepoint) || is_newline(codepoint));
+    }
+
+    CG_FONT_TRACE_POP();
+    return visible_codepoint_count;
+}
+
+static void text_mesh_init_emplace(text_mesh_t * const text_mesh, const uint32_t num_codepoints, const char * const tag) {
+    CG_FONT_TRACE_PUSH_FN();
+    *text_mesh = (text_mesh_t){0};
+
+    text_mesh->resource_heap = &cg_statics.ctx->cg_heap_low;
+    text_mesh->reserved_verts = num_codepoints * 6;
+
+    text_mesh->null_buffer = CONST_MEM_REGION(.ptr = NULL, .size = sizeof(cg_gl_vertex_t) * text_mesh->reserved_verts);
+
+    text_mesh->verts = cg_alloc(text_mesh->resource_heap, text_mesh->null_buffer.size, MALLOC_TAG);
+
+    rhi_mesh_data_init_indirect_t mi;
+    ZEROMEM(&mi);
+    mi.num_channels = 1;
+    mi.channels = &text_mesh->null_buffer;
+
+    text_mesh->r_mesh = render_create_mesh(cg_statics.ctx->gl->render_device, mi, cg_statics.ctx->gl->mesh_layout, MALLOC_TAG);
+    text_mesh->fence = render_get_cmd_stream_fence(&cg_statics.ctx->gl->render_device->default_cmd_stream);
+
+    CG_FONT_TRACE_POP();
+}
+
+static void text_mesh_draw(text_mesh_t * const mesh) {
+    CG_FONT_TRACE_PUSH_FN();
+    if (mesh->vert_index > 0) {
+        cg_context_t * const cg_ctx = cg_statics.ctx;
+        cg_select_blend_and_shader(cg_ctx->gl, cg_ctx->cur_state, &cg_ctx->cur_state->fill_style, &cg_ctx->mosaic_ctx->atlas.image.cg_texture, cg_rgb_fill_alpha_red_enabled);
+        cg_gl_state_draw_mesh(cg_ctx->gl, mesh->r_mesh, rhi_triangles, mesh->vert_index, 0);
+    }
+    CG_FONT_TRACE_POP();
+}
+
+static void text_mesh_free_verts(text_mesh_t * const mesh, const char * const tag) {
+    CG_FONT_TRACE_PUSH_FN();
+    render_conditional_flush_cmd_stream_and_wait_fence(cg_statics.ctx->gl->render_device, &cg_statics.ctx->gl->render_device->default_cmd_stream, mesh->fence);
+    cg_free(mesh->resource_heap, mesh->verts, tag);
+    mesh->verts = NULL;
+    CG_FONT_TRACE_POP();
+}
+
+static void text_mesh_free(text_mesh_t * const mesh, const char * const tag) {
+    CG_FONT_TRACE_PUSH_FN();
+
+    render_conditional_flush_cmd_stream_and_wait_fence(cg_statics.ctx->gl->render_device, &cg_statics.ctx->gl->render_device->default_cmd_stream, mesh->fence);
+    render_release(&mesh->r_mesh->resource, tag);
+    if (mesh->verts) {
+        text_mesh_free_verts(mesh, tag);
+    }
+    ZEROMEM(mesh);
+
+    CG_FONT_TRACE_POP();
+}
+
+static void text_mesh_upload_mesh_indirect(text_mesh_t * const mesh) {
+    CG_FONT_TRACE_PUSH_FN();
+
+    if (mesh->vert_index > 0) {
+        cg_gl_state_t * const state = cg_statics.ctx->gl;
+
+        const int channel_index = 0;
+        const int first_elem = 0;
+        const int num_elems = mesh->vert_index;
+        const size_t stride = sizeof(cg_gl_vertex_t);
+        const void * const data = mesh->verts;
+
+        const uint32_t hash = render_cmd_stream_upload_mesh_channel_data(
+            &state->render_device->default_cmd_stream,
+            &mesh->r_mesh->mesh,
+            channel_index,
+            first_elem,
+            num_elems,
+            stride,
+            data,
+            MALLOC_TAG);
+
+        mesh->r_mesh->hash = hash;
+        mesh->fence = render_get_cmd_stream_fence(&cg_statics.ctx->gl->render_device->default_cmd_stream);
+    }
+
+    CG_FONT_TRACE_POP();
+}
+
+static void mosaic_context_create_text_block_mesh(
+    mosaic_context_t * const mosaic_ctx,
+    const cg_rect_t text_rect,
+    const float scroll_offset,
+    const float extra_line_spacing,
+    const char * const text,
+    const char * const optional_ellipses,
+    const cg_text_block_options_e options,
+    text_mesh_t * const out_text_mesh) {
+    CG_FONT_TRACE_PUSH_FN();
+    cg_rect_t box = {.x = text_rect.x, .y = text_rect.y, .width = 0.0f, .height = 0.0f};
+    if (*text == '\0') {
+        CG_FONT_TRACE_POP();
+    }
+
+    const mosaic_font_data_t * const font = &mosaic_ctx->fonts[mosaic_ctx->font_index];
+
+    font_glyph_cache_t * glyph_cache = mosaic_glyph_raster_find_glyph_cache(mosaic_ctx->glyph_raster, mosaic_ctx->font_index);
+    if (glyph_cache == NULL) {
+        glyph_cache = mosaic_glyph_raster_create_glyph_cache(mosaic_ctx->glyph_raster, mosaic_ctx->font_index);
+    }
+
+    const float font_height = (float)font->height;
+    const float line_height = (options & cg_text_block_line_space_relative) ? (font_height * extra_line_spacing) : (font_height + extra_line_spacing);
+    ASSERT(fabs(line_height) >= 1.0f);
+
+    const cg_context_t * const cg_ctx = mosaic_ctx->cg_ctx;
+
+    text_mesh_init_emplace(out_text_mesh, string_get_num_codepoints(text) + (optional_ellipses ? string_get_num_codepoints(optional_ellipses) : 0), MALLOC_TAG);
+
+    float ellipses_width = 0;
+    if (optional_ellipses) {
+        const char * linebreak_ignored;
+        float line_width_ignored = 0;
+        find_linebreak_position(mosaic_ctx, INFINITY, optional_ellipses, &linebreak_ignored, &ellipses_width, &line_width_ignored);
+    }
+
+    int32_t space_width_int, tab_width_int, lsb_ignored;
+    stbtt_GetCodepointHMetrics(&font->cg_font->font_info, ' ', &space_width_int, &lsb_ignored);
+    stbtt_GetCodepointHMetrics(&font->cg_font->font_info, '\t', &tab_width_int, &lsb_ignored);
+
+    const float space_width = font->scale * space_width_int;
+    const float tab_width = font->scale * tab_width_int;
+
+    float curr_y = text_rect.y + scroll_offset;
+    const float max_y = text_rect.y + text_rect.height;
+
+    const char * curr_text_position = text;
+    const float displayable_glyph_width = min_float(text_rect.width, cg_ctx->width - text_rect.x);
+
+    while (*curr_text_position) {
+        const char * linebreak_position = NULL;
+        float last_renderable_width = 0;
+        float line_width = 0;
+        find_linebreak_position(mosaic_ctx, text_rect.width, curr_text_position, &linebreak_position, &last_renderable_width, &line_width);
+
+        // if we would render glyphs above the box cull them, if its intersecting cull only if allow_bounds_overflow isn't enabled.
+        if (options & cg_text_block_allow_block_bounds_overflow) {
+            if (curr_y < text_rect.y - line_height) {
+                curr_y += line_height;
+                continue;
+            }
+        } else {
+            if (curr_y < text_rect.y) {
+                curr_y += line_height;
+                continue;
+            }
+        }
+
+        const float ellipses_height_threshold = curr_y + line_height + ((options & cg_text_block_allow_block_bounds_overflow) ? 0 : line_height);
+        const bool use_ellipses = (*linebreak_position != '\0')
+                                  && optional_ellipses
+                                  && ((ellipses_height_threshold > max_y)
+                                      || (line_height_at_next_word(
+                                              mosaic_ctx,
+                                              (line_height_args_t){
+                                                  .curr_height = curr_y + line_height,
+                                                  .line_height = line_height,
+                                                  .max_height = max_y,
+                                                  .max_line_width = text_rect.width,
+                                                  .space_width = space_width,
+                                                  .tab_width = tab_width,
+                                                  .ellipses_width = ellipses_width,
+                                                  .text = linebreak_position})
+                                          >= max_y));
+
+        // if ellipses are enabled, and we need to draw them re-calculate the line's cut off position if we can't fit the ellipses on the existing line.
+        if (use_ellipses && (last_renderable_width + ellipses_width > text_rect.width)) {
+            find_linebreak_position(mosaic_ctx, text_rect.width - ellipses_width, curr_text_position, &linebreak_position, &last_renderable_width, &line_width);
+        }
+
+        const float line_offset = calculate_line_offset(text_rect.width, last_renderable_width + (use_ellipses ? ellipses_width : 0), options);
+        float curr_x = text_rect.x + line_offset;
+
+        const char * const start_of_line = curr_text_position;
+
+        draw_text_status_e draw_text_status = draw_partial_text(
+            mosaic_ctx,
+            glyph_cache,
+            out_text_mesh,
+            &cg_ctx->cur_state->transform,
+            (cg_vec2_t){.x = curr_x, .y = curr_y},
+            displayable_glyph_width,
+            curr_text_position,
+            linebreak_position,
+            &curr_text_position,
+            &curr_x);
+
+        VERIFY_MSG(draw_text_status == draw_text_complete, "incomplete draw-text-status: %i", draw_text_status);
+
+        if (!use_ellipses) {
+            curr_x = text_rect.x;
+            curr_y += line_height;
+
+            if (box.width < line_width) {
+                box.width = line_width;
+                box.x = text_rect.x + line_offset;
+            }
+            box.height = curr_y - text_rect.y;
+            skip_trailing_white_space_and_first_newline(start_of_line, &curr_text_position);
+        }
+
+        if (use_ellipses) {
+            const char * curr_ellipses_position = optional_ellipses;
+            const char * const end_of_ellipses = optional_ellipses + strlen(optional_ellipses);
+            draw_text_status = draw_partial_text(
+                mosaic_ctx,
+                glyph_cache,
+                out_text_mesh,
+                &cg_ctx->cur_state->transform,
+                (cg_vec2_t){.x = curr_x, .y = curr_y},
+                displayable_glyph_width,
+                curr_ellipses_position,
+                end_of_ellipses,
+                &curr_ellipses_position,
+                &curr_x);
+
+            VERIFY_MSG(draw_text_status == draw_text_complete, "incomplete draw-text-status: %i", draw_text_status);
+
+            // there are no valid glyphs to draw after we've drawn ellipses so bail.
+            break;
+        }
+
+        // if we would render glyphs beneath the text block bail
+        const float y_limit = options & cg_text_block_allow_block_bounds_overflow ? curr_y : curr_y + line_height;
+        if (y_limit > max_y) {
+            break;
+        }
+    }
+
+    out_text_mesh->bounding_box = box;
+    CG_FONT_TRACE_POP();
+}
+
+static bool text_mesh_id_block_compare(const text_mesh_id_block_t * const left, const text_mesh_id_block_t * const right) {
+    return (left->crc == right->crc) && (left->font_id == right->font_id) && (left->str_len == right->str_len) && (left->has_ellipses == right->has_ellipses) && (memcmp(left->first_n_chars, right->first_n_chars, sizeof(left->first_n_chars)) == 0) && (left->scroll_offset == right->scroll_offset) && (left->options == right->options) && (memcmp(&left->rect, &right->rect, sizeof(left->rect)) == 0);
+}
+
+static cg_rect_t affine_apply_rect(const cg_rect_t rect) {
+    const cg_state_t * const cg_state = cg_statics.ctx->cur_state;
+    const cg_vec2_t tl_pos = {.x = rect.x, .y = rect.y};
+    const cg_vec2_t br_pos = {.x = rect.x + rect.width, .y = rect.y + rect.height};
+    const cg_vec2_t * const tl = cg_affine_apply(&cg_state->transform, &tl_pos);
+    const cg_vec2_t * const br = cg_affine_apply(&cg_state->transform, &br_pos);
+
+    // this isn't actually a rect.
+    return (cg_rect_t){tl->x, tl->y, br->x, br->y};
+}
+
+static text_mesh_id_block_t mosaic_context_text_block_create_mesh_id_block(mosaic_context_t * const mosaic_ctx, const cg_rect_t text_rect, const float scroll_offset, const float extra_line_spacing, const char * const text, const char * const optional_ellipses, const cg_text_block_options_e options) {
+    CG_FONT_TRACE_PUSH_FN();
+    text_mesh_id_block_t id_block = {0};
+    const mosaic_font_data_t * const font = &mosaic_ctx->fonts[mosaic_ctx->font_index];
+    id_block.str_len = (uint32_t)strlen(text);
+    id_block.scroll_offset = scroll_offset;
+    id_block.options = options;
+    id_block.has_ellipses = optional_ellipses;
+    id_block.font_id = font->cg_font->id;
+    id_block.rect = affine_apply_rect(text_rect);
+    memcpy(id_block.first_n_chars, text, min_size_t(id_block.str_len, sizeof(id_block.first_n_chars)));
+
+    // TODO: need to apply the cg affine to the text rect, else we could have a case where client tries to draw the same string in 4 locations, with the entire same set of data... but they just translate via cg_translate.
+    id_block.crc = crc_32((const unsigned char *)&text_rect, sizeof(text_rect));
+    id_block.crc = update_crc_32(id_block.crc, (const unsigned char *)&id_block.font_id, sizeof(id_block.font_id));
+    id_block.crc = update_crc_32(id_block.crc, (const unsigned char *)&scroll_offset, sizeof(scroll_offset));
+    id_block.crc = update_crc_32(id_block.crc, (const unsigned char *)&extra_line_spacing, sizeof(extra_line_spacing));
+
+    id_block.crc = crc_32((const unsigned char *)text, id_block.str_len);
+    if (optional_ellipses) {
+        id_block.crc = update_crc_32(id_block.crc, (const unsigned char *)optional_ellipses, strlen(optional_ellipses));
+    }
+
+    id_block.crc = update_crc_32(id_block.crc, (const unsigned char *)&options, sizeof(options));
+
+    CG_FONT_TRACE_POP();
+    return id_block;
+}
+
+static void text_mesh_cache_init_emplace(text_mesh_cache_t * const cache, uint32_t size, const char * const tag) {
+    cg_context_t * const ctx = cg_statics.ctx;
+    *cache = (text_mesh_cache_t){0};
+
+    cache->storage = cg_alloc(&ctx->cg_heap_low, size * sizeof(text_mesh_cache_node_t), tag);
+    cache->storage_len = size;
+
+    for (uint32_t i = 0; i < size; ++i) {
+        LL_ADD(&cache->storage[i], prev, next, cache->free.head, cache->free.tail);
+    }
+}
+
+static void text_mesh_cache_evict_active_nodes(text_mesh_cache_t * const cache, const char * const tag) {
+    CG_FONT_TRACE_PUSH_FN();
+    text_mesh_cache_node_t * curr_node = cache->active.head;
+    while (curr_node) {
+        text_mesh_cache_node_t * const next_node = curr_node->next;
+        text_mesh_free(&curr_node->text_mesh, tag);
+        LL_REMOVE(curr_node, prev, next, cache->active.head, cache->active.tail);
+        *curr_node = (text_mesh_cache_node_t){0};
+        LL_ADD(curr_node, prev, next, cache->free.head, cache->free.tail);
+        curr_node = next_node;
+    }
+    CG_FONT_TRACE_POP();
+}
+
+static void text_mesh_cache_free(text_mesh_cache_t * const cache, const char * const tag) {
+    CG_FONT_TRACE_PUSH_FN();
+    cg_context_t * const ctx = cg_statics.ctx;
+
+    text_mesh_cache_evict_active_nodes(cache, tag);
+    cg_free(&ctx->cg_heap_low, cache->storage, tag);
+    CG_FONT_TRACE_POP();
+}
+
+static text_mesh_cache_node_t * text_mesh_cache_try_pop_free(text_mesh_cache_t * const cache, const text_mesh_id_block_t * const id_block) {
+    text_mesh_cache_node_t * const node = cache->free.head;
+    if (node) {
+        LL_REMOVE(node, prev, next, cache->free.head, cache->free.tail);
+        LL_ADD(node, prev, next, cache->active.head, cache->active.tail);
+        node->id_block = *id_block;
+    }
+    return node;
+}
+
+static text_mesh_cache_node_t * text_mesh_cache_reuse_oldest_node(text_mesh_cache_t * const cache, const text_mesh_id_block_t * const id_block, const char * const tag) {
+    ASSERT(cache->active.tail);
+    text_mesh_cache_node_t * const node = cache->active.tail;
+    LL_REMOVE(node, prev, next, cache->active.head, cache->active.tail);
+    LL_PUSH_FRONT(node, prev, next, cache->active.head, cache->active.tail);
+    text_mesh_free(&node->text_mesh, tag);
+    node->id_block = *id_block;
+    return node;
+}
+
+static text_mesh_cache_node_t * text_mesh_cache_find_node(text_mesh_cache_t * const cache, const text_mesh_id_block_t * const id_block) {
+    CG_FONT_TRACE_PUSH_FN();
+    text_mesh_cache_node_t * curr_node = cache->active.head;
+    while (curr_node) {
+        if (text_mesh_id_block_compare(&curr_node->id_block, id_block)) {
+            // shuffle the nodes around so the most recently used node is up front, so we can have the least used towards the end of the list.
+            LL_REMOVE(curr_node, prev, next, cache->active.head, cache->active.tail);
+            LL_PUSH_FRONT(curr_node, prev, next, cache->active.head, cache->active.tail);
+            CG_FONT_TRACE_POP();
+            return curr_node;
+        }
+        curr_node = curr_node->next;
+    }
+    CG_FONT_TRACE_POP();
+    return NULL;
+}
+
+static cg_rect_t mosaic_context_draw_text_block_memoized(
+    cg_font_context_t * const font_ctx,
+    const cg_rect_t text_rect,
+    const float scroll_offset,
+    const float extra_line_spacing,
+    const char * const text,
+    const char * const optional_ellipses,
+    const cg_text_block_options_e options) {
+    CG_FONT_TRACE_PUSH_FN();
+    text_mesh_cache_t * const text_mesh_cache = &font_ctx->mosaic_ctx->text_mesh_cache;
+
+    const text_mesh_id_block_t id_block = mosaic_context_text_block_create_mesh_id_block(font_ctx->mosaic_ctx, text_rect, scroll_offset, extra_line_spacing, text, optional_ellipses, options);
+
+    // we have the node, trivial case of just reusing.
+    text_mesh_cache_node_t * node = text_mesh_cache_find_node(text_mesh_cache, &id_block);
+    if (node) {
+        text_mesh_draw(&node->text_mesh);
+        if (node->text_mesh.verts && render_check_fence(node->text_mesh.fence)) {
+            text_mesh_free_verts(&node->text_mesh, MALLOC_TAG);
+        }
+        CG_FONT_TRACE_POP();
+        return node->text_mesh.bounding_box;
+    } else if ((mosaic_context_precache_glyphs(font_ctx, text) == codepoint_rasterizing_renderable_rasterized) && (!optional_ellipses || (mosaic_context_precache_glyphs(font_ctx, optional_ellipses) == codepoint_rasterizing_renderable_rasterized))) {
+        // we do have glyphs in the atlas, just need to find a valid node we can use.
+        node = text_mesh_cache_try_pop_free(text_mesh_cache, &id_block);
+        if (!node) {
+            node = text_mesh_cache_reuse_oldest_node(text_mesh_cache, &id_block, MALLOC_TAG);
+        }
+    } else {
+        // glyphs could not fit, must flush the atlas, and all existing meshes and rebuild.
+        text_mesh_cache_evict_active_nodes(text_mesh_cache, MALLOC_TAG);
+        VERIFY(mosaic_glyph_raster_rebuild_font_atlas(font_ctx->mosaic_ctx, font_ctx->font_index, text, text + id_block.str_len).rasterize_state == codepoint_rasterizing_renderable_rasterized);
+        node = text_mesh_cache_try_pop_free(text_mesh_cache, &id_block);
+        VERIFY(node);
+    }
+    ASSERT(node);
+
+    // create the text mesh, flush the atlas, and draw.
+    mosaic_context_create_text_block_mesh(font_ctx->mosaic_ctx, text_rect, scroll_offset, extra_line_spacing, text, optional_ellipses, options, &node->text_mesh);
+    text_mesh_upload_mesh_indirect(&node->text_mesh);
+    mosaic_glyph_raster_flush_atlas(font_ctx->mosaic_ctx->glyph_raster);
+    text_mesh_draw(&node->text_mesh);
+    node->text_mesh.fence = render_get_cmd_stream_fence(&cg_statics.ctx->gl->render_device->default_cmd_stream);
+
+    CG_FONT_TRACE_POP();
+    return node->text_mesh.bounding_box;
 }

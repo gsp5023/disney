@@ -18,15 +18,7 @@
 #include "source/adk/imagelib/imagelib.h"
 #include "source/adk/log/log.h"
 #include "source/adk/steamboat/sb_platform.h"
-
-#ifdef _CG_IMAGE_TRACE
 #include "source/adk/telemetry/telemetry.h"
-#define CG_IMAGE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...) TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ##__VA_ARGS__)
-#define CG_IMAGE_TIME_SPAN_END(_id) TRACE_TIME_SPAN_END(_id)
-#else
-#define CG_IMAGE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...)
-#define CG_IMAGE_TIME_SPAN_END(_id)
-#endif
 
 #ifndef _SHIP
 #define CG_IMAGE_TIME_LOGGING
@@ -183,7 +175,7 @@ static bool parse_gpu_ready_image_format(image_load_data_t * const user) {
     // gpu-ready image formats bypass the normal decode pipeline because
     // they are essentially instant-parsed and can be queued for upload immediately
 
-#if defined(_LEIA) //this code is stripped from a partner build and must be conditionally wrapped.
+#if defined(_VADER) || defined(_LEIA) //this code is stripped from a partner build and must be conditionally wrapped.
     if (imagelib_load_gnf_from_memory(user->image_bytes.consted.region, &user->cg_image->image)) {
         return true;
     }
@@ -313,10 +305,12 @@ static void rhi_upload_job_main_thread(void * void_user, thread_pool_t * const p
 
             if (user->image_type == cg_image_type_bif) {
                 render_init_cmd_stream(cg_ctx->gl->render_device, &user->cg_image->bif->async_image_data.decode_cmd_stream);
+                user->cg_image->bif->async_image_data.initial_upload_fence = render_get_cmd_stream_fence(&cg_ctx->gl->render_device->default_cmd_stream);
 
             } else {
                 ASSERT(user->image_type == cg_image_type_gif);
                 render_init_cmd_stream(cg_ctx->gl->render_device, &user->cg_image->gif->async_image_data.decode_cmd_stream);
+                user->cg_image->gif->async_image_data.initial_upload_fence = render_get_cmd_stream_fence(&cg_ctx->gl->render_device->default_cmd_stream);
                 LL_ADD(user->cg_image, gif->prev_gif, gif->next_gif, cg_ctx->gif_head, cg_ctx->gif_tail);
             }
         }

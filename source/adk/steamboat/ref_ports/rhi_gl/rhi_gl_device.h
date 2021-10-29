@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -246,10 +246,10 @@ typedef struct gl_context_t {
 #endif
     rhi_counters_t counters;
 #ifdef GL_FRAMEBUFFER_BLIT_PROGRAM
-    int textures[rhi_program_input_max_textures];
+    int textures[rhi_program_num_textures];
 #endif
-    int texture_ids[rhi_program_input_max_textures];
-    struct gl_uniform_buffer_t * ubuffers[rhi_program_input_max_uniforms];
+    int texture_ids[rhi_program_num_textures];
+    struct gl_uniform_buffer_t * ubuffers[rhi_program_num_uniforms];
     rhi_rasterizer_state_desc_t rs_desc;
     rhi_depth_stencil_state_desc_t dss_desc;
     rhi_blend_state_desc_t bs_desc;
@@ -620,7 +620,7 @@ static inline void glc_delete_textures(gl_context_t * const context, const int c
 static inline void glc_bind_texture(gl_context_t * const context, const GLenum texture_unit, const GLenum target, const GLuint texture, const int id) {
     ASSERT(target == GL_TEXTURE_2D);
     const int idx = texture_unit - GL_TEXTURE0;
-    ASSERT((idx >= 0) && (idx < rhi_program_input_max_textures));
+    ASSERT((idx >= 0) && (idx < rhi_program_num_textures));
     if (context->texture_ids[idx] != id) {
         context->texture_ids[idx] = id;
 #ifdef GL_FRAMEBUFFER_BLIT_PROGRAM
@@ -628,6 +628,7 @@ static inline void glc_bind_texture(gl_context_t * const context, const GLenum t
 #endif
 #ifdef GL_DSA
         glf.glBindTextureUnit(idx, texture);
+        CHECK_GL_ERRORS();
 #else
         if (context->active_texture != texture_unit) {
             context->active_texture = texture_unit;
@@ -673,12 +674,27 @@ static inline void glc_texture_storage_2d(gl_context_t * const context, const GL
     CHECK_GL_ERRORS();
 }
 
-static inline void glc_texture_subimage_2d(gl_context_t * const context, const GLenum tunit, const GLenum target, const GLuint texture, int id, const GLint level, const GLint xoffset, const GLint yoffset, const GLsizei w, const GLsizei h, const GLenum format, const GLenum type, const void * const pixels) {
+typedef struct texture_subimage_2d_args_t {
+    GLenum tunit;
+    GLenum target;
+    GLuint texture;
+    int id;
+    GLint level;
+    GLint xoffset;
+    GLint yoffset;
+    GLsizei w;
+    GLsizei h;
+    GLenum format;
+    GLenum type;
+    const void * pixels;
+} texture_subimage_2d_args_t;
+
+static inline void glc_texture_subimage_2d(gl_context_t * const context, const texture_subimage_2d_args_t args) {
 #ifdef GL_DSA
-    glf.glTextureSubImage2D(texture, level, xoffset, yoffset, w, h, format, type, pixels);
+    glf.glTextureSubImage2D(args.texture, args.level, args.xoffset, args.yoffset, args.w, args.h, args.format, args.type, args.pixels);
 #else
-    glc_bind_texture(context, tunit, target, texture, id);
-    glTexSubImage2D(target, level, xoffset, yoffset, w, h, format, type, pixels);
+    glc_bind_texture(context, args.tunit, args.target, args.texture, args.id);
+    glTexSubImage2D(args.target, args.level, args.xoffset, args.yoffset, args.w, args.h, args.format, args.type, args.pixels);
 #endif
     ++context->counters.num_api_calls;
     CHECK_GL_ERRORS();
@@ -711,6 +727,7 @@ static inline void glc_texture_set_swizzle_mask(gl_context_t * const context, co
     glc_bind_texture(context, texture_unit, target, texture, id);
     GLint swizzle_mask[] = {red_channel, green_channel, blue_channel, alpha_channel};
     glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle_mask);
+    CHECK_GL_ERRORS();
     ++context->counters.num_api_calls;
 }
 #endif

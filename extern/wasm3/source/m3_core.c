@@ -109,8 +109,10 @@ M3Result  m3_Realloc  (void ** io_ptr, size_t i_newSize, size_t i_oldSize)
 #define USE_M5_HEAPS
 
 #ifdef USE_M5_HEAPS
-#include "source/adk/runtime/memory.h"
-extern heap_t wasm_heap;
+#include "source/adk/runtime/bifurcated_heap.h"
+
+extern bifurcated_heap_t wasm_heap;
+
 #endif // USE_M5_HEAPS
 
 M3Result  m3_Malloc  (void ** o_ptr, size_t i_size)
@@ -118,7 +120,7 @@ M3Result  m3_Malloc  (void ** o_ptr, size_t i_size)
     M3Result result = m3Err_none;
 
 #ifdef USE_M5_HEAPS
-    void * ptr = heap_unchecked_calloc(&wasm_heap, i_size, MALLOC_TAG);
+    void * ptr = bifurcated_heap_unchecked_calloc(&wasm_heap, i_size, MALLOC_TAG);
 #else
     void * ptr = calloc(i_size, 1);
 #endif // USE_M5_HEAPS
@@ -137,7 +139,7 @@ void  m3_Free  (void ** io_ptr)
 //    if (i_ptr) printf("== free %p\n", i_ptr);
 #ifdef USE_M5_HEAPS
     if (*io_ptr) {
-        heap_free(&wasm_heap, *io_ptr, MALLOC_TAG);
+        bifurcated_heap_free(&wasm_heap, *io_ptr, MALLOC_TAG);
     }
 #else
     free(*io_ptr);
@@ -152,7 +154,7 @@ M3Result  m3_Realloc  (void ** io_ptr, size_t i_newSize, size_t i_oldSize)
     if (i_newSize != i_oldSize)
     {
 #ifdef USE_M5_HEAPS
-        void * newPtr = heap_unchecked_realloc(&wasm_heap, *io_ptr, i_newSize, MALLOC_TAG);
+        void * newPtr = bifurcated_heap_unchecked_realloc(&wasm_heap, *io_ptr, i_oldSize, i_newSize, MALLOC_TAG);
 #else
         void * newPtr = realloc(*io_ptr, i_newSize);
 #endif // USE_M5_HEAPS

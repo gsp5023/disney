@@ -14,6 +14,4 @@ project "cmdlets"
 	}
 
 	filter_tools_platform()
-		files {"shader_compiler/**.c", "shader_compiler/**.h"}
-		files {"json_deflate_tool.c"}
-		files {"bif_extract_tool.c"}
+		files {"restricted/**"}

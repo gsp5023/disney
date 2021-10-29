@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- json_deflate_tools.lua
--- Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+-- Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
 --------------------------------------------------------------------------------
 
 project ("json_deflate_tool_lib", "source/adk/json_deflate_tool")
@@ -15,11 +15,9 @@ project ("json_deflate_tool_lib", "source/adk/json_deflate_tool")
 
 local m = {}
 
-function m.link(prj)
-	if prj.name == "tests" then
-		filter_tools_platform {}
-			links "json_deflate_tool_lib"
-	end
+function m.link()
+	filter_tools_platform(KIND_APP)
+		links "json_deflate_tool_lib"
 end
 
 return m

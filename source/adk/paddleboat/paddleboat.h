@@ -38,11 +38,6 @@ bool pb_unload_module(const pb_module_handle_t handle);
 /// Returns the address of the requested symbol
 const void * pb_bind_symbol(const pb_module_handle_t handle, const char * const sym_name);
 
-/// Fetch default directory to drivers path
-///
-/// Returns the default driver directory
-const char * pb_get_driver_path(char * const buff, const size_t buff_size);
-
 #ifdef __cplusplus
 }
 #endif

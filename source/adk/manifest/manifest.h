@@ -46,16 +46,82 @@ enum {
     manifest_value_max_length = 256
 };
 
+typedef enum logging_mode_e {
+    logging_disabled,
+    logging_tty,
+    logging_metrics,
+    logging_tty_and_metrics,
+} logging_mode_e;
+
 typedef struct fetch_retry_context_t {
     uint32_t retry_max_attempts;
     milliseconds_t retry_backoff_ms;
 } fetch_retry_context_t;
 
+typedef struct runtime_configuration_canvas_gl_t {
+    struct {
+        uint32_t max_verts_per_vertex_bank;
+        uint32_t num_vertex_banks;
+        uint32_t num_meshes;
+    } internal_limits;
+} runtime_configuration_canvas_gl_t;
+
+typedef struct runtime_configuration_canvas_t {
+    bool enable_punchthrough_blend_mode_fix;
+    struct {
+        uint32_t max_states;
+        uint32_t max_tessellation_steps;
+    } internal_limits;
+    struct {
+        int32_t width;
+        int32_t height;
+    } font_atlas;
+    struct {
+        uint32_t size;
+        bool enabled;
+    } text_mesh_cache;
+    struct {
+        uint32_t working_space;
+    } gzip_limits;
+
+    runtime_configuration_canvas_gl_t gl;
+} runtime_configuration_canvas_t;
+
+typedef struct runtime_configuration_renderer_t {
+    struct {
+        size_t num_cmd_buffers;
+        size_t cmd_buf_size;
+    } device;
+
+    struct {
+        bool enabled;
+        bool verbose;
+        struct {
+            bool enabled;
+            size_t buffer_size;
+        } tracking;
+    } rhi_command_diffing;
+
+    struct {
+        logging_mode_e periodic_logging;
+    } render_resource_tracking;
+} runtime_configuration_renderer_t;
+
 typedef struct runtime_configuration_t {
     adk_memory_reservations_t memory_reservations;
     system_guard_page_mode_e guard_page_mode;
-    uint32_t wasm_memory_size;
+    bool log_input_events;
+    uint32_t wasm_low_memory_size;
+    uint32_t wasm_high_memory_size;
+    uint32_t wasm_heap_allocation_threshold;
     uint32_t network_pump_fragment_size;
+    uint32_t network_pump_sleep_period;
+    struct {
+        bool enabled;
+        uint32_t suspend_threshold;
+        uint32_t warning_delay_ms;
+        uint32_t fatal_delay_ms;
+    } watchdog;
     uint32_t http_max_pooled_connections;
     fetch_retry_context_t bundle_fetch;
     uint32_t coredump_memory_size;
@@ -64,21 +130,22 @@ typedef struct runtime_configuration_t {
         adk_websocket_backend_e backend;
         websocket_config_t config;
     } websocket;
-    struct {
-        uint32_t max_states;
-        uint32_t max_tesselation_steps;
-        bool enable_punchthrough_blend_mode_fix;
-        struct {
-            int32_t width;
-            int32_t height;
-        } font_atlas;
-    } canvas;
+    runtime_configuration_canvas_t canvas;
+    runtime_configuration_renderer_t renderer;
     struct {
         bool capture_logs;
         adk_reporting_event_level_e minimum_event_level;
         char sentry_dsn[adk_reporting_max_string_length];
         uint32_t send_queue_size;
     } reporting;
+    struct {
+        bool httpx_global_certs;
+    } http;
+    struct {
+        bool enabled;
+        bool use_multiplexing;
+        bool multiplex_wait_for_existing_connection;
+    } http2;
 } runtime_configuration_t;
 
 typedef struct manifest_t {

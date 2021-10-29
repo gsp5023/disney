@@ -7,10 +7,11 @@
 #include "source/adk/interpreter/interp_common.h"
 
 #include "source/adk/app_thunk/app_thunk.h"
+#include "source/adk/runtime/bifurcated_heap.h"
 #include "source/adk/runtime/memory.h"
 #include "source/adk/steamboat/sb_platform.h"
 
-heap_t wasm_heap;
+bifurcated_heap_t wasm_heap;
 
 void wasm_sig(wasm_sig_mask mask, char * const out) {
     while (!(mask & 0xF)) {
@@ -104,9 +105,9 @@ static adk_mem_region_t allocate_adk_mem_region(const system_guard_page_mode_e g
 }
 
 // Allocates a region for the wasm bytecode followed by the working set, properly aligned
-wasm_memory_region_t alloc_wasm_memory(const size_t wasm_bytecode_size, const size_t sizeof_application_workingset) {
+wasm_memory_region_t alloc_wasm_memory(const size_t wasm_bytecode_size, const size_t low_heap_size, const size_t high_heap_size) {
     const size_t aligned_wasm_bytecode_size = ALIGN_INT(wasm_bytecode_size, 8);
-    const size_t total_wasm_memory_required = aligned_wasm_bytecode_size + ALIGN_INT(sizeof_application_workingset, 8);
+    const size_t total_wasm_memory_required = aligned_wasm_bytecode_size + ALIGN_INT(low_heap_size, 8) + ALIGN_INT(high_heap_size, 8);
     return (wasm_memory_region_t){
         .wasm_bytecode_size = wasm_bytecode_size,
         .wasm_mem_region = allocate_adk_mem_region(system_guard_page_mode_enabled, total_wasm_memory_required)};
@@ -119,20 +120,42 @@ static mem_region_t get_wasm_interpreter_region(const wasm_memory_region_t wasm_
             .size = wasm_memory.wasm_mem_region.region.size - aligned_wasm_bytecode_size);
 }
 
-static void initialize_wasm_heap(const wasm_memory_region_t wasm_memory, const size_t wasm_bytecode_size) {
+static void initialize_wasm_heap(
+    const wasm_memory_region_t wasm_memory,
+    const size_t wasm_bytecode_size,
+    const size_t heap_allocation_threshold,
+    const size_t wasm_low_heap_size,
+    const size_t wasm_high_heap_size) {
     const mem_region_t wasm_interpreter_region = get_wasm_interpreter_region(wasm_memory, wasm_bytecode_size);
 
+    /* The intention for the following branching is to support the old behaviour with a single wasm heap for the purposes of
+     * an A/B testing. By setting the size of the low-heap and threshold to 0, all allocation go to the high heap, effectively
+     * replication the old behaviour.
+     */
+
+    if (wasm_low_heap_size > 0) {
+        const mem_region_t low_heap_region = MEM_REGION(.ptr = wasm_interpreter_region.ptr, .size = wasm_low_heap_size);
+        const mem_region_t high_heap_region = MEM_REGION(.ptr = wasm_interpreter_region.byte_ptr + wasm_low_heap_size, .size = wasm_high_heap_size);
+
+        bifurcated_heap_init(&wasm_heap, low_heap_region, high_heap_region, heap_allocation_threshold, the_app.guard_page_mode, MALLOC_TAG);
+    } else {
+        ASSERT(heap_allocation_threshold == 0);
+
+        wasm_heap.threshold = 0;
+        wasm_heap.low = (heap_t){.name = "unused_wasm_low_heap", .internal = {.init = true}};
+
 #ifdef GUARD_PAGE_SUPPORT
-    if (the_app.guard_page_mode == system_guard_page_mode_enabled) {
-        debug_heap_init(&wasm_heap, wasm_interpreter_region.size, 8, 0, "wasm_heap", system_guard_page_mode_minimal, MALLOC_TAG);
-    } else
+        if (the_app.guard_page_mode == system_guard_page_mode_enabled) {
+            debug_heap_init(&wasm_heap.high, wasm_interpreter_region.size, 8, 0, "wasm_heap", system_guard_page_mode_minimal, MALLOC_TAG);
+        } else
 #endif
-    {
-        heap_init_with_region(&wasm_heap, wasm_interpreter_region, 8, 0, "wasm_heap");
+        {
+            heap_init_with_region(&wasm_heap.high, wasm_interpreter_region, 8, 0, "wasm_heap");
+        }
     }
 }
 
-wasm_memory_region_t wasm_load_common(const sb_file_directory_e directory, const char * const wasm_filename, const size_t sizeof_application_workingset, wasm_interpreter_initializer initializer) {
+wasm_memory_region_t wasm_load_common(const sb_file_directory_e directory, const char * const wasm_filename, const size_t wasm_low_heap_size, const size_t wasm_high_heap_size, wasm_interpreter_initializer initializer, const size_t heap_allocation_threshold) {
     // Identify the size of the Wasm artifact.
     const size_t wasm_bytecode_size = get_artifact_size(directory, wasm_filename);
     if (!wasm_bytecode_size) {
@@ -140,14 +163,14 @@ wasm_memory_region_t wasm_load_common(const sb_file_directory_e directory, const
     }
 
     // Calculate a region that is sufficient to host the artifact in alignment.
-    wasm_memory_region_t wasm_memory = alloc_wasm_memory(wasm_bytecode_size, sizeof_application_workingset);
+    wasm_memory_region_t wasm_memory = alloc_wasm_memory(wasm_bytecode_size, wasm_low_heap_size, wasm_high_heap_size);
 
     const mem_region_t wasm_bytecode = MEM_REGION(
             .ptr = wasm_memory.wasm_mem_region.region.ptr,
             .size = wasm_bytecode_size);
 
     if (load_artifact_data(directory, wasm_bytecode, wasm_filename, 0)) {
-        initialize_wasm_heap(wasm_memory, wasm_bytecode_size);
+        initialize_wasm_heap(wasm_memory, wasm_bytecode_size, heap_allocation_threshold, wasm_low_heap_size, wasm_high_heap_size);
         if (!initializer(wasm_memory, wasm_bytecode_size)) {
             free_mem_region(wasm_memory.wasm_mem_region);
             return (wasm_memory_region_t){0};
@@ -164,16 +187,18 @@ wasm_memory_region_t wasm_load_fp_common(
     void * const wasm_file,
     const wasm_fread_t fread_func,
     const size_t wasm_file_content_size,
-    const size_t sizeof_application_workingset,
-    wasm_interpreter_initializer initializer) {
+    const size_t wasm_low_heap_size,
+    const size_t wasm_high_heap_size,
+    wasm_interpreter_initializer initializer,
+    const size_t heap_allocation_threshold) {
     if (!wasm_file_content_size) {
         return (wasm_memory_region_t){0};
     }
 
-    wasm_memory_region_t wasm_memory = alloc_wasm_memory(wasm_file_content_size, sizeof_application_workingset);
+    wasm_memory_region_t wasm_memory = alloc_wasm_memory(wasm_file_content_size, wasm_low_heap_size, wasm_high_heap_size);
 
     if (fread_func(wasm_memory.wasm_mem_region.region.ptr, wasm_file_content_size, wasm_file) == wasm_file_content_size) {
-        initialize_wasm_heap(wasm_memory, wasm_file_content_size);
+        initialize_wasm_heap(wasm_memory, wasm_file_content_size, heap_allocation_threshold, wasm_low_heap_size, wasm_high_heap_size);
         if (!initializer(wasm_memory, wasm_file_content_size)) {
             free_mem_region(wasm_memory.wasm_mem_region);
             return (wasm_memory_region_t){0};

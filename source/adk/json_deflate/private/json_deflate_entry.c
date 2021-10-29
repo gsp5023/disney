@@ -272,6 +272,35 @@ json_deflate_http_future_t * json_deflate_parse_httpx_async(
     return future;
 }
 
+json_deflate_http_future_t * json_deflate_parse_httpx_response_async(
+    const uint8_t * const schema_layout,
+    const size_t schema_layout_size,
+    adk_httpx_response_t * const response,
+    const uint8_t * const buffer,
+    const size_t buffer_size,
+    const json_deflate_parse_target_e target,
+    const uint32_t expected_size,
+    const uint32_t schema_hash) {
+    json_deflate_http_future_t * const future = (json_deflate_http_future_t *)json_deflate_malloc(sizeof(json_deflate_http_future_t));
+    ZEROMEM(future);
+    future->status = adk_future_status_pending;
+    future->response = response;
+
+    json_deflate_parse_httpx_args_t * const args = (json_deflate_parse_httpx_args_t *)json_deflate_malloc(sizeof(json_deflate_parse_httpx_args_t));
+    ZEROMEM(args);
+
+    args->future = future;
+    args->schema = CONST_MEM_REGION(.byte_ptr = schema_layout, .size = schema_layout_size);
+    args->buffer = MEM_REGION(.byte_ptr = buffer, .size = buffer_size);
+    args->target = target;
+    args->expected_size = expected_size;
+    args->schema_hash = schema_hash;
+
+    thread_pool_enqueue(json_deflate_get_pool(), json_deflate_parse_httpx_async_adapter, json_deflate_parse_data_httpx_async_complete_adapter, args);
+
+    return future;
+}
+
 void json_deflate_parse_httpx_resize(
     json_deflate_http_future_t * const future,
     const uint8_t * const schema_layout,

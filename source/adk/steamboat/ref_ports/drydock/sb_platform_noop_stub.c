@@ -48,6 +48,11 @@ void sb_platform_dump_heap_usage(void) {
     NOT_IMPLEMENTED_EX;
 }
 
+heap_metrics_t sb_platform_get_heap_metrics(void) {
+    NOT_IMPLEMENTED_EX;
+    return (heap_metrics_t){0};
+}
+
 void sb_on_app_load_failure(void) {
     NOT_IMPLEMENTED_EX;
 }
@@ -162,4 +167,9 @@ void sb_report_app_metrics(
     UNUSED(app_version);
 
     NOT_IMPLEMENTED_EX;
+}
+
+int64_t sb_get_localtime_offset() {
+    NOT_IMPLEMENTED_EX;
+    return 0;
 }

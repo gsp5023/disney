@@ -18,6 +18,7 @@
 #include "source/adk/extender/extender.h"
 #include "source/adk/ffi/ffi.h"
 #include "source/adk/file/file.h"
+#include "source/adk/http/adk_httpx.h"
 #include "source/adk/interpreter/interp_all.h"
 #include "source/adk/interpreter/interp_api.h"
 #include "source/adk/log/log.h"
@@ -27,28 +28,9 @@
 #include "source/adk/persona/persona.h"
 #include "source/adk/splash/splash.h"
 #include "source/adk/steamboat/sb_platform.h"
+#include "source/adk/telemetry/telemetry.h"
 
 #include <ctype.h>
-
-#ifdef _TTFI_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define TTFI_TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...) TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ##__VA_ARGS__)
-#define TTFI_TRACE_TIME_SPAN_END(_id) TRACE_TIME_SPAN_END(_id)
-#else
-#define TTFI_TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...)
-#define TTFI_TRACE_TIME_SPAN_END(_id)
-#endif
-
-#ifdef _MERLIN_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define MERLIN_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define MERLIN_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define MERLIN_TRACE_POP() TRACE_POP()
-#else
-#define MERLIN_TRACE_PUSH_FN()
-#define MERLIN_TRACE_PUSH(_name)
-#define MERLIN_TRACE_POP()
-#endif
 
 #if _MERLIN_DEMOS
 extern int canvas_demo_main(const int argc, const char * const * const argv);
@@ -71,9 +53,6 @@ enum {
     cache_region_size = 1 * 1024 * 1024,
 };
 
-// Used when no retry data is available
-static const fetch_retry_context_t default_fetch_retry = {.retry_max_attempts = 4, .retry_backoff_ms.ms = 1000};
-
 #define TAG_MERLIN FOURCC('M', 'R', 'L', 'N')
 
 // Command-line definitions
@@ -90,18 +69,20 @@ typedef enum opt_e {
     opt_skip_signature = 's',
     opt_use_config = 'c',
     opt_test = 't',
+    opt_swap_interval = 'n',
 #endif
 #if !defined(_SHIP) || defined(_SHIP_DEV)
     opt_act_load_manifest_url = 'm',
     opt_act_load_manifest_file = 'M',
     opt_act_load_persona_file = 'P',
-    opt_set_persona_id = 'p',
 #endif
 #if _MERLIN_DEMOS
     opt_act_run_demo = 'd',
     opt_set_demo_asset_root = 'r',
 #endif
     opt_no_app_load = 'x',
+    opt_extensions_path = 'e',
+    opt_log_level = 'l',
 } opt_e;
 
 typedef wasm_memory_region_t (*loader_func_t)(const char * const path);
@@ -132,6 +113,8 @@ typedef struct app_args_t {
     bool test;
 #endif
     bool no_app_load;
+    // Override the default `extensions` location
+    const char * extensions_path;
 } app_args_t;
 
 // File-scope data
@@ -140,13 +123,22 @@ static struct {
 
     mem_region_t cache_pages;
     cache_t * cache;
+    seconds_t cache_request_timeout;
 
-    uint32_t wasm_memory_size;
+    fetch_retry_context_t fetch_retry;
+
+    uint32_t wasm_low_memory_size;
+    uint32_t wasm_high_memory_size;
     bool has_processed_manifest;
     bool displayed_error_splash;
     bundle_t * bundle;
     char fallback_error_message[adk_max_message_length];
+
+    char partner_name[adk_metrics_string_max];
+    char partner_guid[adk_metrics_string_max];
 } statics = {
+    .cache_request_timeout = {.seconds = 30L},
+    .fetch_retry = {.retry_max_attempts = 4, .retry_backoff_ms.ms = 1000},
     .has_processed_manifest = false,
     .displayed_error_splash = false,
     .args = {
@@ -177,7 +169,7 @@ void display_default_error_splash() {
     }
     statics.displayed_error_splash = true;
 
-    app_shutdown_main_display();
+    app_shutdown_main_display(app_display_shutdown_mode_destroy_window);
 
     // Setup subsystems for the splash screen
     if (!app_init_subsystems(get_default_runtime_configuration())) {
@@ -209,7 +201,7 @@ void display_bundle_error_splash(bundle_t * const bundle) {
                 LOG_INFO(TAG_MERLIN, "Displaying fallback error image in bundle: %s", bundle_error_image_paths[i]);
                 statics.displayed_error_splash = true;
 
-                app_shutdown_main_display();
+                app_shutdown_main_display(app_display_shutdown_mode_destroy_window);
 
                 // Setup subsystems for the splash screen
                 if (!app_init_subsystems(get_default_runtime_configuration())) {
@@ -354,11 +346,11 @@ static cache_fetch_status_e retry_cache_fetch_resource_from_url(
     fetch_retry_context_t retry) {
     MERLIN_TRACE_PUSH_FN();
 
-    cache_fetch_status_e fetch_status = cache_fetch_resource_from_url(cache, key, url, update_mode);
+    cache_fetch_status_e fetch_status = cache_fetch_resource_from_url(cache, key, url, update_mode, statics.cache_request_timeout);
     for (int attempt = 0; fetch_status != cache_fetch_success && attempt < (int)retry.retry_max_attempts; ++attempt) {
         LOG_WARN(TAG_MERLIN, "Fetch of URL \"%s\" failed - will retry with attempt %d in %d ms.", url, attempt + 1, retry.retry_backoff_ms.ms);
         sb_thread_sleep(retry.retry_backoff_ms);
-        fetch_status = cache_fetch_resource_from_url(cache, key, url, update_mode);
+        fetch_status = cache_fetch_resource_from_url(cache, key, url, update_mode, statics.cache_request_timeout);
     }
     if (fetch_status != cache_fetch_success) {
         LOG_ERROR(TAG_MERLIN, "Could not fetch URL \"%s\" after %d retries", url, retry.retry_max_attempts);
@@ -383,11 +375,18 @@ static sb_file_t * load_bundle_file_from_resource(
         bundle_file = sb_fopen(sb_app_root_directory, resource, "rb");
         *bundle_file_offset = 0;
     } else {
-        if (cache_fetch_success == retry_cache_fetch_resource_from_url(statics.cache, bundle_cache_key, resource, cache_update_mode_atomic, retry)) {
-            size_t bundle_file_content_size = 0;
-            if (cache_get_content(statics.cache, bundle_cache_key, &bundle_file, &bundle_file_content_size)) {
-                *bundle_file_offset = (size_t)sb_ftell(bundle_file);
-            }
+        const cache_fetch_status_e fetch_result = retry_cache_fetch_resource_from_url(statics.cache, bundle_cache_key, resource, cache_update_mode_atomic, retry);
+        if (fetch_result != cache_fetch_success) {
+            LOG_ERROR(TAG_MERLIN, "Could not fetch bundle \"%s\" after %d retries, fetch status: %i", resource, retry.retry_max_attempts, fetch_result);
+        }
+
+        /*
+          Whether bundle fetch fails or not, try to load a bundle (if there's an older version in the cache) and present it to the user.
+         */
+        
+        size_t bundle_file_content_size = 0;
+        if (cache_get_content(statics.cache, bundle_cache_key, &bundle_file, &bundle_file_content_size)) {
+            *bundle_file_offset = (size_t)sb_ftell(bundle_file);
         }
     }
 
@@ -410,7 +409,10 @@ static wasm_memory_region_t load_wasm_from_bundle_file(sb_file_t * const bundle_
             runtime_configuration_t runtime_config = get_default_runtime_configuration();
 
             conditional_overwrite_bundle_config(bundle, &runtime_config);
-            VERIFY_MSG(runtime_config.wasm_memory_size > 0, "The WASM memory size was not defined in the bundle");
+            VERIFY_MSG(runtime_config.wasm_high_memory_size > 0, "The WASM high memory size was not defined in the bundle");
+            if (runtime_config.wasm_low_memory_size == 0) {
+                VERIFY_MSG(runtime_config.wasm_heap_allocation_threshold == 0, "WASM heap allocation threshold must be zero when WASM low memory size is 0");
+            }
 
             // Apply manifest settings as highest precedence
             manifest_config_parse_overwrite(&runtime_config);
@@ -419,12 +421,17 @@ static wasm_memory_region_t load_wasm_from_bundle_file(sb_file_t * const bundle_
             manifest_get_runtime_configuration()->memory_reservations = runtime_config.memory_reservations;
             manifest_get_runtime_configuration()->guard_page_mode = runtime_config.guard_page_mode;
             manifest_get_runtime_configuration()->coredump_memory_size = runtime_config.coredump_memory_size;
-            statics.wasm_memory_size = runtime_config.wasm_memory_size;
+            manifest_get_runtime_configuration()->log_input_events = runtime_config.log_input_events;
+            manifest_get_runtime_configuration()->network_pump_fragment_size = runtime_config.network_pump_fragment_size;
+            manifest_get_runtime_configuration()->network_pump_sleep_period = runtime_config.network_pump_sleep_period;
+            manifest_get_runtime_configuration()->watchdog = runtime_config.watchdog;
+            statics.wasm_low_memory_size = runtime_config.wasm_low_memory_size;
+            statics.wasm_high_memory_size = runtime_config.wasm_high_memory_size;
             statics.has_processed_manifest = true;
 
             bundle_file_t * const wasm_file = bundle_fopen(bundle, bundle_app_wasm_path);
             if (wasm_file) {
-                wasm_memory = get_active_wasm_interpreter()->load_fp(wasm_file, read_bundle_file, bs.stat.size, statics.wasm_memory_size);
+                wasm_memory = get_active_wasm_interpreter()->load_fp(wasm_file, read_bundle_file, bs.stat.size, statics.wasm_low_memory_size, statics.wasm_high_memory_size, runtime_config.wasm_heap_allocation_threshold);
                 bundle_fclose(wasm_file);
 
                 if (wasm_memory.wasm_mem_region.region.ptr == NULL) {
@@ -493,7 +500,8 @@ static wasm_interpreter_t * get_wasm_interpreter_by_name(const char * const name
 wasm_memory_region_t load_wasm_from_manifest(const manifest_t * const manifest) {
     MERLIN_TRACE_PUSH_FN();
     *manifest_get_runtime_configuration() = manifest->runtime_config;
-    statics.wasm_memory_size = manifest->runtime_config.wasm_memory_size;
+    statics.wasm_low_memory_size = manifest->runtime_config.wasm_low_memory_size;
+    statics.wasm_high_memory_size = manifest->runtime_config.wasm_high_memory_size;
     statics.has_processed_manifest = true;
 
     wasm_interpreter_t * const requested_interpreter = get_wasm_interpreter_by_name(manifest->interpreter);
@@ -569,9 +577,9 @@ static wasm_memory_region_t load_wasm_from_manifest_url(const char * const manif
     wasm_memory_region_t wasm_memory = {0};
 
     const cache_fetch_status_e fetch_status = retry_cache_fetch_resource_from_url(
-        statics.cache, manifest_cache_key, manifest_url, cache_update_mode_atomic, default_fetch_retry);
+        statics.cache, manifest_cache_key, manifest_url, cache_update_mode_atomic, statics.fetch_retry);
 
-    bool should_clear_cache = false; // manifest file is removed from cache when error occurs
+    bool should_clear_cached_manifest = false;
 
     if (fetch_status == cache_fetch_success) {
         sb_file_t * manifest_file = NULL;
@@ -582,23 +590,33 @@ static wasm_memory_region_t load_wasm_from_manifest_url(const char * const manif
             const manifest_t manifest = manifest_parse_fp(manifest_file, manifest_file_content_size);
             if (manifest_is_empty(&manifest)) {
                 LOG_ERROR(TAG_MERLIN, "Could not parse manifest at URL \"%s\"", manifest_url);
-                should_clear_cache = true;
+                should_clear_cached_manifest = true;
             } else {
                 wasm_memory = load_wasm_from_manifest(&manifest);
                 if (!wasm_memory.wasm_mem_region.region.ptr) {
                     LOG_ERROR(TAG_MERLIN, "Could not load a WASM file with the manifest at URL \"%s\"", manifest_url);
-                    should_clear_cache = true;
+                    should_clear_cached_manifest = true;
                 }
             }
 
             sb_fclose(manifest_file);
         }
     } else {
-        LOG_ERROR(TAG_MERLIN, "Could not fetch URL \"%s\" after %d retries", manifest_url, default_fetch_retry.retry_max_attempts);
-        should_clear_cache = true;
+        LOG_ERROR(TAG_MERLIN, "Could not fetch manifest \"%s\" after %d retries", manifest_url, statics.fetch_retry.retry_max_attempts);
+
+        sb_file_t * bundle_file = NULL;
+        size_t bundle_file_content_size = 0;
+        if (cache_get_content(statics.cache, bundle_cache_key, &bundle_file, &bundle_file_content_size)) {
+            LOG_INFO(TAG_MERLIN, "Loading a cached WASM bundle after manifest fetch failure");
+
+            const size_t bundle_file_offset = (size_t) sb_ftell(bundle_file);
+            wasm_memory = load_wasm_from_bundle_file(bundle_file, bundle_file_offset);
+        }
+
+        should_clear_cached_manifest = true;
     }
 
-    if (should_clear_cache) {
+    if (should_clear_cached_manifest) {
         clear_manifest_cache();
     }
 
@@ -647,12 +665,12 @@ wasm_memory_region_t load_wasm_from_bundle(const char * const path) {
     sb_file_t * bundle_file;
 
     if (string_starts_with(path, "http://") || string_starts_with(path, "https://")) {
-        bundle_file = load_bundle_file_from_resource(manifest_resource_url, path, &bundle_file_offset, default_fetch_retry);
+        bundle_file = load_bundle_file_from_resource(manifest_resource_url, path, &bundle_file_offset, statics.fetch_retry);
     } else {
         char bundle_path[sb_max_path_length];
         to_fwd_slash(bundle_path, ARRAY_SIZE(bundle_path), path);
 
-        bundle_file = load_bundle_file_from_resource(manifest_resource_file, bundle_path, &bundle_file_offset, default_fetch_retry);
+        bundle_file = load_bundle_file_from_resource(manifest_resource_file, bundle_path, &bundle_file_offset, statics.fetch_retry);
     }
 
     if (bundle_file == NULL) {
@@ -668,6 +686,25 @@ wasm_memory_region_t load_wasm_from_bundle(const char * const path) {
     return wasm_mem;
 }
 
+static bool parse_config(const char * const config_path, runtime_configuration_t * const config) {
+    char config_file_path[sb_max_path_length];
+    to_fwd_slash(
+        config_file_path,
+        ARRAY_SIZE(config_file_path),
+        (statics.args.config_file_path != NULL) ? statics.args.config_file_path : default_bundle_config_file_path);
+
+    if (!parse_bundle_config(config_file_path, config)) {
+        LOG_ERROR(
+            TAG_MERLIN,
+            "Failed to load configuration file (%s) - expected either the --config $FILE option or a file at %s",
+            config_file_path,
+            default_bundle_config_file_path);
+
+        return false;
+    }
+    return true;
+}
+
 // Loads wasm from local file with local .config
 static wasm_memory_region_t load_wasm_from_file_path(const char * const path) {
     MERLIN_TRACE_PUSH_FN();
@@ -677,30 +714,27 @@ static wasm_memory_region_t load_wasm_from_file_path(const char * const path) {
 
     runtime_configuration_t config = get_default_runtime_configuration();
 
-    char config_file_path[sb_max_path_length];
-    to_fwd_slash(
-        config_file_path,
-        ARRAY_SIZE(config_file_path),
-        (statics.args.config_file_path != NULL) ? statics.args.config_file_path : default_bundle_config_file_path);
-
-    if (!parse_bundle_config(config_file_path, &config)) {
-        LOG_ERROR(
-            TAG_MERLIN,
-            "Failed to load configuration file (%s) - expected either the --config $FILE option or a file at %s",
-            config_file_path,
-            default_bundle_config_file_path);
-
+    if (!parse_config(statics.args.config_file_path, &config)) {
         MERLIN_TRACE_POP();
         return (wasm_memory_region_t){0};
     }
 
-    VERIFY_MSG(config.wasm_memory_size > 0, "The WASM memory size was not defined in the bundle");
+    VERIFY_MSG(config.wasm_high_memory_size > 0, "The WASM high memory size was not defined in the bundle");
+    if (config.wasm_low_memory_size == 0) {
+        VERIFY_MSG(config.wasm_heap_allocation_threshold == 0, "WASM heap allocation threshold must be zero when WASM low memory size is 0");
+    }
+
     manifest_get_runtime_configuration()->memory_reservations = config.memory_reservations;
     manifest_get_runtime_configuration()->guard_page_mode = config.guard_page_mode;
     manifest_get_runtime_configuration()->coredump_memory_size = config.coredump_memory_size;
-    statics.wasm_memory_size = config.wasm_memory_size;
+    manifest_get_runtime_configuration()->log_input_events = config.log_input_events;
+    manifest_get_runtime_configuration()->network_pump_fragment_size = config.network_pump_fragment_size;
+    manifest_get_runtime_configuration()->network_pump_sleep_period = config.network_pump_sleep_period;
+    manifest_get_runtime_configuration()->watchdog = config.watchdog;
+    statics.wasm_low_memory_size = config.wasm_low_memory_size;
+    statics.wasm_high_memory_size = config.wasm_high_memory_size;
 
-    const wasm_memory_region_t wasm_memory = get_active_wasm_interpreter()->load(sb_app_root_directory, file_path, statics.wasm_memory_size);
+    const wasm_memory_region_t wasm_memory = get_active_wasm_interpreter()->load(sb_app_root_directory, file_path, statics.wasm_low_memory_size, statics.wasm_high_memory_size, config.wasm_heap_allocation_threshold);
     MERLIN_TRACE_POP();
     return wasm_memory;
 }
@@ -740,12 +774,12 @@ static const struct {
     {opt_skip_signature, "skip-signature", no_arg, "Skip the signature verification for bundles", NULL},
     {opt_use_config, "config", "<CONFIG-FILE>", "Load wasm application selected by config file from the local file system", NULL},
     {opt_test, "test", no_arg, "Test command-line parsing", NULL},
+    {opt_swap_interval, "swap-interval", "<INTERVAL>", "Override swap interval", NULL},
 #endif
 #if !defined(_SHIP) || defined(_SHIP_DEV)
     {opt_act_load_manifest_url, "manifest-url", "<MANIFEST-URL>", "Load wasm application selected by manifest found at specified URL", load_wasm_from_manifest_url},
     {opt_act_load_manifest_file, "manifest", "<MANIFEST-FILE>", "Load wasm application selected by manifest from the local file system", load_wasm_from_manifest_file},
     {opt_act_load_persona_file, "persona-file", "<PERSONA-FILE>", "Load wasm application selected by persona file from the local file system", load_wasm_from_persona_file},
-    {opt_set_persona_id, "persona-id", "<PERSONA-ID>", "Override the persona ID to be selected from the persona file", NULL},
 #endif
 #if _MERLIN_DEMOS
     {opt_set_demo_asset_root, "asset-root", "<PATH>", "Set demo app's asset root directory", NULL},
@@ -755,6 +789,8 @@ static const struct {
     {'I', "log-canvas-image-load", no_arg, "Enable canvas image logging on non _SHIP builds", NULL},
 #endif
     {opt_no_app_load, "no-app-load", no_arg, "Refrain from running the default app", NULL},
+    {opt_extensions_path, "extensions", "<EXTENSIONS-DIR>", "Override the default path used for discovering extensions", NULL},
+    {opt_log_level, "log-level", "<LEVEL: 0-6>", "Set the logging level: 0:debug, 1:info, 2:warn, 3:error, 4:always, 5:app, 6:none", NULL},
 };
 
 #if _MERLIN_DEMOS
@@ -785,7 +821,8 @@ static void print_help() {
         "OPTIONS:\n");
 
     for (int optx = 0; optx < ARRAY_SIZE(options); optx++) {
-        const int n = max_int(26 - (int)strlen(options[optx].long_opt), 0);
+        const int max_width = 30;
+        const int n = max_int(max_width - (int)strlen(options[optx].long_opt), 0);
         debug_write_line("    --%s %-*s%s", options[optx].long_opt, n, options[optx].arg_help, options[optx].help);
         if (options[optx].opt != opt_unknown) {
             debug_write_line("    -%c\n", options[optx].opt);
@@ -867,26 +904,29 @@ static merlin_exit_code_e parse_args(const int argc, const char * const * const 
             // First handle non-action options
             if (options[optx].opt == opt_no_app_load) {
                 statics.args.no_app_load = true;
-                continue;
+            } else if (options[optx].opt == opt_extensions_path) {
+                statics.args.extensions_path = argv[opt_arg];
+            } else if (options[optx].opt == opt_log_level) {
+                const char * const log_level_override_value = argv[opt_arg];
+                if (!adk_try_override_min_log_level(log_level_override_value)) {
+                    LOG_WARN(TAG_APP, "Unsupported log-level argument: %s", log_level_override_value);
+                }
             }
-
 #ifndef _SHIP
-            if (options[optx].opt == opt_set_persona_id) {
-                statics.args.persona_id = argv[opt_arg];
-            } else if (options[optx].opt == opt_skip_signature) {
+            else if (options[optx].opt == opt_skip_signature) {
                 statics.args.skip_signature = true;
             } else if (options[optx].opt == opt_use_config) {
                 statics.args.config_file_path = argv[opt_arg];
             } else if (options[optx].opt == opt_test) {
                 statics.args.test = true;
-            } else
+            }
 #endif
 #if _MERLIN_DEMOS
-                if (options[optx].opt == opt_set_demo_asset_root) {
+            else if (options[optx].opt == opt_set_demo_asset_root) {
                 statics.args.demo_asset_root = argv[opt_arg];
-            } else
+            }
 #endif
-            {
+            else {
                 // Handle action options
 
                 // Process action with no args immediately
@@ -975,21 +1015,54 @@ static int tick(const uint32_t abstime, const float dt, void * arg) {
     return ret && !tick_call_result.status;
 }
 
+void adk_runtime_override_system_metrics(adk_system_metrics_t * const out) {
+    strcpy_s(out->partner, adk_metrics_string_max, statics.partner_name);
+    strcpy_s(out->partner_guid, adk_metrics_string_max, statics.partner_guid);
+}
+
+#if _MERLIN_DEMOS
+static merlin_exit_code_e run_demo(const int argc, const char * const * const argv, adk_system_metrics_t * const sys_metrics) {
+    runtime_configuration_t runtime_config = *manifest_get_runtime_configuration();
+    manifest_init(sys_metrics);
+    if (statics.args.config_file_path && !parse_config(statics.args.config_file_path, &runtime_config)) {
+        return merlin_exit_code_invalid_path_as_argument;
+    }
+    for (int dx = 0; dx < ARRAY_SIZE(demos); ++dx) {
+        if (strcasecmp(statics.args.action_arg, demos[dx].name) == 0) {
+            the_app.display_settings._720p_hack = true;
+            if (!app_init_subsystems(runtime_config)) {
+                manifest_shutdown();
+                return merlin_exit_code_app_init_subsystems_failure;
+            }
+            demos[dx].main(argc, argv);
+            manifest_shutdown();
+            return merlin_exit_code_success;
+        }
+    }
+    debug_write_line("Unknown --demo \"%s\"", statics.args.action_arg);
+    manifest_shutdown();
+    return merlin_exit_code_unknown;
+}
+#endif
+
 // Main body of app
 static merlin_exit_code_e app_body(const int argc, const char * const * const argv) {
+    const int parse_ret = parse_args(argc, argv);
+
     adk_system_metrics_t sm;
     adk_get_system_metrics(&sm);
 
-    { // Retrieve system metrics for persona id and update default persona file based on tenancy
-
+    { // Retrieve system metrics for persona id and select persona file
         statics.args.persona_id = sm.persona_id;
-
-        if (strcmp(sm.tenancy, "prod") != 0) {
+#if !defined(_SHIP) || defined(_SHIP_DEV)
+        if (statics.args.action == opt_act_load_persona_file) {
+            statics.args.persona_file_path = statics.args.action_arg;
+        } else
+#endif
+            if (strcmp(sm.tenancy, "prod") != 0) {
             statics.args.persona_file_path = default_persona_file_non_prod;
         }
     }
-
-    const int parse_ret = parse_args(argc, argv);
 
     // Handle command line argument test or failure
 #ifndef _SHIP
@@ -1006,18 +1079,7 @@ static merlin_exit_code_e app_body(const int argc, const char * const * const ar
     // Handle non-wasm-load actions
 #if _MERLIN_DEMOS
     if (statics.args.action == opt_act_run_demo) {
-        for (int dx = 0; dx < ARRAY_SIZE(demos); ++dx) {
-            if (strcasecmp(statics.args.action_arg, demos[dx].name) == 0) {
-                the_app.display_settings._720p_hack = true;
-                if (!app_init_subsystems(*manifest_get_runtime_configuration())) {
-                    return merlin_exit_code_app_init_subsystems_failure;
-                }
-                demos[dx].main(argc, argv);
-                return merlin_exit_code_success;
-            }
-        }
-        debug_write_line("Unknown --demo \"%s\"", statics.args.action_arg);
-        return merlin_exit_code_unknown;
+        return run_demo(argc, argv, &sm);
     } else if (statics.args.demo_asset_root != default_demo_asset_root) {
         debug_write_line("Ignoring --asset-root \"%s\", not applicable", statics.args.demo_asset_root);
     }
@@ -1032,8 +1094,7 @@ static merlin_exit_code_e app_body(const int argc, const char * const * const ar
     }
 
     // Start extensions
-    const char * const extensions_path = getargarg("--extensions", argc, argv);
-    extender_status_e extender_status = bind_extensions(extensions_path);
+    extender_status_e extender_status = bind_extensions(statics.args.extensions_path);
     LOG_DEBUG(TAG_MERLIN, "bind_extensions %s", (extender_status == extender_status_success) ? "succeeded" : "failed");
 
     bundle_init();
@@ -1047,7 +1108,6 @@ static merlin_exit_code_e app_body(const int argc, const char * const * const ar
 
     // If no load action specified, load the wasm according to the default persona
     if (statics.args.loader == NULL && statics.args.no_app_load == false) {
-        statics.args.action_arg = statics.args.persona_file_path;
         statics.args.loader = load_wasm_from_persona_file;
     }
 
@@ -1056,30 +1116,40 @@ static merlin_exit_code_e app_body(const int argc, const char * const * const ar
     // Handle wasm-load actions
     merlin_exit_code_e retval = merlin_exit_code_success;
     while (statics.args.loader != NULL) {
-        // Finalize persona values, fetch manifest url, and create cache
-        if (statics.args.loader == load_wasm_from_persona_file) {
-            persona_mapping_t mapping;
-            strcpy_s(mapping.file, ARRAY_SIZE(mapping.file), statics.args.action_arg);
-            strcpy_s(mapping.id, ARRAY_SIZE(mapping.id), statics.args.persona_id);
-            mapping.manifest_url[0] = 0;
-            mapping.fallback_error_message[0] = 0;
+        // Finalize persona values and create cache
+        persona_mapping_t mapping = {0};
+        strcpy_s(mapping.file, ARRAY_SIZE(mapping.file), statics.args.persona_file_path);
+        strcpy_s(mapping.id, ARRAY_SIZE(mapping.id), statics.args.persona_id);
 
-            get_persona_mapping(&mapping);
-            statics.args.persona_id = mapping.id;
-            statics.args.manifest_url = mapping.manifest_url;
-
-            if (mapping.fallback_error_message[0] != '\0') {
-                strcpy_s(statics.fallback_error_message, adk_max_message_length, mapping.fallback_error_message);
-            }
-
-            // Build cache directory path from persona id
-            char cache_path[sb_max_path_length];
-            sprintf_s(cache_path, ARRAY_SIZE(cache_path), "persona/%s/", mapping.id);
-            statics.cache = cache_create(cache_path, statics.cache_pages);
-        } else {
-            statics.cache = cache_create("native/", statics.cache_pages);
-            strcpy_s(statics.fallback_error_message, adk_max_message_length, default_fallback_error_message);
+        if (!get_persona_mapping(&mapping)) {
+            LOG_ERROR(TAG_MERLIN, "Failed to load persona configuration from %s", statics.args.persona_file_path);
+            return merlin_exit_code_persona_load_failure;
         }
+
+        statics.args.persona_id = mapping.id;
+
+        if (statics.args.loader == load_wasm_from_persona_file) {
+            statics.args.manifest_url = mapping.manifest_url;
+        }
+
+        strcpy_s(statics.partner_name, adk_metrics_string_max, mapping.partner_name);
+        strcpy_s(statics.partner_guid, adk_metrics_string_max, mapping.partner_guid);
+        adk_runtime_override_system_metrics(&sm);
+
+        if (mapping.fallback_error_message[0] != '\0') {
+            ZEROMEM(statics.fallback_error_message);
+            strcpy_s(statics.fallback_error_message, adk_max_message_length, mapping.fallback_error_message);
+        }
+
+        statics.cache_request_timeout.seconds = mapping.cache_request_timeout;
+        statics.fetch_retry = (fetch_retry_context_t){
+            .retry_max_attempts = mapping.retry_config.max_retries,
+            .retry_backoff_ms = mapping.retry_config.retry_backoff_ms};
+
+        // Build cache directory path from persona id
+        char cache_path[sb_max_path_length];
+        sprintf_s(cache_path, ARRAY_SIZE(cache_path), "persona/%s/", mapping.id);
+        statics.cache = cache_create(cache_path, statics.cache_pages);
 
         manifest_init(&sm);
 
@@ -1167,6 +1237,8 @@ static void initialize_wasm_interpreter() {
 int app_main(const int argc, const char * const * const argv) {
     adk_cjson_context_initialize();
 
+    strcpy_s(statics.fallback_error_message, adk_max_message_length, default_fallback_error_message);
+
     *manifest_get_runtime_configuration() = get_default_runtime_configuration();
 
     initialize_wasm_interpreter();
@@ -1181,3 +1253,109 @@ int app_main(const int argc, const char * const * const argv) {
 
     return exit_code;
 }
+
+#ifdef _NATIVE_FFI
+runtime_configuration_t get_runtime_configuration(const int argc, const char * const * const argv) {
+    APP_THUNK_TRACE_PUSH_FN();
+
+    runtime_configuration_t bundle = get_default_runtime_configuration();
+    const char * config_filepath = getargarg("-c", argc, argv);
+    if (!config_filepath) {
+        config_filepath = getargarg("--config", argc, argv);
+    }
+    if (!config_filepath) {
+        LOG_INFO(TAG_APP, "No config location specified, defaulting to [%s]", default_bundle_config_file_path);
+        config_filepath = default_bundle_config_file_path;
+    }
+
+    adk_system_metrics_t system_metrics;
+    adk_get_system_metrics(&system_metrics);
+    manifest_init(&system_metrics);
+
+    if (!parse_bundle_config(config_filepath, &bundle)) {
+        LOG_ERROR(
+            TAG_APP,
+            "Failed to load configuration file (%s) - expected either the --config $FILE option or a file at %s",
+            config_filepath,
+            default_bundle_config_file_path);
+
+        APP_THUNK_TRACE_POP();
+        exit(EXIT_FAILURE);
+    }
+
+    manifest_shutdown();
+
+    manifest_get_runtime_configuration()->watchdog = bundle.watchdog;
+
+    APP_THUNK_TRACE_POP();
+    return bundle;
+}
+
+DLL_EXPORT void ffi_app_run(
+    const int argc,
+    const char * const * const argv,
+    int (*init_fn)(int (*init_thunk_arg)(), const int argc, void * argv),
+    int (*init_thunk_arg)(),
+    int (*tick_fn)(const uint32_t abstime, const float dt, void * const arg),
+    int (*shutdown_fn)(),
+    const rust_callbacks_t * const rust_callbacks,
+    void * const arg) {
+    adk_thunk_init(argc, argv, rust_callbacks);
+
+    const char * const log_level_override_value = getargarg("--log-level", argc, argv);
+    if (log_level_override_value) {
+        if (!adk_try_override_min_log_level(log_level_override_value)) {
+            LOG_WARN(TAG_APP, "Unsupported log-level argument: %s", log_level_override_value);
+        }
+    }
+
+    sb_preinit(argc, argv);
+
+    { // Loading partner's name and guid from persona file
+        const char * const persona_id_value = getargarg("--persona", argc, argv);
+        const char * const persona_file_value = getargarg("--persona-file", argc, argv);
+
+        const char * const persona_id = persona_id_value ? persona_id_value : "";
+        const char * const persona_file_path = persona_file_value ? persona_file_value : default_persona_file_non_prod;
+
+        persona_mapping_t mapping = {0};
+        strcpy_s(mapping.id, ARRAY_SIZE(mapping.id), persona_id);
+        strcpy_s(mapping.file, ARRAY_SIZE(mapping.file), persona_file_path);
+
+        if (!get_persona_mapping(&mapping)) {
+            LOG_ERROR(TAG_MERLIN, "Failed to load persona configuration from %s", persona_file_path);
+            return;
+        }
+
+        strcpy_s(statics.partner_name, adk_metrics_string_max, mapping.partner_name);
+        strcpy_s(statics.partner_guid, adk_metrics_string_max, mapping.partner_guid);
+
+        if (mapping.fallback_error_message[0] != '\0') {
+            strcpy_s(statics.fallback_error_message, adk_max_message_length, mapping.fallback_error_message);
+        } else {
+            strcpy_s(statics.fallback_error_message, adk_max_message_length, default_fallback_error_message);
+        }
+    }
+
+    const runtime_configuration_t runtime_configuration = get_runtime_configuration(argc, argv);
+    if (!app_init_subsystems(runtime_configuration)) {
+        app_shutdown_thunk();
+        return;
+    }
+
+    TTFI_TRACE_TIME_SPAN_END(&time_to_first_interaction.main_timestamp);
+    TTFI_TRACE_TIME_SPAN_BEGIN(&time_to_first_interaction.app_init_timestamp, TIME_TO_FIRST_INTERACTION_STR " app init");
+    time_to_first_interaction.app_init_timestamp = adk_read_millisecond_clock();
+
+    if (!init_fn(init_thunk_arg, argc, (void *)argv)) {
+        app_shutdown_thunk();
+        return;
+    }
+
+    app_event_loop(tick_fn, arg);
+
+    shutdown_fn();
+
+    app_shutdown_thunk();
+}
+#endif

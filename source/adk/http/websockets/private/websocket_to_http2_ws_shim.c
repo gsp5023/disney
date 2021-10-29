@@ -59,6 +59,13 @@ void SHIM_NAME(adk_http_dump_heap_usage)() {
     unlock_mutex();
 }
 
+heap_metrics_t SHIM_NAME(adk_http_get_heap_metrics)() {
+    lock_mutex();
+    const heap_metrics_t metrics = websocket_client_get_heap_metrics(statics.client);
+    unlock_mutex();
+    return metrics;
+}
+
 bool SHIM_NAME(adk_http_tick)() {
     lock_mutex();
     const bool status = websocket_client_tick(statics.client);

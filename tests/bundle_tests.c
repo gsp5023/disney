@@ -231,7 +231,9 @@ typedef struct bundle_test_context_t {
 } bundle_test_context_t;
 
 static void compare_runtime_configs(runtime_configuration_t results, runtime_configuration_t expected) {
-    assert_true(results.wasm_memory_size == expected.wasm_memory_size);
+    assert_true(results.wasm_low_memory_size == expected.wasm_low_memory_size);
+    assert_true(results.wasm_high_memory_size == expected.wasm_high_memory_size);
+    assert_true(results.wasm_heap_allocation_threshold == expected.wasm_heap_allocation_threshold);
 #ifndef _SHIP
     assert_true(results.guard_page_mode == expected.guard_page_mode);
 #else
@@ -279,7 +281,9 @@ static void test_bundle_ingest(const bundle_test_context_t ct, const runtime_con
 
 static void test_bundle_config_parse_overwrite(void ** state) {
     const runtime_configuration_t base = {
-        .wasm_memory_size = 0,
+        .wasm_low_memory_size = 0,
+        .wasm_high_memory_size = 0,
+        .wasm_heap_allocation_threshold = 100 * 1024,
         .guard_page_mode = default_guard_page_mode,
         .memory_reservations = {
             .high = {.canvas = 34 * 1024 * 1024},
@@ -298,14 +302,20 @@ static void test_bundle_config_parse_overwrite(void ** state) {
             }}};
 
     runtime_configuration_t unchanged_except_wasm = base;
-    unchanged_except_wasm.wasm_memory_size = 48 * 1024 * 1024;
+    unchanged_except_wasm.wasm_low_memory_size = 16 * 1024 * 1024;
+    unchanged_except_wasm.wasm_high_memory_size = 32 * 1024 * 1024;
+    unchanged_except_wasm.wasm_heap_allocation_threshold = 100 * 1024;
 
     runtime_configuration_t unchanged_except_wasm_and_gp = base;
-    unchanged_except_wasm_and_gp.wasm_memory_size = 48 * 1024 * 1024;
+    unchanged_except_wasm_and_gp.wasm_low_memory_size = 16 * 1024 * 1024;
+    unchanged_except_wasm_and_gp.wasm_high_memory_size = 32 * 1024 * 1024;
+    unchanged_except_wasm_and_gp.wasm_heap_allocation_threshold = 100 * 1024;
     unchanged_except_wasm_and_gp.guard_page_mode = system_guard_page_mode_enabled;
 
     const runtime_configuration_t all_diff_full = {
-        .wasm_memory_size = 48 * 1024 * 1024,
+        .wasm_low_memory_size = 16 * 1024 * 1024,
+        .wasm_high_memory_size = 32 * 1024 * 1024,
+        .wasm_heap_allocation_threshold = 100 * 1024,
         .guard_page_mode = system_guard_page_mode_minimal,
         .memory_reservations = {
             .high = {.canvas = 35 * 1024 * 1024},
@@ -324,7 +334,9 @@ static void test_bundle_config_parse_overwrite(void ** state) {
             }}};
 
     const runtime_configuration_t all_diff_partial = {
-        .wasm_memory_size = 48 * 1024 * 1024,
+        .wasm_low_memory_size = 16 * 1024 * 1024,
+        .wasm_high_memory_size = 32 * 1024 * 1024,
+        .wasm_heap_allocation_threshold = 100 * 1024,
         .guard_page_mode = default_guard_page_mode,
         .memory_reservations = {
             .high = {.canvas = 34 * 1024 * 1024},
@@ -343,7 +355,9 @@ static void test_bundle_config_parse_overwrite(void ** state) {
             }}};
 
     const runtime_configuration_t half_diff_full = {
-        .wasm_memory_size = 48 * 1024 * 1024,
+        .wasm_low_memory_size = 16 * 1024 * 1024,
+        .wasm_high_memory_size = 32 * 1024 * 1024,
+        .wasm_heap_allocation_threshold = 100 * 1024,
         .guard_page_mode = system_guard_page_mode_disabled,
         .memory_reservations = {
             .high = {.canvas = 34 * 1024 * 1024},
@@ -362,7 +376,9 @@ static void test_bundle_config_parse_overwrite(void ** state) {
             }}};
 
     const runtime_configuration_t half_diff_partial = {
-        .wasm_memory_size = 48 * 1024 * 1024,
+        .wasm_low_memory_size = 16 * 1024 * 1024,
+        .wasm_high_memory_size = 32 * 1024 * 1024,
+        .wasm_heap_allocation_threshold = 100 * 1024,
         .guard_page_mode = default_guard_page_mode,
         .memory_reservations = {
             .high = {.canvas = 35 * 1024 * 1024},
@@ -381,7 +397,9 @@ static void test_bundle_config_parse_overwrite(void ** state) {
             }}};
 
     const runtime_configuration_t bundle_fetch = {
-        .wasm_memory_size = 48 * 1024 * 1024,
+        .wasm_low_memory_size = 16 * 1024 * 1024,
+        .wasm_high_memory_size = 32 * 1024 * 1024,
+        .wasm_heap_allocation_threshold = 100 * 1024,
         .guard_page_mode = system_guard_page_mode_enabled,
         .bundle_fetch = {
             .retry_max_attempts = 10,

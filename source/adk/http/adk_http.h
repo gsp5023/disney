@@ -12,6 +12,7 @@ adk_http.h
 steamboat http/s support via curl
 */
 
+#include "source/adk/runtime/memory.h"
 #include "source/adk/runtime/runtime.h"
 
 #ifdef __cplusplus
@@ -268,8 +269,15 @@ bool adk_curl_api_init(
     const mem_region_t region,
     const mem_region_t fragments_region,
     const uint32_t fragment_size,
+    const uint32_t pump_sleep_period,
     const system_guard_page_mode_e guard_page_mode,
     adk_curl_http_init_mode_e init_mode);
+
+/// inits heap for mbedtls allocs
+bool adk_mbedtls_init(const mem_region_t region, const system_guard_page_mode_e guard_page_mode, const char * const tag);
+
+/// frees heap for mbedtls allocs
+void adk_mbedtls_shutdown(const char * const tag);
 
 /// Shuts down the HTTP system
 void adk_curl_api_shutdown();
@@ -279,6 +287,9 @@ void adk_curl_api_shutdown_all_handles();
 
 /// dumps internal heap usage
 void adk_curl_dump_heap_usage();
+
+/// get internal heap metrics
+heap_metrics_t adk_curl_get_heap_metrics();
 
 /// Returns true if any IO was processed
 bool adk_curl_run_callbacks();

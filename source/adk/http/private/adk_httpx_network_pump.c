@@ -9,26 +9,21 @@
 #include "source/adk/http/private/adk_curl_context.h"
 #include "source/adk/steamboat/sb_platform.h"
 #include "source/adk/steamboat/sb_thread.h"
+#include "source/adk/telemetry/telemetry.h"
 
 #define HTTPX_NETWORK_PUMP FOURCC('H', 'X', 'N', 'P')
 
-#ifdef _HTTPX_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define HTTPX_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define HTTPX_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define HTTPX_TRACE_POP() TRACE_POP()
-#else
-#define HTTPX_TRACE_PUSH_FN()
-#define HTTPX_TRACE_PUSH(_name)
-#define HTTPX_TRACE_POP()
-#endif
+// Used to get a chunk of memory for the response error message
+void * adk_httpx_malloc(adk_httpx_client_t * const client, const size_t size, const char * const tag);
+void adk_httpx_free(adk_httpx_client_t * const client, void * const ptr, const char * const tag);
 
 struct adk_httpx_network_pump_t {
-    adk_httpx_api_t * api;
     mem_region_t fragment_buffers;
 
-    bool network_pump_running;
+    bool is_running;
     sb_thread_id_t network_pump_thread;
+
+    uint32_t sleep_period;
 
     // free list
     sb_condition_variable_t * free_fragment_enqued;
@@ -36,15 +31,13 @@ struct adk_httpx_network_pump_t {
     adk_httpx_network_pump_fragment_t * free_list_head;
     adk_httpx_network_pump_fragment_t * free_list_tail;
 
+    // Client that ownes this pump and which requests this pump processes
+    adk_httpx_client_t * client;
+
     sb_mutex_t * incoming_requests_lock;
     adk_httpx_request_t * incoming_requests_head;
     adk_httpx_request_t * incoming_requests_tail;
 };
-
-// Borrow the httpx alloc functions so allocations come from the httpx heap and are synchronized with
-// general httpx allocations
-extern void * adk_httpx_malloc(adk_httpx_api_t * const api, const size_t size, const char * const tag);
-extern void adk_httpx_free(adk_httpx_api_t * const api, void * const ptr, const char * const tag);
 
 static THREAD_LOCAL bool did_get_data = false;
 
@@ -80,7 +73,7 @@ static size_t network_pump_on_header_received(const char * const ptr, const size
 
     adk_httpx_handle_t * const handle = userdata;
     adk_httpx_request_t * const request = handle->request;
-    adk_httpx_network_pump_t * const pump = request->client->api->network_pump;
+    adk_httpx_network_pump_t * const pump = request->client->network_pump;
 
     adk_httpx_network_pump_fragment_t * fragment = request->active_header_fragment;
     if (!fragment) {
@@ -120,7 +113,7 @@ static size_t network_pump_on_data_received(const char * const ptr, const size_t
 
     adk_httpx_handle_t * const handle = userdata;
     adk_httpx_request_t * const request = handle->request;
-    adk_httpx_network_pump_t * const pump = request->client->api->network_pump;
+    adk_httpx_network_pump_t * const pump = request->client->network_pump;
 
     // Flush header fragments to make them available for the main thread
     if (request->active_header_fragment) {
@@ -185,13 +178,14 @@ static size_t network_pump_on_data_received(const char * const ptr, const size_t
 
 // This function should be called after add_client, that creates a corresponding entry that stores information about
 // requests being processed.
-void adk_httpx_network_pump_add_request(adk_httpx_network_pump_t * const pump, adk_httpx_handle_t * const handle) {
+void adk_httpx_network_pump_add_request(adk_httpx_handle_t * const handle) {
     HTTPX_TRACE_PUSH_FN();
 
     adk_httpx_request_t * const request = handle->request;
     adk_httpx_client_t * const client = request->client;
+    adk_httpx_network_pump_t * const pump = client->network_pump;
 
-    CURL_PUSH_CTX(client->api->ctx);
+    CURL_PUSH_CTX(client->ctx);
     curl_easy_setopt(request->curl, CURLOPT_PRIVATE, handle);
 
     curl_easy_setopt(request->curl, CURLOPT_HTTPHEADER, request->headers);
@@ -213,61 +207,29 @@ void adk_httpx_network_pump_add_request(adk_httpx_network_pump_t * const pump, a
     HTTPX_TRACE_POP();
 }
 
-static adk_httpx_client_t * deque_client(adk_httpx_api_t * const api) {
-    sb_lock_mutex(api->clients_list_lock);
-    while (api->network_pump->network_pump_running) {
-        {
-            for (adk_httpx_client_t * client = api->clients_list_head; client; client = client->next) {
-                if (!client->destroyed) {
-                    LL_REMOVE(client, prev, next, api->clients_list_head, api->clients_list_tail);
-                    sb_unlock_mutex(api->clients_list_lock);
-                    return client;
-                }
-            }
-        }
-        sb_wait_condition(api->client_enqued, api->clients_list_lock, sb_timeout_infinite);
-    }
-    sb_unlock_mutex(api->clients_list_lock);
-    return NULL;
-}
-
-static void enque_client(adk_httpx_api_t * const api, adk_httpx_client_t * const client) {
-    sb_lock_mutex(api->clients_list_lock);
-    {
-        LL_ADD(client, prev, next, api->clients_list_head, api->clients_list_tail);
-    }
-    sb_unlock_mutex(api->clients_list_lock);
-    sb_condition_wake_all(api->client_enqued);
-}
-
 static int network_pump_proc(void * userdata) {
     LOG_INFO(HTTPX_NETWORK_PUMP, "Starting network pump thread");
 
     adk_httpx_network_pump_t * const pump = userdata;
-
-    adk_httpx_client_t * client = deque_client(pump->api);
-    while (client) {
+    adk_httpx_client_t * const client = pump->client;
+    while (pump->is_running) {
         HTTPX_TRACE_PUSH("network_pump cycle");
 
-        ASSERT(client->api == pump->api);
+        /*
+          INVARIANT:
+          On `client_free` first thing we terminate the pump, i.e setting `is_running` to false and wait
+          for the current thread cycle to finish, thus there's no need if the client has been destroyed.
+         */
 
-        adk_curl_set_context(client->api->ctx);
+        adk_curl_set_context(client->ctx);
 
         sb_lock_mutex(pump->incoming_requests_lock);
         {
             adk_httpx_request_t * request = pump->incoming_requests_head;
             while (request) {
                 adk_httpx_request_t * const next = request->next;
-
-                // Client could be freed at any time, since we may still have requests for client that were destroyed, we grab
-                // only those that were schedule for the current client. Those that belong to the destroyed client, must be
-                // removed from the queue with a separate call to "adk_httpx_network_pump_delete_enqued_requests" upon the
-                // client's destruction.
-                if (request->client == client) {
-                    VERIFY(curl_multi_add_handle(client->multi, request->curl) == CURLM_OK);
-                    LL_REMOVE(request, prev, next, pump->incoming_requests_head, pump->incoming_requests_tail);
-                }
-
+                VERIFY(curl_multi_add_handle(client->multi, request->curl) == CURLM_OK);
+                LL_REMOVE(request, prev, next, pump->incoming_requests_head, pump->incoming_requests_tail);
                 request = next;
             }
         }
@@ -324,7 +286,7 @@ static int network_pump_proc(void * userdata) {
 
                         const char * const error = curl_easy_strerror(result);
                         const size_t length = strlen(error) + 1;
-                        handle->response->error = adk_httpx_malloc(client->api, length, MALLOC_TAG);
+                        handle->response->error = adk_httpx_malloc(client, length, MALLOC_TAG);
                         memcpy(handle->response->error, error, length);
                     }
                 }
@@ -350,11 +312,9 @@ static int network_pump_proc(void * userdata) {
             sb_unlock_mutex(request->fragments_lock);
         }
 
-        enque_client(pump->api, client);
         if (!did_get_data) {
-            sb_thread_sleep((milliseconds_t){.ms = 1});
+            sb_thread_sleep((milliseconds_t){.ms = pump->sleep_period});
         }
-        client = deque_client(pump->api);
 
         HTTPX_TRACE_POP();
     }
@@ -398,19 +358,20 @@ static void create_fragment_regions(adk_httpx_network_pump_t * const pump, const
 }
 
 void adk_httpx_network_pump_init(
-    adk_httpx_api_t * const api,
+    adk_httpx_client_t * const client,
     const mem_region_t region,
     const size_t fragment_size,
+    const uint32_t sleep_period,
     const system_guard_page_mode_e guard_page_mode) {
     HTTPX_TRACE_PUSH_FN();
 
-    adk_httpx_network_pump_t * const network_pump = adk_httpx_malloc(api, sizeof(adk_httpx_network_pump_t), MALLOC_TAG);
+    adk_httpx_network_pump_t * const network_pump = adk_httpx_malloc(client, sizeof(adk_httpx_network_pump_t), MALLOC_TAG);
     ZEROMEM(network_pump);
-    network_pump->api = api;
-    api->network_pump = network_pump;
+    client->network_pump = network_pump;
+    network_pump->sleep_period = sleep_period;
+    network_pump->client = client;
 
     network_pump->fragment_buffers = region;
-
     if (!network_pump->fragment_buffers.ptr) {
 #ifdef GUARD_PAGE_SUPPORT
         if (guard_page_mode == system_guard_page_mode_enabled) {
@@ -420,9 +381,7 @@ void adk_httpx_network_pump_init(
         {
             network_pump->fragment_buffers = sb_map_pages(PAGE_ALIGN_INT(region.size), system_page_protect_read_write);
         }
-        TRAP_OUT_OF_MEMORY(network_pump->fragment_buffers.ptr);
     }
-
     create_fragment_regions(network_pump, fragment_size);
 
     network_pump->free_list_lock = sb_create_mutex(MALLOC_TAG);
@@ -430,8 +389,8 @@ void adk_httpx_network_pump_init(
 
     network_pump->incoming_requests_lock = sb_create_mutex(MALLOC_TAG);
 
-    network_pump->network_pump_running = true;
-    network_pump->network_pump_thread = sb_create_thread("adk_net_pump", sb_thread_default_options, &network_pump_proc, network_pump, MALLOC_TAG);
+    network_pump->is_running = true;
+    network_pump->network_pump_thread = sb_create_thread("m5_net_pump", sb_thread_default_options, &network_pump_proc, network_pump, MALLOC_TAG);
 
     HTTPX_TRACE_POP();
 }
@@ -440,17 +399,18 @@ void adk_httpx_network_pump_shutdown(adk_httpx_network_pump_t * const pump) {
     LOG_INFO(HTTPX_NETWORK_PUMP, "Terminating network pump\n");
     HTTPX_TRACE_PUSH_FN();
 
-    adk_httpx_api_t * const api = pump->api;
+    adk_httpx_client_t * const client = pump->client;
 
-    pump->network_pump_running = false;
-    sb_condition_wake_all(api->client_enqued);
+    pump->is_running = false;
     sb_join_thread(pump->network_pump_thread);
 
     sb_destroy_mutex(pump->free_list_lock, MALLOC_TAG);
     sb_destroy_mutex(pump->incoming_requests_lock, MALLOC_TAG);
     sb_destroy_condition_variable(pump->free_fragment_enqued, MALLOC_TAG);
 
-    adk_httpx_free(api, pump, MALLOC_TAG);
+    adk_httpx_free(pump->client, pump, MALLOC_TAG);
+
+    client->network_pump = NULL;
 
     HTTPX_TRACE_POP();
 }
@@ -476,18 +436,4 @@ void adk_httpx_network_pump_fragments_free(
     sb_condition_wake_all(pump->free_fragment_enqued);
 
     HTTPX_TRACE_POP();
-}
-
-void adk_httpx_network_pump_delete_enqued_requests(adk_httpx_network_pump_t * const pump, const adk_httpx_client_t * const client) {
-    sb_lock_mutex(pump->incoming_requests_lock);
-    {
-        for (adk_httpx_request_t * request = pump->incoming_requests_head; request != NULL;) {
-            adk_httpx_request_t * const next = request->next;
-            if (request->client == client) {
-                LL_REMOVE(request, prev, next, pump->incoming_requests_head, pump->incoming_requests_tail);
-            }
-            request = next;
-        }
-    }
-    sb_unlock_mutex(pump->incoming_requests_lock);
 }

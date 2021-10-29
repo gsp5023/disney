@@ -7,15 +7,7 @@
 #include "source/adk/http/adk_http.h"
 #include "source/adk/http/adk_httpx.h"
 #include "source/adk/http/private/adk_curl_context.h"
-
-#ifdef _CURL_TRACE
 #include "source/adk/telemetry/telemetry.h"
-#define CURL_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define CURL_TRACE_POP() TRACE_POP()
-#else
-#define CURL_TRACE_PUSH_FN()
-#define CURL_TRACE_POP()
-#endif
 
 #ifdef _CONSOLE_NATIVE
 #define FUNCNAME(NAME) NAME##_httpx
@@ -34,7 +26,6 @@ static char * adk_httpx_strdup(void * const ctx, const char * const str, const c
 }
 
 static struct {
-    adk_httpx_api_t * api;
     adk_httpx_client_t * client;
 
     struct adk_curl_handle_t * handles_head;
@@ -77,82 +68,62 @@ struct adk_curl_slist_t {
     char * value;
 };
 
-bool FUNCNAME(adk_curl_api_init)(
-    const mem_region_t region,
-    const mem_region_t fragments_region,
-    const uint32_t fragment_size,
-    const system_guard_page_mode_e guard_page_mode,
-    adk_curl_http_init_mode_e init_mode) {
-    CURL_TRACE_PUSH_FN();
-
-    statics.api = adk_httpx_api_create(
+CURL_TRACE_FN(, bool, FUNCNAME(adk_curl_api_init), (const mem_region_t, region, const mem_region_t, fragments_region, const uint32_t, fragment_size, const uint32_t, pump_sleep_period, const system_guard_page_mode_e, guard_page_mode, adk_curl_http_init_mode_e, init_mode)) {
+    statics.client = adk_httpx_client_create(
         region,
         fragments_region,
         fragment_size,
+        pump_sleep_period,
         guard_page_mode,
         (init_mode == adk_curl_http_init_normal) ? adk_httpx_init_normal : adk_httpx_init_minimal,
-        "adk-curl");
+        "adk_curl");
 
-    statics.client = adk_httpx_client_create(statics.api);
-
-    CURL_TRACE_POP();
     return true;
 }
 
-void FUNCNAME(adk_curl_api_shutdown)() {
-    CURL_TRACE_PUSH_FN();
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_api_shutdown), ()) {
     adk_httpx_client_free(statics.client);
-    adk_httpx_api_free(statics.api);
-    CURL_TRACE_POP();
 }
 
-void FUNCNAME(adk_curl_api_shutdown_all_handles)() {
-    CURL_TRACE_PUSH_FN();
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_api_shutdown_all_handles), ()) {
     for (adk_curl_handle_t *handle = statics.handles_head, *next; handle != NULL; handle = next) {
         next = handle->next;
 
         adk_curl_close_handle(handle);
     }
-    CURL_TRACE_POP();
 }
 
-void FUNCNAME(adk_curl_dump_heap_usage)() {
-    CURL_TRACE_PUSH_FN();
-    adk_httpx_api_dump_heap_usage(statics.api);
-    CURL_TRACE_POP();
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_dump_heap_usage), ()) {
+    adk_httpx_client_dump_heap_usage(statics.client);
 }
 
-bool FUNCNAME(adk_curl_run_callbacks)() {
-    CURL_TRACE_PUSH_FN();
+CURL_TRACE_FN(, heap_metrics_t, FUNCNAME(adk_curl_get_heap_metrics), ()) {
+    const heap_metrics_t metrics = adk_httpx_client_get_heap_metrics(statics.client);
+    return metrics;
+}
+
+CURL_TRACE_FN(, bool, FUNCNAME(adk_curl_run_callbacks), ()) {
     const bool status = adk_httpx_client_tick(statics.client);
-    CURL_TRACE_POP();
     return status;
 }
 
-adk_curl_handle_t * FUNCNAME(adk_curl_open_handle)() {
-    CURL_TRACE_PUSH_FN();
-    adk_curl_handle_t * const handle = adk_httpx_malloc(statics.api, sizeof(adk_curl_handle_t), MALLOC_TAG);
+CURL_TRACE_FN(, adk_curl_handle_t *, FUNCNAME(adk_curl_open_handle), ()) {
+    adk_curl_handle_t * const handle = adk_httpx_malloc(statics.client, sizeof(adk_curl_handle_t), MALLOC_TAG);
     ZEROMEM(handle);
 
     handle->method = adk_httpx_method_get;
 
     LL_ADD(handle, prev, next, statics.handles_head, statics.handles_tail);
-
-    CURL_TRACE_POP();
     return handle;
 }
 
-void FUNCNAME(adk_curl_close_handle)(adk_curl_handle_t * const handle) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_close_handle), (adk_curl_handle_t * const, handle)) {
     LL_REMOVE(handle, prev, next, statics.handles_head, statics.handles_tail);
 
     adk_httpx_response_free(handle->response);
 
-    adk_httpx_free(statics.api, handle->url, MALLOC_TAG);
-    adk_httpx_free(statics.api, handle, MALLOC_TAG);
-
-    CURL_TRACE_POP();
+    adk_httpx_free(statics.client, handle->url, MALLOC_TAG);
+    adk_httpx_free(statics.client, handle, MALLOC_TAG);
 }
 
 adk_curl_handle_buffer_mode_e FUNCNAME(adk_curl_get_buffering_mode)(adk_curl_handle_t * const handle) {
@@ -171,9 +142,7 @@ const_mem_region_t FUNCNAME(adk_curl_get_http_header)(adk_curl_handle_t * const 
     return adk_httpx_response_get_headers(handle->response);
 }
 
-adk_curl_slist_t * FUNCNAME(adk_curl_slist_append)(adk_curl_slist_t * list, const char * const sz) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN(, adk_curl_slist_t *, FUNCNAME(adk_curl_slist_append), (adk_curl_slist_t *, list, const char * const, sz)) {
     // Appends to end of list by walking to end of `list` and adding new node with `sz`
 
     adk_curl_slist_t ** node = &list;
@@ -181,30 +150,23 @@ adk_curl_slist_t * FUNCNAME(adk_curl_slist_append)(adk_curl_slist_t * list, cons
         node = &(*node)->next;
     }
 
-    (*node) = adk_httpx_malloc(statics.api, sizeof(adk_curl_slist_t), MALLOC_TAG);
-    (*node)->value = adk_httpx_strdup(statics.api, sz, MALLOC_TAG);
+    (*node) = adk_httpx_malloc(statics.client, sizeof(adk_curl_slist_t), MALLOC_TAG);
+    (*node)->value = adk_httpx_strdup(statics.client, sz, MALLOC_TAG);
     (*node)->next = NULL;
 
-    CURL_TRACE_POP();
     return list;
 }
 
-void FUNCNAME(adk_curl_slist_free_all)(adk_curl_slist_t * const list) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_slist_free_all), (adk_curl_slist_t * const, list)) {
     for (adk_curl_slist_t *node = list, *next; node != NULL; node = next) {
         next = node->next;
 
-        adk_httpx_free(statics.api, node->value, MALLOC_TAG);
-        adk_httpx_free(statics.api, node, MALLOC_TAG);
+        adk_httpx_free(statics.client, node->value, MALLOC_TAG);
+        adk_httpx_free(statics.client, node, MALLOC_TAG);
     }
-
-    CURL_TRACE_POP();
 }
 
-void FUNCNAME(adk_curl_set_opt_long)(adk_curl_handle_t * const handle, const adk_curl_option_e option, const long value) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_set_opt_long), (adk_curl_handle_t * const, handle, const adk_curl_option_e, option, const long, value)) {
     switch (option) {
         case adk_curl_opt_buffer_size: {
             handle->preferred_receive_buffer_size = value;
@@ -240,33 +202,25 @@ void FUNCNAME(adk_curl_set_opt_long)(adk_curl_handle_t * const handle, const adk
             break;
         }
     }
-
-    CURL_TRACE_POP();
 }
 
-static bool list_contains(const char * list, const char * const element, const char * const delimiters) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN(static, bool, list_contains, (const char *, list, const char * const, element, const char * const, delimiters)) {
     const size_t element_len = strlen(element);
     while (*list) {
         list += strspn(list, delimiters); // skip over delimiters
 
         const size_t value_len = strcspn(list, delimiters);
         if (value_len == element_len && strncmp(list, element, element_len) == 0) {
-            CURL_TRACE_POP();
             return true;
         }
 
         list += value_len; // skip over value (not `element`)
     }
 
-    CURL_TRACE_POP();
     return false;
 }
 
-void FUNCNAME(adk_curl_set_opt_ptr)(adk_curl_handle_t * const handle, const adk_curl_option_e option, const void * const value) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_set_opt_ptr), (adk_curl_handle_t * const, handle, const adk_curl_option_e, option, const void * const, value)) {
     switch (option) {
         case adk_curl_opt_post_fields: {
             handle->request_body = (const uint8_t *)value;
@@ -277,7 +231,7 @@ void FUNCNAME(adk_curl_set_opt_ptr)(adk_curl_handle_t * const handle, const adk_
             break;
         }
         case adk_curl_opt_url: {
-            handle->url = adk_httpx_strdup(statics.api, value, MALLOC_TAG);
+            handle->url = adk_httpx_strdup(statics.client, value, MALLOC_TAG);
             break;
         }
         case adk_curl_opt_custom_request: {
@@ -321,13 +275,9 @@ void FUNCNAME(adk_curl_set_opt_ptr)(adk_curl_handle_t * const handle, const adk_
             break;
         }
     }
-
-    CURL_TRACE_POP();
 }
 
-adk_curl_result_e FUNCNAME(adk_curl_get_info_long)(adk_curl_handle_t * const handle, const adk_curl_info_e info, long * const out) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN(, adk_curl_result_e, FUNCNAME(adk_curl_get_info_long), (adk_curl_handle_t * const, handle, const adk_curl_info_e, info, long * const, out)) {
     ASSERT(adk_httpx_response_get_status(handle->response) == adk_future_status_ready);
 
     switch (info) {
@@ -336,68 +286,52 @@ adk_curl_result_e FUNCNAME(adk_curl_get_info_long)(adk_curl_handle_t * const han
 
             switch (adk_httpx_response_get_result(handle->response)) {
                 case adk_httpx_ok:
-                    CURL_TRACE_POP();
                     return adk_curl_result_ok;
                 case adk_httpx_timeout:
-                    CURL_TRACE_POP();
                     return adk_curl_result_operation_timeouted;
                 case adk_httpx_error:
                 default:
-                    CURL_TRACE_POP();
                     return adk_curl_result_got_nothing;
             }
         }
         default: {
             TRAP("Info option not implemented: %d", info);
-            CURL_TRACE_POP();
             return adk_curl_result_got_nothing;
         }
     }
-
-    CURL_TRACE_POP();
 }
 
-static bool adk_http_curl_on_header(adk_httpx_response_t * const response, const const_mem_region_t header, void * userdata) {
-    CURL_TRACE_PUSH_FN();
+CURL_TRACE_FN(static, bool, adk_http_curl_on_header, (adk_httpx_response_t * const, response, const const_mem_region_t, header, void *, userdata)) {
     adk_curl_handle_t * const handle = userdata;
     bool status = true;
     if (handle->callbacks.on_http_header_recv != NULL) {
         status = handle->callbacks.on_http_header_recv(handle, header, &handle->callbacks);
     }
     return status;
-    CURL_TRACE_POP();
 }
 
-static bool adk_http_curl_on_body(adk_httpx_response_t * const response, const const_mem_region_t body, void * userdata) {
-    CURL_TRACE_PUSH_FN();
+CURL_TRACE_FN(static, bool, adk_http_curl_on_body, (adk_httpx_response_t * const, response, const const_mem_region_t, body, void *, userdata)) {
     adk_curl_handle_t * const handle = userdata;
     bool status = true;
     if (handle->callbacks.on_http_recv != NULL) {
         status = handle->callbacks.on_http_recv(handle, body, &handle->callbacks);
     }
     return status;
-    CURL_TRACE_POP();
 }
 
-static adk_curl_result_e adk_httpx_response_get_curl_result(adk_httpx_response_t * const response) {
-    CURL_TRACE_PUSH_FN();
+CURL_TRACE_FN(static, adk_curl_result_e, adk_httpx_response_get_curl_result, (adk_httpx_response_t * const, response)) {
     switch (adk_httpx_response_get_result(response)) {
         case adk_httpx_ok:
-            CURL_TRACE_POP();
             return adk_curl_result_ok;
         case adk_httpx_timeout:
-            CURL_TRACE_POP();
             return adk_curl_result_operation_timeouted;
         case adk_httpx_error:
         default:
-            CURL_TRACE_POP();
             return adk_curl_result_got_nothing;
     }
 }
 
-static void adk_http_curl_on_complete(adk_httpx_response_t * const response, void * userdata) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN_VOID(static, adk_http_curl_on_complete, (adk_httpx_response_t * const, response, void *, userdata)) {
     adk_curl_handle_t * const handle = userdata;
 
     if (handle->json_deflate_callback.callback) {
@@ -407,13 +341,9 @@ static void adk_http_curl_on_complete(adk_httpx_response_t * const response, voi
     if (handle->callbacks.on_complete != NULL) {
         handle->callbacks.on_complete(handle, adk_httpx_response_get_curl_result(response), &handle->callbacks);
     }
-
-    CURL_TRACE_POP();
 }
 
-void FUNCNAME(adk_curl_async_perform)(adk_curl_handle_t * const handle, const adk_curl_callbacks_t callbacks) {
-    CURL_TRACE_PUSH_FN();
-
+CURL_TRACE_FN_VOID(, FUNCNAME(adk_curl_async_perform), (adk_curl_handle_t * const, handle, const adk_curl_callbacks_t, callbacks)) {
     handle->callbacks = callbacks;
 
     handle->request = adk_httpx_client_request(statics.client, handle->method, handle->url);
@@ -447,8 +377,6 @@ void FUNCNAME(adk_curl_async_perform)(adk_curl_handle_t * const handle, const ad
     adk_httpx_request_set_userdata(handle->request, handle);
 
     handle->response = adk_httpx_send(handle->request);
-
-    CURL_TRACE_POP();
 }
 
 adk_curl_result_e FUNCNAME(adk_curl_async_get_result)(adk_curl_handle_t * const handle) {

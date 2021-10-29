@@ -1,0 +1,1 @@
+Ok(Root { first: ["foo"], second: FPropertyBag { keys: ["foo"], values: ["bar"], hashes: [2356372769], lookups: [Some("bar")] }, third: RootThird { ref_array: ["baz"], ref_map: FPropertyBag { keys: ["quux"], values: ["hello"], hashes: [2892744419], lookups: [Some("hello")] } } })

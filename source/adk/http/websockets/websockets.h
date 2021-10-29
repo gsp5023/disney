@@ -120,6 +120,8 @@ void websocket_client_shutdown(websocket_client_t * const websokcet_client, cons
 
 void websocket_client_dump_heap_usage(const websocket_client_t * const websocket_client);
 
+heap_metrics_t websocket_client_get_heap_metrics(const websocket_client_t * const websocket_client);
+
 // returns true if there are any websockets left in internal list at end of tick.
 bool websocket_client_tick(websocket_client_t * const websocket_client);
 

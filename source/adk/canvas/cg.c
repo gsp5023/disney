@@ -17,19 +17,7 @@ cg.c
 #include "source/adk/nve/video_texture_api.h"
 #include "source/adk/runtime/thread_pool.h"
 #include "source/adk/steamboat/sb_platform.h"
-
-#ifdef _CG_TRACE
 #include "source/adk/telemetry/telemetry.h"
-#define CG_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define CG_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define CG_TRACE_POP() TRACE_POP()
-#define CG_TRACE_HEAP(_heap) TRACE_HEAP(_heap)
-#else
-#define CG_TRACE_PUSH_FN()
-#define CG_TRACE_PUSH(_name)
-#define CG_TRACE_POP()
-#define CG_TRACE_HEAP(_heap)
-#endif
 
 #include <math.h>
 
@@ -259,7 +247,7 @@ static void cg_subpath_reverse(const cg_subpath_t * const subpath) {
  * STATE
  * ==========================================================================*/
 
-void cg_state_init(cg_state_t * const state) {
+static void cg_state_init(cg_state_t * const state, const cg_context_t * const ctx) {
     CG_TRACE_PUSH_FN();
 
     cg_affine_identity(&state->transform);
@@ -271,10 +259,10 @@ void cg_state_init(cg_state_t * const state) {
     state->image = NULL;
     state->alpha_test_threshold = 0.5f;
     state->blend_mode = cg_blend_mode_src_alpha_rgb;
-    state->clip_state.x0 = -FLT_MAX;
-    state->clip_state.y0 = -FLT_MAX;
-    state->clip_state.x1 = FLT_MAX;
-    state->clip_state.y1 = FLT_MAX;
+    state->clip_state.x0 = 0;
+    state->clip_state.y0 = 0;
+    state->clip_state.x1 = (float)ctx->width;
+    state->clip_state.y1 = (float)ctx->height;
     state->clip_state.clip_state = cg_clip_state_disabled;
 
     CG_TRACE_POP();
@@ -476,7 +464,7 @@ static void cg_path_arc(cg_path_t * const path, const cg_vec2_t pos, const float
     const float scale = cg_affine_get_scale(&path->state->transform);
     const float size = CG_ABS(span) * radius * CG_TAU;
     const float cg_arc_min_steps = 1.0f;
-    const float cg_arc_max_steps = (float)cg_statics.ctx->quality.max_tesselation_steps;
+    const float cg_arc_max_steps = (float)cg_statics.ctx->config.internal_limits.max_tessellation_steps;
     const size_t steps = (size_t)clamp_float(cg_sqrt(size * scale), cg_arc_min_steps, cg_arc_max_steps);
 
     float theta = start.rads;
@@ -559,7 +547,7 @@ static void cg_path_quad_bezier_step(cg_path_t * const path, const float x1, con
         }
     }
 
-    if (_step < cg_statics.ctx->quality.max_tesselation_steps) {
+    if (_step < cg_statics.ctx->config.internal_limits.max_tessellation_steps) {
         cg_path_quad_bezier_step(path, x1, y1, x12, y12, x123, y123, _step + 1, _tol, tag);
         cg_path_quad_bezier_step(path, x123, y123, x23, y23, x3, y3, _step + 1, _tol, tag);
     }
@@ -887,19 +875,18 @@ static void cg_subpath_fill(cg_gl_state_t * const gl, const cg_subpath_t * const
 
 void cg_context_init(
     cg_context_t * const ctx,
-    const cg_context_memory_initializers_t memory_initializers,
-    const cg_context_dimensions_t dimensions,
-    const uint32_t max_states,
-    const uint32_t max_tesellation_steps,
-    const bool enable_punchthrough_blend_mode_fix,
     cg_gl_state_t * const gl,
     thread_pool_t * const thread_pool,
     render_device_t * const render_device,
-    const bool enable_image_time_logging,
+    const cg_context_memory_initializers_t memory_initializers,
+    const sb_display_mode_t display_mode,
+    const runtime_configuration_canvas_t canvas_config,
+    const cg_context_display_size_override_e display_size_override,
+    const cg_context_image_time_logging_e image_logging,
     const char * const tag) {
     CG_TRACE_PUSH_FN();
     ZEROMEM(ctx);
-
+    ASSERT(canvas_config.internal_limits.max_states);
 #ifdef GUARD_PAGE_SUPPORT
     if (memory_initializers.guard_page_mode == system_guard_page_mode_enabled) {
         debug_heap_init(&ctx->cg_heap_low.heap, memory_initializers.low_mem_region.size, 8, 0, "canvas_heap_low", memory_initializers.guard_page_mode, MALLOC_TAG);
@@ -913,34 +900,41 @@ void cg_context_init(
     ctx->guard_page_mode = memory_initializers.guard_page_mode;
     cg_context_set_memory_mode(ctx, memory_initializers.initial_memory_mode);
 
-    ctx->log_image_timing = enable_image_time_logging;
+    ctx->log_image_timing = image_logging == cg_context_image_time_logging_enabled;
 
     ctx->thread_pool = thread_pool;
     ctx->cg_heap_low.mutex = sb_create_mutex(tag);
     ctx->cg_heap_high.mutex = sb_create_mutex(tag);
     ctx->gl = gl;
-    ctx->quality.max_tesselation_steps = max_tesellation_steps ? max_tesellation_steps : cg_default_max_tesselation_steps;
-    ctx->enable_punchthrough_blend_mode_fix = enable_punchthrough_blend_mode_fix;
+    ctx->config = canvas_config;
 
     ctx->state_idx = 0;
 
-    ctx->max_states = max_states ? max_states : cg_default_max_states;
-    ctx->states = cg_alloc(&ctx->cg_heap_low, sizeof(*ctx->states) * ctx->max_states, MALLOC_TAG);
+    ctx->states = cg_alloc(&ctx->cg_heap_low, sizeof(*ctx->states) * ctx->config.internal_limits.max_states, MALLOC_TAG);
 
     ctx->cur_state = &ctx->states[ctx->state_idx];
-    cg_state_init(ctx->cur_state);
+    cg_state_init(ctx->cur_state, ctx);
 
     ctx->path = *cg_path(ctx->cur_state, tag);
 
-    ctx->width = dimensions.virtual_dims.width;
-    ctx->height = dimensions.virtual_dims.height;
-    ctx->view_scale_x = ((float)dimensions.display_dims.width / (float)dimensions.virtual_dims.width);
-    ctx->view_scale_y = ((float)dimensions.display_dims.height / (float)dimensions.virtual_dims.height);
+    sb_display_mode_t virtual_display = display_size_override == cg_context_display_size_720p ? (sb_display_mode_t){.width = 1280, .height = 720, .hz = 60} : display_mode;
+
+    ctx->width = virtual_display.width;
+    ctx->height = virtual_display.height;
+    ctx->view_scale_x = ((float)display_mode.width / (float)virtual_display.width);
+    ctx->view_scale_y = ((float)display_mode.height / (float)virtual_display.height);
+    ctx->clear_color = 0x000000FF;
 
     ctx->using_video_texture = false;
-    cg_gl_state_init(ctx->gl, &ctx->cg_heap_low, render_device);
+    cg_gl_state_init(ctx->gl, &ctx->cg_heap_low, render_device, canvas_config.gl);
 
-    ctx->mosaic_ctx = mosaic_context_new(ctx, dimensions.font_atlas_dims.width, dimensions.font_atlas_dims.height, memory_initializers.font_scratchpad_mem, memory_initializers.guard_page_mode, tag);
+    ctx->mosaic_ctx = mosaic_context_new(
+        ctx,
+        canvas_config.font_atlas.width ? canvas_config.font_atlas.width : virtual_display.width,
+        canvas_config.font_atlas.height ? canvas_config.font_atlas.height : virtual_display.height,
+        memory_initializers.font_scratchpad_mem,
+        memory_initializers.guard_page_mode,
+        tag);
 
     CG_TRACE_POP();
 }
@@ -982,8 +976,8 @@ void cg_context_set_memory_mode(cg_context_t * const ctx, const cg_memory_mode_e
 #endif
         if (ctx->guard_page_mode == system_guard_page_mode_disabled) {
             sb_unmap_pages(ctx->high_mem_region);
-            ZEROMEM(&ctx->cg_heap_high.heap);
         }
+        ZEROMEM(&ctx->cg_heap_high.heap);
     } else if ((memory_mode == cg_memory_mode_high) && !ctx->cg_heap_high.heap.internal.init) {
 #ifndef _SHIP
         if (ctx->guard_page_mode == system_guard_page_mode_enabled) {
@@ -1013,6 +1007,23 @@ void cg_context_dump_heap_usage(cg_context_t * const ctx) {
     CG_TRACE_POP();
 }
 
+static heap_metrics_t cg_context_get_heap_metrics(cg_heap_t * const cg_heap) {
+    CG_TRACE_PUSH_FN();
+    sb_lock_mutex(cg_heap->mutex);
+    const heap_metrics_t metrics = heap_get_metrics(&cg_heap->heap);
+    sb_unlock_mutex(cg_heap->mutex);
+    CG_TRACE_POP();
+    return metrics;
+}
+
+heap_metrics_t cg_context_get_heap_metrics_high(cg_context_t * const ctx) {
+    return cg_context_get_heap_metrics(&ctx->cg_heap_high);
+}
+
+heap_metrics_t cg_context_get_heap_metrics_low(cg_context_t * const ctx) {
+    return cg_context_get_heap_metrics(&ctx->cg_heap_low);
+}
+
 cg_context_t * cg_get_context() {
     return cg_statics.ctx;
 }
@@ -1025,7 +1036,7 @@ void cg_context_save() {
     CG_TRACE_PUSH_FN();
 
     cg_context_t * const ctx = cg_statics.ctx;
-    VERIFY_MSG(ctx->state_idx < ctx->max_states - 1, "Cannot save more context states, max states allowed: %i", ctx->max_states);
+    VERIFY_MSG(ctx->state_idx < ctx->config.internal_limits.max_states - 1, "Cannot save more context states, max states allowed: %i", ctx->config.internal_limits.max_states);
     ctx->cur_state = &ctx->states[++ctx->state_idx];
     *ctx->cur_state = ctx->states[ctx->state_idx - 1];
     ctx->path.state = ctx->cur_state;
@@ -1064,7 +1075,7 @@ void cg_context_begin(const milliseconds_t delta_time) {
     ctx->using_video_texture = false;
     cg_context_tick_gifs(ctx, delta_time);
     cg_affine_identity(&ctx->cur_state->transform);
-    cg_gl_state_begin(ctx->gl, ctx->width, ctx->height);
+    cg_gl_state_begin(ctx->gl, ctx->width, ctx->height, ctx->clear_color);
 
     CG_TRACE_POP();
 }
@@ -1078,7 +1089,7 @@ void cg_context_end(const char * const tag) {
 
     ctx->state_idx = 0;
     ctx->cur_state = &ctx->states[ctx->state_idx];
-    cg_state_init(ctx->cur_state);
+    cg_state_init(ctx->cur_state, ctx);
 
     CG_TRACE_POP();
 }
@@ -1103,6 +1114,12 @@ void cg_context_set_feather(const float feather) {
     CG_TRACE_POP();
 }
 
+void cg_context_set_clear_color(const uint32_t color) {
+    CG_TRACE_PUSH_FN();
+    cg_statics.ctx->clear_color = color;
+    CG_TRACE_POP();
+}
+
 float cg_context_get_alpha_test_threshold() {
     return cg_statics.ctx->cur_state->alpha_test_threshold;
 }
@@ -1120,7 +1137,7 @@ cg_blend_mode_e cg_context_get_punchthrough_blend_mode() {
 void cg_context_set_punchthrough_blend_mode(const cg_blend_mode_e blend_mode) {
     CG_TRACE_PUSH_FN();
     // If we're using texture based playback and we've set the flag to use the correct behavior, use default blend mode
-    if (cg_statics.ctx->using_video_texture && cg_statics.ctx->enable_punchthrough_blend_mode_fix) {
+    if (cg_statics.ctx->using_video_texture && cg_statics.ctx->config.enable_punchthrough_blend_mode_fix) {
         cg_statics.ctx->cur_state->blend_mode = cg_blend_mode_src_alpha_rgb;
     } else {
         cg_statics.ctx->cur_state->blend_mode = blend_mode;
@@ -1298,49 +1315,35 @@ void cg_context_translate(const cg_vec2_t translation) {
 }
 
 void cg_context_set_line_width(const float width) {
-    CG_TRACE_PUSH_FN();
     cg_statics.ctx->cur_state->line_width = width;
-    CG_TRACE_POP();
 }
 
 void cg_context_stroke_style(const cg_color_t color) {
-    CG_TRACE_PUSH_FN();
     cg_statics.ctx->cur_state->stroke_style = (cg_color_t){.r = color.r / 255.f, .g = color.g / 255.f, .b = color.b / 255.f, .a = color.a / 255.f};
-    CG_TRACE_POP();
 }
 
 void cg_context_fill_style(const cg_color_t color) {
-    CG_TRACE_PUSH_FN();
     cg_statics.ctx->cur_state->fill_style = (cg_color_t){.r = color.r / 255.f, .g = color.g / 255.f, .b = color.b / 255.f, .a = color.a / 255.f};
     cg_statics.ctx->cur_state->image = NULL;
-    CG_TRACE_POP();
 }
 
 void cg_context_fill_style_hex(const int32_t color) {
-    CG_TRACE_PUSH_FN();
-
     const float r = (color & 0xf00) * (1.0f / 0xf00);
     const float g = (color & 0x0f0) * (1.0f / 0x0f0);
     const float b = (color & 0x00f) * (1.0f / 0x00f);
 
     cg_statics.ctx->cur_state->fill_style = (cg_color_t){.r = r, .g = g, .b = b, .a = 1};
     cg_statics.ctx->cur_state->image = NULL;
-
-    CG_TRACE_POP();
 }
 
 void cg_context_fill_style_image(const cg_color_t color, const cg_image_t * const image) {
-    CG_TRACE_PUSH_FN();
     cg_context_fill_style(color);
     cg_statics.ctx->cur_state->image = image;
-    CG_TRACE_POP();
 }
 
 void cg_context_fill_style_image_hex(const int32_t color, const cg_image_t * const image) {
-    CG_TRACE_PUSH_FN();
     cg_context_fill_style_hex(color);
     cg_statics.ctx->cur_state->image = image;
-    CG_TRACE_POP();
 }
 
 void cg_context_draw_image_rect(const cg_image_t * const image, const cg_rect_t src, const cg_rect_t dst) {
@@ -1385,6 +1388,204 @@ void cg_context_draw_image_rect(const cg_image_t * const image, const cg_rect_t 
 
     cg_gl_state_draw_tri_fan(ctx->gl, 4, 0);
 
+    CG_TRACE_POP();
+}
+
+typedef struct cg_rect_positions_t {
+    cg_vec2_t p00, p01, p11, p10;
+} cg_rect_positions_t;
+
+static cg_rect_positions_t cg_affine_apply_rect(const cg_rect_t rect) {
+    cg_context_t * const ctx = cg_statics.ctx;
+
+    const cg_affine_t * const xform = &ctx->cur_state->transform;
+    return (cg_rect_positions_t){
+        .p00 = *cg_affine_apply(xform, cg_vec2(rect.x, rect.y)),
+        .p01 = *cg_affine_apply(xform, cg_vec2(rect.x + rect.width, rect.y)),
+        .p11 = *cg_affine_apply(xform, cg_vec2(rect.x + rect.width, rect.y + rect.height)),
+        .p10 = *cg_affine_apply(xform, cg_vec2(rect.x, rect.y + rect.height)),
+    };
+}
+
+static cg_box_t cg_get_box(const cg_rect_t rect) {
+    const cg_rect_positions_t rect_pos = cg_affine_apply_rect(rect);
+    const float width = rect_pos.p01.x - rect_pos.p00.x;
+    const float height = rect_pos.p10.y - rect_pos.p00.y;
+    return (cg_box_t){.centerpoint = {rect_pos.p00.x + width / 2, rect_pos.p00.y + height / 2}, .half_dim = {width / 2, height / 2}};
+}
+
+typedef struct cg_2d_mesh_t {
+    cg_gl_vertex_t * verts;
+    int32_t vert_index;
+    const int32_t max_verts;
+} cg_2d_mesh_t;
+
+static void cg_set_quad_verts(cg_2d_mesh_t * const mesh, const cg_vec2_t inverse_img_dims, const cg_rect_t src, const cg_rect_t dst, const float alpha) {
+    const float u0 = src.x * inverse_img_dims.x;
+    const float v0 = src.y * inverse_img_dims.y;
+    const float u1 = u0 + src.width * inverse_img_dims.x;
+    const float v1 = v0 + src.height * inverse_img_dims.y;
+
+    const cg_rect_positions_t rect_pos = cg_affine_apply_rect(dst);
+    ASSERT(mesh->vert_index + 6 <= mesh->max_verts);
+
+    cg_set_vert(mesh->verts, mesh->vert_index++, &rect_pos.p00, cg_color(u0, v0, 0.0f, alpha));
+    cg_set_vert(mesh->verts, mesh->vert_index++, &rect_pos.p01, cg_color(u1, v0, 0.0f, alpha));
+    cg_set_vert(mesh->verts, mesh->vert_index++, &rect_pos.p11, cg_color(u1, v1, 0.0f, alpha));
+
+    cg_set_vert(mesh->verts, mesh->vert_index++, &rect_pos.p11, cg_color(u1, v1, 0.0f, alpha));
+    cg_set_vert(mesh->verts, mesh->vert_index++, &rect_pos.p10, cg_color(u0, v1, 0.0f, alpha));
+    cg_set_vert(mesh->verts, mesh->vert_index++, &rect_pos.p00, cg_color(u0, v0, 0.0f, alpha));
+}
+
+typedef enum cg_sdf_stroke_mode_e {
+    cg_sdf_stroke_enabled,
+    cg_sdf_stroke_disabled,
+} cg_sdf_stroke_mode_e;
+
+static void cg_finish_range_and_draw_2d_sdf_rect_mesh(cg_2d_mesh_t * const mesh, const cg_image_t * const drawable_image, const cg_box_t box, const cg_sdf_rect_params_t draw_params, const cg_sdf_stroke_mode_e stroke_mode) {
+    CG_TRACE_PUSH_FN();
+    cg_context_t * const ctx = cg_statics.ctx;
+    ASSERT_MSG((stroke_mode != cg_sdf_stroke_enabled) || (draw_params.fade == 0.0), "Strokes and fades together produce bad output when rendered and is not functioning correctly currently. Run m5 in release to see the poor output.");
+    cg_gl_state_finish_vertex_range(ctx->gl);
+
+    cg_gl_state_set_mode_blend_alpha_rgb(ctx->gl);
+
+    const cg_sdf_rect_uniforms_t rect_uniforms = {
+        .box = box,
+        .roundness = draw_params.roundness,
+        .fade = draw_params.fade,
+    };
+
+    if (stroke_mode == cg_sdf_stroke_enabled) {
+        const cg_sdf_rect_border_uniforms_t border_uniforms = {
+            .sdf_rect_uniforms = rect_uniforms,
+            .stroke_color = draw_params.border_color,
+            .stroke_size = draw_params.border_width,
+        };
+        cg_gl_state_bind_sdf_rect_border_shader(
+            ctx->gl,
+            &ctx->cur_state->fill_style,
+            drawable_image ? &drawable_image->cg_texture : NULL,
+            border_uniforms);
+    } else {
+        cg_gl_state_bind_sdf_rect_shader(
+            ctx->gl,
+            &ctx->cur_state->fill_style,
+            drawable_image ? &drawable_image->cg_texture : NULL,
+            rect_uniforms);
+    }
+
+    cg_gl_state_draw(ctx->gl, rhi_triangles, mesh->vert_index, 0);
+    CG_TRACE_POP();
+}
+
+void cg_context_sdf_draw_image_rect_rounded(const cg_image_t * const image, const cg_rect_t src, const cg_rect_t dst, const cg_sdf_rect_params_t draw_params) {
+    CG_TRACE_PUSH_FN();
+    cg_context_t * const ctx = cg_statics.ctx;
+    const float scale = cg_affine_get_scale(&ctx->cur_state->transform);
+    const float smallest_dim = min_float(dst.width, dst.height);
+    const float radius = max_float(min_float(smallest_dim / 2, draw_params.roundness), 0.0) * scale;
+    const cg_box_t box = cg_get_box(dst);
+
+    const cg_image_t * const drawable_image = (image->status == cg_image_async_load_complete) ? image : NULL;
+    ASSERT(!drawable_image || drawable_image->cg_texture.texture);
+    // normalize tex-coords
+    const float iw = 1.0f / (drawable_image ? drawable_image->cg_texture.texture->width : 1);
+    const float ih = 1.0f / (drawable_image ? drawable_image->cg_texture.texture->height : 1);
+
+    cg_gl_vertex_t * verts = cg_gl_state_map_vertex_range(ctx->gl, 6);
+    cg_2d_mesh_t mesh = {.verts = verts, .max_verts = 6};
+    cg_set_quad_verts(&mesh, (cg_vec2_t){iw, ih}, src, dst, ctx->cur_state->fill_style.a * ctx->cur_state->global_alpha);
+
+    cg_finish_range_and_draw_2d_sdf_rect_mesh(&mesh, drawable_image, box, (cg_sdf_rect_params_t){.roundness = radius, .fade = max_float(draw_params.fade, 0.f) * scale, .border_width = draw_params.border_width, .border_color = draw_params.border_color}, cg_sdf_stroke_disabled);
+
+    CG_TRACE_POP();
+}
+
+void cg_context_sdf_fill_image_rect_rounded(const cg_image_t * const image, const cg_rect_t dst, const cg_sdf_rect_params_t draw_params, const cg_image_tiling_e tiling) {
+    CG_TRACE_PUSH_FN();
+    cg_context_t * const ctx = cg_statics.ctx;
+    const float scale = cg_affine_get_scale(&ctx->cur_state->transform);
+
+    const cg_image_t * const drawable_image = (image->status == cg_image_async_load_complete) ? image : NULL;
+    ASSERT(!drawable_image || drawable_image->cg_texture.texture);
+
+    const float smallest_dim = min_float(dst.width, dst.height);
+    const float radius = max_float(min_float(smallest_dim / 2, draw_params.roundness), 0.0) * scale;
+    const cg_box_t box = cg_get_box(dst);
+    const cg_rect_t src = cg_context_image_rect(image);
+
+    // normalize tex-coords
+    const cg_vec2_t inverse_img_dims = {
+        1.0f / src.width,
+        1.0f / src.height};
+
+    cg_vec2_t uv_repeats;
+    if (tiling == cg_image_tiling_stretch) {
+        uv_repeats = (cg_vec2_t){
+            .x = (src.width + draw_params.border_width * 2) / src.width,
+            .y = (src.height + draw_params.border_width * 2) / src.height};
+    } else {
+        uv_repeats = (cg_vec2_t){
+            .x = (dst.width + draw_params.border_width * 2) / (src.width / scale),
+            .y = (dst.height + draw_params.border_width * 2) / (src.height / scale)};
+    }
+
+    const cg_rect_t dst_rect = {
+        .x = dst.x - draw_params.border_width,
+        .y = dst.y - draw_params.border_width,
+        .width = dst.width + 2 * draw_params.border_width,
+        .height = dst.height + 2 * draw_params.border_width};
+
+    cg_vec2_t src_start_coord;
+    if (tiling == cg_image_tiling_relative || tiling == cg_image_tiling_stretch) {
+        src_start_coord = (cg_vec2_t){
+            .x = draw_params.border_width > 0.f ? src.width - draw_params.border_width : src.x,
+            .y = draw_params.border_width > 0.f ? src.height - draw_params.border_width : src.y,
+        };
+    } else {
+        ASSERT(tiling == cg_image_tiling_absolute);
+        src_start_coord = (cg_vec2_t){fmodf(dst_rect.x * scale, src.width), fmodf(dst_rect.y * scale, src.height)};
+    }
+
+    const cg_rect_t src_rect = {
+        .x = src_start_coord.x,
+        .y = src_start_coord.y,
+        .width = src.width * uv_repeats.x,
+        .height = src.height * uv_repeats.y,
+    };
+
+    cg_gl_vertex_t * const verts = cg_gl_state_map_vertex_range(ctx->gl, 6);
+    cg_2d_mesh_t mesh = (cg_2d_mesh_t){.verts = verts, .max_verts = 6};
+
+    cg_set_quad_verts(&mesh, inverse_img_dims, src_rect, dst_rect, ctx->cur_state->fill_style.a * ctx->cur_state->global_alpha);
+    cg_finish_range_and_draw_2d_sdf_rect_mesh(
+        &mesh,
+        drawable_image,
+        box,
+        (cg_sdf_rect_params_t){
+            .roundness = radius,
+            .fade = max_float(draw_params.fade, 0.f) * scale,
+            .border_width = draw_params.border_width,
+            .border_color = draw_params.border_color},
+        draw_params.border_width > 0.f ? cg_sdf_stroke_enabled : cg_sdf_stroke_disabled);
+    CG_TRACE_POP();
+}
+
+void cg_context_sdf_fill_rect_rounded(const cg_rect_t rect, const cg_sdf_rect_params_t draw_params) {
+    CG_TRACE_PUSH_FN();
+    cg_context_t * const ctx = cg_statics.ctx;
+
+    const cg_image_t white_image = {
+        .cg_texture = ctx->gl->white,
+        .image = (image_t){
+            .width = 1,
+            .height = 1,
+        },
+        .status = cg_image_async_load_complete,
+    };
+    cg_context_sdf_fill_image_rect_rounded(&white_image, rect, draw_params, cg_image_tiling_stretch);
     CG_TRACE_POP();
 }
 
@@ -1642,7 +1843,12 @@ void cg_context_blit_video_frame(const cg_rect_t rect) {
 
 #ifdef _NVE
         if (video_frame.chroma && video_frame.luma) {
-            cg_gl_state_bind_video_shader(ctx->gl, &ctx->cur_state->fill_style, video_frame.chroma, video_frame.luma);
+            if (video_frame.hdr10) {
+                cg_gl_state_bind_video_shader_hdr(ctx->gl, &ctx->cur_state->fill_style, video_frame.chroma, video_frame.luma, (cg_ivec2_t){video_frame.luma_tex_width, video_frame.luma_tex_height}, (cg_ivec2_t){video_frame.chroma_tex_width, video_frame.chroma_tex_height}, (cg_ivec2_t){video_frame.framesize_width, video_frame.framesize_height});
+            } else {
+                cg_gl_state_bind_video_shader(ctx->gl, &ctx->cur_state->fill_style, video_frame.chroma, video_frame.luma, (cg_ivec2_t){video_frame.luma_tex_width, video_frame.luma_tex_height}, (cg_ivec2_t){video_frame.chroma_tex_width, video_frame.chroma_tex_height}, (cg_ivec2_t){video_frame.framesize_width, video_frame.framesize_height});
+            }
+
         } else
 #endif
         {

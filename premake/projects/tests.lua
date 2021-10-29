@@ -17,6 +17,7 @@ project ("tests", "tests")
 
 	links "cmocka"
 	links "bundle"
+	links "steamboat"
 
 	includedirs("extern/stb")
 

@@ -16,14 +16,31 @@ extern "C" {
 extern const char adk_http_init_default_cert_path[];
 extern const char adk_http_init_default_charles_path[];
 
+typedef enum adk_websocket_backend_e {
+    adk_websocket_backend_null,
+    adk_websocket_backend_http2,
+    adk_websocket_backend_websocket,
+} adk_websocket_backend_e;
+
+struct websocket_config_t;
+
 /// Initializes the HTTP system
-EXT_EXPORT void adk_http_init(const char * const ssl_certificate_path, const mem_region_t region, const system_guard_page_mode_e guard_page_mode, const char * const tag);
+EXT_EXPORT void adk_http_init(
+    const char * const ssl_certificate_path,
+    const mem_region_t region,
+    const enum adk_websocket_backend_e backend,
+    const struct websocket_config_t config,
+    const system_guard_page_mode_e guard_page_mode,
+    const char * const tag);
 
 /// Shuts down the HTTP system
 EXT_EXPORT void adk_http_shutdown(const char * const tag);
 
 /// dumps internal heap usage
 EXT_EXPORT void adk_http_dump_heap_usage();
+
+/// gets internal heap metrics
+EXT_EXPORT heap_metrics_t adk_http_get_heap_metrics();
 
 /// enable and specify the http/https proxy to use.
 /// format is: `host:ip` e.g. "myproxy.com:34" or "127.0.0.1.:8888"

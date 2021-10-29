@@ -232,12 +232,12 @@ EXT_EXPORT bool cncbus_msg_set_size_unchecked(cncbus_msg_t * const msg, int size
 
 // sets the size of the message, if necessary message buffer grows
 // to accommodate. this is only valid during message construction.
-static void cncbus_msg_set_size_checked(cncbus_msg_t * const msg, int size) {
+static inline void cncbus_msg_set_size_checked(cncbus_msg_t * const msg, int size) {
     VERIFY(cncbus_msg_set_size_unchecked(msg, size));
 }
 
 // constructs a new message. if a new message cannot be allocated a program error is generated
-static cncbus_msg_t * cncbus_msg_begin_checked(cncbus_t * const bus, const uint32_t msg_type) {
+static inline cncbus_msg_t * cncbus_msg_begin_checked(cncbus_t * const bus, const uint32_t msg_type) {
     cncbus_msg_t * const msg = cncbus_msg_begin_unchecked(bus, msg_type);
     VERIFY_MSG(msg, "no free bus messages");
     return msg;
@@ -249,14 +249,14 @@ EXT_EXPORT void cncbus_msg_cancel(cncbus_msg_t * const msg);
 // reserves space of "size" bytes in the message payload.
 // this is not required, as cncbus_msg_write will grow the message if necessary.
 // only valid during message construction.
-static void cncbus_msg_reserve_checked(cncbus_msg_t * const msg, const int size) {
+static inline void cncbus_msg_reserve_checked(cncbus_msg_t * const msg, const int size) {
     VERIFY(cncbus_msg_reserve_unchecked(msg, size));
 }
 
 // writes data into the message from the messages current cursor position.
 // advances the msg cursor.
 // only valid during message construction.
-static void cncbus_msg_write_checked(cncbus_msg_t * const msg, const void * const src, const int size) {
+static inline void cncbus_msg_write_checked(cncbus_msg_t * const msg, const void * const src, const int size) {
     VERIFY(cncbus_msg_write_unchecked(msg, src, size));
 }
 

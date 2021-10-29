@@ -13,6 +13,7 @@ function m.link(prj)
         links {
             "runtime",
             "paddleboat",
+            "steamboat",
             "steamboat-cpp",
             "renderer",
             "cncbus",

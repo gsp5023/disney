@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2020-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -13,7 +13,7 @@ Test for Text-to-Speech
 #include "source/adk/steamboat/sb_platform.h"
 #include "testapi.h"
 
-void text_to_speech_unit_test(void ** state) {
+static void text_to_speech_unit_test(void ** state) {
     const char * sample = "This is a test";
     print_message("Invoking text-to-speech on string: %s\n", sample);
     sb_text_to_speech(sample);

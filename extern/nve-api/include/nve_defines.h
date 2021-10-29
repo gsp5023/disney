@@ -14,6 +14,10 @@
 #ifndef __NVE_DEFINES_H__
 #define __NVE_DEFINES_H__
 
+#if defined(__GNUC__) && __GNUC__ < 5
+#define __STDC_LIMIT_MACROS
+#endif
+
 #include <stdint.h>
 
 /*
@@ -113,7 +117,7 @@ FFI_EXPORT typedef enum nve_event_type_e {
     nve_event_type_media_player_item,
     nve_event_type_load_information,
     nve_event_type_buffer,
-    nve_event_type_cenc_initdata,
+    nve_event_type_cenc_init_data,
     nve_event_type_drm_challenge_generated,
     nve_event_type_text_updated,
     nve_event_type_audio_updated,
@@ -121,6 +125,7 @@ FFI_EXPORT typedef enum nve_event_type_e {
     nve_event_type_text_manifest_updated,
     nve_event_type_audio_manifest_updated,
     nve_event_type_media_player_general_info,
+    nve_event_type_main_manifest_updated,
 } nve_event_type_e;
 
 FFI_EXPORT typedef enum nve_timed_metadata_type_e {
@@ -175,7 +180,7 @@ FFI_EXPORT typedef struct {
     int32_t is_auto_select;
 } nve_audio_track_t;
 
-#define NVE_FFI_METADATA_STRING_CAPACITY 512
+#define NVE_FFI_METADATA_STRING_CAPACITY 1024 
 FFI_EXPORT typedef struct {
     char key[NVE_FFI_METADATA_STRING_CAPACITY];
     char value[NVE_FFI_METADATA_STRING_CAPACITY];
@@ -187,6 +192,13 @@ FFI_EXPORT typedef struct {
     char error_server_url[NVE_FFI_DRM_ERROR_STRING_CAPACITY];
 } nve_drm_error_payload_t;
 
+FFI_EXPORT typedef enum nve_playlist_type_e {
+    nve_playlist_type_not_playlist = 0,
+    nve_playlist_type_no_type = 1,
+    nve_playlist_type_event = 2,
+    nve_playlist_type_vod = 3
+} nve_playlist_type_e;
+
 #define NVE_FFI_LOAD_INFORMATION_URL_CAPACITY 512
 FFI_EXPORT typedef struct {
     int32_t period_index;
@@ -195,6 +207,8 @@ FFI_EXPORT typedef struct {
     int32_t http_status;
     int32_t latency;
     int32_t error_code;
+    bool playlist_complete;
+    nve_playlist_type_e playlist_type;
     char track_name[NVE_FFI_TRACK_STRING_CAPACITY];
     char track_type[NVE_FFI_TRACK_STRING_CAPACITY];
     char url[NVE_FFI_LOAD_INFORMATION_URL_CAPACITY];
@@ -204,6 +218,7 @@ FFI_EXPORT typedef struct {
     int32_t profile_peak_bit_rate;
     int32_t profile_avg_bit_rate;
     float profile_framerate;
+    char x_request_id[NVE_FFI_TRACK_STRING_CAPACITY];
 } nve_load_information_t;
 
 typedef enum {
@@ -280,6 +295,11 @@ FFI_EXPORT typedef struct {
     char app_version[NVE_FFI_DRM_INIT_STRING_CAPACITY];
     bool privacy_mode;
 } nve_drm_init_payload_t;
+
+#define NVE_TIMED_METADATA_TAG_STRING_CAPACITY 64
+FFI_EXPORT typedef struct {
+    char tag[NVE_FFI_VERSION_STRING_CAPACITY];
+} nve_timed_metadata_tag_t;
 
 #ifdef __cplusplus
 }

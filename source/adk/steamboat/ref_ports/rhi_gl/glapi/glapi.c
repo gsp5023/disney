@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -23,7 +23,7 @@ gl_check_errors
 void check_gl_errors(const char * tag) {
     GLenum e;
     bool glHadErrors = false;
-    while ((e = glGetError()) != GL_NO_ERROR) {
+    while ((e = glGetError()) != GL_NO_ERROR && !glHadErrors) {
         static const char * errStrings[7] = {
             "GL_INVALID_ENUM",
             "GL_INVALID_VALUE",

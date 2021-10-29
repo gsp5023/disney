@@ -87,22 +87,25 @@ STATIC_ASSERT(sizeof(nve_font_e) == 4);
 
 STATIC_ASSERT(sizeof(nve_font_edge_e) == 4);
 
-STATIC_ASSERT(sizeof(nve_load_information_t) == 688);
+STATIC_ASSERT(sizeof(nve_load_information_t) == 760);
 STATIC_ASSERT(offsetof(nve_load_information_t, period_index) == 0);
 STATIC_ASSERT(offsetof(nve_load_information_t, size) == 4);
 STATIC_ASSERT(offsetof(nve_load_information_t, track_index) == 8);
 STATIC_ASSERT(offsetof(nve_load_information_t, http_status) == 12);
 STATIC_ASSERT(offsetof(nve_load_information_t, latency) == 16);
 STATIC_ASSERT(offsetof(nve_load_information_t, error_code) == 20);
-STATIC_ASSERT(offsetof(nve_load_information_t, track_name) == 24);
-STATIC_ASSERT(offsetof(nve_load_information_t, track_type) == 88);
-STATIC_ASSERT(offsetof(nve_load_information_t, url) == 152);
-STATIC_ASSERT(offsetof(nve_load_information_t, profile_id) == 664);
-STATIC_ASSERT(offsetof(nve_load_information_t, profile_width) == 668);
-STATIC_ASSERT(offsetof(nve_load_information_t, profile_height) == 672);
-STATIC_ASSERT(offsetof(nve_load_information_t, profile_peak_bit_rate) == 676);
-STATIC_ASSERT(offsetof(nve_load_information_t, profile_avg_bit_rate) == 680);
-STATIC_ASSERT(offsetof(nve_load_information_t, profile_framerate) == 684);
+STATIC_ASSERT(offsetof(nve_load_information_t, playlist_complete) == 24);
+STATIC_ASSERT(offsetof(nve_load_information_t, playlist_type) == 28);
+STATIC_ASSERT(offsetof(nve_load_information_t, track_name) == 32);
+STATIC_ASSERT(offsetof(nve_load_information_t, track_type) == 96);
+STATIC_ASSERT(offsetof(nve_load_information_t, url) == 160);
+STATIC_ASSERT(offsetof(nve_load_information_t, profile_id) == 672);
+STATIC_ASSERT(offsetof(nve_load_information_t, profile_width) == 676);
+STATIC_ASSERT(offsetof(nve_load_information_t, profile_height) == 680);
+STATIC_ASSERT(offsetof(nve_load_information_t, profile_peak_bit_rate) == 684);
+STATIC_ASSERT(offsetof(nve_load_information_t, profile_avg_bit_rate) == 688);
+STATIC_ASSERT(offsetof(nve_load_information_t, profile_framerate) == 692);
+STATIC_ASSERT(offsetof(nve_load_information_t, x_request_id) == 696);
 
 STATIC_ASSERT(sizeof(nve_media_audio_capabilities_flag_e) == 4);
 
@@ -140,9 +143,9 @@ STATIC_ASSERT(sizeof(nve_media_video_output_rate_e) == 4);
 
 STATIC_ASSERT(sizeof(nve_media_video_output_resolution_e) == 4);
 
-STATIC_ASSERT(sizeof(nve_metadata_key_value_t) == 1024);
+STATIC_ASSERT(sizeof(nve_metadata_key_value_t) == 2048);
 STATIC_ASSERT(offsetof(nve_metadata_key_value_t, key) == 0);
-STATIC_ASSERT(offsetof(nve_metadata_key_value_t, value) == 512);
+STATIC_ASSERT(offsetof(nve_metadata_key_value_t, value) == 1024);
 
 STATIC_ASSERT(sizeof(nve_network_configuration_t) == 576);
 STATIC_ASSERT(offsetof(nve_network_configuration_t, use_cookie_header_for_all_requests) == 0);
@@ -208,6 +211,9 @@ STATIC_ASSERT(offsetof(nve_text_track_t, track_language) == 68);
 STATIC_ASSERT(offsetof(nve_text_track_t, is_forced) == 132);
 STATIC_ASSERT(offsetof(nve_text_track_t, is_default) == 136);
 STATIC_ASSERT(offsetof(nve_text_track_t, is_auto_select) == 140);
+
+STATIC_ASSERT(sizeof(nve_timed_metadata_tag_t) == 64);
+STATIC_ASSERT(offsetof(nve_timed_metadata_tag_t, tag) == 0);
 
 STATIC_ASSERT(sizeof(nve_version_t) == 84);
 STATIC_ASSERT(offsetof(nve_version_t, version) == 0);

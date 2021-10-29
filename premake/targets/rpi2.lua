@@ -6,20 +6,13 @@
 
 local m = {}
 
-function m.strip_platform_files()
-	filter {"platforms:not *rpi2*", "platforms:not *rpi3*"}
-		removefiles "/**dispmanx**"
-	filter {"platforms:not *rpi*"}
-		removefiles "**rpi**"
-end
-
 if not target_is_any {"rpi2", "Raspberry Pi2"} then return m end
 
 filter "action:gmake*"
 	platforms "emu_stb_gpu_rpi2_arm7-a_32"
 
 filter "platforms:*rpi2*"
-	defines {"_RPI", "_RPI2", "_BYTE_ORDER_LE", "__USE_GNU"}
+	defines {"_RPI", "_RPI2", "_BYTE_ORDER_LE", "__USE_GNU", "_USE_DISPMANX"}
 	defines {"_SB_SYSTEM_METRICS_HEADER=\"source/adk/steamboat/ref_ports/linux/sb_system_metrics_rpi.h\""}
 	makesettings [[ CC = arm-linux-gnueabihf-gcc ]]
 	toolset "gcc"

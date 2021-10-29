@@ -740,6 +740,8 @@ static cJSON_bool parse_string(cJSON_Env * const env, cJSON * const item, parse_
 
     item->type = cJSON_String;
     item->valuestring = (char *)output;
+    item->valuestring_length = (uintptr_t)output_pointer - (uintptr_t)output;
+    ASSERT(item->valuestring_length == strlen(item->valuestring));
 
     input_buffer->offset = (size_t)(input_end - input_buffer->content);
     input_buffer->offset++;
@@ -2128,6 +2130,7 @@ cJSON_CreateString(cJSON_Env * const env, const char * string)
     if (item) {
         item->type = cJSON_String;
         item->valuestring = (char *)cJSON_strdup(env, (const unsigned char *)string, &global_hooks);
+        item->valuestring_length = strlen(item->valuestring);
         if (!item->valuestring) {
             cJSON_Delete(env, item);
             return NULL;
@@ -2180,6 +2183,7 @@ cJSON_CreateRaw(cJSON_Env * const env, const char * raw)
     if (item) {
         item->type = cJSON_Raw;
         item->valuestring = (char *)cJSON_strdup(env, (const unsigned char *)raw, &global_hooks);
+        item->valuestring_length = strlen(item->valuestring);
         if (!item->valuestring) {
             cJSON_Delete(env, item);
             return NULL;
@@ -2359,6 +2363,7 @@ cJSON_Duplicate(cJSON_Env * const env, const cJSON * item, cJSON_bool recurse)
     newitem->valuedouble = item->valuedouble;
     if (item->valuestring) {
         newitem->valuestring = (char *)cJSON_strdup(env, (unsigned char *)item->valuestring, &global_hooks);
+        newitem->valuestring_length = strlen(newitem->valuestring);
         if (!newitem->valuestring) {
             goto fail;
         }

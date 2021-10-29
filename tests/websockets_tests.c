@@ -124,7 +124,7 @@ static void websocket_client_wait_till_shutdown(websocket_client_t * const clien
     nanoseconds_t timer = {5000000000};
     nanoseconds_t start = sb_read_nanosecond_clock();
     while (websocket_client_tick(client)) {
-        sb_thread_yield();
+        sb_thread_sleep((milliseconds_t){1});
         const nanoseconds_t end = sb_read_nanosecond_clock();
         const nanoseconds_t dt = {end.ns - start.ns};
         if (timer.ns < dt.ns) {

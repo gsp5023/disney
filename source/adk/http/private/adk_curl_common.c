@@ -7,6 +7,7 @@
 #include "source/adk/http/private/adk_curl_common.h"
 
 #include "extern/curl/curl/include/curl/curl.h"
+#include "extern/mbedtls/mbedtls/include/mbedtls/platform.h"
 #include "extern/mbedtls/mbedtls/include/mbedtls/sha1.h"
 #include "mbedtls/ssl.h"
 #include "source/adk/file/file.h"
@@ -17,6 +18,8 @@
 #include "source/adk/runtime/private/file.h"
 #include "source/adk/steamboat/sb_platform.h"
 #include "source/adk/steamboat/sb_socket.h"
+#include "source/adk/telemetry/telemetry.h"
+#include "extern/mbedtls/mbedtls/include/mbedtls/error.h"
 
 #if defined(__linux__) || defined(_LEIA) || defined(_VADER)
 #include <netinet/in.h>
@@ -34,17 +37,6 @@
 #endif
 
 #include <limits.h>
-
-#ifdef _CURL_COMMON_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define CURL_COMMON_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define CURL_COMMON_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define CURL_COMMON_TRACE_POP() TRACE_POP()
-#else
-#define CURL_COMMON_TRACE_PUSH_FN()
-#define CURL_COMMON_TRACE_PUSH(_name)
-#define CURL_COMMON_TRACE_POP()
-#endif
 
 #define TAG_CURL_COMMON FOURCC('C', 'R', 'L', 'C')
 
@@ -171,6 +163,101 @@ void curl_common_free_certs(heap_t * const heap, sb_mutex_t * const optional_mut
     CURL_COMMON_TRACE_POP();
 }
 
+void curl_common_free_custom_certs(heap_t * const heap, sb_mutex_t * const optional_mutex, curl_common_custom_certs_t * const certs, const char * const tag) {
+    CURL_COMMON_TRACE_PUSH_FN();
+    curl_common_custom_certs_t * curr = certs;
+    if (optional_mutex) {
+        sb_lock_mutex(optional_mutex);
+    }
+    while (curr) {
+        heap_free(heap, curr->cert.ptr, tag);
+        if (curr->key.ptr) {
+            heap_free(heap, curr->key.ptr, tag);
+        }
+        curr = curr->next;
+    }
+    if (optional_mutex) {
+        sb_unlock_mutex(optional_mutex);
+    }
+    CURL_COMMON_TRACE_POP();
+}
+
+//Parses custom certs. First the certificates are parsed. If certificates are parsed correctly, the cert is checked for a private key.
+static CURLcode ssl_load_parse_custom_certs(mbedtls_ssl_config * const ssl_config, const mem_region_t cert_region, const char * const name, heap_t * const heap, sb_mutex_t * const optional_mutex, curl_common_custom_certs_t * custom_certs) {
+    CURL_COMMON_TRACE_PUSH_FN();
+    //Getting certificates
+    if (optional_mutex) {
+        sb_lock_mutex(optional_mutex);
+    }
+    mbedtls_x509_crt * const crt = heap_calloc(heap, sizeof(mbedtls_x509_crt), MALLOC_TAG);
+    if (optional_mutex) {
+        sb_unlock_mutex(optional_mutex);
+    }
+
+    mbedtls_x509_crt_init(crt);
+    const int crt_parse_error = mbedtls_x509_crt_parse(crt, cert_region.ptr, cert_region.size);
+    if (crt_parse_error == 0) {
+        LOG_DEBUG(TAG_CURL_COMMON, "Using cert bundle [%s] from memory successful.", name);
+    } else if (crt_parse_error > 0) {
+        LOG_ERROR(TAG_CURL_COMMON, "Using cert bundle [%s] from memory failed. %d certificates did not parse.", name, crt_parse_error);
+        CURL_COMMON_TRACE_POP();
+        return CURLE_ABORTED_BY_CALLBACK;
+    } else {
+        LOG_ERROR(TAG_CURL_COMMON, "Using cert bundle [%s] from memory failed with error %d", name, crt_parse_error);
+        CURL_COMMON_TRACE_POP();
+        return CURLE_ABORTED_BY_CALLBACK;
+    }
+
+    if (optional_mutex) {
+        sb_lock_mutex(optional_mutex);
+    }
+    if (!custom_certs) {
+        custom_certs = heap_calloc(heap, sizeof(curl_common_custom_certs_t), MALLOC_TAG);
+    } else {
+        curl_common_custom_certs_t * new_node = heap_calloc(heap, sizeof(curl_common_custom_certs_t), MALLOC_TAG);
+        ZEROMEM(new_node);
+        *new_node = *custom_certs;
+        custom_certs->next = new_node;
+    }
+    custom_certs->cert.ptr = crt;
+    custom_certs->cert.size = sizeof(mbedtls_x509_crt);
+
+    //Getting private key
+    mbedtls_pk_context * const pk = heap_calloc(heap, sizeof(mbedtls_pk_context), MALLOC_TAG);
+    if (optional_mutex) {
+        sb_unlock_mutex(optional_mutex);
+    }
+    mbedtls_pk_init(pk);
+    const int key_parse_error = mbedtls_pk_parse_key(pk, cert_region.ptr, cert_region.size, NULL, 0);
+    if (!key_parse_error) {
+        custom_certs->key.ptr = pk;
+        custom_certs->key.size = sizeof(mbedtls_pk_context);
+        LOG_DEBUG(TAG_CURL_COMMON, "Key from cert bundle [%s] loaded successfully", name);
+    } else {
+        if (optional_mutex) {
+            sb_lock_mutex(optional_mutex);
+        }
+        heap_free(heap, pk, MALLOC_TAG);
+        if (optional_mutex) {
+            sb_unlock_mutex(optional_mutex);
+        }
+        custom_certs->key.ptr = NULL;
+        custom_certs->key.size = 0;
+        char buf[200] = {0};
+        mbedtls_strerror(key_parse_error, buf, 200);
+        LOG_DEBUG(TAG_CURL_COMMON, "Key from cert bundle [%s] couldn't be loaded. Code: -0x%04X (%s)", name, (int) -key_parse_error, buf);
+    }
+    const int add_custom_cert_error = mbedtls_ssl_conf_own_cert(ssl_config, custom_certs->cert.ptr, custom_certs->key.ptr);
+    if (!add_custom_cert_error) {
+        CURL_COMMON_TRACE_POP();
+        return CURLE_OK;
+    } else {
+        LOG_DEBUG(TAG_CURL_COMMON, "Could not add cert bundle [%s] to custom cert list %d", name, add_custom_cert_error);
+        CURL_COMMON_TRACE_POP();
+        return CURLE_ABORTED_BY_CALLBACK;
+    }
+}
+
 static CURLcode ssl_load_parse_certs(mbedtls_x509_crt * const chain, const mem_region_t cert_region, const char * const name) {
     CURL_COMMON_TRACE_PUSH_FN();
     const int crt_parse_error = mbedtls_x509_crt_parse(chain, cert_region.ptr, cert_region.size);
@@ -188,27 +275,90 @@ static CURLcode ssl_load_parse_certs(mbedtls_x509_crt * const chain, const mem_r
     return CURLE_ABORTED_BY_CALLBACK;
 }
 
+static CURLcode ssl_ctx_handler_ca_chain(CURL * curl, void * sslctx, void * parm) {
+    ASSERT(parm);
+    mbedtls_x509_crt * const ca_chain = parm;
+    mbedtls_ssl_config * config = sslctx;
+    config->ca_chain = ca_chain;
+    return CURLE_OK;
+}
+
 static CURLcode ssl_ctx_handler(CURL * curl, void * sslctx, void * parm) {
-    curl_common_certs_t * certs = parm;
-    mbedtls_ssl_config * chain = sslctx;
+    curl_common_ssl_ctx_data_t * data = parm;
+    mbedtls_ssl_config * ssl_config = sslctx;
     CURL_COMMON_TRACE_PUSH_FN();
-    curl_common_certs_list_t * const cert_lists = (curl_common_certs_list_t *)certs;
-    for (size_t i = 0; i < sizeof(curl_common_certs_t) / sizeof(curl_common_certs_list_t); ++i) {
-        curl_common_certs_node_t * curr = cert_lists[i].head;
-        while (curr) {
-            const CURLcode cert_ret = ssl_load_parse_certs(chain->ca_chain, curr->cert, curr->name);
-            if (cert_ret != CURLE_OK) {
-                CURL_COMMON_TRACE_POP();
-                return cert_ret;
-            }
-            curr = curr->next;
+    curl_common_certs_list_t * const default_certs = &data->certs->default_certs;
+    curl_common_certs_list_t * const custom_certs = &data->certs->custom_certs;
+
+    curl_common_certs_node_t * curr = default_certs->head;
+    while (curr) {
+        const CURLcode cert_ret = ssl_load_parse_certs(ssl_config->ca_chain, curr->cert, curr->name);
+        if (cert_ret != CURLE_OK) {
+            CURL_COMMON_TRACE_POP();
+            return cert_ret;
         }
+        curr = curr->next;
+    }
+
+    curr = custom_certs->head;
+    while (curr) {
+        const CURLcode cert_ret = ssl_load_parse_custom_certs(ssl_config, curr->cert, curr->name, data->heap, NULL, data->custom_certs);
+        if (cert_ret != CURLE_OK) {
+            CURL_COMMON_TRACE_POP();
+            return cert_ret;
+        }
+        curr = curr->next;
     }
     CURL_COMMON_TRACE_POP();
     return CURLE_OK;
 }
 
-void curl_common_set_ssl_ctx(curl_common_certs_t * const certs, CURL * const curl, adk_curl_context_t * const ctx) {
+void curl_common_parse_certs_to_ca_chain(curl_common_certs_t * const certs, curl_common_ca_chain_t ** out_ca_chain) {
+    ASSERT(*out_ca_chain == NULL);
+    // TODO - This will resolve to nake malloc. Remove when https://jira.disneystreaming.com/browse/M5-1813 is finished
+    *out_ca_chain = mbedtls_calloc(1, sizeof(mbedtls_x509_crt));
+
+    void * const ca_chain = *out_ca_chain;
+    curl_common_certs_list_t * const cert_lists = (curl_common_certs_list_t *)certs;
+    for (size_t i = 0; i < sizeof(curl_common_certs_t) / sizeof(curl_common_certs_list_t); ++i) {
+        curl_common_certs_node_t * curr = cert_lists[i].head;
+        while (curr) {
+            const CURLcode cert_ret = ssl_load_parse_certs(ca_chain, curr->cert, curr->name);
+            if (cert_ret != CURLE_OK) {
+                return;
+            }
+            curr = curr->next;
+        }
+    }
+
+    (*out_ca_chain)->keep = 1;
+}
+
+void curl_common_free_ca_chain(curl_common_ca_chain_t * ca_chain) {
+    if (!ca_chain) {
+        return;
+    }
+    ca_chain->keep = 0;
+    mbedtls_x509_crt_free(ca_chain);
+}
+
+void curl_common_set_ssl_ctx_ca_chain(CURL * const curl, adk_curl_context_t * const ctx, void * ca_chain) {
+    /* Turn off the default CA locations, otherwise libcurl will load CA
+     * certificates from the locations that were detected/specified at
+     * build-time
+     */
+    adk_curl_context_t * const ctx_old = adk_curl_get_context();
+    adk_curl_set_context(ctx);
+    curl_easy_setopt(curl, CURLOPT_CAINFO, NULL);
+    curl_easy_setopt(curl, CURLOPT_CAPATH, NULL);
+
+    curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "PEM");
+    curl_easy_setopt(curl, CURLOPT_SSL_CTX_FUNCTION, ssl_ctx_handler_ca_chain);
+    curl_easy_setopt(curl, CURLOPT_SSL_CTX_DATA, ca_chain);
+    adk_curl_set_context(ctx_old);
+}
+
+void curl_common_set_ssl_ctx(curl_common_ssl_ctx_data_t * const data, CURL * const curl, adk_curl_context_t * const ctx) {
     /* Turn off the default CA locations, otherwise libcurl will load CA
      * certificates from the locations that were detected/specified at
      * build-time
@@ -220,7 +370,7 @@ void curl_common_set_ssl_ctx(curl_common_certs_t * const certs, CURL * const cur
 
     curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "PEM");
     curl_easy_setopt(curl, CURLOPT_SSL_CTX_FUNCTION, ssl_ctx_handler);
-    curl_easy_setopt(curl, CURLOPT_SSL_CTX_DATA, certs);
+    curl_easy_setopt(curl, CURLOPT_SSL_CTX_DATA, data);
     adk_curl_set_context(ctx_old);
 }
 

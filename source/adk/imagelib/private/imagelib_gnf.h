@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2020-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -46,6 +46,9 @@ enum {
     gnf_tile_shift = 20,
     gnf_type_mask = 0xf0000000L,
     gnf_type_shift = 28,
+    gnf_width_high_mask = 0x00000fffL,
+    gnf_width_low_shift = 30,
+    gnf_width_high_shift = 2,
     gnf_width_mask = 0x00003fffL,
     gnf_width_shift = 0
 

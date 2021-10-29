@@ -26,7 +26,27 @@ Canvas rendering test
 
 #define TAG_CANVAS_DEMO FOURCC('C', 'V', 'D', 'M')
 
+static const uint32_t clear_colors[5] = {
+    // Black,
+    0x000000FF,
+    // Teal - Manually construct each component
+    (0 << 24) + (255 << 16) + (255 << 8) + (255),
+    // Rest created via familiar hex codes
+    // Cornflower blue
+    0x6495edff,
+    // White
+    0xFFFFFFFF,
+    // Forest Green
+    0x228B22FF};
+
 static cg_font_context_t * font_ctx = NULL;
+static uint8_t current_clear_color_index = 0;
+
+static void tick_clear_color() {
+    current_clear_color_index++;
+    current_clear_color_index = current_clear_color_index % (sizeof(clear_colors) / sizeof(uint32_t));
+    cg_context_set_clear_color(clear_colors[current_clear_color_index]);
+}
 
 static bool dispatch_events_and_read_msecs(sb_window_t * const main_window, milliseconds_t * const msec_time) {
     const adk_event_t *head, *tail;
@@ -55,11 +75,24 @@ static bool dispatch_events_and_read_msecs(sb_window_t * const main_window, mill
             case adk_key_event: {
                 if ((event->event_data.key.event == adk_key_event_key_down) && (event->event_data.key.repeat == 0) && (event->event_data.key.key == adk_key_escape)) {
                     app_running = false;
+                } else if ((event->event_data.key.event == adk_key_event_key_down) && (event->event_data.key.repeat == 0) && (event->event_data.key.key == adk_key_c)) {
+                    tick_clear_color();
                 }
             } break;
             case adk_stb_input_event: {
-                if ((event->event_data.stb_input.repeat == 0) && (event->event_data.stb_input.stb_key == adk_stb_key_back)) {
-                    app_running = false;
+                if (event->event_data.stb_input.repeat == 0) {
+                    switch (event->event_data.stb_input.stb_key) {
+                        case adk_stb_key_back: {
+                            app_running = false;
+                            break;
+                        }
+                        case adk_stb_key_blue: {
+                            tick_clear_color();
+                            break;
+                        }
+                        default:
+                            break;
+                    }
                 }
             } break;
             case adk_gamepad_event: {
@@ -179,6 +212,18 @@ static void cg_canvas_demo_step(const images_to_draw_t images, const int mouse_x
     cg_context_rounded_rect((cg_rect_t){.x = 300, .y = 25, .width = 300, .height = 100}, 20, MALLOC_TAG);
     cg_context_fill(MALLOC_TAG);
     cg_context_stroke(MALLOC_TAG);
+
+    cg_context_save();
+
+    cg_context_set_global_alpha(1.0f);
+    cg_context_translate((cg_vec2_t){.x = 175, .y = 25});
+    cg_context_fill_style((cg_color_t){.r = 125.f, .g = 125.f, .b = 30.f, .a = 255.f});
+    cg_context_sdf_fill_rect_rounded((cg_rect_t){.x = -5, .y = -5, .width = 110, .height = 110}, (cg_sdf_rect_params_t){.roundness = 1000});
+    cg_context_fill_style((cg_color_t){.r = 125.f, .g = 30.f, .b = 30.f, .a = 255.f});
+    cg_context_scale((cg_vec2_t){1 / 2.f, 1 / 2.f});
+    cg_context_sdf_fill_rect_rounded((cg_rect_t){.x = 25, .y = 50, .width = 150, .height = 100}, (cg_sdf_rect_params_t){.roundness = 1000});
+
+    cg_context_restore();
 
     // face
     cg_context_set_line_width(2.0);
@@ -363,9 +408,11 @@ int canvas_demo_main(const int argc, const char * const * const argv) {
     sb_enumerate_display_modes_result_t display_mode_result;
     sb_enumerate_display_modes(the_app.display_settings.curr_display, the_app.display_settings.curr_display_mode, &display_mode_result);
 
+    cg_context_set_clear_color(clear_colors[current_clear_color_index]);
+
     sb_text_to_speech("Hello World");
     while (dispatch_events_and_read_msecs(the_app.window, &time)) {
-        TRACE_PUSH_FN();
+        APP_THUNK_TRACE_PUSH_FN();
         adk_curl_run_callbacks();
         thread_pool_run_completion_callbacks(&the_app.default_thread_pool);
 
@@ -392,6 +439,9 @@ int canvas_demo_main(const int argc, const char * const * const argv) {
             if (fps_time.ms >= 1000) {
                 const milliseconds_t ms_per_frame = {fps_time.ms / num_frames};
                 LOG_ALWAYS(TAG_CANVAS_DEMO, "[%4d] FPS: [%dms/frame]", (ms_per_frame.ms > 0) ? 1000 / ms_per_frame.ms : 1000, ms_per_frame.ms);
+
+                render_device_log_resource_tracking(the_app.render_device, the_app.runtime_config.renderer.render_resource_tracking.periodic_logging);
+
                 fps_time.ms = 0;
                 num_frames = 0;
             }
@@ -426,7 +476,7 @@ int canvas_demo_main(const int argc, const char * const * const argv) {
         } else {
             last_time = time;
         }
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
         TRACE_TICK();
     }
 

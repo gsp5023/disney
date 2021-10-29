@@ -590,21 +590,16 @@ IMPL_MIN_MAX_CLAMP(float)
     }                                                                  \
     LL_ASSERT_INVARIANTS("LL_ADD(post): ", _prev, _next, _head, _tail)
 
-#define LL_INSERT(_before_pos, _item, _prev, _next, _head, _tail)         \
-    LL_ASSERT_INVARIANTS("LL_INSERT(pre): ", _prev, _next, _head, _tail); \
-    if (_before_pos) {                                                    \
-        (_item)->_prev = (_before_pos)->_prev;                            \
-        (_item)->_next = _before_pos;                                     \
-        if ((_before_pos)->_prev) {                                       \
-            (_before_pos)->_prev->_next = _item;                          \
-        } else {                                                          \
-            _head = _item;                                                \
-        }                                                                 \
-        (_before_pos)->_prev = _item;                                     \
-    } else {                                                              \
-        LL_ADD(_item, _next, _prev, _head, _tail);                        \
-    }                                                                     \
-    LL_ASSERT_INVARIANTS("LL_INSERT(post): ", _prev, _next, _head, _tail)
+#define LL_PUSH_FRONT(_item, _prev, _next, _head, _tail)                      \
+    LL_ASSERT_INVARIANTS("LL_PUSH_FRONT(pre): ", _prev, _next, _head, _tail); \
+    if (_head) {                                                              \
+        (_item)->_next = _head;                                               \
+        _head->prev = _item;                                                  \
+        _head = _item;                                                        \
+    } else {                                                                  \
+        LL_ADD(_item, _prev, _next, _head, _tail);                            \
+    }                                                                         \
+    LL_ASSERT_INVARIANTS("LL_PUSH_FRONT(post): ", _prev, _next, _head, _tail)
 
 #define LL_REMOVE(_item, _prev, _next, _head, _tail)                      \
     LL_ASSERT_INVARIANTS("LL_REMOVE(pre): ", _prev, _next, _head, _tail); \

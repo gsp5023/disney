@@ -33,8 +33,11 @@ third_party_project "wasm3"
 
 local m = {}
 
-function m.link()
+function m.configure()
 	defines "_WASM3"
+end
+
+function m.link()
 	filter {KIND_APP}
 		links "wasm3"
 end

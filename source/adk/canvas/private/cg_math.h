@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -50,6 +50,10 @@ FFI_TYPE_MODULE(canvas)
 typedef struct cg_vec2_t {
     float x, y;
 } cg_vec2_t;
+
+typedef struct cg_ivec2_t {
+    int x, y;
+} cg_ivec2_t;
 
 /* ===========================================================================
  * AFFINE

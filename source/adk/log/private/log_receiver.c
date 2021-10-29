@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -110,13 +110,13 @@ static int on_log_msg_received(cncbus_receiver_t * const self, const cncbus_msg_
 
     if (log_receiver.tty_options.colorize) {
         const uint8_t color_attribute_value = (log_header.level == log_level_error) ? tty_permitted_color_attribute_values[tty_color_red] : tty_tag_options->color_attribute_value;
-        if (log_receiver.tty_options.show_location) {
+        if (log_receiver.tty_options.show_location && log_header.level != log_level_app) {
             debug_write_line("%s(%d): %s()\n\x1b[%dm[%s][%*.*s][%s] %s \x1b[0m", log_header.file, log_header.line, log_header.func, color_attribute_value, time_str, 4, 4, (char *)&log_header.fourcc_tag, log_get_level_short_name(log_header.level), log_msg);
         } else {
             debug_write_line("\x1b[%dm[%s][%*.*s][%s] %s \x1b[0m", color_attribute_value, time_str, 4, 4, (char *)&log_header.fourcc_tag, log_get_level_short_name(log_header.level), log_msg);
         }
     } else {
-        if (log_receiver.tty_options.show_location) {
+        if (log_receiver.tty_options.show_location && log_header.level != log_level_app) {
             debug_write_line("%s(%d): %s()\n[%s][%*.*s][%s] %s", log_header.file, log_header.line, log_header.func, time_str, 4, 4, (char *)&log_header.fourcc_tag, log_get_level_short_name(log_header.level), log_msg);
         } else {
             debug_write_line("[%s][%*.*s][%s] %s", time_str, 4, 4, (char *)&log_header.fourcc_tag, log_get_level_short_name(log_header.level), log_msg);

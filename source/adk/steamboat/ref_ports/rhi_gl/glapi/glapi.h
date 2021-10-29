@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -121,7 +121,7 @@ static void gl_logger_callback(GLenum source, GLenum type, GLuint id, GLenum sev
     ASSERT((type - GL_DEBUG_TYPE_ERROR) < 6);
     ASSERT((severity - GL_DEBUG_SEVERITY_HIGH) < 6);
 
-    LOG_DEBUG(TAG_GLAPI, "gldbg [%s][%s][%s] %s", str_source[source - GL_DEBUG_SOURCE_API], str_type[type - GL_DEBUG_TYPE_ERROR], (severity == GL_DEBUG_SEVERITY_NOTIFICATION) ? "INFO" : str_severity[severity - GL_DEBUG_SEVERITY_HIGH], message);
+    debug_write_line("gldbg [%s][%s][%s] %s", str_source[source - GL_DEBUG_SOURCE_API], str_type[type - GL_DEBUG_TYPE_ERROR], (severity == GL_DEBUG_SEVERITY_NOTIFICATION) ? "INFO" : str_severity[severity - GL_DEBUG_SEVERITY_HIGH], message);
     if ((type != GL_DEBUG_TYPE_OTHER) && (type != GL_DEBUG_TYPE_PERFORMANCE)) {
         DBG_BREAK();
     }

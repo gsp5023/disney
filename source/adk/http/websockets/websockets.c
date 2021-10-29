@@ -17,28 +17,9 @@
 #include "source/adk/runtime/rand_gen.h"
 #include "source/adk/runtime/runtime.h"
 #include "source/adk/steamboat/sb_platform.h"
+#include "source/adk/telemetry/telemetry.h"
 
 #include <ctype.h>
-
-#ifdef _WEBSOCKET_FULL_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define WEBSOCKET_FULL_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define WEBSOCKET_FULL_TRACE_POP() TRACE_POP()
-#else
-#define WEBSOCKET_FULL_TRACE_PUSH_FN()
-#define WEBSOCKET_FULL_TRACE_POP()
-#endif
-
-#ifdef _WEBSOCKET_MINIMAL_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define WEBSOCKET_MINIMAL_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define WEBSOCKET_MINIMAL_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define WEBSOCKET_MINIMAL_TRACE_POP() TRACE_POP()
-#else
-#define WEBSOCKET_MINIMAL_TRACE_PUSH_FN()
-#define WEBSOCKET_MINIMAL_TRACE_PUSH(_name)
-#define WEBSOCKET_MINIMAL_TRACE_POP()
-#endif
 
 #define _WS_SHIM_SUPPORT
 
@@ -222,6 +203,8 @@ struct websocket_t {
     } ws_shim_support;
 #endif
 
+    curl_common_ssl_ctx_data_t ssl_ctx_data;
+
     const char * tag;
 };
 
@@ -340,6 +323,10 @@ websocket_client_t * websocket_client_emplace_init(const mem_region_t region, co
 
 void websocket_client_dump_heap_usage(const websocket_client_t * const websocket_client) {
     heap_dump_usage(websocket_client->heap);
+}
+
+heap_metrics_t websocket_client_get_heap_metrics(const websocket_client_t * const websocket_client) {
+    return heap_get_metrics(websocket_client->heap);
 }
 
 static void ws_free(websocket_t * const ws);
@@ -577,6 +564,8 @@ static void ws_close(websocket_t * const ws, uint16_t reason, const char * const
         ws->send_buffer.message_size = msg_size;
         ws->send_buffer.amount_sent = bytes_sent;
         ASSERT(ws->send_buffer.message_size >= ws->send_buffer.amount_sent);
+    } else if (bytes_sent == msg_size) {
+        ws->status = ws_to_close_status(ws->status);
     }
     WEBSOCKET_FULL_TRACE_POP();
 }
@@ -586,6 +575,8 @@ static void ws_ping_pong(websocket_t * const ws, const ws_op_code_e op_code) {
     const ws_frame_t ping_frame = {
         .fin = 1,
         .op_code = op_code,
+        .masked = 1,
+        .mask = ws_mask_gen(ws),
     };
     size_t frame_end;
     ws_construct_frame(ws->send_buffer.buffer, ping_frame, &frame_end);
@@ -677,7 +668,7 @@ static void ws_signal_allocation_failure(websocket_t * const ws, const size_t al
     ws->status = websocket_status_closed;
     ws->error = websocket_error_allocation_failure;
     LOG_ERROR(WS_TAG, "%s: Allocation failed!\nSize: [%" PRIu64 "]\n", tag, (uint64_t)alloc_size);
-#if defined(_CONSOLE) || !defined(_SHIP)
+#if defined(_CONSOLE_NATIVE) || !defined(_SHIP)
     heap_dump_usage(ws->client->heap);
 #endif
 }
@@ -1311,15 +1302,20 @@ static curl_connect_only_handle_t * ws_create_connect_only(websocket_t * const w
 
     curl_easy_setopt(handle->curl_handle, CURLOPT_URL, ws->connection.url);
     curl_easy_setopt(handle->curl_handle, CURLOPT_CONNECT_ONLY, 1L);
+    curl_easy_setopt(handle->curl_handle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
     curl_common_set_socket_callbacks(handle->curl_handle, ws->client->curl_ctx);
 #ifdef _WS_SHIM_SUPPORT
     if (ws->ws_shim_support.certs.custom_certs.head) {
-        curl_common_set_ssl_ctx(&ws->ws_shim_support.certs, handle->curl_handle, ws->client->curl_ctx);
+        ws->ssl_ctx_data.certs = &ws->ws_shim_support.certs;
+        ws->ssl_ctx_data.heap = ws->client->heap;
+        curl_common_set_ssl_ctx(&ws->ssl_ctx_data, handle->curl_handle, ws->client->curl_ctx);
     } else
 #endif
     {
-        curl_common_set_ssl_ctx(&ws->client->certs, handle->curl_handle, ws->client->curl_ctx);
+        ws->ssl_ctx_data.certs = &ws->client->certs;
+        ws->ssl_ctx_data.heap = ws->client->heap;
+        curl_common_set_ssl_ctx(&ws->ssl_ctx_data, handle->curl_handle, ws->client->curl_ctx);
     }
     curl_easy_setopt(handle->curl_handle, CURLOPT_PRIVATE, handle);
 
@@ -1489,6 +1485,7 @@ websocket_t * websocket_create(
     ws->client = websocket_client;
     ws->http_handshake.optional_user_headers = optional_additional_headers;
     ws->http_handshake.remaining_redirects_allowed = config.maximum_redirects;
+    ws->ssl_ctx_data.custom_certs = NULL;
 
     ws_url_fragments_t url_fragments;
     if (!ws_alloc_url_and_parse_fragments(ws, url, &url_fragments)) {
@@ -1561,9 +1558,10 @@ websocket_t * websocket_create_with_ssl_ctx(
     ws->client = websocket_client;
     ws->http_handshake.optional_user_headers = optional_additional_headers;
     ws->http_handshake.remaining_redirects_allowed = config.maximum_redirects;
+    ws->ssl_ctx_data.custom_certs = NULL;
 
+    curl_common_load_cert_from_memory(ws->client->heap, NULL, &ws->ws_shim_support.certs.custom_certs, ssl_client.consted, "ssl_client", MALLOC_TAG);
     curl_common_load_cert_from_memory(ws->client->heap, NULL, &ws->ws_shim_support.certs.custom_certs, ssl_ca.consted, "ssl_ca", MALLOC_TAG);
-    curl_common_load_cert_from_memory(ws->client->heap, NULL, &ws->ws_shim_support.certs.custom_certs, ssl_client.consted, "ssl_ca", MALLOC_TAG);
     ws->ws_shim_support.certs.default_certs = websocket_client->certs.default_certs;
 
     ws_url_fragments_t url_fragments;
@@ -1728,6 +1726,8 @@ static void ws_free(websocket_t * const ws) {
         heap_free(ws->client->heap, ws->send_buffer.buffer.ptr, MALLOC_TAG);
     }
     ws_free_temporary_handshake_data(ws);
+    curl_common_free_custom_certs(ws->client->heap, NULL, ws->ssl_ctx_data.custom_certs, MALLOC_TAG);
+    ws->ssl_ctx_data.custom_certs = NULL;
     heap_free(ws->client->heap, ws, MALLOC_TAG);
     WEBSOCKET_MINIMAL_TRACE_POP();
 }

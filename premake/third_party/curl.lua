@@ -81,7 +81,7 @@ third_party_project "m5-curl"
 		"HAVE_STRUCT_TIMEVAL",
 		"HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID",
 		"USE_MBEDTLS",
-		"USE_SB_SOCKET"
+		"USE_SB_SOCKET",
 	}
 
 filter {"platforms:not leia","platforms:not vader"}
@@ -110,8 +110,6 @@ filter "platforms:*32"
 filter "platforms:*win*"
 	defines {
 		"in_addr_t=unsigned long",
-		"WINVER="..WINVER,
-		"WIN32_WINNT="..WINVER,
 		"HAVE_WINDOWS_H",
 		"HAVE_WINSOCK2_H",
 		"HAVE_PROCESS_H",
@@ -182,6 +180,14 @@ includedirs "extern/curl/curl/include"
 includedirs "extern/zlib"
 includedirs "extern/mbedtls/mbedtls/include"
 
+filter "options:curl-http2"
+	defines {
+		"USE_NGHTTP2",
+		"NGHTTP2_STATICLIB=1"
+	}
+	includedirs "extern/nghttp2-1.43.0/lib/includes"
+filter {}
+
 files {
 	"curl/curl_config.h",
 	"curl/curl/include/curl/**.h",
@@ -211,6 +217,8 @@ function m.link()
 		links "mbedtls"
 	filter {"platforms:*win*", KIND_APP}
 		links "ws2_32"
+	filter "options:curl-http2"
+		links "nghttp2_static"
 end
 
 return m

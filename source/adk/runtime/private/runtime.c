@@ -11,6 +11,7 @@ Basic runtime stuff, asserts
 */
 
 #include _PCH
+
 #include "source/adk/runtime/runtime.h"
 
 #include "source/adk/interpreter/interp_api.h"
@@ -20,17 +21,7 @@ Basic runtime stuff, asserts
 #include "source/adk/steamboat/sb_display.h"
 #include "source/adk/steamboat/sb_platform.h"
 #include "source/adk/steamboat/sb_thread.h"
-
-#ifdef _RUNTIME_TRACE
 #include "source/adk/telemetry/telemetry.h"
-#define RUNTIME_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define RUNTIME_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define RUNTIME_TRACE_POP() TRACE_POP()
-#else
-#define RUNTIME_TRACE_PUSH_FN()
-#define RUNTIME_TRACE_PUSH(_name)
-#define RUNTIME_TRACE_POP()
-#endif
 
 /*
 =======================================
@@ -201,15 +192,22 @@ void adk_shutdown(const char * const tag) {
     RUNTIME_TRACE_POP();
 }
 
-void adk_halt(const char * const message) {
-    sb_halt(message);
-}
-
 void adk_get_system_metrics(adk_system_metrics_t * const out) {
     RUNTIME_TRACE_PUSH_FN();
 
     ZEROMEM(out);
     sb_get_system_metrics(out);
+    adk_runtime_override_system_metrics(out);
+#if defined(BRCM_DEVICE_OVERRIDE_HIGH) 
+    // Force metrics device alignment if we are overriding
+    VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), "97xx_high"));
+#elif defined(BRCM_DEVICE_OVERRIDE_MID) 
+    // Force metrics device alignment if we are overriding
+    VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), "97xx_mid"));
+#elif defined(BRCM_DEVICE_OVERRIDE_LOW)
+    // Force metrics device alignment if we are overriding
+    VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), "97xx_low"));
+#endif    
     VERIFY(0 == strcpy_s(out->core_version, ARRAY_SIZE(out->core_version), ADK_VERSION_STRING));
 #if defined(_SHIP)
 #if defined(NDEBUG)
@@ -251,6 +249,7 @@ adk_memory_reservations_t adk_get_default_memory_reservations() {
             .cncbus = 2 * 1024 * 1024,
             .json_deflate = 10 * 1024 * 1024,
             .default_thread_pool = 256 * 1024,
+            .ssl = 10 * 1024 * 1024,
             .http2 = 2 * 1024 * 1024,
             .httpx = 2 * 1024 * 1024,
             .httpx_fragment_buffers = 4 * 1024 * 1024,

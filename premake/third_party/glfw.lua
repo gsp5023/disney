@@ -63,7 +63,7 @@ third_party_project "glfw"
 
 local m = {}
 
-function m.link(prj)
+function m.link_platform(prj)
 	if prj.name ~= "glfw" then
 		filter(glfw_platforms)
 			defines {"_GLFW"}

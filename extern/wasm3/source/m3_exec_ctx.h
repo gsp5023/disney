@@ -17,13 +17,7 @@ typedef struct m3_exec_ctx {
     size_t callstack_len;
 } m3_exec_ctx;
 
-static inline void m3_exec_ctx_push_call(m3_exec_ctx * const ctx, IM3Function function) {
-    assert(ctx->callstack_len <= M3_CALLSTACK_MAX_DEPTH);
-    ctx->callstack[ctx->callstack_len++] = function;
-}
-
-static inline void m3_exec_ctx_pop_call(m3_exec_ctx * const ctx) {
-    ctx->callstack_len -= 1;
-}
+void m3_exec_ctx_push_call(m3_exec_ctx * const ctx, IM3Function function);
+void m3_exec_ctx_pop_call(m3_exec_ctx * const ctx);
 
 d_m3EndExternC

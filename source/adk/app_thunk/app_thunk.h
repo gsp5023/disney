@@ -45,14 +45,8 @@ typedef struct adk_app_t {
     struct {
         cg_context_t context;
         cg_gl_state_t cg_gl;
-        uint32_t max_states;
-        uint32_t max_tesselation_steps;
-        bool enable_punchthrough_blend_mode_fix;
-        cg_context_dimension_t font_atlas;
     } canvas;
-    milliseconds_t elapsed_time;
     system_guard_page_mode_e guard_page_mode;
-    int frame_count;
     struct {
         int num_frames;
         milliseconds_t time;
@@ -62,9 +56,9 @@ typedef struct adk_app_t {
         int curr_display_mode;
         bool _720p_hack;
     } display_settings;
-    struct adk_httpx_api_t * httpx;
-    adk_httpx_client_t * reporting_instance_httpx_client;
+    adk_httpx_client_t * httpx_client;
     adk_reporting_instance_t * reporting_instance;
+    runtime_configuration_t runtime_config;
 } adk_app_t;
 
 FFI_EXPORT typedef struct native_slice_t {
@@ -90,6 +84,22 @@ typedef enum adk_dump_heap_flags_e {
 } adk_dump_heap_flags_e;
 
 FFI_EXPORT
+FFI_TYPE_MODULE(memory)
+FFI_ENUM_CLEAN_NAMES
+FFI_ENUM_CAPITALIZE_NAMES
+typedef enum adk_query_heap_e {
+    adk_heap_runtime,
+    adk_heap_rhi_and_renderer,
+    adk_heap_canvas_low,
+    adk_heap_canvas_high,
+    adk_heap_http_curl,
+    adk_heap_http2,
+    adk_heap_json_deflate,
+    adk_heap_wasm_low,
+    adk_heap_wasm_high
+} adk_heap_e;
+
+FFI_EXPORT
 FFI_ENUM_CLEAN_NAMES
 typedef enum adk_memory_mode_e {
     adk_memory_mode_low = 2,
@@ -107,12 +117,18 @@ DLL_EXPORT int adk_main(const int argc, const char * const * const argv);
 bool app_init_subsystems(const runtime_configuration_t runtime_config);
 
 bool app_subsystem_initialized(void);
+void app_shutdown_thunk();
 
 FFI_EXPORT
 FFI_NAME(adk_init_main_display)
 void app_init_main_display(const int32_t display_index, const int32_t display_mode_index, FFI_PTR_WASM const char * const adk_app_name);
 
-void app_shutdown_main_display();
+typedef enum app_display_shutdown_mode_e {
+    app_display_shutdown_mode_destroy_window,
+    app_display_shutdown_mode_keep_window,
+} app_display_shutdown_mode_e;
+
+void app_shutdown_main_display(const app_display_shutdown_mode_e window);
 
 /// Return lowest refresh rate greater than or equal to the given refresh rate that is supported by the current display at the current
 /// resolution.  Can be used to check if a rate is supported and to enumerate available refresh rates at current resolution.
@@ -201,7 +217,7 @@ FFI_EXPORT int32_t read_events(FFI_PTR_WASM FFI_SLICE void * const evbuffer, int
 
 FFI_EXPORT void adk_notify_app_status(const sb_app_notify_e notify);
 
-FFI_EXPORT FFI_NO_RUST_THUNK heap_metrics_t adk_get_wasm_heap_usage();
+FFI_EXPORT FFI_NO_RUST_THUNK heap_metrics_t adk_get_heap_usage(const adk_heap_e heap);
 
 FFI_EXPORT FFI_NAME(adk_get_deeplink_buffer) native_slice_t adk_get_deeplink_buffer_bridge(FFI_PTR_NATIVE const sb_deeplink_handle_t * const handle);
 
@@ -211,6 +227,15 @@ void adk_clear_wasm_error_and_stack_trace();
 
 FFI_EXPORT FFI_NO_RUST_THUNK FFI_CAN_BE_NULL FFI_PTR_NATIVE const char * adk_get_env(
     FFI_PTR_WASM const char * const env_name);
+
+/// Enables min_log_level override via CLI arguments in native and ffi builds.
+/// Returns true is `cli_arg_value` has been successfully parsed and `min_log_level` was reset.
+bool adk_try_override_min_log_level(const char * const cli_arg_value);
+
+#ifdef _NATIVE_FFI
+typedef struct rust_callbacks_t rust_callbacks_t;
+void adk_thunk_init(const int argc, const char * const * const argv, const rust_callbacks_t * const rust_callbacks);
+#endif
 
 #ifdef __cplusplus
 }

@@ -12,21 +12,19 @@
 
 #include _PCH
 
-#pragma push_macro("NDEBUG")
-#undef NDEBUG
 #include "source/adk/log/log.h"
-
-#include <assert.h>
-#include <uuid/uuid.h>
-
-#pragma pop_macro("NDEBUG")
-
 #include "source/adk/runtime/app/app.h"
 #include "source/adk/steamboat/private/private_apis.h"
+#include "source/adk/steamboat/ref_ports/sb_linux_shared.h"
 #include "source/adk/steamboat/sb_platform.h"
 #include "source/adk/steamboat/sb_system_metrics.h"
 
-#ifdef _RPI2
+#pragma push_macro("NDEBUG")
+#undef NDEBUG
+#include <assert.h>
+#pragma pop_macro("NDEBUG")
+
+#ifdef _USE_DISPMANX
 #include "dispmanx.h"
 #else
 #include "source/adk/steamboat/private/glfw/glfw_support.h"
@@ -35,10 +33,25 @@
 #endif
 #endif
 
+#if _USE_UUID == 0
+static void uuid_generate(uint8_t id[16]) {
+    STATIC_ASSERT(sizeof(int) == 4);
+
+    const size_t size = sizeof(int);
+    const int x = rand(), y = rand(), z = rand(), w = rand();
+    memcpy(id, &x, size);
+    memcpy(id + size, &y, size);
+    memcpy(id + size * 2, &z, size);
+    memcpy(id + size * 3, &w, size);
+}
+#else
+#include <uuid/uuid.h>
+#endif
+
 #define TAG_RT_LINUX FOURCC('R', 'T', 'L', 'X')
 
 static struct {
-#ifdef _RPI2
+#ifdef _USE_DISPMANX
     dispmanx_window_t * main_win;
 #else
     GLFWwindow * main_win;
@@ -49,7 +62,7 @@ extern const char * sb_persona_id;
 
 bool __sb_posix_init_platform(adk_api_t * api, const int argc, const char * const * const argv) {
     if (!api->runtime_flags.headless) {
-#ifdef _RPI2
+#ifdef _USE_DISPMANX
         if (!dispmanx_init()) {
             LOG_ERROR(TAG_RT_LINUX, "dispmanx_init() failed.");
             return false;
@@ -69,7 +82,7 @@ bool __sb_posix_init_platform(adk_api_t * api, const int argc, const char * cons
 }
 
 void __sb_posix_shutdown_platform() {
-#ifdef _RPI2
+#ifdef _USE_DISPMANX
     dispmanx_shutdown();
 #else
 #ifdef _RPI4
@@ -84,16 +97,13 @@ void __sb_posix_get_device_id(adk_system_metrics_t * const out);
 void sb_get_system_metrics(adk_system_metrics_t * const out) {
     ZEROMEM(out);
 
-    // partner and partner_guid must be valid AWS S3 bucket names
     VERIFY(0 == strcpy_s(out->vendor, ARRAY_SIZE(out->vendor), SB_METRICS_VENDOR));
-    VERIFY(0 == strcpy_s(out->partner, ARRAY_SIZE(out->partner), SB_METRICS_PARTNER));
 
     VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), SB_METRICS_DEVICE));
 
     VERIFY(0 == strcpy_s(out->software, ARRAY_SIZE(out->software), SB_METRICS_SOFTWARE));
     VERIFY(0 == strcpy_s(out->revision, ARRAY_SIZE(out->revision), SB_METRICS_REVISION));
     VERIFY(0 == strcpy_s(out->gpu, ARRAY_SIZE(out->gpu), SB_METRICS_GPU));
-    VERIFY(0 == strcpy_s(out->partner_guid, ARRAY_SIZE(out->partner_guid), SB_METRICS_PARTNER_GUID));
     VERIFY(0 == strcpy_s(out->advertising_id, ARRAY_SIZE(out->advertising_id), SB_METRICS_ADVERTISING_ID));
     VERIFY(0 == strcpy_s(out->device_region, ARRAY_SIZE(out->device_region), SB_METRICS_REGION));
     VERIFY(0 == strcpy_s(out->firmware, ARRAY_SIZE(out->firmware), SB_METRICS_FIRMWARE));
@@ -133,7 +143,7 @@ sb_window_t * sb_init_main_display(const int display_index, const int display_mo
     ASSERT(!statics.main_win);
     sb_enumerate_display_modes_result_t display_results;
     VERIFY_MSG(sb_enumerate_display_modes(display_index, display_mode_index, &display_results), "Received invalid display index or display mode index when initing main display.");
-#ifdef _RPI2
+#ifdef _USE_DISPMANX
     statics.main_win = dispmanx_create_window(display_results.display_mode.width, display_results.display_mode.height, MALLOC_TAG);
     return (sb_window_t *)statics.main_win;
 #else
@@ -151,7 +161,7 @@ sb_window_t * sb_init_main_display(const int display_index, const int display_mo
 #endif
 }
 
-#ifndef _RPI2
+#ifndef _USE_DISPMANX
 bool sb_set_main_display_refresh_rate(const int32_t hz) {
     if (statics.main_win == NULL) {
         return false; // not initialized
@@ -175,7 +185,7 @@ bool sb_set_main_display_refresh_rate(const int32_t hz) {
 
 void sb_destroy_main_window() {
     if (statics.main_win) {
-#ifdef _RPI2
+#ifdef _USE_DISPMANX
         dispmanx_close_window(statics.main_win, MALLOC_TAG);
 #else
         glfwDestroyWindow((GLFWwindow *)statics.main_win);
@@ -185,7 +195,7 @@ void sb_destroy_main_window() {
 }
 
 void sb_get_window_client_area(sb_window_t * const window, int * const out_width, int * const out_height) {
-#ifdef _RPI2
+#ifdef _USE_DISPMANX
     dispmanx_get_window_size((dispmanx_window_t *)window, out_width, out_height);
 #else
     glfwGetWindowSize((GLFWwindow *)window, out_width, out_height);
@@ -208,10 +218,13 @@ void sb_tick(const adk_event_t ** const head, const adk_event_t ** const tail) {
 #endif
 
     adk_lock_events();
+
+    process_network_status();
+
     // NOTE: the event system here can be journaled to a file
     // and then played back. Since time is part of the event queue
     // it is possible to reconstruct identical inputs.
-#ifdef _RPI2
+#ifdef _USE_DISPMANX
     dispmanx_dispatch_events();
 #else
     glfwPollEvents();

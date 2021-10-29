@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -44,12 +44,15 @@ bool sb_enumerate_display_modes(const int32_t display_index, const int32_t displ
     ZEROMEM(out_results);
 
     GLFWmonitor * const monitor = get_glfw_monitor_by_index(display_index);
+    if (!monitor) {
+        return false;
+    }
 
     if (statics.display_mode_count == 0) {
         load_file_display_modes(monitor);
     }
 
-    if (!monitor || (display_mode_index < 0) || (display_mode_index > statics.display_mode_count)) {
+    if ((display_mode_index < 0) || (display_mode_index >= statics.display_mode_count)) {
         return false;
     }
 

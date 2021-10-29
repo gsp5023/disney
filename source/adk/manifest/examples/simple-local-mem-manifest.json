@@ -9,7 +9,11 @@
         ],
         "runtime_config": {
           "sys_params": {
-            "wasm_memory_size": 50331648,
+            "wasm_memory_size": {
+              "low": 16777216,
+              "high": 33554432,
+              "allocation_threshold": 102400
+            },
             "memory_reservations": {
               "low": {
                 "runtime": 17408,

@@ -18,17 +18,7 @@ JSON deflate library API.
 #include "source/adk/runtime/thread_pool.h"
 #include "source/adk/steamboat/sb_file.h"
 #include "source/adk/steamboat/sb_platform.h"
-
-#ifdef _JSON_DEFLATE_TRACE
 #include "source/adk/telemetry/telemetry.h"
-#define JSON_DEFLATE_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define JSON_DEFLATE_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define JSON_DEFLATE_TRACE_POP() TRACE_POP()
-#else
-#define JSON_DEFLATE_TRACE_PUSH_FN()
-#define JSON_DEFLATE_TRACE_PUSH(_name)
-#define JSON_DEFLATE_TRACE_POP()
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,6 +68,7 @@ void * json_deflate_realloc(void * const ptr, const size_t size);
 void json_deflate_free(void * const ptr);
 void json_deflate_shutdown(void);
 void json_deflate_dump_heap_usage();
+heap_metrics_t json_deflate_get_heap_metrics(void);
 
 json_deflate_parse_data_result_t json_deflate_parse_data(const const_mem_region_t schema_layout, const const_mem_region_t data, const mem_region_t buffer, const json_deflate_parse_target_e target, const uint32_t expected_size, const uint32_t schema_hash);
 void json_deflate_parse_data_async(const const_mem_region_t schema_layout, const const_mem_region_t data, const mem_region_t buffer, const json_deflate_parse_target_e target, const uint32_t expected_size, const uint32_t schema_hash, void * const on_complete);
@@ -89,6 +80,16 @@ FFI_EXPORT FFI_PTR_NATIVE json_deflate_http_future_t * json_deflate_parse_httpx_
     FFI_PTR_WASM FFI_SLICE const uint8_t * const schema_layout,
     FFI_TYPE_OVERRIDE(uint64_t) const size_t schema_layout_size,
     FFI_PTR_NATIVE adk_httpx_request_t * const request,
+    FFI_PTR_WASM const uint8_t * const buffer,
+    FFI_TYPE_OVERRIDE(uint64_t) const size_t buffer_size,
+    const json_deflate_parse_target_e target,
+    const uint32_t expected_size,
+    const uint32_t schema_hash);
+
+FFI_EXPORT FFI_PTR_NATIVE json_deflate_http_future_t * json_deflate_parse_httpx_response_async(
+    FFI_PTR_WASM FFI_SLICE const uint8_t * const schema_layout,
+    FFI_TYPE_OVERRIDE(uint64_t) const size_t schema_layout_size,
+    FFI_PTR_NATIVE adk_httpx_response_t * const response,
     FFI_PTR_WASM const uint8_t * const buffer,
     FFI_TYPE_OVERRIDE(uint64_t) const size_t buffer_size,
     const json_deflate_parse_target_e target,
@@ -116,7 +117,7 @@ FFI_EXPORT json_deflate_parse_result_t json_deflate_http_future_get_result(
 
 FFI_EXPORT void json_deflate_http_future_drop(
     FFI_PTR_NATIVE json_deflate_http_future_t * const future);
-    
+
 FFI_EXPORT void json_deflate_native_async(
     FFI_PTR_WASM FFI_SLICE const uint8_t * const schema_layout,
     const uint32_t schema_layout_length,

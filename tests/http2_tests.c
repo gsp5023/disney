@@ -46,8 +46,7 @@ static int setup(void ** s) {
           .size = 2 * 1024 * 1024}}};
     TRAP_OUT_OF_MEMORY(region.ptr);
 
-    adk_websocket_backend_set(statics.backend);
-    adk_websocket_backend_set_websocket_config((websocket_config_t){
+    const websocket_config_t websocket_config = (websocket_config_t){
         .ping_timeout = {10000},
         .no_activity_wait_period = {50000},
         .receive_buffer_size = 1024,
@@ -55,8 +54,8 @@ static int setup(void ** s) {
         .max_receivable_message_size = 1024 * 1024,
         .header_buffer_size = 2 * 1024,
         .maximum_redirects = 10,
-    });
-    adk_http_init(adk_http_init_default_cert_path, region, unit_test_guard_page_mode, MALLOC_TAG);
+    };
+    adk_http_init(adk_http_init_default_cert_path, region, statics.backend, websocket_config, unit_test_guard_page_mode, MALLOC_TAG);
 
     // pass in --http2_use_proxy to the tests to run this and run charles to demo its ability to proxy
     if (statics.use_proxy) {
@@ -73,7 +72,6 @@ static int teardown(void ** s) {
     ws_test_state_t * state = *s;
 
     adk_http_shutdown(MALLOC_TAG);
-    adk_websocket_backend_set(adk_websocket_backend_none);
     free(state->region.ptr);
     free(state);
 
@@ -333,6 +331,46 @@ void init_http2(bool use_proxy, const char * proxy_address) {
     statics.proxy_address = proxy_address;
 }
 
+static int websocket_backend_null_setup(void ** _) {
+    adk_http_init(adk_http_init_default_cert_path, (mem_region_t){0}, adk_websocket_backend_null, (websocket_config_t){0}, unit_test_guard_page_mode, MALLOC_TAG);
+    adk_http_set_proxy("null");
+    adk_http_set_socks("null");
+    return 0;
+}
+
+static int websocket_backend_null_teardown(void ** _) {
+    adk_http_shutdown(MALLOC_TAG);
+    return 0;
+}
+
+static void test_null_backend(void ** _) {
+    adk_http_dump_heap_usage();
+    const heap_metrics_t metrics = adk_http_get_heap_metrics();
+    assert_int_equal(metrics.heap_size, 0);
+
+    adk_http_header_list_t * const header_list = adk_http_append_header_list(NULL, "some fake", "value", MALLOC_TAG);
+    assert_null(header_list);
+    adk_websocket_handle_t * const ws_handle = adk_websocket_create("http://notarealurl.com", "none", header_list, (adk_websocket_callbacks_t){0}, MALLOC_TAG);
+    assert_null(ws_handle);
+    adk_websocket_handle_t * const ws_ssl_handle = adk_websocket_create_with_ssl_ctx("http://notarealurl.com", "none", header_list, (adk_websocket_callbacks_t){0}, (mem_region_t){0}, (mem_region_t){0}, MALLOC_TAG);
+    assert_null(ws_ssl_handle);
+
+    assert_false(adk_http_tick());
+    while (adk_http_tick()) {
+    }
+
+    assert_int_equal(adk_websocket_get_status(ws_handle), adk_websocket_status_internal_error);
+    assert_int_equal(adk_websocket_send(ws_handle, (const_mem_region_t){0}, adk_websocket_message_binary, (adk_websocket_callbacks_t){0}), adk_websocket_status_internal_error);
+    assert_int_equal(adk_websocket_begin_read(ws_handle, NULL), adk_websocket_message_error);
+    adk_websocket_end_read(ws_handle, MALLOC_TAG);
+
+    adk_websocket_close(ws_handle, MALLOC_TAG);
+    adk_websocket_close(ws_ssl_handle, MALLOC_TAG);
+
+    while (adk_http_tick()) {
+    }
+}
+
 int test_http2() {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup_teardown(test_websocket_echo, setup, teardown),
@@ -340,10 +378,15 @@ int test_http2() {
         cmocka_unit_test_setup_teardown(test_ws_bamgrid_json, setup, teardown),
         cmocka_unit_test_setup_teardown(test_close_connection_before_sending_all_msgs, setup, teardown),
     };
+    const struct CMUnitTest null_backend_tests[] = {
+        cmocka_unit_test_setup_teardown(test_null_backend, websocket_backend_null_setup, websocket_backend_null_teardown),
+    };
     statics.backend = adk_websocket_backend_http2;
+    print_message("Null tests:\n");
+    const int null_tests = cmocka_run_group_tests(null_backend_tests, NULL, NULL);
     print_message("HTTP2 run:\n");
     const int http2_tests = cmocka_run_group_tests(tests, NULL, NULL);
     statics.backend = adk_websocket_backend_websocket;
     print_message("Websockets run:\n");
-    return http2_tests + cmocka_run_group_tests(tests, NULL, NULL);
+    return null_tests + http2_tests + cmocka_run_group_tests(tests, NULL, NULL);
 }

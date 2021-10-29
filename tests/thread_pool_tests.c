@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -44,7 +44,7 @@ static void thread_pool_unit_test(void ** ignored) {
     TRAP_OUT_OF_MEMORY(region.ptr);
 
     print_message("Creating thread pool...\n");
-    struct thread_pool_t * pool = thread_pool_emplace_init(region, thread_pool_max_threads, "tst_thr_pol_", MALLOC_TAG);
+    struct thread_pool_t * pool = thread_pool_emplace_init(region, thread_pool_max_threads, "test_tp_", MALLOC_TAG);
     print_message("Created thread pool [%p] with [%i] threads\n", pool, thread_pool_max_threads);
     static const int max_counter_increments = 10;
     sb_atomic_int32_t atomic_counter = {.i32 = 0};

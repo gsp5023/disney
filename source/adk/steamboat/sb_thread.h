@@ -45,6 +45,8 @@ EXT_EXPORT sb_thread_id_t sb_get_main_thread_id();
 
 #define ASSERT_IS_MAIN_THREAD() ASSERT(sb_is_main_thread())
 #define ASSERT_NOT_MAIN_THREAD() ASSERT(!sb_is_main_thread())
+#define ASSERT_IS_SAME_THREAD(_x) ASSERT((_x) == sb_get_current_thread_id())
+#define ASSERT_IS_NOT_SAME_THREAD(_x) ASSERT((_x) != sb_get_current_thread_id())
 
 /// Returns the ID of the calling thread
 EXT_EXPORT sb_thread_id_t sb_get_current_thread_id();
@@ -95,15 +97,11 @@ EXT_EXPORT bool sb_set_thread_priority(const sb_thread_id_t id, const sb_thread_
 EXT_EXPORT void sb_join_thread(const sb_thread_id_t id);
 
 /// Suspends the execution of the calling thread until either at least the `time` specified has elapsed,
-/// or a signal triggers the activation/termination of the thread
+/// measured by a monotonic clock, or a signal triggers the activation/termination of the thread
 ///
 /// * `time`: Time to sleep in milliseconds
 ///
-/// Note: To yield time slice sb_thread_yield should be used.
 EXT_EXPORT void sb_thread_sleep(const milliseconds_t time);
-
-/// Causes the calling thread to yield execution to another thread that's ready to run on the same processor.
-EXT_EXPORT void sb_thread_yield();
 
 /// Returns *true* if the calling thread is the main thread
 static inline bool sb_is_main_thread() {
@@ -258,14 +256,6 @@ MSVC ATOMICS
 We disable default MSVC 'volatile' behavior via /volatile:iso (see premake file). This also
 AFAIK will disable automatic compiler barriers around volatiles?
 */
-
-/* Win32 Interlocked* functions act as compiler barriers. */
-
-/// Prevents the compiler from reordering loads/stores across this
-/// barrier.
-static inline void sb_compiler_barrier() {
-    _ReadWriteBarrier();
-}
 
 /// Generates a memory fence.
 ///
@@ -424,13 +414,6 @@ static inline void * sb_atomic_cas_ptr(sb_atomic_ptr_t * const dest, void * cons
 }
 
 #elif defined(__GNUC__)
-
-/// Prevents the compiler from reordering loads/stores across this
-/// barrier.
-static inline void sb_compiler_barrier() {
-    asm volatile("" ::
-                     : "memory");
-}
 
 #if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7))
 /// Generates a memory fence.

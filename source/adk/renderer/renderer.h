@@ -15,16 +15,18 @@ renderer.h
 
 Multithreaded rendering, command queue, and RHI
 
-The renderer is broken into two fundemental pieces, frontend and backend.
+The renderer is broken into two fundamental pieces, frontend and backend.
 
 The render frontend is comprised of command queues that are submitted for
 processing by the backend.
 */
 
-#define ENABLE_RENDER_TAGS
+// NOTE: removed render tags to simplify command hashing
+#define ENABLE_RENDER_TAGS 0
 
 #include "private/rbcmd.h"
 #include "private/rhi.h"
+#include "source/adk/manifest/manifest.h"
 #include "source/adk/runtime/memory.h"
 #include "source/adk/runtime/runtime.h"
 #include "source/adk/steamboat/sb_thread.h"
@@ -56,11 +58,26 @@ typedef struct render_resource_vtable_t {
     void (*destroy)(struct render_resource_t * resource, const char * const tag);
 } render_resource_vtable_t;
 
+typedef enum render_resource_type_e {
+    render_resource_type_invalid,
+    render_resource_type_render_device_t,
+    render_resource_type_r_texture_t,
+    render_resource_type_r_program_t,
+    render_resource_type_r_mesh_data_layout_t,
+    render_resource_type_r_mesh_t,
+    render_resource_type_r_blend_state_t,
+    render_resource_type_r_depth_stencil_state_t,
+    render_resource_type_r_rasterizer_state_t,
+    render_resource_type_r_uniform_buffer_t,
+    render_resource_type_r_render_target_t,
+} render_resource_type_e;
+
 typedef struct render_resource_t {
     const render_resource_vtable_t * vtable;
     struct render_device_t * device;
     rb_fence_t fence;
     int ref_count;
+    render_resource_type_e resource_type;
     const char * tag;
 } render_resource_t;
 
@@ -71,6 +88,7 @@ static inline int render_add_ref(render_resource_t * const resource) {
 
 int render_release(render_resource_t * const resource, const char * const tag);
 void render_dump_heap_usage(const struct render_device_t * const device);
+heap_metrics_t render_get_heap_metrics(const struct render_device_t * const device);
 
 bool render_is_resource_ready(render_resource_t * const resource);
 void render_wait_for_resource(render_resource_t * const resource);
@@ -128,12 +146,26 @@ typedef struct render_device_internal_t {
 #endif
 } render_device_internal_t;
 
+typedef struct render_memory_usage_t {
+    uint64_t peak_memory;
+    uint64_t total_memory;
+    uint64_t mesh_memory;
+    uint64_t texture_memory;
+    uint64_t uniform_buffer_memory;
+} render_memory_usage_t;
+
+typedef struct render_resource_tracking_t {
+    bool enabled;
+    render_memory_usage_t memory_usage;
+} render_resource_tracking_t;
+
 typedef struct render_device_t {
     render_resource_t resource;
     render_device_internal_t internal;
     rhi_device_caps_t caps;
     render_cmd_stream_t default_cmd_stream;
     rhi_api_t * api;
+    render_resource_tracking_t resource_tracking;
 } render_device_t;
 
 typedef struct render_thread_t {
@@ -170,6 +202,16 @@ enum {
     (aligned_render_device_size + (aligned_render_thread_size * (_num_threads)) + ((aligned_render_cmdbuf_size + ALIGN_INT(_cmd_buffer_size, 8)) * _num_cmd_buffers))
 
 render_device_t * create_render_device(rhi_api_t * const api, struct sb_window_t * const window, rhi_error_t ** out_error, const mem_region_t block, const int num_cmd_buffers, const int cmd_buffer_size, const int max_threads, const system_guard_page_mode_e guard_page_mode, const char * const tag);
+
+/*
+=======================================
+render_device_log_resource_tracking
+
+Log tracked resource metrics to TTY
+=======================================
+*/
+
+void render_device_log_resource_tracking(const render_device_t * const render_device, const logging_mode_e logging_mode);
 
 /*
 =======================================
@@ -247,7 +289,7 @@ THREAD SAFE -- can be called from multiple threads.
 
 Submits a command buffer to the renderer for later processing.
 If cmd_buf_order is cmd_buf_ordered then the command buffer is
-guarnateed to execute in submit order, otherwise it may be
+guaranteed to execute in submit order, otherwise it may be
 executed out of order
 =======================================
 */
@@ -411,7 +453,7 @@ render_wait_for_resource()
 typedef struct r_texture_t {
     render_resource_t resource;
     rhi_texture_t * texture;
-    int width, height, channels;
+    int width, height, channels, data_len;
     rhi_pixel_format_e format;
 } r_texture_t;
 
@@ -468,6 +510,8 @@ mesh init data must remain valid until the mesh resource is ready
 typedef struct r_mesh_t {
     render_resource_t resource;
     rhi_mesh_t * mesh;
+    uint32_t mesh_byte_size;
+    uint32_t hash;
 } r_mesh_t;
 
 r_mesh_t * render_create_mesh(render_device_t * const device, const rhi_mesh_data_init_indirect_t mesh_data, r_mesh_data_layout_t * mesh_data_layout, const char * const tag);
@@ -519,6 +563,7 @@ render_create_uniform_buffer
 
 typedef struct r_uniform_buffer_t {
     render_resource_t resource;
+    uint32_t buffer_size;
     rhi_uniform_buffer_t * uniform_buffer;
 } r_uniform_buffer_t;
 
@@ -548,6 +593,18 @@ typedef struct r_render_target_t {
 } r_render_target_t;
 
 r_render_target_t * render_create_render_target(render_device_t * const device, const char * const tag);
+
+/* mesh channel data */
+
+uint32_t render_cmd_stream_upload_mesh_channel_data(
+    render_cmd_stream_t * const cmd_stream,
+    rhi_mesh_t * const * mesh,
+    const int channel_index,
+    const int first_elem,
+    const int num_elems,
+    const size_t stride,
+    const void * const data,
+    const char * const tag);
 
 #ifdef __cplusplus
 }

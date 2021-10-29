@@ -27,9 +27,9 @@ FFI_EXPORT FFI_PUB_CRATE FFI_NAME(adk_httpx_client_request) FFI_PTR_NATIVE adk_h
     return adk_httpx_client_request(c, method, url);
 }
 
-FFI_EXPORT FFI_PUB_CRATE static inline FFI_PTR_NATIVE adk_httpx_client_t * adk_httpx_client_new() {
+FFI_EXPORT FFI_PUB_CRATE static inline FFI_PTR_NATIVE adk_httpx_client_t * adk_httpx_client_get() {
     extern adk_app_t the_app;
-    return adk_httpx_client_create(the_app.httpx);
+    return the_app.httpx_client;
 }
 
 FFI_EXPORT FFI_PUB_CRATE FFI_TYPE_OVERRIDE(uint32_t) static inline size_t adk_httpx_response_get_headers_size(

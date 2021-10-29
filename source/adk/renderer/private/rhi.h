@@ -21,6 +21,7 @@ Metal, etc.
 
 #include "source/adk/runtime/runtime.h"
 #include "source/adk/steamboat/sb_thread.h"
+#include "source/adk/telemetry/telemetry.h"
 
 typedef struct rhi_device_caps_t {
     int max_samples; /* max MSAA  */
@@ -39,7 +40,7 @@ typedef struct rhi_device_caps_t {
 
 enum {
     rhi_program_input_max_textures = 4,
-    rhi_program_input_max_uniforms = 8,
+    rhi_program_input_max_uniforms = 10,
 #if defined(_RPI) || defined(_STB_NATIVE)
     rhi_max_devices = 1,
     rhi_max_render_target_color_buffers = 1
@@ -70,8 +71,6 @@ typedef enum rhi_program_input_semantic_e {
     rhi_program_input_num_semantics
 } rhi_program_input_semantic_e;
 
-extern const char * const rhi_program_semantic_names[rhi_program_input_num_semantics];
-
 #include "source/shaders/shader_binding_locations.h"
 
 typedef enum rhi_program_uniform_e {
@@ -81,6 +80,14 @@ typedef enum rhi_program_uniform_e {
     rhi_program_uniform_tex1 = U_TEX1_BINDING,
     rhi_program_uniform_fill = U_FILL_BINDING,
     rhi_program_uniform_threshold = U_THRESHOLD_BINDING,
+    rhi_program_uniform_rect_roundness = U_RECT_ROUNDNESS_BINDING,
+    rhi_program_uniform_rect = U_RECT_BINDING,
+    rhi_program_uniform_fade = U_FADE_BINDING,
+    rhi_program_uniform_stroke_color = U_STROKE_COLOR_BINDING,
+    rhi_program_uniform_stroke_size = U_STROKE_SIZE_BINDING,
+    rhi_program_uniform_ltexsize = U_LTEXSIZE_BINDING,
+    rhi_program_uniform_ctexsize = U_CTEXSIZE_BINDING,
+    rhi_program_uniform_framesize = U_FRAMESIZE_BINDING,
     rhi_program_num_uniforms,
     rhi_program_num_textures = 2,
     FORCE_ENUM_SIGNED(rhi_program_uniform_e)
@@ -93,9 +100,53 @@ typedef enum rhi_program_uniform_shader_stage_e {
     rhi_program_uniform_shader_stage_fragment,
 } rhi_program_uniform_shader_stage_e;
 
-extern const char * const rhi_program_uniform_names[rhi_program_num_uniforms];
-extern const enum rhi_program_uniform_shader_stage_e rhi_program_uniform_shader_stages[rhi_program_num_uniforms];
-extern const enum rhi_program_uniform_e rhi_program_texture_samplers[rhi_program_num_textures];
+static const char * const rhi_program_semantic_names[rhi_program_input_num_semantics] = {
+    "in_pos0",
+    "in_col0",
+    "in_nml0",
+    "in_bin0",
+    "in_tan0",
+    "in_tc0",
+    "in_tc1"};
+
+static const char * const rhi_program_uniform_names[rhi_program_num_uniforms] = {
+    /* [rhi_program_uniform_mvp] = */ "u_mvp",
+    /* [rhi_program_uniform_viewport] = */ "u_viewport",
+    /* [rhi_program_uniform_tex0] = */ "u_tex0",
+    /* [rhi_program_uniform_tex1] = */ "u_tex1",
+    /* [rhi_program_uniform_fill] = */ "u_fill",
+    /* [rhi_program_uniform_threshold] = */ "u_threshold",
+    /* [rhi_program_uniform_rect_roundness] = */ "u_rect_roundness",
+    /* [rhi_program_uniform_rect] = */ "u_rect",
+    /* [rhi_program_uniform_fade] = */ "u_fade",
+    /* [rhi_program_uniform_stroke_color] = */ "u_stroke_color",
+    /* [rhi_program_uniform_stroke_size] = */ "u_stroke_size",
+    /* [rhi_program_uniform_ltexsize] = */ "u_ltex_size",
+    /* [rhi_program_uniform_ctexsize] = */ "u_ctex_size",
+    /* [rhi_program_uniform_framesize] = */ "u_framesize",
+};
+
+static const enum rhi_program_uniform_shader_stage_e rhi_program_uniform_shader_stages[rhi_program_num_uniforms] = {
+    /* [rhi_program_uniform_mvp] = */ rhi_program_uniform_shader_stage_vertex,
+    /* [rhi_program_uniform_viewport] = */ rhi_program_uniform_shader_stage_vertex,
+    /* [rhi_program_uniform_tex0] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_tex1] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_fill] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_threshold] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_rect_roundness] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_rect] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_fade] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_stroke_color] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_stroke_size] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_ltexsize] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_ctexsize] = */ rhi_program_uniform_shader_stage_fragment,
+    /* [rhi_program_uniform_framesize] = */ rhi_program_uniform_shader_stage_fragment,
+};
+
+static const enum rhi_program_uniform_e rhi_program_texture_samplers[rhi_program_num_textures] = {
+    rhi_program_uniform_tex0,
+    rhi_program_uniform_tex1,
+};
 
 typedef enum rhi_vertex_element_format_e {
     rhi_vertex_element_format_float,
@@ -128,6 +179,8 @@ typedef enum rhi_pixel_format_e {
     rhi_pixel_format_gnf,
     rhi_pixel_format_luma, // r
     rhi_pixel_format_chroma, // ra8
+    rhi_pixel_format_luma_hdr10, // 32 bit packed texture
+    rhi_pixel_format_chroma_hdr10, // 32 bit packed texture
 #endif
     rhi_num_pixels_formats,
     rhi_framebuffer_format = rhi_pixel_format_rgba8_unorm,
@@ -309,7 +362,7 @@ typedef struct rhi_sampler_state_desc_t {
 } rhi_sampler_state_desc_t;
 
 typedef struct rhi_texture_bindings_indirect_t {
-    struct rhi_texture_t * const * textures[rhi_program_input_max_textures];
+    struct rhi_texture_t * const * textures[rhi_program_num_textures];
     int num_textures;
 } rhi_texture_bindings_indirect_t;
 
@@ -327,6 +380,7 @@ typedef struct rhi_draw_params_indirect_t {
     struct rhi_mesh_t * const * const * mesh_list;
     const int * idx_ofs;
     const int * elm_counts;
+    const uint32_t * hashes;
     int num_meshes;
     rhi_draw_mode_e mode;
 } rhi_draw_params_indirect_t;
@@ -345,7 +399,7 @@ typedef struct rhi_counters_t {
     uint32_t upload_texture_size;
 } rhi_counters_t;
 
-static rhi_counters_t rhi_add_counters(const rhi_counters_t * a, const rhi_counters_t * b) {
+static inline rhi_counters_t rhi_add_counters(const rhi_counters_t * a, const rhi_counters_t * b) {
     struct rhi_counters_t counter = {
         /*.num_tris =*/a->num_tris + b->num_tris,
         /*.num_draw_calls =*/a->num_draw_calls + b->num_draw_calls,
@@ -428,7 +482,7 @@ return true if two resources are not equal
 =======================================
 */
 
-static bool rhi_resources_not_equal(const rhi_resource_t * const a, const rhi_resource_t * const b, const int b_instance_id) {
+static inline bool rhi_resources_not_equal(const rhi_resource_t * const a, const rhi_resource_t * const b, const int b_instance_id) {
     return a && ((a != b) || (a->instance_id != b_instance_id));
 }
 
@@ -452,7 +506,7 @@ return true if two resources are equal
 =======================================
 */
 
-static bool rhi_resources_equal(const rhi_resource_t * const a, const rhi_resource_t * const b, const int b_instance_id) {
+static inline bool rhi_resources_equal(const rhi_resource_t * const a, const rhi_resource_t * const b, const int b_instance_id) {
     return (!a && !b && !b_instance_id) || !rhi_resources_not_equal(a, b, b_instance_id);
 }
 

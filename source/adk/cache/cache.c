@@ -16,17 +16,7 @@
 #include "source/adk/http/private/adk_http_utils.h"
 #include "source/adk/log/log.h"
 #include "source/adk/steamboat/sb_platform.h"
-
-#ifdef _CACHE_TRACE
 #include "source/adk/telemetry/telemetry.h"
-#define CACHE_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define CACHE_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define CACHE_TRACE_POP() TRACE_POP()
-#else
-#define CACHE_TRACE_PUSH_FN()
-#define CACHE_TRACE_PUSH(_name)
-#define CACHE_TRACE_POP()
-#endif
 
 #define TAG_CACHE FOURCC('C', 'A', 'C', 'H')
 
@@ -403,7 +393,8 @@ cache_fetch_status_e cache_fetch_resource_from_url(
     cache_t * const cache,
     const char * const key,
     const char * const url,
-    const cache_update_mode_e update_mode) {
+    const cache_update_mode_e update_mode,
+    const seconds_t timeout) {
     CACHE_TRACE_PUSH_FN();
     char cache_file_path[sb_max_path_length];
     cache_build_file_path(
@@ -460,7 +451,7 @@ cache_fetch_status_e cache_fetch_resource_from_url(
             .userdata = &ctx,
         };
 
-        adk_httpx_fetch(cache->heap, ctx.url, callbacks, request_headers, num_request_headers);
+        adk_httpx_fetch(cache->heap, ctx.url, callbacks, request_headers, num_request_headers, timeout);
 
         CACHE_TRACE_POP();
     }

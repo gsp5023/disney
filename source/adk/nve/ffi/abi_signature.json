@@ -379,7 +379,7 @@
           "constant": 11
         },
         {
-          "name": "nve_event_type_cenc_initdata",
+          "name": "nve_event_type_cenc_init_data",
           "constant": 12
         },
         {
@@ -393,6 +393,10 @@
         {
           "name": "nve_event_type_load_information",
           "constant": 10
+        },
+        {
+          "name": "nve_event_type_main_manifest_updated",
+          "constant": 20
         },
         {
           "name": "nve_event_type_media_player_general_info",
@@ -1006,6 +1010,29 @@
       ]
     },
     {
+      "name": "nve_playlist_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "nve_playlist_type_event",
+          "constant": 2
+        },
+        {
+          "name": "nve_playlist_type_no_type",
+          "constant": 1
+        },
+        {
+          "name": "nve_playlist_type_not_playlist",
+          "constant": 0
+        },
+        {
+          "name": "nve_playlist_type_vod",
+          "constant": 3
+        }
+      ]
+    },
+    {
       "name": "nve_result_e",
       "size": 4,
       "align": 4,
@@ -1511,6 +1538,28 @@
       "return": "()"
     },
     {
+      "name": "nve_get_psdk_version",
+      "args": [
+        {
+          "rust_type": "* mut nve_version_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "nve_get_system_cc_styles",
+      "args": [
+        {
+          "rust_type": "* mut nve_text_format_t",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "bool"
+    },
+    {
       "name": "nve_init",
       "args": [],
       "return": "()"
@@ -1563,7 +1612,7 @@
       "name": "nve_m5_cenc_init_data_get",
       "args": [
         {
-          "rust_type": "nve_handle_t",
+          "rust_type": "* mut ()",
           "origin": "native",
           "wasm_type": "i64"
         },
@@ -1835,6 +1884,17 @@
         }
       ],
       "return": "nve_result_e"
+    },
+    {
+      "name": "nve_media_player_local_position",
+      "args": [
+        {
+          "rust_type": "* mut ()",
+          "origin": "native",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "f64"
     },
     {
       "name": "nve_media_player_pause",
@@ -2537,17 +2597,6 @@
       "return": "()"
     },
     {
-      "name": "nve_version_get",
-      "args": [
-        {
-          "rust_type": "* mut nve_version_t",
-          "origin": "wasm",
-          "wasm_type": "i32"
-        }
-      ],
-      "return": "()"
-    },
-    {
       "name": "nve_view_create",
       "args": [
         {
@@ -2753,7 +2802,7 @@
     },
     {
       "name": "nve_load_information_t",
-      "size": 688,
+      "size": 760,
       "align": 4,
       "members": [
         "period_index",
@@ -2762,6 +2811,8 @@
         "http_status",
         "latency",
         "error_code",
+        "playlist_complete",
+        "playlist_type",
         "track_name",
         "track_type",
         "url",
@@ -2770,7 +2821,8 @@
         "profile_height",
         "profile_peak_bit_rate",
         "profile_avg_bit_rate",
-        "profile_framerate"
+        "profile_framerate",
+        "x_request_id"
       ]
     },
     {
@@ -2805,7 +2857,7 @@
     },
     {
       "name": "nve_metadata_key_value_t",
-      "size": 1024,
+      "size": 2048,
       "align": 1,
       "members": [
         "key",
@@ -2903,6 +2955,14 @@
         "is_forced",
         "is_default",
         "is_auto_select"
+      ]
+    },
+    {
+      "name": "nve_timed_metadata_tag_t",
+      "size": 64,
+      "align": 1,
+      "members": [
+        "tag"
       ]
     },
     {

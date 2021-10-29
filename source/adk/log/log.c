@@ -111,14 +111,18 @@ static const char * const log_level_names[num_log_levels] = {
     "INFO",
     "WARN",
     "ERROR",
-    "ALWAYS"};
+    "ALWAYS",
+    "APP",
+    "NONE"};
 
 static const char * const log_level_short_names[num_log_levels] = {
     "DBG",
     "INF",
     "WRN",
     "ERR",
-    "ALW"};
+    "ALW",
+    "APP",
+    "NON"};
 
 static log_level_e minimum_log_level =
 #ifdef NDEBUG
@@ -164,4 +168,8 @@ void log_msg_print_basic(const log_header_t * const log_header, const char * log
     snprintf(time_str, ARRAY_SIZE(time_str), "%04d-%02d-%02d|%02d:%02d:%02d.%06d", time_info.tm_year + 1900, time_info.tm_mon + 1, time_info.tm_mday, time_info.tm_hour, time_info.tm_min, time_info.tm_sec, log_header->time_since_epoch.microseconds);
 
     debug_write_line("%s(%d): %s: %s()\n\t[%s][%*.*s][%s] %s", log_header->file, log_header->line, log_get_level_name(log_header->level), log_header->func, time_str, 4, 4, (char *)&log_header->fourcc_tag, log_get_level_short_name(log_header->level), log_msg);
+}
+
+void adk_log_app_msg(const char * const file, const uint32_t line, const char * const func, const log_level_e level, const uint32_t tag, const char * const msg) {
+    log_message_va(file, line, func, level, tag, "%s", msg);
 }

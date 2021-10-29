@@ -1,0 +1,17 @@
+{
+    "v1": {
+        "default_persona": "persona1",
+        "personas": [
+            {
+                "id": "persona1",
+                "manifest_url": "manifest_url_success1",
+                "error": {
+                    "default_locales": ["en-us"],
+                    "localized": {
+                        "en-us": "default-locale-only"
+                    }
+                }
+            }
+        ]
+    }
+}

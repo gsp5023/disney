@@ -26,11 +26,7 @@ static void extender_unit_test(void ** state) {
 
 int test_extender() {
     const struct CMUnitTest tests[] = {
-    // TODO: Re-enable this test when extensions are available for Leia/Vader
-#ifndef _CONSOLE_NATIVE
-        cmocka_unit_test(extender_unit_test)
-#endif
-    };
+        cmocka_unit_test(extender_unit_test)};
 
     return cmocka_run_group_tests(tests, extender_unit_test_setup, NULL);
 }

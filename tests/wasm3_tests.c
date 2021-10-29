@@ -31,7 +31,9 @@ static void wasm3_unit_test(void ** state) {
     wasm3_register_linker(wasm3_link_adk);
     wasm3_register_linker(wasm3_link_tests);
 
-    const wasm_memory_region_t region = wasm3->load(sb_app_root_directory, "target/wasm32-unknown-unknown/release/wasm_tests.wasm", 0x03000000);
+    const uint32_t wasm_low_heap_size = 16 * 1024 * 1024;
+    const uint32_t wasm_high_heap_size = 32 * 1024 * 1024;
+    const wasm_memory_region_t region = wasm3->load(sb_app_root_directory, "target/wasm32-unknown-unknown/release/wasm_tests.wasm", wasm_low_heap_size, wasm_high_heap_size, 100 * 1024);
     VERIFY_MSG(region.wasm_bytecode_size, "Failed to load Wasm file");
 
     const wasm_call_result_t ffi_test = wasm3->call_i("exercise", 0);

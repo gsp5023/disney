@@ -4,14 +4,9 @@
  *
  * ==========================================================================*/
 
-/*
-adk_coredump.h
-
-core dump data collection
-*/
-
 #include "coredump.h"
 
+#include "source/adk/log/log.h"
 #include "source/adk/runtime/memory.h"
 #include "source/adk/steamboat/sb_platform.h"
 #include "source/adk/steamboat/sb_thread.h"
@@ -19,6 +14,8 @@ core dump data collection
 #ifdef _RESTRICTED
 #include "source/adk/steamboat/restricted/sb_coredump.h"
 #endif
+
+#define TAG_CORE_DUMP FOURCC('C', 'R', 'D', 'P')
 
 enum {
     manifest_heap_size = 512 * 1024,
@@ -31,8 +28,6 @@ static struct {
     adk_coredump_data_t * data;
     bool init;
 } statics;
-
-static const char coredump_tag[] = "coredump_tag";
 
 static void alloc_value(const char ** value, const char ** dest) {
     char * _value = (char *)heap_alloc(&statics.heap, strlen(*value) + 1, MALLOC_TAG);
@@ -75,27 +70,33 @@ static void add_or_update_data(const char * name, const char * value) {
     prev->next = allocate_data(name, value);
 }
 
-/*
- *  adk_coredump_handler
- *  Must be called in callback registered in sb_coredump_init
- */
-void adk_coredump_handler() {
+/// Called from Steamboat when a crash has occurred
+/// * Must be async-signal-safe
+void adk_crash_handler() {
     // TODO: add crash handle logic here.
+    //   * Crash reporting integration to be implemented in [M5-1802](https://jira.disneystreaming.com/browse/M5-1802)
 }
 
-void adk_coredump_init(int coredump_stack_size) {
-    if (statics.init == false) {
-        statics.init = true;
-        statics.mutex = sb_create_mutex(MALLOC_TAG);
-        TRAP_OUT_OF_MEMORY(statics.mutex);
-        statics.pages = sb_map_pages(PAGE_ALIGN_INT(coredump_stack_size), system_page_protect_read_write);
-        TRAP_OUT_OF_MEMORY(statics.pages.ptr);
-        heap_init_with_region(&statics.heap, statics.pages, 8, 0, coredump_tag);
+bool adk_coredump_init(int coredump_stack_size) {
+    if (statics.init) {
+        LOG_WARN(TAG_CORE_DUMP, "Attempted to initialize after already initialized");
+        return true;
+    }
+
+    statics.init = true;
+
+    statics.mutex = sb_create_mutex(MALLOC_TAG);
+
+    statics.pages = sb_map_pages(PAGE_ALIGN_INT(coredump_stack_size), system_page_protect_read_write);
+    TRAP_OUT_OF_MEMORY(statics.pages.ptr);
+
+    heap_init_with_region(&statics.heap, statics.pages, 8, 0, "coredump");
 
 #ifdef _RESTRICTED
-        sb_coredump_init(coredump_stack_size);
+    return sb_coredump_init(coredump_stack_size) == 0;
+#else
+    return true;
 #endif
-    }
 }
 
 void adk_coredump_shutdown() {
@@ -108,15 +109,18 @@ void adk_coredump_shutdown() {
         heap_free(&statics.heap, (void *)prev->value, MALLOC_TAG);
         heap_free(&statics.heap, (void *)prev, MALLOC_TAG);
     }
+    statics.data = NULL;
 
-    if (statics.mutex) {
-        sb_destroy_mutex(statics.mutex, MALLOC_TAG);
-    }
+    sb_destroy_mutex(statics.mutex, MALLOC_TAG);
+
     sb_unmap_pages(statics.pages);
     heap_destroy(&statics.heap, MALLOC_TAG);
 
 #ifdef _RESTRICTED
-    sb_coredump_shutdown();
+    const int result = sb_coredump_shutdown();
+    if (result != 0) {
+        LOG_WARN(TAG_CORE_DUMP, "Failed to shutdown core-dump component");
+    }
 #endif
 
     statics.init = false;

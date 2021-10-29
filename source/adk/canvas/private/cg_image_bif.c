@@ -21,7 +21,7 @@ void destroy_bif(cg_image_t * const image, const char * const tag) {
     cg_async_image_t * const cg_async_image = &image->bif->async_image_data;
     cg_context_t * const ctx = cg_async_image->cg;
 
-    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->upload_fence);
+    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->recurrent_upload_fence);
 
     cg_gl_texture_free(ctx->gl, &image->cg_texture);
 
@@ -54,7 +54,7 @@ static void bif_decode_next_frame_job(void * void_user, thread_pool_t * const po
 
     cg_image->bif->decoded_frame_index = req_frame_index;
 
-    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->upload_fence);
+    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->recurrent_upload_fence);
 
     imagelib_load_bif_jpg_frame_from_memory(
         cg_async_image->resident_bytes.region,
@@ -81,7 +81,7 @@ static void bif_decode_next_frame_job(void * void_user, thread_pool_t * const po
         MALLOC_TAG);
 
     // update fence so we don't cg_free the data before this command is processed
-    cg_async_image->upload_fence = render_flush_cmd_stream(&cg_async_image->decode_cmd_stream, render_no_wait);
+    cg_async_image->recurrent_upload_fence = render_flush_cmd_stream(&cg_async_image->decode_cmd_stream, render_no_wait);
 }
 
 static void bif_check_restart_job(void * void_user, thread_pool_t * const pool) {
@@ -111,6 +111,10 @@ void cg_context_set_image_frame_index(cg_image_t * const cg_image, const uint32_
 
     if (!cg_async_image->decode_job_running) {
         cg_async_image->decode_job_running = true;
+        render_conditional_flush_cmd_stream_and_wait_fence(
+            cg_image->cg_ctx->gl->render_device,
+            &cg_image->cg_ctx->gl->render_device->default_cmd_stream,
+            cg_image->bif->async_image_data.initial_upload_fence);
         thread_pool_enqueue_front(cg_async_image->cg->thread_pool, bif_decode_next_frame_job, bif_check_restart_job, cg_image);
     }
 }

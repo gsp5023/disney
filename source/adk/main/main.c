@@ -23,18 +23,11 @@ unified main entry point.
 ===============================================================================
 */
 
-#if defined(_VADER) || defined(_LEIA)
+#if defined(_VADER) || defined(_LEIA) || defined(__linux__)
 int adk_main(const int argc, const char * const * const argv);
 
 int main(int argc, char ** argv) {
     return adk_main(argc, PEDANTIC_CAST(const char * const * const) argv);
-}
-
-#elif defined(__linux__)
-int thunk_main(const int argc, const char * const * const argv);
-
-int main(int argc, char ** argv) {
-    return thunk_main(argc, PEDANTIC_CAST(const char * const * const) argv);
 }
 
 #elif defined(_WIN32)
@@ -61,7 +54,7 @@ it into an array of char * and fill in the number.
 /* defined NEED_SPLIT_COMMAND_LINE if your main needs this otherwise it will not be implemented */
 static int split_command_line(char * cmdline, char *** argv);
 
-int thunk_main(const int argc, const char * const * const argv);
+int adk_main(const int argc, const char * const * const argv);
 
 int WinMain(void * h_instance, void * h_prev_instance, char * cmdline, int ncmdshow) {
     char ** argv;
@@ -71,7 +64,7 @@ int WinMain(void * h_instance, void * h_prev_instance, char * cmdline, int ncmds
     h_prev_instance;
     ncmdshow;
 
-    return thunk_main(argc, argv);
+    return adk_main(argc, argv);
 }
 
 #endif

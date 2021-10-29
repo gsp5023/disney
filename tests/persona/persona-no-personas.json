@@ -1,5 +1,9 @@
 {
-  "v1": {
-    "default_persona": "persona1"
-  }
+    "v1": {
+        "default_persona": "persona1",
+        "partner": {
+            "name": "launchpad",
+            "guid": "123"
+        }
+    }
 }

@@ -51,3 +51,10 @@ adk_app_metrics_result_e adk_app_metrics_get(adk_app_metrics_t * app_info) {
     sb_unlock_mutex(statics.mutex);
     return adk_app_metrics_no_app;
 }   
+
+void adk_app_metrics_clear() {
+    sb_lock_mutex(statics.mutex);
+    statics.hosting_app = false;
+    ZEROMEM(&statics.info);
+    sb_unlock_mutex(statics.mutex);
+}

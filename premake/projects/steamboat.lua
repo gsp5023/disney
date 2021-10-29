@@ -3,8 +3,11 @@
 -- Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
 -------------------------------------------------------------------------------
 
+local p = premake
+
 project "steamboat"
 	group "adk"
+	tags {"adk-platform"}
 
 	filter { "options:steamboat-dylib" }
 		kind "sharedlib"
@@ -16,7 +19,6 @@ project "steamboat"
 	files "**.c"
 	pch()
 
-	includedirs "extern/curl/curl/include"
 	removefiles "sb_media_stub.c"
 
 	filter "platforms:*win*"
@@ -34,8 +36,8 @@ project "steamboat"
 	filter "platforms:vader or leia"
 		-- conviva libs
 		includedirs {
-				"extern/private/conviva/Conviva_SDK_C_2.161.0.37400/src/include",
-				"extern/private/conviva/Conviva_SDK_C_2.161.0.37400/src/lib"
+				"extern/private/conviva/Conviva_SDK_C_2.176.0.0/src/include",
+				"extern/private/conviva/Conviva_SDK_C_2.176.0.0/src/lib"
 		}
 
 		removefiles "ref_ports/**"
@@ -62,21 +64,52 @@ project "steamboat"
 		files "ref_ports/drydock/impl_tracking.h"
 		files "ref_ports/drydock/impl_tracking.c"
 
-	filter {"platforms:not stb*", "platforms:not *rpi2*", "platforms:not *rpi3*", "platforms:not vader", "platforms:not *mtk*", "platforms:not leia"}
+	filter {"platforms:not stb*", "platforms:not *rpi1*", "platforms:not *rpi2*", "platforms:not *rpi3*", "platforms:not vader", "platforms:not *mtk*", "platforms:not leia"}
 		removefiles "**_gles.*"
 		removefiles "**gles_*.*"
+
+	filter {"platforms:*brcm_bme*"}
+	    -- Retain the POSIX-y ref-port components, but not the Nexus pieces
+		removefiles "ref_ports/nexus/**"
+
+		cppdialect "gnu++0x"
+
+    	includedirs "extern/curl/curl/include"
+		includedirs "extern/dss-nve/code/third_party/dss-nve-shared/steamboat/include"
+		includedirs "extern/private/bme"
+
+		includedirs "source"
+		includedirs "source/adk/steamboat"
+
+		p.original.files "extern/private/bme/Display.cpp"
+		p.original.files "extern/private/bme/Input.cpp"
+		p.original.files "extern/private/bme/Runtime.cpp"
+		p.original.files "extern/private/bme/TextToSpeech.cpp"
+
+		if(player_is_any("nve-prebuilt", "nve-shared")) then
+            push_filter {}
+
+			p.original.files "extern/private/bme/Playback.cpp"
+			p.original.files "extern/private/bme/DrmPlayback.cpp"
+			p.original.files "extern/private/bme/drm/Drm.cpp"
+
+	        filter {"platforms:*brcm_bme*", "tags:bme-prdy-32"}
+				p.original.files "extern/private/bme/playready/PlayReadyBase.cpp"
+				p.original.files "extern/private/bme/playready/PlayReady3Plus.cpp"
+				p.original.files "extern/private/bme/playready/PolicyCallback3Plus.cpp"
+				p.original.files "extern/private/bme/playready/Clock.cpp"
+
+	        filter {"platforms:*brcm_bme*", "tags:bme-prdy-25"}
+				p.original.files "extern/private/bme/playready/PlayReadyBase.cpp"
+				p.original.files "extern/private/bme/playready/PlayReady25.cpp"
+				p.original.files "extern/private/bme/playready/PolicyCallback25.cpp"
+
+            -- TODO(M5-3316): WV support
+            -- p.original.files "extern/private/bme/widevine/Widevine.cpp"
+
+            pop_filter {}
+		end
 
 	filter {}
 
 	MODULES.strip_platform_files()
-
-local m = {}
-
-function m.link(prj)
-	if prj.name ~= "steamboat" then
-		filter { KIND_APP }
-			links { "steamboat" }
-	end
-end
-
-return m

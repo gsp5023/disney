@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- msc.lua
--- Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+-- Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
 --------------------------------------------------------------------------------
 
 filter "toolset:msc*"
@@ -26,5 +26,7 @@ filter "toolset:msc*"
 	buildoptions "/volatile:iso"
 	staticruntime "off"
 
-filter {"toolset:msc*", KIND_APP}
+filter {"toolset:msc*", KIND_APP, "configurations:*debug*"}
+	linkoptions "/STACK:10500000"
+filter {"toolset:msc*", KIND_APP, "configurations:not *debug*"}
 	linkoptions "/STACK:1500000"

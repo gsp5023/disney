@@ -26,6 +26,13 @@ typedef struct persona_mapping_t {
     char id[adk_metrics_string_max];
     char manifest_url[sb_max_path_length];
     char fallback_error_message[adk_max_message_length];
+    long cache_request_timeout;
+    struct {
+        uint32_t max_retries;
+        milliseconds_t retry_backoff_ms;
+    } retry_config;
+    char partner_name[adk_metrics_string_max];
+    char partner_guid[adk_metrics_string_max];
 } persona_mapping_t;
 
 bool get_persona_mapping(persona_mapping_t * mapping);

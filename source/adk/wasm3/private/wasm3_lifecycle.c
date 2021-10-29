@@ -8,10 +8,15 @@
 #include "source/adk/file/file.h"
 #include "source/adk/interpreter/interp_common.h"
 #include "source/adk/log/log.h"
+#include "source/adk/runtime/bifurcated_heap.h"
 #include "source/adk/runtime/memory.h"
 #include "source/adk/wasm3/private/wasm3.h"
 
-extern heap_t wasm_heap;
+extern bifurcated_heap_t wasm_heap;
+
+IM3Environment wasm3_global_environment;
+IM3Runtime wasm3_global_runtime;
+IM3Module wasm3_app_module;
 
 // Initializes the wasm3 app loaded in a wasm memory region
 static bool initialize_wasm3(const wasm_memory_region_t wasm_memory, const size_t wasm_bytecode_size) {
@@ -36,16 +41,18 @@ static bool initialize_wasm3(const wasm_memory_region_t wasm_memory, const size_
     return true;
 }
 
-wasm_memory_region_t load_wasm3(const sb_file_directory_e directory, const char * const wasm_filename, const size_t sizeof_application_workingset) {
-    return wasm_load_common(directory, wasm_filename, sizeof_application_workingset, initialize_wasm3);
+wasm_memory_region_t load_wasm3(const sb_file_directory_e directory, const char * const wasm_filename, const size_t wasm_low_heap_size, const size_t wasm_high_heap_size, const size_t allocation_threshold) {
+    return wasm_load_common(directory, wasm_filename, wasm_low_heap_size, wasm_high_heap_size, initialize_wasm3, allocation_threshold);
 }
 
 wasm_memory_region_t load_wasm3_fp(
     void * const wasm_file,
     const wasm_fread_t fread_func,
     const size_t wasm_file_content_size,
-    const size_t sizeof_application_workingset) {
-    return wasm_load_fp_common(wasm_file, fread_func, wasm_file_content_size, sizeof_application_workingset, initialize_wasm3);
+    const size_t wasm_low_heap_size,
+    const size_t wasm_high_heap_size,
+    const size_t allocation_threshold) {
+    return wasm_load_fp_common(wasm_file, fread_func, wasm_file_content_size, wasm_low_heap_size, wasm_high_heap_size, initialize_wasm3, allocation_threshold);
 }
 
 void unload_wasm3(wasm_memory_region_t wasm_memory) {
@@ -60,5 +67,5 @@ void unload_wasm3(wasm_memory_region_t wasm_memory) {
 
     free_mem_region(wasm_memory.wasm_mem_region);
 
-    heap_destroy(&wasm_heap, MALLOC_TAG);
+    bifurcated_heap_destroy(&wasm_heap, MALLOC_TAG);
 }

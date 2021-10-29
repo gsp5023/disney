@@ -12,6 +12,7 @@ canvas rendering backend
 
 #include "source/adk/canvas/cg.h"
 #include "source/adk/log/log.h"
+#include "source/adk/telemetry/telemetry.h"
 #include "source/shaders/compiled/canvas.frag.gen.h"
 #include "source/shaders/compiled/canvas.vert.gen.h"
 #include "source/shaders/compiled/canvas_alpha_mask.frag.gen.h"
@@ -19,16 +20,12 @@ canvas rendering backend
 #include "source/shaders/compiled/canvas_alpha_test_rgb_fill_alpha_red.frag.gen.h"
 #include "source/shaders/compiled/canvas_rgb_fill_alpha_red.frag.gen.h"
 #include "source/shaders/compiled/canvas_video.frag.gen.h"
+#include "source/shaders/compiled/sdf/canvas_sdf.vert.gen.h"
+#include "source/shaders/compiled/sdf/canvas_sdf_rect.frag.gen.h"
+#include "source/shaders/compiled/sdf/canvas_sdf_rect_border.frag.gen.h"
 
-#ifdef _CG_GL_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define CG_GL_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define CG_GL_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define CG_GL_TRACE_POP() TRACE_POP()
-#else
-#define CG_GL_TRACE_PUSH_FN()
-#define CG_GL_TRACE_PUSH(_name)
-#define CG_GL_TRACE_POP()
+#if defined(_VADER) || defined(_LEIA)
+#include "source/shaders/compiled/canvas_video_hdr.frag.gen.h"
 #endif
 
 #ifdef _CANVAS_EXPERIMENTAL
@@ -36,6 +33,7 @@ canvas rendering backend
 #endif
 
 #define TAG_CG_GL FOURCC('C', 'G', 'G', 'L')
+#define CG_GL_SCREEN_SCISSOR_MAX_RANGE 16 * 1024
 
 /* ===========================================================================
  * Canvas RHI interface
@@ -81,6 +79,13 @@ static void cg_gl_set_uniform_float(cg_gl_state_t * const state, const rhi_progr
     CG_GL_TRACE_PUSH_FN();
     const float paddto4floats[4] = {f, 0, 0, 0};
     cg_gl_upload_uniform(state, name, paddto4floats, sizeof(paddto4floats), tag);
+    CG_GL_TRACE_POP();
+}
+
+static void cg_gl_set_uniform_ivec2(cg_gl_state_t * const state, const rhi_program_uniform_e name, const int * const v, const char * const tag) {
+    CG_GL_TRACE_PUSH_FN();
+    const int paddto4ints[4] = {v[0], v[1], 0, 0};
+    cg_gl_upload_uniform(state, name, paddto4ints, sizeof(paddto4ints), tag);
     CG_GL_TRACE_POP();
 }
 
@@ -358,6 +363,24 @@ void cg_gl_texture_update(cg_gl_state_t * const state, cg_gl_texture_t * const t
     CG_GL_TRACE_POP();
 }
 
+#if !(defined(_VADER) || defined(_LEIA))
+void cg_gl_sub_texture_update(cg_gl_state_t * const state, cg_gl_texture_t * const tex, const image_mips_t image_mips) {
+    CG_GL_TRACE_PUSH_FN();
+
+    RENDER_ENSURE_WRITE_CMD_STREAM(
+        &state->render_device->default_cmd_stream,
+        render_cmd_buf_write_upload_sub_texture_indirect,
+        &tex->texture->texture,
+        image_mips,
+        MALLOC_TAG);
+
+    // update fence so we don't cg_free the data before this command is processed
+    tex->texture->resource.fence = render_get_cmd_stream_fence(&state->render_device->default_cmd_stream);
+
+    CG_GL_TRACE_POP();
+}
+#endif
+
 /* ------------------------------------------------------------------------- */
 
 void cg_gl_framebuffer_free(cg_gl_state_t * const state, cg_gl_framebuffer_t * const fb) {
@@ -489,10 +512,12 @@ r_program_t * load_shader_program(
     return program;
 }
 
-void cg_gl_state_init(cg_gl_state_t * const state, cg_heap_t * const cg_heap, render_device_t * const render_device) {
+void cg_gl_state_init(cg_gl_state_t * const state, cg_heap_t * const cg_heap, render_device_t * const render_device, const runtime_configuration_canvas_gl_t config) {
     CG_GL_TRACE_PUSH_FN();
 
     ZEROMEM(state);
+    state->config = config;
+
     state->render_device = render_device;
     state->cg_heap = cg_heap;
     state->shaders.color = load_shader_program(
@@ -519,6 +544,20 @@ void cg_gl_state_init(cg_gl_state_t * const state, cg_heap_t * const cg_heap, re
         state,
         canvas_vert_program,
         canvas_video_frag_program);
+    state->shaders.sdf_rect = load_shader_program(
+        state,
+        canvas_sdf_vert_program,
+        canvas_sdf_rect_frag_program);
+    state->shaders.sdf_rect_border = load_shader_program(
+        state,
+        canvas_sdf_vert_program,
+        canvas_sdf_rect_border_frag_program);
+#if defined(_VADER) || defined(_LEIA)
+    state->shaders.video_hdr = load_shader_program(
+        state,
+        canvas_vert_program,
+        canvas_video_hdr_frag_program);
+#endif
 
     cg_gl_texture_init_with_color(state, &state->white, cg_color_packed(1, 1, 1, 1));
 
@@ -646,21 +685,24 @@ void cg_gl_state_init(cg_gl_state_t * const state, cg_heap_t * const cg_heap, re
         desc.indices = NULL;
         desc.num_channels = 1;
 
-        r_mesh_data_layout_t * const layout = render_create_mesh_data_layout(render_device, desc, MALLOC_TAG);
+        state->mesh_layout = render_create_mesh_data_layout(render_device, desc, MALLOC_TAG);
 
-        const_mem_region_t null_buffer;
-        ZEROMEM(&null_buffer);
-        null_buffer.size = sizeof(cg_gl_vertex_t) * cg_gl_max_vertex_count;
+        state->gl_fences = cg_calloc(cg_heap, sizeof(*state->gl_fences) * config.internal_limits.num_vertex_banks, MALLOC_TAG);
+        state->vertices = cg_alloc(cg_heap, sizeof(*state->vertices) * config.internal_limits.num_vertex_banks, MALLOC_TAG);
+        for (uint32_t i = 0; i < config.internal_limits.num_vertex_banks; ++i) {
+            state->vertices[i] = cg_alloc(cg_heap, sizeof(*state->vertices[i]) * config.internal_limits.max_verts_per_vertex_bank, MALLOC_TAG);
+        }
+
+        state->mesh_null_buffer.size = sizeof(cg_gl_vertex_t) * config.internal_limits.max_verts_per_vertex_bank;
         rhi_mesh_data_init_indirect_t mi;
         ZEROMEM(&mi);
         mi.num_channels = 1;
-        mi.channels = &null_buffer;
+        mi.channels = &state->mesh_null_buffer;
 
-        for (int i = 0; i < ARRAY_SIZE(state->meshes); ++i) {
-            state->meshes[i] = render_create_mesh(render_device, mi, layout, MALLOC_TAG);
+        state->meshes = cg_alloc(cg_heap, sizeof(*state->meshes) * config.internal_limits.num_meshes, MALLOC_TAG);
+        for (uint32_t i = 0; i < config.internal_limits.num_meshes; ++i) {
+            state->meshes[i] = render_create_mesh(render_device, mi, state->mesh_layout, MALLOC_TAG);
         }
-
-        render_release(&layout->resource, MALLOC_TAG);
     }
 
 #ifdef _CANVAS_EXPERIMENTAL
@@ -677,6 +719,12 @@ void cg_gl_state_free(cg_gl_state_t * const state) {
     cg_experimental_shutdown();
 #endif
 
+    cg_free(state->cg_heap, state->gl_fences, MALLOC_TAG);
+    for (uint32_t i = 0; i < state->config.internal_limits.num_vertex_banks; ++i) {
+        cg_free(state->cg_heap, state->vertices[i], MALLOC_TAG);
+    }
+    cg_free(state->cg_heap, state->vertices, MALLOC_TAG);
+
     cg_gl_texture_free(state, &state->white);
     render_release(&state->shaders.color->resource, MALLOC_TAG);
     render_release(&state->shaders.color_rgb_fill_alpha_red->resource, MALLOC_TAG);
@@ -684,10 +732,19 @@ void cg_gl_state_free(cg_gl_state_t * const state) {
     render_release(&state->shaders.color_alpha_test->resource, MALLOC_TAG);
     render_release(&state->shaders.color_alpha_test_rgb_fill_alpha_red->resource, MALLOC_TAG);
     render_release(&state->shaders.video->resource, MALLOC_TAG);
+    render_release(&state->shaders.sdf_rect->resource, MALLOC_TAG);
+    render_release(&state->shaders.sdf_rect_border->resource, MALLOC_TAG);
+#if defined(_VADER) || defined(_LEIA)
+    render_release(&state->shaders.video_hdr->resource, MALLOC_TAG);
+#endif
 
-    for (int i = 0; i < ARRAY_SIZE(state->meshes); ++i) {
+    for (uint32_t i = 0; i < state->config.internal_limits.num_meshes; ++i) {
         render_release(&state->meshes[i]->resource, MALLOC_TAG);
     }
+    cg_free(state->cg_heap, state->meshes, MALLOC_TAG);
+
+    render_release(&state->mesh_layout->resource, MALLOC_TAG);
+
     render_release(&state->rs_scissor_off->resource, MALLOC_TAG);
     render_release(&state->rs_scissor_on->resource, MALLOC_TAG);
 
@@ -711,7 +768,7 @@ void cg_gl_state_free(cg_gl_state_t * const state) {
     CG_GL_TRACE_POP();
 }
 
-void cg_gl_state_begin(cg_gl_state_t * const state, const int width, const int height) {
+void cg_gl_state_begin(cg_gl_state_t * const state, const int width, const int height, uint32_t clear_color) {
     CG_GL_TRACE_PUSH_FN();
 
     // render to state->screen
@@ -722,11 +779,10 @@ void cg_gl_state_begin(cg_gl_state_t * const state, const int width, const int h
         &state->render_device->default_cmd_stream,
         render_cmd_buf_write_clear_screen_cds,
         (render_clear_color_t){
-            .r = 0,
-            .g = 0,
-            .b = 0,
-            .a = 1 // full alpha for punch-through
-        },
+            .r = ((clear_color >> 24) & 0xFF) / 255.f,
+            .g = ((clear_color >> 16) & 0xFF) / 255.f,
+            .b = ((clear_color >> 8) & 0xFF) / 255.f,
+            .a = (clear_color & 0xFF) / 255.f},
         (render_clear_depth_t){
             .depth = FLT_MAX},
         (render_clear_stencil_t){
@@ -829,7 +885,7 @@ void cg_gl_state_bind_color_shader_raw(cg_gl_state_t * const state, const cg_col
     CG_GL_TRACE_POP();
 }
 
-void cg_gl_state_bind_video_shader(cg_gl_state_t * const state, const cg_color_t * const fill, rhi_texture_t * const * const chroma, rhi_texture_t * const * const luma) {
+void cg_gl_state_bind_video_shader(cg_gl_state_t * const state, const cg_color_t * const fill, rhi_texture_t * const * const chroma, rhi_texture_t * const * const luma, const cg_ivec2_t luma_tex_dim, const cg_ivec2_t chroma_tex_dim, const cg_ivec2_t framesize_dim) {
     CG_GL_TRACE_PUSH_FN();
 
     ASSERT(chroma && luma);
@@ -842,17 +898,85 @@ void cg_gl_state_bind_video_shader(cg_gl_state_t * const state, const cg_color_t
 
     cg_gl_set_uniform_color(state, rhi_program_uniform_fill, fill, MALLOC_TAG);
 
+    cg_gl_set_uniform_ivec2(state, rhi_program_uniform_ltexsize, (const int[]){luma_tex_dim.x, luma_tex_dim.y}, MALLOC_TAG);
+    cg_gl_set_uniform_ivec2(state, rhi_program_uniform_ctexsize, (const int[]){chroma_tex_dim.x, chroma_tex_dim.y}, MALLOC_TAG);
+    cg_gl_set_uniform_ivec2(state, rhi_program_uniform_framesize, (const int[]){framesize_dim.x, framesize_dim.y}, MALLOC_TAG);
+
     cg_gl_texture_bind_raw_two(state, chroma, luma);
 
     CG_GL_TRACE_POP();
 }
 
-void cg_gl_state_draw(cg_gl_state_t * const state, const rhi_draw_mode_e prim, const int count, const int offset) {
+void cg_gl_state_bind_video_shader_hdr(cg_gl_state_t * const state, const cg_color_t * const fill, rhi_texture_t * const * const chroma, rhi_texture_t * const * const luma, const cg_ivec2_t luma_tex_dim, const cg_ivec2_t chroma_tex_dim, const cg_ivec2_t framesize_dim) {
+    CG_GL_TRACE_PUSH_FN();
+
+    ASSERT(chroma && luma);
+    ASSERT(&state->shaders.video_hdr);
+
+    RENDER_ENSURE_WRITE_CMD_STREAM(
+        &state->render_device->default_cmd_stream,
+        render_cmd_buf_write_set_program_indirect,
+        &state->shaders.video_hdr->program,
+        MALLOC_TAG);
+
+    cg_gl_set_uniform_color(state, rhi_program_uniform_fill, fill, MALLOC_TAG);
+
+    cg_gl_set_uniform_ivec2(state, rhi_program_uniform_ltexsize, (const int[]){luma_tex_dim.x, luma_tex_dim.y}, MALLOC_TAG);
+    cg_gl_set_uniform_ivec2(state, rhi_program_uniform_ctexsize, (const int[]){chroma_tex_dim.x, chroma_tex_dim.y}, MALLOC_TAG);
+    cg_gl_set_uniform_ivec2(state, rhi_program_uniform_framesize, (const int[]){framesize_dim.x, framesize_dim.y}, MALLOC_TAG);
+
+    cg_gl_texture_bind_raw_two(state, chroma, luma);
+
+    CG_GL_TRACE_POP();
+}
+
+void cg_gl_state_bind_sdf_rect_shader(cg_gl_state_t * const state, const cg_color_t * const fill, const cg_gl_texture_t * const tex, const cg_sdf_rect_uniforms_t uniforms) {
+    CG_GL_TRACE_PUSH_FN();
+
+    RENDER_ENSURE_WRITE_CMD_STREAM(
+        &state->render_device->default_cmd_stream,
+        render_cmd_buf_write_set_program_indirect,
+        &state->shaders.sdf_rect->program,
+        MALLOC_TAG);
+
+    cg_gl_set_uniform_color(state, rhi_program_uniform_fill, fill, MALLOC_TAG);
+    const float rect[] = {uniforms.box.centerpoint.x, uniforms.box.centerpoint.y, uniforms.box.half_dim.x, uniforms.box.half_dim.y};
+    cg_gl_set_uniform_vec4(state, rhi_program_uniform_rect, rect, MALLOC_TAG);
+    cg_gl_set_uniform_float(state, rhi_program_uniform_rect_roundness, uniforms.roundness, MALLOC_TAG);
+    cg_gl_set_uniform_float(state, rhi_program_uniform_fade, uniforms.fade, MALLOC_TAG);
+
+    cg_gl_texture_bind(state, (tex == NULL) ? &state->white : tex);
+
+    CG_GL_TRACE_POP();
+}
+
+void cg_gl_state_bind_sdf_rect_border_shader(cg_gl_state_t * const state, const cg_color_t * const fill, const cg_gl_texture_t * const tex, const struct cg_sdf_rect_border_uniforms_t uniforms) {
+    CG_GL_TRACE_PUSH_FN();
+
+    RENDER_ENSURE_WRITE_CMD_STREAM(
+        &state->render_device->default_cmd_stream,
+        render_cmd_buf_write_set_program_indirect,
+        &state->shaders.sdf_rect_border->program,
+        MALLOC_TAG);
+
+    cg_gl_set_uniform_color(state, rhi_program_uniform_fill, fill, MALLOC_TAG);
+    const float rect[] = {uniforms.sdf_rect_uniforms.box.centerpoint.x, uniforms.sdf_rect_uniforms.box.centerpoint.y, uniforms.sdf_rect_uniforms.box.half_dim.x, uniforms.sdf_rect_uniforms.box.half_dim.y};
+    cg_gl_set_uniform_vec4(state, rhi_program_uniform_rect, rect, MALLOC_TAG);
+    cg_gl_set_uniform_vec4(state, rhi_program_uniform_stroke_color, (float *)&uniforms.stroke_color, MALLOC_TAG);
+    cg_gl_set_uniform_float(state, rhi_program_uniform_stroke_size, uniforms.stroke_size, MALLOC_TAG);
+    cg_gl_set_uniform_float(state, rhi_program_uniform_rect_roundness, uniforms.sdf_rect_uniforms.roundness, MALLOC_TAG);
+    cg_gl_set_uniform_float(state, rhi_program_uniform_fade, uniforms.sdf_rect_uniforms.fade, MALLOC_TAG);
+
+    cg_gl_texture_bind(state, (tex == NULL) ? &state->white : tex);
+
+    CG_GL_TRACE_POP();
+}
+
+void cg_gl_state_draw_mesh(cg_gl_state_t * const state, r_mesh_t * const mesh, const rhi_draw_mode_e prim, const int count, const int offset) {
     CG_GL_TRACE_PUSH_FN();
 
     cg_gl_apply_scissor_state(state);
 
-    ASSERT(!state->map_count);
     rhi_draw_params_indirect_t draw_params;
 
     struct {
@@ -864,11 +988,17 @@ void cg_gl_state_draw(cg_gl_state_t * const state, const rhi_draw_mode_e prim, c
     render_cmd_stream_blocking_latch_cmd_buf(&state->render_device->default_cmd_stream);
     draw_single_mesh = render_cmd_buf_unchecked_alloc(state->render_device->default_cmd_stream.buf, 8, sizeof(*draw_single_mesh));
 
+    draw_params.hashes = &mesh->hash;
+
     draw_params.idx_ofs = &draw_single_mesh->idx_ofs;
     draw_params.elm_counts = &draw_single_mesh->elm_count;
     draw_params.mesh_list = &draw_single_mesh->mesh;
     draw_params.mode = prim;
     draw_params.num_meshes = 1;
+
+    draw_single_mesh->idx_ofs = offset;
+    draw_single_mesh->elm_count = count;
+    draw_single_mesh->mesh = &mesh->mesh;
 
     if (!draw_single_mesh || !render_cmd_buf_write_draw_indirect(state->render_device->default_cmd_stream.buf, draw_params, MALLOC_TAG)) {
         // could not allocate parameters or could not write the command to the stream
@@ -884,23 +1014,28 @@ void cg_gl_state_draw(cg_gl_state_t * const state, const rhi_draw_mode_e prim, c
         draw_params.elm_counts = &draw_single_mesh->elm_count;
         draw_params.mesh_list = &draw_single_mesh->mesh;
 
+        draw_single_mesh->idx_ofs = offset;
+        draw_single_mesh->elm_count = count;
+        draw_single_mesh->mesh = &mesh->mesh;
+
         VERIFY(render_cmd_buf_write_draw_indirect(state->render_device->default_cmd_stream.buf, draw_params, MALLOC_TAG));
     }
-
-    draw_single_mesh->idx_ofs = offset;
-    draw_single_mesh->elm_count = count;
-    draw_single_mesh->mesh = &state->meshes[state->cur_mesh]->mesh;
 
     state->meshes[state->cur_mesh]->resource.fence = render_get_cmd_stream_fence(&state->render_device->default_cmd_stream);
 
     CG_GL_TRACE_POP();
 }
 
+void cg_gl_state_draw(cg_gl_state_t * const state, const rhi_draw_mode_e prim, const int count, const int offset) {
+    ASSERT(!state->map_count);
+    cg_gl_state_draw_mesh(state, state->meshes[state->cur_mesh], prim, count, offset);
+}
+
 cg_gl_vertex_t * cg_gl_state_map_vertex_range(cg_gl_state_t * const state, const int count) {
     CG_GL_TRACE_PUSH_FN();
 
     ++state->cur_mesh;
-    if (state->cur_mesh >= ARRAY_SIZE(state->meshes)) {
+    if ((uint32_t)state->cur_mesh >= state->config.internal_limits.num_meshes) {
         state->cur_mesh = 0;
     }
 
@@ -908,16 +1043,16 @@ cg_gl_vertex_t * cg_gl_state_map_vertex_range(cg_gl_state_t * const state, const
 
     const int vertex_ofs = state->vertex_ofs = state->map_ofs;
 
-    if ((vertex_ofs + count) <= cg_gl_max_vertex_count) {
+    if ((uint32_t)(vertex_ofs + count) <= state->config.internal_limits.max_verts_per_vertex_bank) {
         const int bank = state->active_bank;
-        ASSERT((bank >= 0) && (bank < cg_gl_num_vertex_banks));
+        ASSERT((bank >= 0) && ((uint32_t)bank < state->config.internal_limits.num_vertex_banks));
         CG_GL_TRACE_POP();
         return &state->vertices[bank][vertex_ofs];
     }
 
     // overflow, flush this vertex bank.
     const int active_bank = state->active_bank;
-    const int next_bank = (active_bank + 1) % cg_gl_num_vertex_banks;
+    const int next_bank = (active_bank + 1) % state->config.internal_limits.num_vertex_banks;
 
     // make sure we have flushed the previous buffer before we start writing here...
 
@@ -932,45 +1067,21 @@ cg_gl_vertex_t * cg_gl_state_map_vertex_range(cg_gl_state_t * const state, const
     state->map_ofs = 0;
     state->active_bank = next_bank;
 
-    ASSERT(count <= cg_gl_max_vertex_count);
+    ASSERT((uint32_t)count <= state->config.internal_limits.max_verts_per_vertex_bank);
 
     CG_GL_TRACE_POP();
     return &state->vertices[next_bank][0];
 }
 
 void cg_gl_state_finish_vertex_range(cg_gl_state_t * const state) {
-    CG_GL_TRACE_PUSH_FN();
-
-    ASSERT(state->map_count);
-    const int count = state->map_count;
-    state->map_count = 0;
-
-    // move the bank watermark forward
-    ASSERT(state->map_ofs < state->vertex_ofs + count);
-
-    state->map_ofs = state->vertex_ofs + count;
-    const int bank = state->active_bank;
-    const float * const data = (float *)&state->vertices[bank][state->vertex_ofs];
-
-    RENDER_ENSURE_WRITE_CMD_STREAM(
-        &state->render_device->default_cmd_stream,
-        render_cmd_buf_write_upload_mesh_channel_data_indirect,
-        &state->meshes[state->cur_mesh]->mesh,
-        0,
-        0,
-        state->map_ofs - state->vertex_ofs,
-        data,
-        MALLOC_TAG);
-
-    state->gl_fences[bank] = render_get_cmd_stream_fence(&state->render_device->default_cmd_stream);
-
-    CG_GL_TRACE_POP();
+    ASSERT(state->map_count > 0);
+    cg_gl_state_finish_vertex_range_with_count(state, state->map_count);
 }
 
 void cg_gl_state_finish_vertex_range_with_count(cg_gl_state_t * const state, const int count) {
     CG_GL_TRACE_PUSH_FN();
 
-    ASSERT(state->map_count && (count <= state->map_count));
+    ASSERT((state->map_count > 0) && (count <= state->map_count));
     state->map_count = 0;
 
     // move the bank watermark forward
@@ -980,29 +1091,26 @@ void cg_gl_state_finish_vertex_range_with_count(cg_gl_state_t * const state, con
     const int bank = state->active_bank;
     const float * const data = (float *)&state->vertices[bank][state->vertex_ofs];
 
-    RENDER_ENSURE_WRITE_CMD_STREAM(
+    const int channel_index = 0;
+    const int first_elem = 0;
+    const int num_elems = state->map_ofs - state->vertex_ofs;
+    const size_t stride = sizeof(cg_gl_vertex_t);
+
+    const uint32_t hash = render_cmd_stream_upload_mesh_channel_data(
         &state->render_device->default_cmd_stream,
-        render_cmd_buf_write_upload_mesh_channel_data_indirect,
         &state->meshes[state->cur_mesh]->mesh,
-        0,
-        0,
-        state->map_ofs - state->vertex_ofs,
+        channel_index,
+        first_elem,
+        num_elems,
+        stride,
         data,
         MALLOC_TAG);
 
+    state->meshes[state->cur_mesh]->hash = hash;
     state->gl_fences[bank] = render_get_cmd_stream_fence(&state->render_device->default_cmd_stream);
 
     CG_GL_TRACE_POP();
 }
-
-#ifdef CG_TODO
-void cg_gl_texture_read_pixels(const cg_gl_texture_t * const tex, const int32_t sx, const int32_t sy, const int32_t sw, const int32_t sh) {
-    ASSERT(tex->data != NULL);
-
-    glReadPixels(sx, sy, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, tex->data);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, tex->data);
-}
-#endif
 
 void cg_gl_state_set_mode_blend_off(cg_gl_state_t * const state) {
     CG_GL_TRACE_PUSH_FN();
@@ -1124,23 +1232,13 @@ void cg_gl_state_set_mode_stencil_neq(cg_gl_state_t * const state) {
     CG_GL_TRACE_POP();
 }
 
-void cg_gl_state_set_mode_debug(cg_gl_state_t * const state) {
-#ifdef CG_TODO
-    // NOTE: linewidth/pointsize are not portable concepts
-    // linewidth is not support on desktop GL
-    // linewidth and pointsize are not supported in DX11
-
-    glLineWidth(1);
-    glPointSize(4);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-}
-
 /* ------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------- */
 
 void cg_gl_set_scissor_rect(cg_gl_state_t * const state, const int x0, const int y0, const int x1, const int y1) {
+    ASSERT((x0 >= 0) && (y0 >= 0));
+    ASSERT((x1 <= CG_GL_SCREEN_SCISSOR_MAX_RANGE) && (y1 <= CG_GL_SCREEN_SCISSOR_MAX_RANGE));
+
     state->scissor.canvas.x0 = x0;
     state->scissor.canvas.y0 = y0;
     state->scissor.canvas.x1 = x1;

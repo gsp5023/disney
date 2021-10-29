@@ -5,6 +5,11 @@
 
 third_party_project "mbedtls"
 	kind "staticlib"
+	
+    defines{
+        "MBEDTLS_PLATFORM_MEMORY"
+    }
+	
 	includedirs "extern/mbedtls/mbedtls/include"
 	files "mbedtls/mbedtls/include/mbedtls/*.h"
 	files "mbedtls/mbedtls/library/*.c"
@@ -28,7 +33,10 @@ third_party_project "mbedtls"
 		files "source/adk/steamboat/private/vader/common_compat/sysheaders/*.c"
 		disablewarnings "incompatible-pointer-types" -- incompatible pointer types assigning to 'X *' from 'Y *'
 		disablewarnings "implicit-function-declaration" -- implicit declaration of function 'X' is invalid in C99
-
+	
+	filter "platforms:*win*"
+		disablewarnings "4232" -- [TODO fix] nonstandard extension used: 'mbedtls_free/calloc_func': address of dllimport 'free/calloc' is not static, identity not guaranteed
+	
 local m = {}
 
 function m.link()

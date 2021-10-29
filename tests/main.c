@@ -12,6 +12,7 @@ ADK tests main entry point
 
 #include "source/adk/app_thunk/app_thunk.h"
 #include "source/adk/cjson/adk_cjson_context.h"
+#include "source/adk/http/adk_http.h"
 #include "source/adk/http/adk_httpx.h"
 #include "source/adk/interpreter/interp_api.h"
 #include "source/adk/runtime/app/app.h"
@@ -59,9 +60,11 @@ int test_algorithms();
 int test_bundle();
 int test_cache();
 int test_canvas();
+int test_canvas_integration();
 int test_cncbus();
 int test_coredump();
 int test_crypto();
+int test_display();
 int test_events();
 int test_extender();
 int test_files();
@@ -78,15 +81,19 @@ int test_memory_pool();
 int test_metrics();
 int test_persona();
 int test_pvr();
+int test_runtime();
 int test_reporting();
+int test_rhi();
 int test_socket();
 int test_system_metrics();
 int test_text_to_speech();
 int test_thread_pool();
 int test_uuid();
+int test_vm_map();
 int test_wamr();
 int test_wasm3();
 int test_websockets();
+int test_watchdog();
 
 #ifdef _RESTRICTED
 int test_unwind();
@@ -115,12 +122,16 @@ typedef struct test_t {
     const char * name;
     int (*function)();
     bool enabled;
+    bool override;
     bool failed;
     bool skipped;
 } test_t;
 
+#define TEST_FUNC(NAME, FUNC, CONDITION) \
+    { .name = #NAME, .function = test_##FUNC, .enabled = (CONDITION), .override = (CONDITION) }
+
 #define TEST_IF(NAME, CONDITION) \
-    { .name = #NAME, .function = test_##NAME, .enabled = (CONDITION) }
+    { .name = #NAME, .function = test_##NAME, .enabled = (CONDITION), .override = (CONDITION) }
 
 #define TEST(NAME) TEST_IF(NAME, true)
 
@@ -130,9 +141,8 @@ bool tests_toggle_by_name(test_t * const tests, size_t tests_len, const char * n
         bool found_test = false;
         for (size_t i = 0; i < tests_len; ++i) {
             if (strcmp(tests[i].name, name) == 0) {
-                tests[i].enabled = enabled;
+                tests[i].enabled = enabled && tests[i].override;
                 found_test = true;
-                break;
             }
         }
 
@@ -150,14 +160,7 @@ bool tests_toggle_by_name(test_t * const tests, size_t tests_len, const char * n
     return true;
 }
 
-int main(const int argc, const char * const * const argv) {
-    _argc = argc;
-    _argv = argv;
-
-    __assert_failed_hook = invoke_mock_assert;
-
-    log_set_min_level(log_level_warn);
-
+int tests_init_core(const int argc, const char * const * const argv) {
     if (!sb_preinit(argc, argv)) {
         return -1;
     }
@@ -180,23 +183,54 @@ int main(const int argc, const char * const * const argv) {
 
     the_app.api = api;
 
-    runtime_configuration_t runtime_config = get_default_runtime_configuration();
+    the_app.runtime_config = get_default_runtime_configuration();
 
-    the_app.httpx = adk_httpx_api_create(
+    adk_mbedtls_init(the_app.api->mmap.ssl.region, unit_test_guard_page_mode, MALLOC_TAG);
+
+    adk_httpx_init_global_certs(the_app.runtime_config.http.httpx_global_certs);
+
+    adk_httpx_enable_http2((adk_httpx_http2_options){
+        .enabled = the_app.runtime_config.http2.enabled,
+        .use_multiplexing = the_app.runtime_config.http2.use_multiplexing,
+        .multiplex_wait_for_existing_connection = the_app.runtime_config.http2.multiplex_wait_for_existing_connection});
+
+    the_app.httpx_client = adk_httpx_client_create(
         the_app.api->mmap.httpx.region,
         the_app.api->mmap.httpx_fragment_buffers.region,
-        runtime_config.network_pump_fragment_size,
+        the_app.runtime_config.network_pump_fragment_size,
+        the_app.runtime_config.network_pump_sleep_period,
         the_app.guard_page_mode,
         adk_httpx_init_normal,
         "app-httpx");
 
     adk_app_metrics_init();
+    return 0;
+}
+
+int main(const int argc, const char * const * const argv) {
+    _argc = argc;
+    _argv = argv;
+
+    __assert_failed_hook = invoke_mock_assert;
+
+    log_set_min_level(log_level_warn);
+
+    int init_status = tests_init_core(argc, argv);
+    if (init_status != 0) {
+        return -1;
+    }
 
     const bool help = test_findarg("--help") != -1;
     const bool quick = test_findarg("--quick") != -1;
     const bool headless = test_findarg("--headless") != -1;
     const bool input = test_findarg("--input") != -1;
     (void)headless;
+
+#if !defined(_RPI) && !defined(NEXUS_PLATFORM) && !defined(_VADER) && !defined(_LEIA)
+    const bool integration = true;
+#else
+    const bool integration = test_findarg("--integration") != -1;
+#endif
 
     const bool http2_use_proxy = test_findarg("--test_http_proxy") != -1;
     init_http2(http2_use_proxy, http2_use_proxy ? test_getargarg("--test_http_proxy") : NULL);
@@ -206,9 +240,11 @@ int main(const int argc, const char * const * const argv) {
         TEST(bundle),
         TEST(cache),
         TEST_IF(canvas, !headless),
+        TEST_FUNC(canvas, canvas_integration, !headless && integration),
         TEST(cncbus),
         TEST(coredump),
         TEST(crypto),
+        TEST_IF(display, !headless),
         TEST(events),
         TEST(extender),
         TEST(files),
@@ -226,14 +262,18 @@ int main(const int argc, const char * const * const argv) {
         TEST(persona),
         TEST(pvr),
         TEST(reporting),
+        TEST(rhi),
+        TEST(runtime),
         TEST(socket),
         TEST(system_metrics),
         TEST(text_to_speech),
         TEST(thread_pool),
         TEST(uuid),
+        TEST_IF(vm_map, !headless),
         TEST(wamr),
         TEST(wasm3),
         TEST(websockets),
+        TEST(watchdog),
 
 #ifdef _RESTRICTED
         TEST(unwind),
@@ -331,8 +371,13 @@ int main(const int argc, const char * const * const argv) {
     }
 
     adk_app_metrics_shutdown();
-    adk_httpx_api_free(the_app.httpx);
+    adk_httpx_client_free(the_app.httpx_client);
+    adk_mbedtls_shutdown(MALLOC_TAG);
     adk_shutdown(MALLOC_TAG);
+
+    if (get_default_runtime_configuration().http.httpx_global_certs) {
+        adk_httpx_free_global_certs();
+    }
 
     return num_failed ? 1 : 0;
 }

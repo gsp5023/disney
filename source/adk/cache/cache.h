@@ -14,6 +14,7 @@
 
 #include "source/adk/runtime/memory.h"
 #include "source/adk/runtime/runtime.h"
+#include "source/adk/runtime/time.h"
 #include "source/adk/steamboat/sb_file.h"
 
 #ifdef __cplusplus
@@ -72,7 +73,8 @@ cache_fetch_status_e cache_fetch_resource_from_url(
     cache_t * const cache,
     const char * const key,
     const char * const url,
-    const cache_update_mode_e update_mode);
+    const cache_update_mode_e update_mode,
+    const seconds_t timeout);
 
 /// Deletes (i.e. removes) the resource associated with `key` from the `cache`
 void cache_delete_key(cache_t * const cache, const char * const key);

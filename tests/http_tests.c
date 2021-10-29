@@ -125,7 +125,7 @@ static void perform(adk_curl_handle_t * const handle, const char * const url) {
 
 static void poll() {
     while (adk_curl_run_callbacks()) {
-        sb_thread_yield();
+        sb_thread_sleep((milliseconds_t){1});
     }
 }
 
@@ -207,7 +207,7 @@ static int group_setup(void ** state) {
     TRAP_OUT_OF_MEMORY(statics.region.ptr);
     TRAP_OUT_OF_MEMORY(statics.fragment_buffers_region.ptr);
 
-    VERIFY(adk_curl_api_init(statics.region, statics.fragment_buffers_region, fragment_size, unit_test_guard_page_mode, adk_curl_http_init_normal));
+    VERIFY(adk_curl_api_init(statics.region, statics.fragment_buffers_region, network_pump_fragment_size, network_pump_sleep_period, unit_test_guard_page_mode, adk_curl_http_init_normal));
 
     statics.headers = adk_curl_slist_append(NULL, "Content-Type: application/json");
     statics.headers = adk_curl_slist_append(statics.headers, "X-Powered-By: coffee");

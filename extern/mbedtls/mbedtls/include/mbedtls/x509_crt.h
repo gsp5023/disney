@@ -46,6 +46,9 @@
  *
  *  **********
  */
+
+// Modifications to this software (c) 2021 Disney
+
 #ifndef MBEDTLS_X509_CRT_H
 #define MBEDTLS_X509_CRT_H
 
@@ -114,6 +117,8 @@ typedef struct mbedtls_x509_crt
     mbedtls_md_type_t sig_md;           /**< Internal representation of the MD algorithm of the signature algorithm, e.g. MBEDTLS_MD_SHA256 */
     mbedtls_pk_type_t sig_pk;           /**< Internal representation of the Public Key algorithm of the signature algorithm, e.g. MBEDTLS_PK_RSA */
     void *sig_opts;             /**< Signature options to be passed to mbedtls_pk_verify_ext(), e.g. for RSASSA-PSS */
+
+    int keep;   /**<  If set, don't free this chain during mbedtls_x509_crt_free */
 
     struct mbedtls_x509_crt *next;     /**< Next certificate in the CA-chain. */
 }

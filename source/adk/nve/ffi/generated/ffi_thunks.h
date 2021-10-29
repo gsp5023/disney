@@ -210,6 +210,30 @@ FFI_THUNK(0x104, void, nve_event_filtering_enabled, (const int32_t is_enabled), 
 #endif // _NVE
 
 #ifdef _NVE
+FFI_THUNK(0x10A, void, nve_get_psdk_version, (FFI_WASM_PTR const out_version), {
+    FFI_ASSERT_ALIGNED_WASM_PTR(out_version, nve_version_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(out_version), "out_version cannot be NULL");
+    nve_get_psdk_version(FFI_PIN_WASM_PTR(out_version));
+})
+#else
+FFI_THUNK(0x10A, void, nve_get_psdk_version, (FFI_WASM_PTR const out_version), {
+    (void)0;
+})
+#endif // _NVE
+
+#ifdef _NVE
+FFI_THUNK(0x40A, int32_t, nve_get_system_cc_styles, (FFI_WASM_PTR const text_format), {
+    FFI_ASSERT_ALIGNED_WASM_PTR(text_format, nve_text_format_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(text_format), "text_format cannot be NULL");
+    return nve_get_system_cc_styles(FFI_PIN_WASM_PTR(text_format));
+})
+#else
+FFI_THUNK(0x40A, int32_t, nve_get_system_cc_styles, (FFI_WASM_PTR const text_format), {
+    return 0;
+})
+#endif // _NVE
+
+#ifdef _NVE
 FFI_THUNK(0x10, void, nve_init, (), {
     nve_init();
 })
@@ -266,19 +290,19 @@ FFI_THUNK(0x108, void, nve_m5_callback_manager_release, (FFI_NATIVE_PTR(void *) 
 #endif // _NVE
 
 #ifdef _NVE
-FFI_THUNK(0x108AAAA, void, nve_m5_cenc_init_data_get, (FFI_NATIVE_PTR(nve_handle_t) handle, FFI_WASM_PTR const out_ptr, FFI_WASM_PTR const out_size, FFI_WASM_PTR const method, FFI_WASM_PTR const tag), {
-    ASSERT_MSG(FFI_GET_NATIVE_PTR(nve_handle_t, handle), "handle cannot be NULL");
+FFI_THUNK(0x108AAAA, void, nve_m5_cenc_init_data_get, (FFI_NATIVE_PTR(void *) event_payload_ptr, FFI_WASM_PTR const out_ptr, FFI_WASM_PTR const out_size, FFI_WASM_PTR const out_method, FFI_WASM_PTR const out_tag), {
+    ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, event_payload_ptr), "event_payload_ptr cannot be NULL");
     ASSERT_MSG(FFI_PIN_WASM_PTR(out_ptr), "out_ptr cannot be NULL");
     FFI_ASSERT_ALIGNED_WASM_PTR(out_size, int32_t);
     ASSERT_MSG(FFI_PIN_WASM_PTR(out_size), "out_size cannot be NULL");
-    FFI_ASSERT_ALIGNED_WASM_PTR(method, nve_drm_method_e);
-    ASSERT_MSG(FFI_PIN_WASM_PTR(method), "method cannot be NULL");
-    FFI_ASSERT_ALIGNED_WASM_PTR(tag, nve_drm_key_tag_e);
-    ASSERT_MSG(FFI_PIN_WASM_PTR(tag), "tag cannot be NULL");
-    nve_m5_cenc_init_data_get(FFI_GET_NATIVE_PTR(nve_handle_t, handle), FFI_PIN_WASM_PTR(out_ptr), FFI_PIN_WASM_PTR(out_size), FFI_PIN_WASM_PTR(method), FFI_PIN_WASM_PTR(tag));
+    FFI_ASSERT_ALIGNED_WASM_PTR(out_method, nve_drm_method_e);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(out_method), "out_method cannot be NULL");
+    FFI_ASSERT_ALIGNED_WASM_PTR(out_tag, nve_drm_key_tag_e);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(out_tag), "out_tag cannot be NULL");
+    nve_m5_cenc_init_data_get(FFI_GET_NATIVE_PTR(void *, event_payload_ptr), FFI_PIN_WASM_PTR(out_ptr), FFI_PIN_WASM_PTR(out_size), FFI_PIN_WASM_PTR(out_method), FFI_PIN_WASM_PTR(out_tag));
 })
 #else
-FFI_THUNK(0x108AAAA, void, nve_m5_cenc_init_data_get, (FFI_NATIVE_PTR(nve_handle_t) handle, FFI_WASM_PTR const out_ptr, FFI_WASM_PTR const out_size, FFI_WASM_PTR const method, FFI_WASM_PTR const tag), {
+FFI_THUNK(0x108AAAA, void, nve_m5_cenc_init_data_get, (FFI_NATIVE_PTR(void *) event_payload_ptr, FFI_WASM_PTR const out_ptr, FFI_WASM_PTR const out_size, FFI_WASM_PTR const out_method, FFI_WASM_PTR const out_tag), {
     (void)0;
 })
 #endif // _NVE
@@ -482,6 +506,17 @@ FFI_THUNK(0x408A, FFI_ENUM(nve_result_e), nve_media_player_item_network_configur
 #else
 FFI_THUNK(0x408A, FFI_ENUM(nve_result_e), nve_media_player_item_network_configuration_get, (FFI_NATIVE_PTR(void *) player_ptr, FFI_WASM_PTR const config), {
     return 0;
+})
+#endif // _NVE
+
+#ifdef _NVE
+FFI_THUNK(0xD08, double, nve_media_player_local_position, (FFI_NATIVE_PTR(void *) player_ptr), {
+    ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, player_ptr), "player_ptr cannot be NULL");
+    return nve_media_player_local_position(FFI_GET_NATIVE_PTR(void *, player_ptr));
+})
+#else
+FFI_THUNK(0xD08, double, nve_media_player_local_position, (FFI_NATIVE_PTR(void *) player_ptr), {
+    return 0.0;
 })
 #endif // _NVE
 
@@ -1050,18 +1085,6 @@ FFI_THUNK(0x1084, void, nve_text_visibility_set, (FFI_NATIVE_PTR(void *) player_
 })
 #else
 FFI_THUNK(0x1084, void, nve_text_visibility_set, (FFI_NATIVE_PTR(void *) player_ptr, const int32_t cc_visibility), {
-    (void)0;
-})
-#endif // _NVE
-
-#ifdef _NVE
-FFI_THUNK(0x10A, void, nve_version_get, (FFI_WASM_PTR const out_version), {
-    FFI_ASSERT_ALIGNED_WASM_PTR(out_version, nve_version_t);
-    ASSERT_MSG(FFI_PIN_WASM_PTR(out_version), "out_version cannot be NULL");
-    nve_version_get(FFI_PIN_WASM_PTR(out_version));
-})
-#else
-FFI_THUNK(0x10A, void, nve_version_get, (FFI_WASM_PTR const out_version), {
     (void)0;
 })
 #endif // _NVE

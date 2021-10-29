@@ -147,13 +147,10 @@ void __sb_posix_shutdown_platform() {
 void sb_get_system_metrics(adk_system_metrics_t * const out) {
     LOG_DEBUG(TAG_RT_STUB, "retrieve device display information");
 
-    // partner and partner_guid must be valid AWS S3 bucket names
     VERIFY(0 == strcpy_s(out->vendor, ARRAY_SIZE(out->vendor), SB_METRICS_VENDOR));
-    VERIFY(0 == strcpy_s(out->partner, ARRAY_SIZE(out->partner), SB_METRICS_PARTNER));
     VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), SB_METRICS_DEVICE));
     VERIFY(0 == strcpy_s(out->software, ARRAY_SIZE(out->software), SB_METRICS_SOFTWARE));
     VERIFY(0 == strcpy_s(out->revision, ARRAY_SIZE(out->revision), SB_METRICS_REVISION));
-    VERIFY(0 == strcpy_s(out->partner_guid, ARRAY_SIZE(out->partner_guid), SB_METRICS_PARTNER_GUID));
     VERIFY(0 == strcpy_s(out->advertising_id, ARRAY_SIZE(out->advertising_id), SB_METRICS_ADVERTISING_ID));
     VERIFY(0 == strcpy_s(out->device_region, ARRAY_SIZE(out->device_region), SB_METRICS_REGION));
     VERIFY(0 == strcpy_s(out->firmware, ARRAY_SIZE(out->firmware), SB_METRICS_FIRMWARE));

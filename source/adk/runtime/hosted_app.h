@@ -32,3 +32,5 @@ EXT_EXPORT FFI_EXPORT FFI_NAME(adk_report_app_metrics) void adk_app_metrics_repo
     FFI_PTR_WASM const char * const app_version);
 
 EXT_EXPORT adk_app_metrics_result_e adk_app_metrics_get(adk_app_metrics_t * app_info);
+
+void adk_app_metrics_clear();

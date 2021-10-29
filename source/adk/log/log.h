@@ -22,12 +22,15 @@ Structured log messages via cnc_bus connection, defined levels, category tagging
 extern "C" {
 #endif
 
+FFI_EXPORT
 typedef enum log_level_e {
     log_level_debug = 0,
     log_level_info,
     log_level_warn,
     log_level_error,
     log_level_always,
+    log_level_app,
+    log_level_none,
     num_log_levels
 } log_level_e;
 
@@ -41,7 +44,7 @@ const char * log_get_level_name(const log_level_e level);
 
 EXT_EXPORT const char * log_get_level_short_name(const log_level_e level);
 
-EXT_EXPORT log_level_e log_get_min_level();
+FFI_EXPORT EXT_EXPORT log_level_e log_get_min_level();
 
 void log_set_min_level(const log_level_e level);
 
@@ -98,6 +101,14 @@ static inline void log_message_va(
     log_message(file, line, func, level, fourcc_tag, msg, args);
     va_end(args);
 }
+
+FFI_EXPORT void adk_log_app_msg(
+    FFI_PTR_WASM const char * const file,
+    const uint32_t line,
+    FFI_PTR_WASM const char * const func,
+    const log_level_e level,
+    const uint32_t tag,
+    FFI_PTR_WASM const char * const msg);
 
 #ifdef __cplusplus
 }

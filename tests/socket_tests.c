@@ -218,8 +218,17 @@ static int client_tcp_test(void * ignored) {
     // a test failure.
     sb_lock_mutex(statics.tcp_mutex);
     print_message("[tcp client] waiting for TCP server port\n");
-    const milliseconds_t timeout = {3 * 1000};
-    sb_wait_condition(statics.tcp_cv, statics.tcp_mutex, timeout);
+    const milliseconds_t initial_timeout = {3 * 1000};
+    milliseconds_t timeout = initial_timeout;
+    milliseconds_t start = adk_read_millisecond_clock();
+    while (!statics.tcp_server_listening_port) {
+        sb_wait_condition(statics.tcp_cv, statics.tcp_mutex, timeout);
+        const milliseconds_t dt = {adk_read_millisecond_clock().ms - start.ms};
+        if (dt.ms >= initial_timeout.ms) {
+            break;
+        }
+        timeout.ms = initial_timeout.ms - dt.ms;
+    }
     sb_unlock_mutex(statics.tcp_mutex);
     if (statics.tcp_server_listening_port == 0) {
         TRAP("[tcp client] timed out after %u msecs waiting for server\n", timeout.ms);

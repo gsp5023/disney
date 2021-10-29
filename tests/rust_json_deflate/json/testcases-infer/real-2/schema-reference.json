@@ -211,15 +211,19 @@
 														"type":	"string"
 													},
 													"encodedSeasonId":	{
+														"type":	[]
 													},
 													"encodedSeriesId":	{
+														"type":	[]
 													},
 													"programId":	{
 														"type":	"string"
 													},
 													"seasonId":	{
+														"type":	[]
 													},
 													"seriesId":	{
+														"type":	[]
 													}
 												},
 												"required":	["encodedProgramId", "programId"]
@@ -257,15 +261,19 @@
 															"type":	"string"
 														},
 														"encodedSeasonId":	{
+															"type":	[]
 														},
 														"encodedSeriesId":	{
+															"type":	[]
 														},
 														"programId":	{
 															"type":	"string"
 														},
 														"seasonId":	{
+															"type":	[]
 														},
 														"seriesId":	{
+															"type":	[]
 														}
 													},
 													"required":	["encodedProgramId", "programId"]
@@ -337,6 +345,7 @@
 													"type":	"object",
 													"properties":	{
 														"name":	{
+															"type":	[]
 														},
 														"trackType":	{
 															"type":	"string"
@@ -520,6 +529,7 @@
 										}
 									},
 									"meta":	{
+										"type":	[]
 									},
 									"videoId":	{
 										"type":	"string"
@@ -561,6 +571,7 @@
 										"type":	"string"
 									},
 									"episodeSequenceNumber":	{
+										"type":	[]
 									},
 									"groups":	{
 										"type":	"array",
@@ -653,10 +664,13 @@
 										"type":	"integer"
 									},
 									"seasonId":	{
+										"type":	[]
 									},
 									"encodedSeasonId":	{
+										"type":	[]
 									},
 									"seasonSequenceNumber":	{
+										"type":	[]
 									},
 									"milestones":	{
 										"type":	"array",

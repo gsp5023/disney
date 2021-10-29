@@ -16,17 +16,7 @@ GLFW support
 #include "source/adk/log/log.h"
 #include "source/adk/runtime/private/events.h"
 #include "source/adk/steamboat/ref_ports/rhi_gl/rhi_gl_config.h"
-
-#ifdef _GLFW_TRACE
 #include "source/adk/telemetry/telemetry.h"
-#define GLFW_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define GLFW_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define GLFW_TRACE_POP() TRACE_POP()
-#else
-#define GLFW_TRACE_PUSH_FN()
-#define GLFW_TRACE_PUSH(_name)
-#define GLFW_TRACE_POP()
-#endif
 
 #define TAG_GLFW FOURCC('G', 'L', 'F', 'W')
 

@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -159,6 +159,7 @@ void cncbus_init(cncbus_t * const bus, const mem_region_t region, const system_g
             TRAP_OUT_OF_MEMORY(block.region.ptr);
             last = (cncbus_receiver_msg_chain_t *)block.region.ptr;
             last->guard_pages = block;
+            bus->internal.guard_pages = true;
         } else
 #endif
         {

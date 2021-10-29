@@ -21,14 +21,7 @@ RENDER_COMMAND_FUNC(render_cmd_rhi_resource_add_ref_indirect,
 
 RENDER_COMMAND_FUNC(
     render_cmd_release_rhi_resource_indirect,
-    // we can emit release commands that may try to release
-    // resources that fail to create. instead of making the caller
-    // block to wait-and-see if the resource fails and conditionally
-    // releasing, just NULL check here and avoid complexity.
-    rhi_resource_t * resource = *cmd_args->resource;
-    if (resource) {
-        rhi_release(*cmd_args->resource, cmd_args->tag);
-    })
+    render_cmd_release_rhi_resource(cmd_args);)
 
 RENDER_COMMAND_FUNC(render_cmd_upload_mesh_channel_data_indirect,
                     rhi_upload_mesh_channel_data(device, *cmd_args->mesh, cmd_args->channel_index, cmd_args->first_elem, cmd_args->num_elems, cmd_args->data);)
@@ -42,6 +35,10 @@ RENDER_COMMAND_FUNC(render_cmd_upload_uniform_data_indirect,
 RENDER_COMMAND_FUNC(render_cmd_upload_texture_indirect,
                     rhi_upload_texture(device, *cmd_args->texture, &cmd_args->mipmaps);)
 
+#if !(defined(_VADER) || defined(_LEIA))
+RENDER_COMMAND_FUNC(render_cmd_upload_sub_texture_indirect,
+                    rhi_upload_sub_texture(device, *cmd_args->texture, &cmd_args->mipmaps);)
+#endif
 #if defined(_LEIA) || defined(_VADER)
 RENDER_COMMAND_FUNC(render_cmd_bind_texture_address,
                     rhi_bind_texture_address(device, *cmd_args->texture, &cmd_args->mipmaps);)

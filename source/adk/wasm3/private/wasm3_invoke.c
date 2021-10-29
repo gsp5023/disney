@@ -1,4 +1,4 @@
-﻿/* ===========================================================================
+/* ===========================================================================
  *
  * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
@@ -8,6 +8,7 @@
 #include "extern/wasm3/source/m3_exception.h"
 #include "source/adk/log/log.h"
 #include "source/adk/runtime/runtime.h"
+#include "source/adk/telemetry/telemetry.h"
 #include "source/adk/wasm3/private/wasm3.h"
 
 #define WASM3_TAG FOURCC('W', 'S', 'M', '3')
@@ -356,4 +357,15 @@ const char * adk_get_wasm_error_and_stack_trace() {
 
 void adk_clear_wasm_error_and_stack_trace() {
     ZEROMEM(&statics.stack_trace_buffer);
+}
+
+void m3_exec_ctx_push_call(m3_exec_ctx * const ctx, IM3Function function) {
+    WASM_FN_TRACE_PUSH(GetFunctionName(function));
+    assert(ctx->callstack_len <= M3_CALLSTACK_MAX_DEPTH);
+    ctx->callstack[ctx->callstack_len++] = function;
+}
+
+void m3_exec_ctx_pop_call(m3_exec_ctx * const ctx) {
+    WASM_FN_TRACE_POP();
+    ctx->callstack_len -= 1;
 }

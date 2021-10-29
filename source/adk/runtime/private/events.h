@@ -88,7 +88,7 @@ from any thread
 ===============================================================================
 */
 
-static void adk_post_event_async(const adk_event_t event) {
+static inline void adk_post_event_async(const adk_event_t event) {
     adk_lock_events();
     adk_post_event(event);
     adk_unlock_events();

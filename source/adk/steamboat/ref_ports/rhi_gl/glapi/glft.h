@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -154,7 +154,7 @@ LOAD(glUniform2fv, GLUNIFORM2FV)
 /*LOAD(glUniform3fv, GLUNIFORM3FV)*/
 LOAD(glUniform4fv, GLUNIFORM4FV)
 /*LOAD(glUniform1iv, GLUNIFORM1IV)*/
-/*LOAD(glUniform2iv, GLUNIFORM2IV)*/
+LOAD(glUniform2iv, GLUNIFORM2IV)
 /*LOAD(glUniform3iv, GLUNIFORM3IV)*/
 /*LOAD(glUniform4iv, GLUNIFORM4IV)*/
 /*LOAD(glUniformMatrix2fv, GLUNIFORMMATRIX2FV)*/

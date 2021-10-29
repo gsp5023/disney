@@ -1,0 +1,35 @@
+{
+  "v1": {
+    "options": [
+      {
+        "bundle": [
+          {
+            "file": "build/bundle/rust_app.bundle.zip",
+            "signature": "4ZtqyoNnO6griCGnROp1yq2aGSIZFOh7JWDArUh7Ay8="
+          }
+        ],
+        "runtime_config": {
+          "sys_params": {
+            "renderer": {
+              "device": {
+                "num_cmd_buffers": 123,
+                "cmd_buf_size": 456
+              },
+              "rhi_command_diffing": {
+                "enabled": true,
+                "verbose": true,
+                "tracking": {
+                  "enabled": true,
+                  "buffer_size": 12345
+                }
+              },
+              "render_resource_tracking": {
+                "periodic_logging": "tty_and_metrics"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

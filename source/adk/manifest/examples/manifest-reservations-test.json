@@ -23,6 +23,7 @@
                 "net" : 44,
                 "json_deflate": 99,
                 "default_thread_pool": 1010,
+                "ssl": 1000,
                 "http2": 1111,
                 "httpx": 1212,
                 "httpx_fragment_buffers": 1414,
@@ -34,7 +35,10 @@
               }
             },
             "guard_page_mode": "minimal",
-            "http_max_pooled_connections": 3
+            "http_max_pooled_connections": 3,
+            "http": {
+              "httpx_global_certs": true
+            }
           }
         }
       }

@@ -45,6 +45,7 @@ typedef void (*destroy_vtable_call)(struct adk_http_handle_base_t * const handle
 typedef struct adk_http_handle_base_t {
     destroy_vtable_call destroy;
     struct adk_http_handle_base_t * next;
+    struct adk_http_handle_base_t * prev;
     const char * destruction_tag;
 } adk_http_handle_base_t;
 
@@ -170,32 +171,12 @@ static void lws_log_emit(int level, const char * line) {
 }
 
 static void push_handle(adk_http_handle_base_t * const handle) {
-    if (statics.alive_handles_head == NULL) {
-        statics.alive_handles_tail = statics.alive_handles_head = handle;
-        return;
-    }
-    statics.alive_handles_tail->next = handle;
-    statics.alive_handles_tail = handle;
+    LL_ADD(handle, prev, next, statics.alive_handles_head, statics.alive_handles_tail);
 }
 
 static void remove_handle(adk_http_handle_base_t * const handle) {
     ASSERT(handle != NULL);
-    adk_http_handle_base_t * curr_handle = statics.alive_handles_head;
-
-    if (handle == statics.alive_handles_head) {
-        statics.alive_handles_head = statics.alive_handles_head->next;
-    } else {
-        while (curr_handle != NULL) {
-            if (curr_handle->next == handle) {
-                curr_handle->next = curr_handle->next->next;
-                break;
-            }
-            curr_handle = curr_handle->next;
-        }
-    }
-    if (statics.alive_handles_head == NULL) {
-        statics.alive_handles_tail = NULL;
-    }
+    LL_REMOVE(handle, prev, next, statics.alive_handles_head, statics.alive_handles_tail);
 }
 
 static void adk_websocket_destroy(adk_websocket_handle_t * const ws_handle) {
@@ -281,7 +262,7 @@ static void connect_client(lws_sorted_usec_list_t * const sul) {
     if (!lws_client_connect_via_info(&client_info)) {
         if (lws_retry_sul_schedule(statics.context, 0, sul, &lws_retry_policy, connect_client, &ws_handle->retry_count)) {
             ws_handle->socket_status = adk_websocket_status_connection_failed;
-            LOG_ERROR(TAG_LWS, "Websocket encountered an error attempting to connect to: %s%s%s", ws_handle->url_protocol, ws_handle->url_server_address, ws_handle->url_path);
+            LOG_WARN(TAG_LWS, "Websocket encountered an error attempting to connect to: %s%s%s", ws_handle->url_protocol, ws_handle->url_server_address, ws_handle->url_path);
             // on failure destroy the existing handle. we never hit on_error or on_close for the user to clean them up, so they must be cleaned automatically.
 
             adk_websocket_write_message_t * msg = ws_handle->write_message_head;
@@ -304,7 +285,7 @@ static void connect_client(lws_sorted_usec_list_t * const sul) {
 static int websocket_callback_retry(struct lws * const wsi, adk_websocket_handle_t * const ws_handle) {
     // the lws function returns non zero on failure to schedule.
     if (lws_retry_sul_schedule_retry_wsi(wsi, &ws_handle->sul, connect_client, &ws_handle->retry_count)) {
-        LOG_ERROR(TAG_LWS, "Websocket exhausted max retries of [%i] (%s)", ws_handle->retry_count - 1, ws_handle->url_server_address);
+        LOG_WARN(TAG_LWS, "Websocket exhausted max retries of [%i] (%s)", ws_handle->retry_count - 1, ws_handle->url_server_address);
         return -1;
     }
 
@@ -570,7 +551,7 @@ static int websocket_callback(struct lws * wsi, enum lws_callback_reasons reason
                 break;
             }
             case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
-                LOG_ERROR(TAG_LWS, "Websocket encountered a client connection error: [%.*s] (%s)", (int)len, (const char *)in, ws_handle->url_server_address);
+                LOG_WARN(TAG_LWS, "Websocket encountered a client connection error: [%.*s] (%s)", (int)len, (const char *)in, ws_handle->url_server_address);
 
                 // if we have an http error code, we must bail immediately vs trying to hide, or the handle will never be marked as dead
                 if (lws_http_client_http_response(wsi) >= 400) {
@@ -1033,6 +1014,13 @@ void SHIM_NAME(adk_http_dump_heap_usage)() {
     sb_unlock_mutex(statics.mutex);
 }
 
+heap_metrics_t SHIM_NAME(adk_http_get_heap_metrics)() {
+    sb_lock_mutex(statics.mutex);
+    const heap_metrics_t metrics = heap_get_metrics(&statics.heap);
+    sb_unlock_mutex(statics.mutex);
+    return metrics;
+}
+
 void SHIM_NAME(adk_http_set_proxy)(const char * const proxy) {
     ASSERT(statics.vhost);
     ASSERT(proxy);
@@ -1058,6 +1046,7 @@ adk_websocket_vtable_t adk_websocket_vtable_http2 = {
     .adk_http_init = SHIM_NAME(adk_http_init),
     .adk_http_shutdown = SHIM_NAME(adk_http_shutdown),
     .adk_http_dump_heap_usage = SHIM_NAME(adk_http_dump_heap_usage),
+    .adk_http_get_heap_metrics = SHIM_NAME(adk_http_get_heap_metrics),
     .adk_http_set_proxy = SHIM_NAME(adk_http_set_proxy),
     .adk_http_set_socks = SHIM_NAME(adk_http_set_socks),
     .adk_http_tick = SHIM_NAME(adk_http_tick),

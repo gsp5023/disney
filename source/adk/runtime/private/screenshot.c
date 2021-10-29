@@ -79,9 +79,9 @@ static bool image_save_as_type(const sb_file_directory_e directory, const char *
 }
 
 size_t adk_get_screenshot_required_memory() {
-    int ww, wh;
-    sb_get_window_client_area(the_app.window, &ww, &wh);
-    return ww * wh * (size_t)4;
+    sb_enumerate_display_modes_result_t display_mode_result = {0};
+    sb_enumerate_display_modes(the_app.display_settings.curr_display, the_app.display_settings.curr_display_mode, &display_mode_result);
+    return (size_t)(display_mode_result.display_mode.width * display_mode_result.display_mode.height * 4);
 }
 
 void adk_take_screenshot(image_t * const out_screenshot, const mem_region_t screenshot_mem_region) {

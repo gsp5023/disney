@@ -36,7 +36,6 @@ static struct {
     mem_region_t sentry_region;
     mem_region_t httpx_region;
     mem_region_t fragment_buffer;
-    adk_httpx_api_t * httpx_api;
     adk_httpx_client_t * httpx_client;
 } statics;
 
@@ -105,7 +104,7 @@ static void test_reporting_full_dsn_inspect_message(void ** ignored) {
         .key = "msg_tag", .value = "msg_tag", .next = NULL};
     ADK_REPORTING_REPORT_MSG_DEBUG(instance, &msg_tag, "test_reporting_full_dsn_inspect_message: %s", "ADK_REPORTING_SET_MSG_DEBUG");
     while (adk_reporting_tick(instance)) {
-        sb_thread_yield();
+        sb_thread_sleep((milliseconds_t){1});
     }
 
     adk_reporting_instance_free(instance);
@@ -130,7 +129,7 @@ static void test_reporting_bad_request(void ** ignored) {
         .key = "msg_tag", .value = "msg_tag", .next = NULL};
     ADK_REPORTING_REPORT_MSG_DEBUG(instance, &msg_tag, "test_reporting_bad_request: %s", "ADK_REPORTING_SET_MSG_DEBUG");
     while (adk_reporting_tick(instance)) {
-        sb_thread_yield();
+        sb_thread_sleep((milliseconds_t){1});
     }
 
     adk_reporting_instance_free(instance);
@@ -161,7 +160,7 @@ static void test_reporting_good_request(void ** ignored) {
     // Example reporting event now
     ADK_REPORTING_REPORT_MSG_DEBUG(instance, &msg_tag, "test_reporting_good_request: %s", "ADK_REPORTING_SET_MSG_DEBUG");
     while (adk_reporting_tick(instance)) {
-        sb_thread_yield();
+        sb_thread_sleep((milliseconds_t){1});
     }
 
     adk_reporting_instance_free(instance);
@@ -271,7 +270,7 @@ static void test_reporting_sentry_exception_inspect(void ** ignored) {
 
     ADK_REPORTING_REPORT_EXCEPTION_FATAL(instance, NULL, NULL, 0, "TypeCastError", "Unsafe cast from void* to : %s", "int");
     while (adk_reporting_tick(instance)) {
-        sb_thread_yield();
+        sb_thread_sleep((milliseconds_t){1});
     }
 
     adk_reporting_instance_free(instance);
@@ -376,7 +375,7 @@ static void test_reporting_through_log(void ** ignored) {
     log_init(NULL, CNCBUS_ADDRESS_LOGGER, CNCBUS_SUBNET_MASK_CORE, instance);
     LOG_ERROR(TAG_ADK_REPORTING_TEST, "test_reporting_through_log", "message");
     while (adk_reporting_tick(instance)) {
-        sb_thread_yield();
+        sb_thread_sleep((milliseconds_t){1});
     }
 
     log_shutdown();
@@ -395,22 +394,20 @@ static int setup(void ** state) {
     statics.httpx_region = MEM_REGION(.ptr = heap_alloc(&statics.heap, aligned_httpx_region_size, MALLOC_TAG), .size = aligned_httpx_region_size);
     statics.fragment_buffer = sb_map_pages(PAGE_ALIGN_INT(httpx_fragment_buffer_size), system_page_protect_read_write);
 
-    statics.httpx_api = adk_httpx_api_create(
+    statics.httpx_client = adk_httpx_client_create(
         statics.httpx_region,
         statics.fragment_buffer,
-        fragment_size,
+        network_pump_fragment_size,
+        network_pump_sleep_period,
         unit_test_guard_page_mode,
         adk_httpx_init_normal,
         "adk-reporting-httpx-test");
-
-    statics.httpx_client = adk_httpx_client_create(statics.httpx_api);
 
     return 0;
 }
 
 static int teardown(void ** state) {
     adk_httpx_client_free(statics.httpx_client);
-    adk_httpx_api_free(statics.httpx_api);
 
     heap_free(&statics.heap, statics.httpx_region.ptr, MALLOC_TAG);
 #ifndef NDEBUG

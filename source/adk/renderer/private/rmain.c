@@ -14,8 +14,12 @@ Render main
 #include "rhi.h"
 #include "rhi_device_api.h"
 #include "rhi_private.h"
+#include "source/adk/log/log.h"
+#include "source/adk/metrics/metrics.h"
 #include "source/adk/renderer/renderer.h"
 #include "source/adk/steamboat/sb_thread.h"
+
+#define RENDER_TAG FOURCC('R', 'N', 'D', 'R')
 
 /*
 =======================================
@@ -23,11 +27,14 @@ render resources
 =======================================
 */
 
-static void render_resource_init(render_resource_t * const resource, render_device_t * const device, const render_resource_vtable_t * const vtable, const char * const tag) {
+static void render_resource_init(render_resource_t * const resource, render_device_t * const device, const render_resource_vtable_t * const vtable, render_resource_type_e resource_type, const char * const tag) {
+    ASSERT(resource_type != render_resource_type_invalid);
+
     resource->device = device;
     resource->ref_count = 1;
     resource->vtable = vtable;
     resource->tag = tag;
+    resource->resource_type = resource_type;
 
     if (device) {
         render_add_ref(&device->resource);
@@ -44,6 +51,65 @@ void render_wait_for_resource(render_resource_t * const resource) {
     render_conditional_flush_cmd_stream_and_wait_fence(resource->device, &resource->device->default_cmd_stream, resource->fence);
 }
 
+static void render_track_resource_memory_allocation(const render_resource_t * const resource) {
+    render_device_t * const device = resource->device;
+    if (!device) {
+        return;
+    }
+    switch (resource->resource_type) {
+        case render_resource_type_r_texture_t: {
+            const r_texture_t * const text = (const r_texture_t *)resource;
+            device->resource_tracking.memory_usage.texture_memory += (uint64_t)text->data_len;
+            device->resource_tracking.memory_usage.total_memory += (uint64_t)text->data_len;
+            break;
+        }
+        case render_resource_type_r_mesh_t: {
+            const r_mesh_t * const mesh = (const r_mesh_t *)resource;
+            device->resource_tracking.memory_usage.mesh_memory += mesh->mesh_byte_size;
+            device->resource_tracking.memory_usage.total_memory += mesh->mesh_byte_size;
+            break;
+        }
+        case render_resource_type_r_uniform_buffer_t: {
+            const r_uniform_buffer_t * const uniform_buffer = (const r_uniform_buffer_t *)resource;
+            device->resource_tracking.memory_usage.uniform_buffer_memory += uniform_buffer->buffer_size;
+            device->resource_tracking.memory_usage.total_memory += uniform_buffer->buffer_size;
+            break;
+        }
+        default:
+            break;
+    }
+    device->resource_tracking.memory_usage.peak_memory = max_uint64_t(device->resource_tracking.memory_usage.total_memory, device->resource_tracking.memory_usage.peak_memory);
+}
+
+static void render_track_resource_memory_release(const render_resource_t * const resource) {
+    render_device_t * const device = resource->device;
+    if (!device) {
+        return;
+    }
+    switch (resource->resource_type) {
+        case render_resource_type_r_texture_t: {
+            const r_texture_t * const text = (const r_texture_t *)resource;
+            device->resource_tracking.memory_usage.texture_memory -= (uint64_t)text->data_len;
+            device->resource_tracking.memory_usage.total_memory -= (uint64_t)text->data_len;
+            break;
+        }
+        case render_resource_type_r_mesh_t: {
+            const r_mesh_t * const mesh = (const r_mesh_t *)resource;
+            device->resource_tracking.memory_usage.mesh_memory -= mesh->mesh_byte_size;
+            device->resource_tracking.memory_usage.total_memory -= mesh->mesh_byte_size;
+            break;
+        }
+        case render_resource_type_r_uniform_buffer_t: {
+            const r_uniform_buffer_t * const uniform_buffer = (const r_uniform_buffer_t *)resource;
+            device->resource_tracking.memory_usage.uniform_buffer_memory -= uniform_buffer->buffer_size;
+            device->resource_tracking.memory_usage.total_memory -= uniform_buffer->buffer_size;
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 int render_release(render_resource_t * const resource, const char * const tag) {
     ASSERT(resource->ref_count > 0);
     const int r = --resource->ref_count;
@@ -53,6 +119,7 @@ int render_release(render_resource_t * const resource, const char * const tag) {
             render_wait_for_resource(resource);
         }
         if (resource->vtable) {
+            render_track_resource_memory_release(resource);
             resource->vtable->destroy(resource, tag);
         }
         if (device) {
@@ -66,6 +133,10 @@ void render_dump_heap_usage(const render_device_t * const device) {
     heap_dump_usage(&device->internal.object_heap);
 
     device->internal.device->vtable->dump_heap_usage();
+}
+
+heap_metrics_t render_get_heap_metrics(const render_device_t * const device) {
+    return heap_get_metrics(&device->internal.object_heap);
 }
 
 /*
@@ -278,6 +349,7 @@ static int render_proc_any_order(void * const arg) {
         order = render_proc_exec_cmd_buf(device, rhi_device, buf, order);
     }
     sb_unlock_mutex(device->internal.mutex);
+    rhi_thread_device_done_current(rhi_device);
     return 0;
 }
 
@@ -303,6 +375,8 @@ static int render_proc_only_out_of_order(void * const arg) {
         render_proc_exec_cmd_buf(device, rhi_device, buf, 0);
     }
     sb_unlock_mutex(device->internal.mutex);
+
+    rhi_thread_device_done_current(rhi_device);
     return 0;
 }
 
@@ -418,7 +492,7 @@ render_device_t * create_render_device(rhi_api_t * const api, struct sb_window_t
     }
 #endif
 
-    render_resource_init(&device->resource, NULL, &render_device_vtable, tag);
+    render_resource_init(&device->resource, NULL, &render_device_vtable, render_resource_type_render_device_t, tag);
 
     device->api = api;
     device->internal.device = rhi_device;
@@ -475,10 +549,10 @@ render_device_t * create_render_device(rhi_api_t * const api, struct sb_window_t
         device->internal.threads = thread;
 
         if (i != 0) {
-            thread->thread = sb_create_thread("render_sec", sb_thread_default_options, render_proc_only_out_of_order, thread, MALLOC_TAG);
+            thread->thread = sb_create_thread("m5_render_sec", sb_thread_default_options, render_proc_only_out_of_order, thread, MALLOC_TAG);
         } else {
             // primary thread runs both
-            thread->thread = sb_create_thread("render_prim", sb_thread_default_options, render_proc_any_order, thread, MALLOC_TAG);
+            thread->thread = sb_create_thread("m5_render_prim", sb_thread_default_options, render_proc_any_order, thread, MALLOC_TAG);
         }
     }
 
@@ -501,6 +575,34 @@ render_device_t * create_render_device(rhi_api_t * const api, struct sb_window_t
     return device;
 }
 
+void render_device_log_resource_tracking(const render_device_t * const render_device, const logging_mode_e logging_mode) {
+    if (logging_mode == logging_tty || logging_mode == logging_tty_and_metrics) {
+        LOG_ALWAYS(RENDER_TAG,
+                   "Render resources:\n"
+                   "\tpeak memory:       [%" PRIu64
+                   "]\n"
+                   "\ttotal memory:      [%" PRIu64
+                   "]\n"
+                   "\tmesh memory:       [%" PRIu64
+                   "]\n"
+                   "\ttexture memory:    [%" PRIu64
+                   "]\n"
+                   "\tuniform buffers:   [%" PRIu64 "]",
+                   render_device->resource_tracking.memory_usage.peak_memory,
+                   render_device->resource_tracking.memory_usage.total_memory,
+                   render_device->resource_tracking.memory_usage.mesh_memory,
+                   render_device->resource_tracking.memory_usage.texture_memory,
+                   render_device->resource_tracking.memory_usage.uniform_buffer_memory);
+    }
+    if (logging_mode == logging_metrics || logging_mode == logging_tty_and_metrics) {
+        STATIC_ASSERT(sizeof(metrics_render_memory_usage_t) == sizeof(render_memory_usage_t));
+
+        metrics_render_memory_usage_t memory_usage_metric;
+        memcpy(&memory_usage_metric, &render_device->resource_tracking.memory_usage, sizeof(render_device->resource_tracking.memory_usage));
+        publish_metric(metric_type_metrics_render_memory_usage_t, &memory_usage_metric, sizeof(memory_usage_metric));
+    }
+}
+
 /*
 =======================================
 flush_render_device
@@ -521,6 +623,7 @@ static bool wrap_is_lequal(const int x, const int y) {
 }
 
 static void flush_cmd_buf_que(render_device_t * const device, rhi_device_t * const rhi_device, rb_cmd_buf_que_t que) {
+    RHI_TRACE_PUSH_FN();
     rb_cmd_buf_t * buf = deque_next_cmd_buf(&que);
 
     while (buf) {
@@ -536,9 +639,11 @@ static void flush_cmd_buf_que(render_device_t * const device, rhi_device_t * con
 
         buf = deque_next_cmd_buf(&que);
     }
+    RHI_TRACE_POP();
 }
 
 static void async_wait_render_device(render_device_t * const device) {
+    RHI_TRACE_PUSH_FN();
     const int submit_count = sb_atomic_load(&device->internal.submit_count, memory_order_relaxed);
     // wait until complete count passes submit count
     if (wrap_is_less(sb_atomic_load(&device->internal.done_count, memory_order_relaxed), submit_count)) {
@@ -549,9 +654,11 @@ static void async_wait_render_device(render_device_t * const device) {
         } while (wrap_is_less(sb_atomic_load(&device->internal.done_count, memory_order_relaxed), submit_count));
         sb_unlock_mutex(device->internal.mutex);
     }
+    RHI_TRACE_POP();
 }
 
 static void flush_device_command_buffers(render_device_t * const device) {
+    RHI_TRACE_PUSH_FN();
     sb_lock_mutex(device->internal.mutex);
     const rb_cmd_buf_que_t ordered = device->internal.ordered_cmd_buf_que;
     const rb_cmd_buf_que_t unordered = device->internal.unordered_cmd_buf_que;
@@ -566,6 +673,7 @@ static void flush_device_command_buffers(render_device_t * const device) {
 
     flush_cmd_buf_que(device, rhi_device, ordered);
     flush_cmd_buf_que(device, rhi_device, unordered);
+    RHI_TRACE_POP();
 }
 
 /*
@@ -575,6 +683,7 @@ render_device_frame
 */
 
 void render_device_frame(render_device_t * const device) {
+    RHI_TRACE_PUSH_FN();
     ASSERT_IS_MAIN_THREAD();
     STATIC_ASSERT(ARRAY_SIZE(device->internal.frame_fences) == render_max_pending_frames + 1);
 
@@ -598,6 +707,7 @@ void render_device_frame(render_device_t * const device) {
     device->internal.frame_fences[next_frame_slot] = fence;
 
     sb_atomic_store(&device->internal.num_frames, (int)next_frame, memory_order_relaxed);
+    RHI_TRACE_POP();
 }
 
 void render_wait_frames(render_device_t * const device, const int32_t num_frames) {
@@ -617,6 +727,7 @@ void render_wait_frames(render_device_t * const device, const int32_t num_frames
 }
 
 void flush_render_device(render_device_t * const device) {
+    RHI_TRACE_PUSH_FN();
     render_flush_cmd_stream(&device->default_cmd_stream, render_no_wait);
 
     if (device->internal.num_device_threads > 0) {
@@ -636,6 +747,7 @@ void flush_render_device(render_device_t * const device) {
 
     // this is the main device thread
     flush_device_command_buffers(device);
+    RHI_TRACE_POP();
 }
 
 /*
@@ -659,6 +771,7 @@ render_wait_fence
 */
 
 void render_wait_fence(render_device_t * const device, const rb_fence_t fence) {
+    RHI_TRACE_PUSH_FN();
     if (fence.cmd_buf) {
         if (wrap_is_less(sb_atomic_load(&fence.cmd_buf->retire_counter, memory_order_relaxed), fence.counter)) {
             if (device->internal.num_device_threads > 0) {
@@ -672,6 +785,7 @@ void render_wait_fence(render_device_t * const device, const rb_fence_t fence) {
             }
         }
     }
+    RHI_TRACE_POP();
 }
 
 /*
@@ -684,6 +798,7 @@ Internally the stream holds a cmd_buf and flushes the data as necessary to fit c
 */
 
 rb_fence_t render_flush_cmd_stream(render_cmd_stream_t * const cmd_stream, const render_wait_mode_e wait_mode) {
+    RHI_TRACE_PUSH_FN();
     if (cmd_stream->buf) {
         if (cmd_stream->buf->num_cmds > 0) {
             const rb_fence_t fence = render_submit_cmd_buf(cmd_stream->internal.device, cmd_stream->buf, cmd_buf_ordered);
@@ -701,7 +816,7 @@ rb_fence_t render_flush_cmd_stream(render_cmd_stream_t * const cmd_stream, const
             cmd_stream->buf = NULL;
         }
     }
-
+    RHI_TRACE_POP();
     return cmd_stream->internal.last_fence;
 }
 
@@ -736,6 +851,7 @@ bool render_conditional_flush_cmd_stream_and_check_fence(render_device_t * const
     // command buffer then either the fence is done or
     // the stream needs to be flushed.
     ASSERT((fence.cmd_stream == NULL) || (fence.cmd_stream == cmd_stream));
+    RHI_TRACE_PUSH_FN();
 
     if (fence.cmd_buf && (fence.cmd_buf == cmd_stream->buf)) {
         if (wrap_is_less(fence.cmd_buf->submit_counter, fence.counter)) {
@@ -744,15 +860,18 @@ bool render_conditional_flush_cmd_stream_and_check_fence(render_device_t * const
             (void)new_fence;
             ASSERT(new_fence.cmd_buf == fence.cmd_buf);
             ASSERT(new_fence.counter == fence.counter);
+            RHI_TRACE_POP();
             return false;
         }
         // command buffers are equal but the submit_counter on the command buffer
         // has since been incremented which means it made a full trip through the
         // rendering command queue, ended up back in the free-list and bound to
         // this command stream.
+        RHI_TRACE_POP();
         return true;
     }
 
+    RHI_TRACE_POP();
     return render_check_fence(fence);
 }
 
@@ -762,6 +881,7 @@ void render_conditional_flush_cmd_stream_and_wait_fence(render_device_t * const 
     // command buffer then either the fence is done or
     // the stream needs to be flushed.
     ASSERT((fence.cmd_stream == NULL) || (fence.cmd_stream == cmd_stream));
+    RHI_TRACE_PUSH_FN();
 
     if (fence.cmd_buf && (fence.cmd_buf == cmd_stream->buf)) {
         if (wrap_is_less(fence.cmd_buf->submit_counter, fence.counter)) {
@@ -770,16 +890,19 @@ void render_conditional_flush_cmd_stream_and_wait_fence(render_device_t * const 
             (void)new_fence;
             ASSERT(new_fence.cmd_buf == fence.cmd_buf);
             ASSERT(new_fence.counter == fence.counter);
+            RHI_TRACE_POP();
             return;
         }
         // command buffers are equal but the submit_counter on the command buffer
         // has since been incremented which means it made a full trip through the
         // rendering command queue, ended up back in the free-list and bound to
         // this command stream.
+        RHI_TRACE_POP();
         return;
     }
 
     render_wait_fence(device, fence);
+    RHI_TRACE_POP();
 }
 
 /*
@@ -843,16 +966,21 @@ render_create_texture_2d
 
 MAKE_RENDER_RESOURCE(r_texture_t, texture)
 
+static uint32_t render_estimate_texture_size_on_gpu(const image_mips_t * const mipmaps) {
+    return (uint32_t)(mipmaps->levels[0].data_len + (mipmaps->num_levels > 1 ? mipmaps->levels[0].data_len / 2 : 0));
+}
+
 r_texture_t * render_create_texture_2d_no_flush(render_device_t * const device, const image_mips_t mipmaps, const rhi_pixel_format_e format, const rhi_usage_e usage, const rhi_sampler_state_desc_t sampler_state, const char * const tag) {
     ASSERT_IS_MAIN_THREAD();
-
+    ASSERT(mipmaps.levels[0].data_len > 0);
     r_texture_t * const texture = (r_texture_t *)heap_calloc(&device->internal.object_heap, sizeof(r_texture_t), tag);
-    render_resource_init(&texture->resource, device, &RESOURCE_VTABLE(r_texture_t), tag);
+    render_resource_init(&texture->resource, device, &RESOURCE_VTABLE(r_texture_t), render_resource_type_r_texture_t, tag);
 
     texture->format = format;
     texture->width = mipmaps.levels[0].width;
     texture->height = mipmaps.levels[0].height;
     texture->channels = mipmaps.levels[0].bpp;
+    texture->data_len = render_estimate_texture_size_on_gpu(&mipmaps);
 
     if (!render_cmd_buf_write_create_texture_2d(device->default_cmd_stream.buf, &texture->texture, mipmaps, format, usage, sampler_state, tag)) {
         heap_free(&device->internal.object_heap, texture, MALLOC_TAG);
@@ -861,19 +989,23 @@ r_texture_t * render_create_texture_2d_no_flush(render_device_t * const device, 
 
     texture->resource.fence = render_get_cmd_stream_fence(&device->default_cmd_stream);
 
+    render_track_resource_memory_allocation(&texture->resource);
+
     return texture;
 }
 
 r_texture_t * render_create_texture_2d(render_device_t * const device, const image_mips_t mipmaps, const rhi_pixel_format_e format, const rhi_usage_e usage, const rhi_sampler_state_desc_t sampler_state, const char * const tag) {
     ASSERT_IS_MAIN_THREAD();
+    ASSERT(mipmaps.levels[0].data_len > 0);
 
     r_texture_t * const texture = (r_texture_t *)heap_calloc(&device->internal.object_heap, sizeof(r_texture_t), tag);
-    render_resource_init(&texture->resource, device, &RESOURCE_VTABLE(r_texture_t), tag);
+    render_resource_init(&texture->resource, device, &RESOURCE_VTABLE(r_texture_t), render_resource_type_r_texture_t, tag);
 
     texture->format = format;
     texture->width = mipmaps.levels[0].width;
     texture->height = mipmaps.levels[0].height;
     texture->channels = mipmaps.levels[0].bpp;
+    texture->data_len = render_estimate_texture_size_on_gpu(&mipmaps);
 
     RENDER_ENSURE_WRITE_CMD_STREAM(
         &device->default_cmd_stream,
@@ -886,6 +1018,8 @@ r_texture_t * render_create_texture_2d(render_device_t * const device, const ima
         tag);
 
     texture->resource.fence = render_get_cmd_stream_fence(&device->default_cmd_stream);
+
+    render_track_resource_memory_allocation(&texture->resource);
 
     return texture;
 }
@@ -923,7 +1057,7 @@ r_program_t * render_create_program_from_binary(render_device_t * const device, 
     ASSERT_IS_MAIN_THREAD();
 
     r_program_t * const program = (r_program_t *)heap_calloc(&device->internal.object_heap, sizeof(r_program_t), tag);
-    render_resource_init(&program->resource, device, &r_program_vtable, tag);
+    render_resource_init(&program->resource, device, &r_program_vtable, render_resource_type_r_program_t, tag);
 
     RENDER_ENSURE_WRITE_CMD_STREAM(
         &device->default_cmd_stream,
@@ -979,7 +1113,7 @@ r_mesh_data_layout_t * render_create_mesh_data_layout(render_device_t * const de
     ASSERT_IS_MAIN_THREAD();
 
     r_mesh_data_layout_t * const mesh_data_layout = (r_mesh_data_layout_t *)heap_calloc(&device->internal.object_heap, sizeof(r_mesh_data_layout_t), tag);
-    render_resource_init(&mesh_data_layout->resource, device, &RESOURCE_VTABLE(r_mesh_data_layout_t), tag);
+    render_resource_init(&mesh_data_layout->resource, device, &RESOURCE_VTABLE(r_mesh_data_layout_t), render_resource_type_r_mesh_data_layout_t, tag);
 
     int struct_size = 0;
 
@@ -1017,13 +1151,21 @@ render_create_mesh
 =======================================
 */
 
+static uint32_t render_estimate_mesh_size_on_gpu(const rhi_mesh_data_init_indirect_t mesh_data) {
+    uint32_t memory_usage = mesh_data.num_indices;
+    for (int i = 0; i < mesh_data.num_channels; ++i) {
+        memory_usage += (uint32_t)mesh_data.channels[i].size;
+    }
+    return memory_usage;
+}
+
 MAKE_RENDER_RESOURCE(r_mesh_t, mesh)
 
 r_mesh_t * render_create_mesh(render_device_t * const device, const rhi_mesh_data_init_indirect_t mesh_data, r_mesh_data_layout_t * mesh_data_layout, const char * const tag) {
     ASSERT_IS_MAIN_THREAD();
 
     r_mesh_t * const mesh = (r_mesh_t *)heap_calloc(&device->internal.object_heap, sizeof(r_mesh_t), tag);
-    render_resource_init(&mesh->resource, device, &RESOURCE_VTABLE(r_mesh_t), tag);
+    render_resource_init(&mesh->resource, device, &RESOURCE_VTABLE(r_mesh_t), render_resource_type_r_mesh_t, tag);
 
     rhi_mesh_data_init_indirect_t mesh_init_data_copy = mesh_data;
     if (mesh_data_layout) {
@@ -1040,6 +1182,9 @@ r_mesh_t * render_create_mesh(render_device_t * const device, const rhi_mesh_dat
 
     mesh->resource.fence = render_get_cmd_stream_fence(&device->default_cmd_stream);
 
+    mesh->mesh_byte_size = render_estimate_mesh_size_on_gpu(mesh_data);
+    render_track_resource_memory_allocation(&mesh->resource);
+
     return mesh;
 }
 
@@ -1055,7 +1200,7 @@ r_blend_state_t * render_create_blend_state(render_device_t * const device, cons
     ASSERT_IS_MAIN_THREAD();
 
     r_blend_state_t * const blend_state = (r_blend_state_t *)heap_calloc(&device->internal.object_heap, sizeof(r_blend_state_t), tag);
-    render_resource_init(&blend_state->resource, device, &RESOURCE_VTABLE(r_blend_state_t), tag);
+    render_resource_init(&blend_state->resource, device, &RESOURCE_VTABLE(r_blend_state_t), render_resource_type_r_blend_state_t, tag);
 
     render_cmd_stream_blocking_latch_cmd_buf(&device->default_cmd_stream);
     RENDER_ENSURE_WRITE_CMD_STREAM(
@@ -1082,7 +1227,7 @@ r_depth_stencil_state_t * render_create_depth_stencil_state(render_device_t * co
     ASSERT_IS_MAIN_THREAD();
 
     r_depth_stencil_state_t * const depth_stencil_state = (r_depth_stencil_state_t *)heap_calloc(&device->internal.object_heap, sizeof(r_depth_stencil_state_t), tag);
-    render_resource_init(&depth_stencil_state->resource, device, &RESOURCE_VTABLE(r_depth_stencil_state_t), tag);
+    render_resource_init(&depth_stencil_state->resource, device, &RESOURCE_VTABLE(r_depth_stencil_state_t), render_resource_type_r_depth_stencil_state_t, tag);
 
     RENDER_ENSURE_WRITE_CMD_STREAM(
         &device->default_cmd_stream,
@@ -1108,7 +1253,7 @@ r_rasterizer_state_t * render_create_rasterizer_state(render_device_t * const de
     ASSERT_IS_MAIN_THREAD();
 
     r_rasterizer_state_t * const rasterizer_state = (r_rasterizer_state_t *)heap_calloc(&device->internal.object_heap, sizeof(r_rasterizer_state_t), tag);
-    render_resource_init(&rasterizer_state->resource, device, &RESOURCE_VTABLE(r_rasterizer_state_t), tag);
+    render_resource_init(&rasterizer_state->resource, device, &RESOURCE_VTABLE(r_rasterizer_state_t), render_resource_type_r_rasterizer_state_t, tag);
 
     RENDER_ENSURE_WRITE_CMD_STREAM(
         &device->default_cmd_stream,
@@ -1134,7 +1279,7 @@ r_uniform_buffer_t * render_create_uniform_buffer(render_device_t * const device
     ASSERT_IS_MAIN_THREAD();
 
     r_uniform_buffer_t * const uniform_buffer = (r_uniform_buffer_t *)heap_calloc(&device->internal.object_heap, sizeof(r_uniform_buffer_t), tag);
-    render_resource_init(&uniform_buffer->resource, device, &RESOURCE_VTABLE(r_uniform_buffer_t), tag);
+    render_resource_init(&uniform_buffer->resource, device, &RESOURCE_VTABLE(r_uniform_buffer_t), render_resource_type_r_uniform_buffer_t, tag);
 
     RENDER_ENSURE_WRITE_CMD_STREAM(
         &device->default_cmd_stream,
@@ -1145,6 +1290,9 @@ r_uniform_buffer_t * render_create_uniform_buffer(render_device_t * const device
         tag);
 
     uniform_buffer->resource.fence = render_get_cmd_stream_fence(&device->default_cmd_stream);
+
+    uniform_buffer->buffer_size = desc.size;
+    render_track_resource_memory_allocation(&uniform_buffer->resource);
 
     return uniform_buffer;
 }
@@ -1182,7 +1330,7 @@ r_render_target_t * render_create_render_target(render_device_t * const device, 
     ASSERT_IS_MAIN_THREAD();
 
     r_render_target_t * const render_target = (r_render_target_t *)heap_calloc(&device->internal.object_heap, sizeof(r_render_target_t), tag);
-    render_resource_init(&render_target->resource, device, &RESOURCE_VTABLE(r_render_target_t), tag);
+    render_resource_init(&render_target->resource, device, &RESOURCE_VTABLE(r_render_target_t), render_resource_type_r_render_target_t, tag);
 
     RENDER_ENSURE_WRITE_CMD_STREAM(
         &device->default_cmd_stream,
@@ -1193,4 +1341,36 @@ r_render_target_t * render_create_render_target(render_device_t * const device, 
     render_target->resource.fence = render_get_cmd_stream_fence(&device->default_cmd_stream);
 
     return render_target;
+}
+
+/* mesh channel data */
+
+uint32_t render_cmd_stream_upload_mesh_channel_data(
+    render_cmd_stream_t * const cmd_stream,
+    rhi_mesh_t * const * mesh,
+    const int channel_index,
+    const int first_elem,
+    const int num_elems,
+    const size_t stride,
+    const void * const data,
+    const char * const tag) {
+    uint32_t hash = 0;
+    if (render_cmd_get_is_rhi_command_diffing_enabled()) {
+        const size_t offset = first_elem * stride;
+        const size_t byte_length = num_elems * stride;
+        hash = rbcmd_hash_bytes(channel_index, (const uint8_t *)data + offset, byte_length);
+    }
+
+    RENDER_ENSURE_WRITE_CMD_STREAM(
+        cmd_stream,
+        render_cmd_buf_write_upload_mesh_channel_data_indirect,
+        mesh,
+        channel_index,
+        first_elem,
+        num_elems,
+        data,
+        hash,
+        tag);
+
+    return hash;
 }

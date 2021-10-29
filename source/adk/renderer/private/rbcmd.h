@@ -15,6 +15,7 @@ render command buffers, and render command support
 #include "rhi.h"
 #include "source/adk/imagelib/imagelib.h"
 #include "source/adk/runtime/memory.h"
+#include "source/adk/runtime/rand_gen.h"
 #include "source/adk/runtime/runtime.h"
 
 #ifdef __cplusplus
@@ -27,6 +28,14 @@ extern "C" {
 #define MAX_RB_CMD_JUMP_MASK ((1 << MAX_RB_CMD_JUMP_BITS) - 1)
 #define MAX_RB_CMD_BUF_SIZE MAX_RB_CMD_JUMP_MASK
 
+#if ENABLE_RENDER_TAGS
+#define DECL_RENDER_TAG const char * tag;
+#define ASSIGN_RENDER_TAG tag
+#else
+#define DECL_RENDER_TAG
+#define ASSIGN_RENDER_TAG
+#endif
+
 /*
 =======================================
 rb_cmd_buf_t
@@ -35,6 +44,18 @@ A small buffer containing commands to be
 executed by a thread on a specific RHI
 device.
 =======================================
+*/
+
+/*
+ rb_cmd_buf_t's are internally ordered, but a buffer is executed based on whichever is first submitted.
+ If there are dependencies between buffers, synchronization between them _must_ be used.
+
+ Example:
+ Thread X submits a command buffer with a command to create a resource.
+ Thread Y submits a command buffer that includes a command using the resource created in the buffer from thread X.
+ Thread Y must wait on and verify that the command buffer submitted by thread X has been processed before submitting its commands.
+ If thread Y does not wait, potential race conditions can occur.
+ To prevent the above scenario/race, synchronize using a `rb_fence_t` and conditional waits/flushes.
 */
 
 typedef struct rb_cmd_buf_t {
@@ -56,7 +77,25 @@ typedef struct rb_cmd_buf_t {
 #ifdef GUARD_PAGE_SUPPORT
     debug_sys_page_block_t guard_pages;
 #endif
+    uint32_t hash;
 } rb_cmd_buf_t;
+
+typedef struct render_cmd_config_t {
+    struct {
+        bool enabled;
+        bool verbose;
+        struct {
+            bool enabled;
+            size_t buffer_size;
+        } tracking;
+    } rhi_command_diffing;
+} render_cmd_config_t;
+
+void render_cmd_init(const render_cmd_config_t config);
+void render_cmd_shutdown();
+
+void render_cmd_log_metrics();
+bool render_cmd_get_is_rhi_command_diffing_enabled();
 
 /*
 =======================================
@@ -138,6 +177,9 @@ typedef enum render_cmd_e {
     render_cmd_upload_mesh_indices_indirect,
     render_cmd_upload_uniform_data_indirect,
     render_cmd_upload_texture_indirect,
+#if !(defined(_VADER) || defined(_LEIA))
+    render_cmd_upload_sub_texture_indirect,
+#endif
 #if defined(_LEIA) || defined(_VADER)
     render_cmd_bind_texture_address,
 #endif
@@ -181,15 +223,28 @@ typedef enum render_cmd_e {
 
 STATIC_ASSERT(num_render_commands < RB_CMD_ID_MASK);
 
-bool render_cmd_buf_write_render_command(rb_cmd_buf_t * const cmd_buf, const render_cmd_e cmd_id, const void * const cmd, const int alignment, const int size);
+typedef uint32_t(render_cmd_hash_fn_t)(const void * const cmd, const int size);
 
-#ifdef ENABLE_RENDER_TAGS
-#define DECL_RENDER_TAG const char * tag;
-#define ASSIGN_RENDER_TAG tag
-#else
-#define DECL_RENDER_TAG
-#define ASSIGN_RENDER_TAG
-#endif
+uint32_t render_cmd_shallow_hash(const void * const cmd, const int size);
+uint32_t render_cmd_random_hash(const void * const cmd, const int size);
+
+uint32_t rbcmd_hash_bytes(const uint32_t seed, const uint8_t * bytes, const size_t num_bytes);
+
+typedef struct rhi_resource_container_t {
+    rhi_resource_t resource;
+} rhi_resource_container_t;
+
+static inline uint32_t render_cmd_resource_container_hash(const rhi_resource_container_t * const resource_container) {
+    return resource_container == NULL ? 0 : resource_container->resource.instance_id;
+}
+
+bool render_cmd_buf_write_render_command(
+    rb_cmd_buf_t * const cmd_buf,
+    const render_cmd_e cmd_id,
+    const void * const cmd,
+    const int alignment,
+    const int size,
+    render_cmd_hash_fn_t render_cmd_hash_fn);
 
 /*
 =======================================
@@ -207,7 +262,7 @@ static inline bool render_cmd_buf_write_rhi_resource_add_ref_indirect(rb_cmd_buf
         resource,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_rhi_resource_add_ref_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_rhi_resource_add_ref_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -226,7 +281,7 @@ static inline bool render_cmd_buf_write_release_rhi_resource_indirect(rb_cmd_buf
         resource,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_release_rhi_resource_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_release_rhi_resource_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -241,19 +296,26 @@ typedef struct render_cmd_upload_mesh_channel_data_indirect_t {
     int first_elem;
     int num_elems;
     const void * data;
+    uint32_t hash;
     DECL_RENDER_TAG
 } render_cmd_upload_mesh_channel_data_indirect_t;
 
-static inline bool render_cmd_buf_write_upload_mesh_channel_data_indirect(rb_cmd_buf_t * const cmd_buf, rhi_mesh_t * const * const mesh, const int channel_index, const int first_elem, const int num_elems, const void * const data, const char * const tag) {
+static inline uint32_t render_cmd_upload_mesh_channel_data_indirect_hash(const void * const cmd, const int size) {
+    const render_cmd_upload_mesh_channel_data_indirect_t * const rc = (const render_cmd_upload_mesh_channel_data_indirect_t *)cmd;
+    return rc->hash;
+}
+
+static inline bool render_cmd_buf_write_upload_mesh_channel_data_indirect(rb_cmd_buf_t * const cmd_buf, rhi_mesh_t * const * const mesh, const int channel_index, const int first_elem, const int num_elems, const void * const data, uint32_t hash, const char * const tag) {
     const render_cmd_upload_mesh_channel_data_indirect_t cmd = {
         mesh,
         channel_index,
         first_elem,
         num_elems,
         data,
+        hash,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_mesh_channel_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_mesh_channel_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_upload_mesh_channel_data_indirect_hash);
 }
 
 /*
@@ -278,7 +340,7 @@ static inline bool render_cmd_buf_write_upload_mesh_indices_indirect(rb_cmd_buf_
         indices,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_mesh_indices_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_mesh_indices_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -294,6 +356,20 @@ typedef struct render_cmd_upload_uniform_data_indirect_t {
     DECL_RENDER_TAG
 } render_cmd_upload_uniform_data_indirect_t;
 
+static inline uint32_t render_cmd_upload_uniform_data_indirect_hash(const void * const cmd, const int size) {
+    const render_cmd_upload_uniform_data_indirect_t * const rc = (const render_cmd_upload_uniform_data_indirect_t *)cmd;
+
+    uint32_t hash = 0;
+
+    const uint32_t h = render_cmd_resource_container_hash((const rhi_resource_container_t *)*rc->uniform_buffer);
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&h, sizeof(h));
+
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->ofs, sizeof(rc->ofs));
+    hash = rbcmd_hash_bytes(hash, rc->data.byte_ptr, rc->data.size);
+
+    return hash;
+}
+
 static inline bool render_cmd_buf_write_upload_uniform_data_indirect(rb_cmd_buf_t * const cmd_buf, rhi_uniform_buffer_t * const * const uniform_buffer, const const_mem_region_t data, const int ofs, const char * const tag) {
     const render_cmd_upload_uniform_data_indirect_t cmd = {
         uniform_buffer,
@@ -301,7 +377,7 @@ static inline bool render_cmd_buf_write_upload_uniform_data_indirect(rb_cmd_buf_
         data,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_uniform_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_uniform_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_upload_uniform_data_indirect_hash);
 }
 
 /*
@@ -322,8 +398,31 @@ static inline bool render_cmd_buf_write_upload_texture_indirect(rb_cmd_buf_t * c
         mipmaps,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_texture_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_texture_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
+
+/*
+=======================================
+render_cmd_buf_write_upload_sub_texture_indirect
+=======================================
+*/
+
+#if !(defined(_VADER) || defined(_LEIA))
+typedef struct render_cmd_upload_sub_texture_indirect_t {
+    rhi_texture_t * const * texture;
+    image_mips_t mipmaps;
+    DECL_RENDER_TAG
+} render_cmd_upload_sub_texture_indirect_t;
+
+static inline bool render_cmd_buf_write_upload_sub_texture_indirect(rb_cmd_buf_t * const cmd_buf, rhi_texture_t * const * const texture, const image_mips_t mipmaps, const char * const tag) {
+    const render_cmd_upload_sub_texture_indirect_t cmd = {
+        texture,
+        mipmaps,
+        ASSIGN_RENDER_TAG};
+
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_upload_sub_texture_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
+}
+#endif
 
 /*
 =======================================
@@ -345,7 +444,7 @@ static inline bool render_cmd_buf_write_bind_texture_address(rb_cmd_buf_t * cons
         mipmaps,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_bind_texture_address, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_bind_texture_address, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 #endif
@@ -363,12 +462,13 @@ typedef struct render_cmd_set_display_size_t {
 
 static inline bool render_cmd_buf_write_set_display_size(rb_cmd_buf_t * const cmd_buf, const int w, const int h, const char * const tag) {
     ASSERT_MSG((w > 0) && (h > 0), "Error: framebuffer size must have dimensions greater than zero.");
+
     const render_cmd_set_display_size_t cmd = {
         w,
         h,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_display_size, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_display_size, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -390,7 +490,7 @@ static inline bool render_cmd_buf_write_set_viewport(rb_cmd_buf_t * const cmd_bu
         y1,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_viewport, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_viewport, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -412,7 +512,7 @@ static inline bool render_cmd_buf_write_set_scissor_rect(rb_cmd_buf_t * const cm
         y1,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_scissor_rect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_scissor_rect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -426,12 +526,19 @@ typedef struct render_cmd_set_program_indirect_t {
     DECL_RENDER_TAG
 } render_cmd_set_program_indirect_t;
 
+static inline uint32_t render_cmd_set_program_indirect_hash(const void * const cmd, const int size) {
+    const render_cmd_set_program_indirect_t * const rc = (const render_cmd_set_program_indirect_t *)cmd;
+
+    const uint32_t h = render_cmd_resource_container_hash((const rhi_resource_container_t *)*rc->program);
+    return rbcmd_hash_bytes(0, (const uint8_t *)&h, sizeof(h));
+}
+
 static inline bool render_cmd_buf_write_set_program_indirect(rb_cmd_buf_t * const cmd_buf, rhi_program_t * const * const program, const char * const tag) {
     const render_cmd_set_program_indirect_t cmd = {
         program,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_program_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_program_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_set_program_indirect_hash);
 }
 
 /*
@@ -448,6 +555,33 @@ typedef struct render_cmd_set_render_state_indirect_t {
     DECL_RENDER_TAG
 } render_cmd_set_render_state_indirect_t;
 
+static inline uint32_t render_cmd_set_render_state_indirect_hash(const void * const cmd, const int size) {
+    const render_cmd_set_render_state_indirect_t * const rc = (const render_cmd_set_render_state_indirect_t *)cmd;
+
+    uint32_t hash = 0;
+
+    uint32_t h;
+
+    if (rc->rs != NULL && *rc->rs != NULL) {
+        h = render_cmd_resource_container_hash((const rhi_resource_container_t *)*rc->rs);
+        hash = rbcmd_hash_bytes(hash, (const uint8_t *)&h, sizeof(h));
+    }
+
+    if (rc->dss != NULL && *rc->dss != NULL) {
+        h = render_cmd_resource_container_hash((const rhi_resource_container_t *)*rc->dss);
+        hash = rbcmd_hash_bytes(hash, (const uint8_t *)&h, sizeof(h));
+    }
+
+    if (rc->bs != NULL && *rc->bs != NULL) {
+        h = render_cmd_resource_container_hash((const rhi_resource_container_t *)*rc->bs);
+        hash = rbcmd_hash_bytes(hash, (const uint8_t *)&h, sizeof(h));
+    }
+
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->stencil_ref, sizeof(rc->stencil_ref));
+
+    return hash;
+}
+
 static inline bool render_cmd_buf_write_set_render_state_indirect(rb_cmd_buf_t * const cmd_buf, rhi_rasterizer_state_t * const * const rs, rhi_depth_stencil_state_t * const * const dss, rhi_blend_state_t * const * const bs, const uint32_t stencil_ref, const char * const tag) {
     const render_cmd_set_render_state_indirect_t cmd = {
         rs,
@@ -456,7 +590,7 @@ static inline bool render_cmd_buf_write_set_render_state_indirect(rb_cmd_buf_t *
         stencil_ref,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_render_state_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_render_state_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_set_render_state_indirect_hash);
 }
 
 /*
@@ -477,7 +611,7 @@ static inline bool render_cmd_buf_write_set_render_target_color_buffer_indirect(
         color_buffer,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_render_target_color_buffer_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_render_target_color_buffer_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -496,7 +630,7 @@ static inline bool render_cmd_buf_write_discard_render_target_data_indirect(rb_c
         render_target,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_discard_render_target_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_discard_render_target_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -515,7 +649,7 @@ static inline bool render_cmd_buf_write_set_render_target_indirect(rb_cmd_buf_t 
         render_target,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_render_target_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_render_target_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -536,7 +670,7 @@ static inline bool render_cmd_buf_write_clear_render_target_color_buffers_indire
         clear_color,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_render_target_color_buffers_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_render_target_color_buffers_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -557,7 +691,7 @@ static inline bool render_cmd_buf_write_copy_render_target_buffers_indirect(rb_c
         dst_render_target,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_copy_render_target_buffers_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_copy_render_target_buffers_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -571,12 +705,25 @@ typedef struct render_cmd_set_uniform_binding_indirect_t {
     DECL_RENDER_TAG
 } render_cmd_set_uniform_binding_indirect_t;
 
+static inline uint32_t render_cmd_set_uniform_binding_indirect_hash(const void * const cmd, const int size) {
+    const render_cmd_set_uniform_binding_indirect_t * const rc = (const render_cmd_set_uniform_binding_indirect_t *)cmd;
+
+    uint32_t hash = 0;
+
+    const uint32_t h = render_cmd_resource_container_hash((const rhi_resource_container_t *)*rc->uniform_binding.buffer);
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&h, sizeof(h));
+
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->uniform_binding.index, sizeof(rc->uniform_binding.index));
+
+    return hash;
+}
+
 static inline bool render_cmd_buf_write_set_uniform_binding(rb_cmd_buf_t * const cmd_buf, const rhi_uniform_binding_indirect_t uniform_binding, const char * const tag) {
     const render_cmd_set_uniform_binding_indirect_t cmd = {
         uniform_binding,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_uniform_binding_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_uniform_binding_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_set_uniform_binding_indirect_hash);
 }
 
 /*
@@ -597,7 +744,7 @@ static inline bool render_cmd_buf_write_set_texture_sampler_state_indirect(rb_cm
         sampler_state,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_texture_sampler_state_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_texture_sampler_state_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -611,12 +758,23 @@ typedef struct render_cmd_set_texture_bindings_indirect_t {
     DECL_RENDER_TAG
 } render_cmd_set_texture_bindings_indirect_t;
 
+static inline uint32_t render_cmd_texture_binding_hash(const void * const cmd, const int size) {
+    render_cmd_set_texture_bindings_indirect_t * tb = (render_cmd_set_texture_bindings_indirect_t *)cmd;
+    int nt = tb->texture_bindings.num_textures;
+    uint32_t hash = rbcmd_hash_bytes(0, (const uint8_t *)&nt, sizeof(int));
+    for (int i = 0; i < tb->texture_bindings.num_textures; i++) {
+        uint32_t text_hash = render_cmd_resource_container_hash((rhi_resource_container_t *)*tb->texture_bindings.textures[i]);
+        hash = rbcmd_hash_bytes(hash, (const uint8_t *)&text_hash, sizeof(uint32_t));
+    }
+    return hash;
+}
+
 static inline bool render_cmd_buf_write_set_texture_bindings_indirect(rb_cmd_buf_t * const cmd_buf, const rhi_texture_bindings_indirect_t texture_bindings, const char * const tag) {
     const render_cmd_set_texture_bindings_indirect_t cmd = {
         texture_bindings,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_texture_bindings_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_set_texture_bindings_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_texture_binding_hash);
 }
 
 /*
@@ -630,12 +788,34 @@ typedef struct render_cmd_draw_indirect_t {
     DECL_RENDER_TAG
 } render_cmd_draw_indirect_t;
 
+static inline uint32_t render_cmd_draw_indirect_hash(const void * const cmd, const int size) {
+    render_cmd_draw_indirect_t * di = (render_cmd_draw_indirect_t *)cmd;
+
+    const int nm = di->params.num_meshes;
+    uint32_t hash = rbcmd_hash_bytes(0, (const uint8_t *)&nm, sizeof(int));
+
+    for (int i = 0; i < nm; i++) {
+        if (di->params.idx_ofs != NULL) {
+            const int offset = di->params.idx_ofs[i];
+            hash = rbcmd_hash_bytes(hash, (const uint8_t *)&offset, sizeof(int));
+        }
+
+        const int elems = di->params.elm_counts[i];
+        hash = rbcmd_hash_bytes(hash, (const uint8_t *)&elems, sizeof(int));
+
+        const uint32_t mh = di->params.hashes[i];
+        hash = rbcmd_hash_bytes(hash, (const uint8_t *)&mh, sizeof(mh));
+    }
+
+    return hash;
+}
+
 static inline bool render_cmd_buf_write_draw_indirect(rb_cmd_buf_t * const cmd_buf, const rhi_draw_params_indirect_t params, const char * const tag) {
     const render_cmd_draw_indirect_t cmd = {
         params,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_draw_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_draw_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_draw_indirect_hash);
 }
 
 /*
@@ -662,6 +842,21 @@ typedef struct render_cmd_clear_screen_cds_t {
     DECL_RENDER_TAG
 } render_cmd_clear_screen_cds_t;
 
+static inline uint32_t render_cmd_clear_screen_cds_hash(const void * const cmd, const int size) {
+    const render_cmd_clear_screen_cds_t * const rc = (const render_cmd_clear_screen_cds_t *)cmd;
+
+    uint32_t hash = 0;
+
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->r, sizeof(rc->r));
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->g, sizeof(rc->g));
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->b, sizeof(rc->b));
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->a, sizeof(rc->a));
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->d, sizeof(rc->d));
+    hash = rbcmd_hash_bytes(hash, (const uint8_t *)&rc->s, sizeof(rc->s));
+
+    return hash;
+}
+
 static inline bool render_cmd_buf_write_clear_screen_cds(rb_cmd_buf_t * const cmd_buf, const render_clear_color_t color, const render_clear_depth_t depth, const render_clear_stencil_t stencil, const char * const tag) {
     const render_cmd_clear_screen_cds_t cmd = {
         color.r,
@@ -672,7 +867,7 @@ static inline bool render_cmd_buf_write_clear_screen_cds(rb_cmd_buf_t * const cm
         stencil.stencil,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_cds, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_cds, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_clear_screen_cds_hash);
 }
 
 /*
@@ -693,7 +888,7 @@ static inline bool render_cmd_buf_write_clear_screen_ds(rb_cmd_buf_t * const cmd
         stencil.stencil,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_ds, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_ds, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -715,7 +910,7 @@ static inline bool render_cmd_buf_write_clear_screen_c(rb_cmd_buf_t * const cmd_
         color.a,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_c, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_c, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -734,7 +929,7 @@ static inline bool render_cmd_buf_write_clear_screen_d(rb_cmd_buf_t * const cmd_
         d,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_d, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_d, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -753,7 +948,7 @@ static inline bool render_cmd_buf_write_clear_screen_s(rb_cmd_buf_t * const cmd_
         s,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_s, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_clear_screen_s, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -767,12 +962,16 @@ typedef struct render_cmd_present_t {
     DECL_RENDER_TAG
 } render_cmd_present_t;
 
+static inline uint32_t render_cmd_swap_interval_hash(const void * const cmd, const int size) {
+    return ((render_cmd_present_t *)cmd)->swap_interval.interval;
+}
+
 static inline bool render_cmd_buf_write_present(rb_cmd_buf_t * const cmd_buf, const rhi_swap_interval_t swap_interval, const char * const tag) {
     const render_cmd_present_t cmd = {
         swap_interval,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_present, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_present, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_swap_interval_hash);
 }
 
 /*
@@ -793,7 +992,7 @@ static inline bool render_cmd_buf_screenshot(rb_cmd_buf_t * const cmd_buf, image
         mem_region,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_screenshot, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_screenshot, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -814,7 +1013,7 @@ static inline bool render_cmd_buf_write_create_mesh_data_layout(rb_cmd_buf_t * c
         layout_desc,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_mesh_data_layout, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_mesh_data_layout, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -835,7 +1034,7 @@ static inline bool render_cmd_buf_write_create_mesh_indirect(rb_cmd_buf_t * cons
         init_data,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_mesh_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_mesh_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -860,7 +1059,7 @@ static inline bool render_cmd_buf_write_create_mesh_shared_vertex_data_indirect(
         num_indices,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_mesh_shared_vertex_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_mesh_shared_vertex_data_indirect, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -885,7 +1084,7 @@ static inline bool render_cmd_buf_write_create_program_from_binary(rb_cmd_buf_t 
         frag_program,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_program_from_binary, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_program_from_binary, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -906,7 +1105,7 @@ static inline bool render_cmd_buf_write_create_blend_state(rb_cmd_buf_t * const 
         desc,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_blend_state, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_blend_state, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -927,7 +1126,7 @@ static inline bool render_cmd_buf_write_create_depth_stencil_state(rb_cmd_buf_t 
         desc,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_depth_stencil_state, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_depth_stencil_state, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -948,7 +1147,7 @@ static inline bool render_cmd_buf_write_create_rasterizer_state(rb_cmd_buf_t * c
         desc,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_rasterizer_state, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_rasterizer_state, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -971,7 +1170,7 @@ static inline bool render_cmd_buf_write_create_uniform_buffer(rb_cmd_buf_t * con
         init_data,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_uniform_buffer, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_uniform_buffer, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -998,7 +1197,7 @@ static inline bool render_cmd_buf_write_create_texture_2d(rb_cmd_buf_t * const c
         sampler_state,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_texture_2d, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_texture_2d, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -1017,7 +1216,7 @@ static inline bool render_cmd_buf_write_create_render_target(rb_cmd_buf_t * cons
         out_render_target,
         tag};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_render_target, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_create_render_target, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_random_hash);
 }
 
 /*
@@ -1038,7 +1237,7 @@ static inline bool render_cmd_buf_write_callback(rb_cmd_buf_t * const cmd_buf, v
         arg,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_callback, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_callback, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 /*
@@ -1057,7 +1256,7 @@ static inline bool render_cmd_buf_write_breakpoint(rb_cmd_buf_t * const cmd_buf,
         arg,
         ASSIGN_RENDER_TAG};
 
-    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_breakpoint, &cmd, ALIGN_OF(cmd), sizeof(cmd));
+    return render_cmd_buf_write_render_command(cmd_buf, render_cmd_breakpoint, &cmd, ALIGN_OF(cmd), sizeof(cmd), render_cmd_shallow_hash);
 }
 
 #ifdef __cplusplus

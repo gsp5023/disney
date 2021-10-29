@@ -153,10 +153,14 @@ void json_deflate_shutdown(void) {
     JSON_DEFLATE_TRACE_POP();
 }
 
-void json_deflate_dump_heap_usage() {
+void json_deflate_dump_heap_usage(void) {
     JSON_DEFLATE_TRACE_PUSH_FN();
     sb_lock_mutex(statics.mutex);
     heap_dump_usage(&statics.heap);
     sb_unlock_mutex(statics.mutex);
     JSON_DEFLATE_TRACE_POP();
+}
+
+heap_metrics_t json_deflate_get_heap_metrics(void) {
+    return heap_get_metrics(&statics.heap);
 }

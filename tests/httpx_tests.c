@@ -10,9 +10,10 @@
 #include "testapi.h"
 
 static struct {
-    adk_httpx_api_t * api;
     mem_region_t region;
     mem_region_t fragment_buffers_region;
+
+    adk_httpx_client_t * client;
 } statics;
 
 enum {
@@ -24,25 +25,23 @@ enum {
 #define HTTP_TEST_TRACE print_message
 
 static void test_http_requests(void ** state) {
-    adk_httpx_client_t * const client = adk_httpx_client_create(statics.api);
-
-    adk_httpx_request_t * const get = adk_httpx_client_request(client, adk_httpx_method_get, "https://httpbin.org/get");
+    adk_httpx_request_t * const get = adk_httpx_client_request(statics.client, adk_httpx_method_get, "https://httpbin.org/get");
     adk_httpx_response_t * const getter = adk_httpx_send(get);
 
-    adk_httpx_request_t * post = adk_httpx_client_request(client, adk_httpx_method_post, "https://httpbin.org/post");
+    adk_httpx_request_t * post = adk_httpx_client_request(statics.client, adk_httpx_method_post, "https://httpbin.org/post");
     adk_httpx_request_set_header(post, "foo: bar");
     const char message[] = "Hello, world!";
     adk_httpx_request_set_body(post, (const uint8_t *)message, strlen(message));
     adk_httpx_response_t * const poster = adk_httpx_send(post);
 
     adk_httpx_response_t * const putter = adk_httpx_send(
-        adk_httpx_client_request(client, adk_httpx_method_put, "https://httpbin.org/put"));
+        adk_httpx_client_request(statics.client, adk_httpx_method_put, "https://httpbin.org/put"));
 
     adk_httpx_response_t * const not_found = adk_httpx_send(
-        adk_httpx_client_request(client, adk_httpx_method_get, "https://httpbin.org/status/404"));
+        adk_httpx_client_request(statics.client, adk_httpx_method_get, "https://httpbin.org/status/404"));
 
-    while (adk_httpx_client_tick(client)) {
-        sb_thread_yield();
+    while (adk_httpx_client_tick(statics.client)) {
+        sb_thread_sleep((milliseconds_t){1});
     }
 
     assert_int_equal(adk_httpx_response_get_status(getter), adk_future_status_ready);
@@ -74,24 +73,21 @@ static void test_http_requests(void ** state) {
     adk_httpx_response_free(poster);
     adk_httpx_response_free(putter);
     adk_httpx_response_free(not_found);
-
-    adk_httpx_client_free(client);
 }
 
 static void test_concurrent_http_requests(void ** state) {
-    adk_httpx_client_t * const client = adk_httpx_client_create(statics.api);
     adk_httpx_request_t * get_requests[httpx_test_concurrent_request_count];
     adk_httpx_response_t * get_responses[httpx_test_concurrent_request_count];
 
     for (size_t i = 0; i < httpx_test_concurrent_request_count; i++) {
         const char url[] = "https://prod-static.disney-plus.net/fed-container-configs/prod/connected/connected/3.0.2/output.json";
-        get_requests[i] = adk_httpx_client_request(client, adk_httpx_method_get, url);
+        get_requests[i] = adk_httpx_client_request(statics.client, adk_httpx_method_get, url);
         get_responses[i] = adk_httpx_send(get_requests[i]);
     }
 
     uint64_t epoch = adk_get_milliseconds_since_epoch();
-    while (adk_httpx_client_tick(client)) {
-        sb_thread_yield();
+    while (adk_httpx_client_tick(statics.client)) {
+        sb_thread_sleep((milliseconds_t){1});
 
         if (adk_get_milliseconds_since_epoch() - epoch > 1000) {
             size_t num_ready = 0;
@@ -118,8 +114,6 @@ static void test_concurrent_http_requests(void ** state) {
 
         adk_httpx_response_free(get_responses[i]);
     }
-
-    adk_httpx_client_free(client);
 }
 
 typedef struct callback_state_t {
@@ -168,10 +162,8 @@ void test_on_complete(adk_httpx_response_t * const response, void * userdata) {
 }
 
 static void test_http_request_callbacks(void ** _state) {
-    adk_httpx_client_t * const client = adk_httpx_client_create(statics.api);
-
     adk_httpx_request_t * const request = adk_httpx_client_request(
-        client, adk_httpx_method_get, "https://httpbin.org/get");
+        statics.client, adk_httpx_method_get, "https://httpbin.org/get");
 
     callback_state_t state = {0};
     adk_httpx_request_set_on_header(request, test_on_header);
@@ -181,8 +173,8 @@ static void test_http_request_callbacks(void ** _state) {
 
     adk_httpx_response_t * const getter = adk_httpx_send(request);
 
-    while (adk_httpx_client_tick(client)) {
-        sb_thread_yield();
+    while (adk_httpx_client_tick(statics.client)) {
+        sb_thread_sleep((milliseconds_t){1});
     }
 
     assert_true(state.is_completed);
@@ -195,7 +187,6 @@ static void test_http_request_callbacks(void ** _state) {
     assert_null(adk_httpx_response_get_body(getter).ptr);
 
     adk_httpx_response_free(getter);
-    adk_httpx_client_free(client);
 }
 
 static int setup(void ** state) {
@@ -205,10 +196,11 @@ static int setup(void ** state) {
     statics.fragment_buffers_region = MEM_REGION(malloc(httpx_test_fragment_buffers_size), httpx_test_fragment_buffers_size);
     TRAP_OUT_OF_MEMORY(statics.fragment_buffers_region.ptr);
 
-    statics.api = adk_httpx_api_create(
+    statics.client = adk_httpx_client_create(
         statics.region,
         statics.fragment_buffers_region,
-        fragment_size,
+        network_pump_fragment_size,
+        network_pump_sleep_period,
         unit_test_guard_page_mode,
         adk_httpx_init_normal,
         "tests-httpx");
@@ -217,7 +209,8 @@ static int setup(void ** state) {
 }
 
 static int teardown(void ** state) {
-    adk_httpx_api_free(statics.api);
+    adk_httpx_client_free(statics.client);
+
     free(statics.region.ptr);
     free(statics.fragment_buffers_region.ptr);
 

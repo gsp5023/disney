@@ -31,12 +31,21 @@ typedef struct metric_memory_footprint_t {
     uint32_t high_memory_size;
 } metric_memory_footprint_t;
 
+typedef struct metrics_render_memory_usage_t {
+    uint64_t peak_memory;
+    uint64_t total_memory;
+    uint64_t mesh_memory;
+    uint64_t texture_memory;
+    uint64_t uniform_buffer_memory;
+} metrics_render_memory_usage_t;
+
 typedef enum metric_types_e {
     metric_type_int,
     metric_type_float,
     metric_type_delta_time_in_ms, // milliseconds_t
     metric_type_time_to_first_interaction, // metric_time_to_first_interaction_t
     metric_type_memory_footprint, // metric_memory_footprint_t
+    metric_type_metrics_render_memory_usage_t,
     metric_types_last, // this must be the last element in the enum
     FORCE_ENUM_INT32(metric_types_e)
 } metric_types_e;

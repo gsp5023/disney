@@ -17,17 +17,18 @@ function m.link(p)
             links "stdc++"
 
         if p.name ~= "nve-api" then
-            filter "configurations:debug*"
+            filter { KIND_APP, "configurations:*debug*" }
                 libdirs { "extern/dss-nve/stage/debug" }
 
-            filter "configurations:release-o2* or ship*"
+            filter { KIND_APP, "configurations:not *debug*" }
                 libdirs { "extern/dss-nve/stage/release" }
 
-            filter {}
+            filter { KIND_APP }
+                libdirs { "build/nve" }
+                links "nve-api"
 
-            libdirs { "build/nve" }
-            links "nve-api"
-            links "steamboat-media"
+            filter { KIND_APP, "platforms:not *brcm_bme*" }
+                links "steamboat-media"
         end
 
 	elseif player_is_any("nve-internal") then
@@ -35,11 +36,13 @@ function m.link(p)
 			libdirs { "extern/dss-nve/stage/release" }
 
 			links "dss-nve"
-			links "steamboat-media"
 			links "ssl"
 			links "crypto"
 			links "nve-api"
 			links "stdc++"
+
+        filter { KIND_APP, "platforms:*brcm* or *rpi*", "platforms:not *brcm_bme*" }
+			links "steamboat-media"
     end
 end
 

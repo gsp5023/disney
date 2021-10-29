@@ -17,10 +17,11 @@ canvas gif support
 #define TAG_CG_IMG_GIF FOURCC('I', 'M', 'G', 'F')
 
 void destroy_gif(cg_image_t * const image, const char * const tag) {
+    CG_IMAGE_TRACE_PUSH_FN();
     cg_async_image_t * const cg_async_image = &image->gif->async_image_data;
     cg_context_t * const ctx = cg_async_image->cg;
 
-    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->upload_fence);
+    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->recurrent_upload_fence);
 
     cg_gl_texture_free(ctx->gl, &image->cg_texture);
 
@@ -40,9 +41,11 @@ void destroy_gif(cg_image_t * const image, const char * const tag) {
 
     cg_free(&ctx->cg_heap_low, image->gif, tag);
     cg_free(&ctx->cg_heap_low, image, tag);
+    CG_IMAGE_TRACE_POP();
 }
 
 static void gif_decode_next_frame_job(void * void_user, thread_pool_t * const pool) {
+    CG_IMAGE_TRACE_PUSH_FN();
     cg_image_t * const cg_image = void_user;
     cg_async_image_t * const cg_async_image = &cg_image->gif->async_image_data;
     cg_context_t * const ctx = cg_async_image->cg;
@@ -52,12 +55,13 @@ static void gif_decode_next_frame_job(void * void_user, thread_pool_t * const po
     cg_image->gif->done_frame_count = req_frame_count;
 
     if (frame_delta < 1) {
+        CG_IMAGE_TRACE_POP();
         return;
     }
 
     const microseconds_t start_time = adk_read_microsecond_clock();
 
-    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->upload_fence);
+    render_conditional_flush_cmd_stream_and_wait_fence(ctx->gl->render_device, &cg_async_image->decode_cmd_stream, cg_async_image->recurrent_upload_fence);
     for (uint32_t i = 0; i < frame_delta; ++i) {
         imagelib_gif_load_next_frame_from_memory(
             cg_async_image->resident_bytes.region,
@@ -83,20 +87,23 @@ static void gif_decode_next_frame_job(void * void_user, thread_pool_t * const po
         MALLOC_TAG);
 
     // update fence so we don't cg_free the data before this command is processed
-    cg_async_image->upload_fence = render_flush_cmd_stream(&cg_async_image->decode_cmd_stream, render_no_wait);
+    cg_async_image->recurrent_upload_fence = render_flush_cmd_stream(&cg_async_image->decode_cmd_stream, render_no_wait);
 
     const microseconds_t end_time = adk_read_microsecond_clock();
     cg_image->gif->decoded_frame_time.us += end_time.us - start_time.us;
     cg_image->gif->decoded_frame_count += frame_delta;
+    CG_IMAGE_TRACE_POP();
 }
 
 static void gif_check_restart_job(void * void_user, thread_pool_t * const pool) {
+    CG_IMAGE_TRACE_PUSH_FN();
     cg_image_t * const cg_image = void_user;
     cg_async_image_t * const cg_async_image = &cg_image->gif->async_image_data;
     cg_context_t * const ctx = cg_async_image->cg;
 
     if (cg_async_image->pending_destroy) {
         destroy_gif(cg_image, MALLOC_TAG);
+        CG_IMAGE_TRACE_POP();
         return;
     }
 
@@ -111,9 +118,11 @@ static void gif_check_restart_job(void * void_user, thread_pool_t * const pool) 
     } else {
         cg_async_image->decode_job_running = false;
     }
+    CG_IMAGE_TRACE_POP();
 }
 
 void cg_context_tick_gifs(cg_context_t * const ctx, const milliseconds_t delta_time) {
+    CG_IMAGE_TRACE_PUSH_FN();
     for (cg_image_t * cg_image = ctx->gif_head; cg_image != NULL; cg_image = cg_image->gif->next_gif) {
         cg_async_image_t * const cg_async_image = &cg_image->gif->async_image_data;
         if (cg_image && (cg_image->status == cg_image_async_load_complete) && (cg_image->image_animation_state != cg_image_animation_stopped)) {
@@ -125,7 +134,7 @@ void cg_context_tick_gifs(cg_context_t * const ctx, const milliseconds_t delta_t
                 render_conditional_flush_cmd_stream_and_wait_fence(
                     ctx->gl->render_device,
                     &ctx->gl->render_device->default_cmd_stream,
-                    cg_image->cg_texture.texture->resource.fence);
+                    cg_image->gif->async_image_data.initial_upload_fence);
 
                 ++cg_image->gif->req_frame_count;
                 if (!cg_async_image->decode_job_running) {
@@ -135,4 +144,5 @@ void cg_context_tick_gifs(cg_context_t * const ctx, const milliseconds_t delta_t
             }
         }
     }
+    CG_IMAGE_TRACE_POP();
 }

@@ -100,7 +100,8 @@ int cmdlet_http_test(const int argc, const char * const * const argv) {
     const adk_memory_reservations_t default_reservations = adk_get_default_memory_reservations();
     const adk_api_t * const api = adk_init(argc, argv, system_guard_page_mode_enabled, default_reservations, MALLOC_TAG);
 
-    VERIFY(adk_curl_api_init(api->mmap.curl.region, api->mmap.httpx_fragment_buffers.region, 4096, system_guard_page_mode_enabled, adk_curl_http_init_normal));
+    VERIFY(adk_mbedtls_init(api->mmap.ssl.region, system_guard_page_mode_enabled, MALLOC_TAG));
+    VERIFY(adk_curl_api_init(api->mmap.curl.region, api->mmap.httpx_fragment_buffers.region, 4096, 1, system_guard_page_mode_enabled, adk_curl_http_init_normal));
 
     handle_info_t * const handle_info = malloc(sizeof(handle_info_t) * num_downloads);
     TRAP_OUT_OF_MEMORY(handle_info);
@@ -153,7 +154,7 @@ int cmdlet_http_test(const int argc, const char * const * const argv) {
             ++statics.num_ticks;
             adk_curl_run_callbacks();
             while (adk_read_microsecond_clock().us < end_us) {
-                sb_thread_yield();
+                sb_thread_sleep((milliseconds_t){1});
             }
             size_t const bytes_per_tick = statics.bytes_downloaded - bytes_downloaded;
             if (bytes_per_tick > max_bytes_per_tick) {
@@ -232,6 +233,7 @@ int cmdlet_http_test(const int argc, const char * const * const argv) {
     free(handle_info);
 
     adk_curl_api_shutdown();
+    adk_mbedtls_shutdown(MALLOC_TAG);
 
     return 0;
 }

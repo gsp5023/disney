@@ -30,6 +30,7 @@
 #include "source/adk/steamboat/sb_file.h"
 #include "source/adk/steamboat/sb_locale.h"
 #include "source/adk/steamboat/sb_platform.h"
+#include "source/adk/telemetry/telemetry.h"
 
 #ifdef _WASM3
 #include "source/adk/wasm3/wasm3_link.h"

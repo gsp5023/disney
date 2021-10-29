@@ -1,21 +1,59 @@
 {
-  "v1": {
-    "default_persona": "persona1",
-    "personas": [
-      {
-        "id": "persona1",
-        "manifest_url": "manifest_url_success1",
-        "error_message": "test_message1"
-      },
-      {
-        "id": "persona2",
-        "manifest_url": "manifest_url_success2",
-        "error_message": "test_message2"
-      },
-      {
-        "id": "persona3",
-        "manifest_url": "manifest_url_success3"
-      }
-    ]
-  }
+    "v1": {
+        "default_persona": "persona1",
+        "partner": {
+            "name": "launchpad",
+            "guid": "123"
+        },
+        "personas": [
+            {
+                "id": "persona1",
+                "manifest_url": "manifest_url_success1",
+                "error": {
+                    "default_locales": ["en-us"],
+                    "localized": {
+                        "en-us": "default-locale-only"
+                    }
+                }
+            },
+            {
+                "id": "persona2",
+                "manifest_url": "manifest_url_success2",
+                "error": {
+                    "localized": {
+                        "en-us": "user-locale-no-defaults"
+                    }
+                }
+            },
+            {
+                "id": "persona3",
+                "manifest_url": "manifest_url_success3",
+                "error": {
+                    "localized": {
+                        "en-gb": "no-default-or-user-matching-locales"
+                    }
+                }
+            },
+            {
+                "id": "persona4",
+                "manifest_url": "manifest_url_success4"
+            },
+            {
+                "id": "persona5",
+                "manifest_url": "manifest_url_success5",
+                "error_message": "old error_message supported"
+            },
+            {
+                "id": "persona6",
+                "manifest_url": "manifest_url_success6",
+                "error_message": "old error_message supported",
+                "error": {
+                    "default_locales": ["en-us"],
+                    "localized": {
+                        "en-us": "newer error overrides"
+                    }
+                }
+            }
+        ]
+    }
 }

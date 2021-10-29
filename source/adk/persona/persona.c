@@ -18,6 +18,7 @@ Support for running multiple apps with the same m5 core
 #include "source/adk/log/log.h"
 #include "source/adk/runtime/memory.h"
 #include "source/adk/steamboat/sb_file.h"
+#include "source/adk/steamboat/sb_locale.h"
 #include "source/adk/steamboat/sb_platform.h"
 
 #define TAG_PERSONA FOURCC('P', 'R', 'S', 'A')
@@ -27,16 +28,22 @@ Support for running multiple apps with the same m5 core
 
 DECL_CONST_STR(persona_heap_tag);
 DECL_CONST_STR(v1);
+DECL_CONST_STR(partner);
 DECL_CONST_STR(default_persona);
 DECL_CONST_STR(personas);
 DECL_CONST_STR(id);
 DECL_CONST_STR(manifest_url);
 DECL_CONST_STR(error_message);
+DECL_CONST_STR(error);
+DECL_CONST_STR(cache_request_timeout_in_seconds);
+DECL_CONST_STR(retry_config);
+DECL_CONST_STR(default_locales);
+DECL_CONST_STR(localized);
 
 #undef DECL_CONST_STR
 
 enum {
-    persona_heap_size = 32 * 1024,
+    persona_heap_size = 1 * 1024 * 1024,
 };
 
 // File-scope variables
@@ -104,6 +111,57 @@ void persona_shutdown() {
     sb_unmap_pages(statics.pages);
 }
 
+static void build_localized_fallback_message(persona_mapping_t * mapping, cJSON * const persona_item, const cJSON * const error_message) {
+    const cJSON * const localized_messages = cJSON_GetObjectItem(error_message, c_localized);
+    if (!cJSON_IsObject(localized_messages)) {
+        LOG_ERROR(TAG_PERSONA, "Invalid json \"%s\"", c_localized);
+        return;
+    }
+
+    enum { locale_str_max_length = sb_locale_str_size * 2 };
+    const sb_locale_t user_locale = sb_get_locale();
+    char user_locale_str[locale_str_max_length] = {0};
+    snprintf(user_locale_str, locale_str_max_length, "%s-%s", (char *)user_locale.language, (char *)user_locale.region);
+    bool user_locale_found = false;
+
+    size_t offset = 0;
+
+    const cJSON * const default_locales = cJSON_GetObjectItem(error_message, c_default_locales);
+    if (cJSON_IsArray(default_locales)) {
+        cJSON * default_locale_item;
+        cJSON_ArrayForEach(default_locale_item, default_locales) {
+            if (!cJSON_IsString(default_locale_item)) {
+                LOG_ERROR(TAG_PERSONA, "Invalid locale element in \"%s\"", c_default_locales);
+                continue;
+            }
+
+            const char * default_locale_str = cJSON_GetStringValue(default_locale_item);
+
+            const cJSON * const message = cJSON_GetObjectItem(localized_messages, default_locale_str);
+            if (!cJSON_IsString(message)) {
+                LOG_ERROR(TAG_PERSONA, "Localized message for locale '%s' not found", message);
+                continue;
+            }
+
+            const char * message_value = cJSON_GetStringValue(message);
+            offset += snprintf(mapping->fallback_error_message + offset, adk_max_message_length - offset, "%s\n", message_value);
+
+            user_locale_found = user_locale_found || (strcasecmp(user_locale_str, default_locale_str) == 0);
+        }
+    }
+
+    if (!user_locale_found) {
+        const cJSON * const message = cJSON_GetObjectItem(localized_messages, user_locale_str);
+        if (!cJSON_IsString(message)) {
+            LOG_WARN(TAG_PERSONA, "Localized message for locale '%s' not found", user_locale_str);
+            return;
+        }
+
+        const char * message_value = cJSON_GetStringValue(message);
+        snprintf(mapping->fallback_error_message + offset, adk_max_message_length - offset, "%s", message_value);
+    }
+}
+
 bool persona_parse_for_mapping(persona_mapping_t * mapping, const_mem_region_t const persona_blob) {
     if (statics.json_root != NULL) {
         persona_reset_state();
@@ -139,6 +197,26 @@ bool persona_parse_for_mapping(persona_mapping_t * mapping, const_mem_region_t c
         }
     }
 
+    cJSON * const partner_item = cJSON_GetObjectItem(v1_item, c_partner);
+    if (!cJSON_IsObject(partner_item)) {
+        LOG_ERROR(TAG_PERSONA, "Invalid JSON: \"%s\"", c_partner);
+        return false;
+    } else {
+        cJSON * const partner_name_item = cJSON_GetObjectItem(partner_item, "name");
+        if (!cJSON_IsString(partner_name_item)) {
+            LOG_ERROR(TAG_PERSONA, "Invalid JSON: \"partner.name\"");
+            return false;
+        }
+        strcpy_s(mapping->partner_name, ARRAY_SIZE(mapping->partner_name), cJSON_GetStringValue(partner_name_item));
+
+        cJSON * const partner_guid_item = cJSON_GetObjectItem(partner_item, "guid");
+        if (!cJSON_IsString(partner_guid_item)) {
+            LOG_ERROR(TAG_PERSONA, "Invalid JSON: \"partner.guid\"");
+            return false;
+        }
+        strcpy_s(mapping->partner_guid, ARRAY_SIZE(mapping->partner_guid), cJSON_GetStringValue(partner_guid_item));
+    }
+
     // Get "personas"
     cJSON * const personas_array = cJSON_GetObjectItem(v1_item, c_personas);
     if (!cJSON_IsArray(personas_array)) {
@@ -163,14 +241,36 @@ bool persona_parse_for_mapping(persona_mapping_t * mapping, const_mem_region_t c
                     return false;
                 }
 
-                // Successfully retrieved a manifest url! Return early to avoid parsing the rest of the file.
                 strcpy_s(mapping->manifest_url, ARRAY_SIZE(mapping->manifest_url), cJSON_GetStringValue(manifest_url_item));
 
-                const cJSON * const message = cJSON_GetObjectItem(persona_item, c_error_message);
-                if (cJSON_IsString(message)) {
-                    strcpy_s(mapping->fallback_error_message, adk_max_message_length, cJSON_GetStringValue(message));
+                // Check the new "error" field first, if there's no such field, fallback to the "old" error_message otherwise throw...
+                const cJSON * const error_object = cJSON_GetObjectItem(persona_item, c_error);
+                if (cJSON_IsObject(error_object)) {
+                    build_localized_fallback_message(mapping, persona_item, error_object);
                 } else {
-                    mapping->fallback_error_message[0] = 0;
+                    // If "error" field is not specified in persona, fallback to the older "error_message" field
+                    const cJSON * const error_message_object = cJSON_GetObjectItem(persona_item, c_error_message);
+                    if (cJSON_IsString(error_message_object)) {
+                        strcpy_s(mapping->fallback_error_message, adk_max_message_length, cJSON_GetStringValue(error_message_object));
+                    }
+                }
+
+                cJSON * const cache_request_timeout_obj = cJSON_GetObjectItem(persona_item, c_cache_request_timeout_in_seconds);
+                if (cJSON_IsNumber(cache_request_timeout_obj)) {
+                    mapping->cache_request_timeout = cache_request_timeout_obj->valueint;
+                }
+
+                cJSON * const retry_config_obj = cJSON_GetObjectItem(persona_item, c_retry_config);
+                if (cJSON_IsObject(retry_config_obj)) {
+                    cJSON * const max_retries_obj = cJSON_GetObjectItem(retry_config_obj, "max_retries");
+                    if (cJSON_IsNumber(max_retries_obj)) {
+                        mapping->retry_config.max_retries = max_retries_obj->valueint;
+                    }
+
+                    cJSON * const retry_backoff_ms_obj = cJSON_GetObjectItem(retry_config_obj, "retry_backoff_in_millis");
+                    if (cJSON_IsNumber(retry_backoff_ms_obj)) {
+                        mapping->retry_config.retry_backoff_ms = (milliseconds_t){.ms = retry_backoff_ms_obj->valueint};
+                    }
                 }
 
                 return true;

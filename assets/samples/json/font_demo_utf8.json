@@ -1,0 +1,44 @@
+{
+	"font_tests": [
+		{
+			"test_str": "This test file can help you examine, how your UTF-8 decoder handles\nvarious types of correct, malformed, or otherwise interesting UTF-8\nsequences. This file is not meant to be a conformance test. It does\nnot prescribe any particular outcome. Therefore, there is no way to\n'pass' or 'fail' this test file, even though the text does suggest a\npreferable decoder behaviour at some places. Its aim is, instead, to\nhelp you think about and test the behaviour of your UTF-8 decoder on\nsystematic collection of unusual inputs. Experience so far suggests\nthat most first-time authors of UTF-8 decoders find at least one\nserious problem in their decoder using this file.\n",
+			"font_ctx": 1,
+			"fill": {"r": 255,
+			"g": 200,
+			"b": 190,
+			"a": 255}
+		},
+		{
+			"test_str": "There should be no such thing as boring mathematics. -Edsger Dijkstra",
+			"font_ctx": 2,
+			"fill": {"r": 55,
+			"g": 200,
+			"b": 190,
+			"a": 255}
+		},
+		{
+			"test_str": "arcadefire *33",
+			"font_ctx": 3,
+			"fill": {"r": 255,
+			"g": 20,
+			"b": 190,
+			"a": 255}
+		},
+		{
+			"test_str": "加勒比海盗：鬼盗船魔咒",
+			"font_ctx": 4,
+			"fill": {"r": 255,
+			"g": 255,
+			"b": 190,
+			"a": 255}
+		},
+		{
+			"test_str": "Shoulders of Giants ― Isaac Newton ♜ ♞ ♝ ♛",
+			"font_ctx": 4,
+			"fill": {"r": 50,
+			"g": 100,
+			"b": 190,
+			"a": 255}
+		}
+	]
+}

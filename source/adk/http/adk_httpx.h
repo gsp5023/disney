@@ -15,11 +15,8 @@
 extern "C" {
 #endif
 
-/// An httpx 'api' object is used to create clients and manages, e.g., memory allocation across clients
-typedef struct adk_httpx_api_t adk_httpx_api_t;
-
 /// A client is used to create and send HTTP requests. The client is ticked in order to perform progress on the pending requests/responses.
-FFI_DROP(adk_httpx_client_free)
+FFI_ALWAYS_TYPED
 typedef struct adk_httpx_client_t adk_httpx_client_t;
 
 /// An HTTP request to send
@@ -50,23 +47,33 @@ typedef enum adk_httpx_init_mode_e {
     adk_httpx_init_normal = 1
 } adk_httpx_init_mode_e;
 
-adk_httpx_api_t * adk_httpx_api_create(
+void adk_httpx_init_global_certs(bool use_global_certs);
+void adk_httpx_free_global_certs();
+
+typedef struct adk_httpx_http2_options {
+    bool enabled;
+    bool use_multiplexing;
+    bool multiplex_wait_for_existing_connection;
+} adk_httpx_http2_options;
+
+void adk_httpx_enable_http2(adk_httpx_http2_options options);
+
+adk_httpx_client_t * adk_httpx_client_create(
     const mem_region_t region,
     const mem_region_t fragments_region,
     const uint32_t fragment_size,
+    const uint32_t pump_sleep_period,
     const system_guard_page_mode_e guard_page_mode,
     const adk_httpx_init_mode_e init_mode,
     const char * const name);
 
-void adk_httpx_api_dump_heap_usage(adk_httpx_api_t * const api);
-
-void adk_httpx_api_free(adk_httpx_api_t * const api);
-
-adk_httpx_client_t * adk_httpx_client_create(adk_httpx_api_t * const api);
-
-FFI_EXPORT FFI_PUB_CRATE void adk_httpx_client_free(FFI_PTR_NATIVE adk_httpx_client_t * const client);
+void adk_httpx_client_free(adk_httpx_client_t * const client);
 
 bool adk_httpx_client_tick(adk_httpx_client_t * const client);
+
+void adk_httpx_client_dump_heap_usage(adk_httpx_client_t * const client);
+
+heap_metrics_t adk_httpx_client_get_heap_metrics(adk_httpx_client_t * const client);
 
 FFI_EXPORT FFI_ENUM_CLEAN_NAMES typedef enum adk_httpx_method_e {
     adk_httpx_method_get,
@@ -139,9 +146,6 @@ FFI_EXPORT FFI_PUB_CRATE FFI_PTR_NATIVE FFI_CAN_BE_NULL const char * adk_httpx_r
 FFI_EXPORT FFI_PUB_CRATE int64_t adk_httpx_response_get_response_code(
     FFI_PTR_NATIVE const adk_httpx_response_t * const response);
 
-sb_socket_t adk_httpx_response_get_socket(adk_httpx_response_t * const response);
-void * adk_httpx_response_get_curl_handle(adk_httpx_response_t * const response);
-
 const_mem_region_t adk_httpx_response_get_headers(const adk_httpx_response_t * const response);
 const_mem_region_t adk_httpx_response_get_body(const adk_httpx_response_t * const response);
 
@@ -164,7 +168,8 @@ void adk_httpx_fetch(
     const char * const url,
     adk_httpx_fetch_callbacks_t callbacks,
     const char ** headers,
-    const size_t num_headers);
+    const size_t num_headers,
+    const seconds_t timeout);
 
 #ifdef __cplusplus
 }

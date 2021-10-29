@@ -22,7 +22,7 @@ enum {
     crypto_encoded_uuid_length = 37
 };
 
-void crypto_generate_hmac(
+EXT_EXPORT void crypto_generate_hmac(
     const const_mem_region_t key,
     const const_mem_region_t input,
     uint8_t output[crypto_sha256_size]);
@@ -37,7 +37,7 @@ void crypto_hmac_ctx_update(crypto_hmac_ctx_t * const ctx, const const_mem_regio
 
 void crypto_hmac_ctx_finish(crypto_hmac_ctx_t * const ctx, uint8_t output[crypto_sha256_size]);
 
-size_t crypto_encode_base64(const const_mem_region_t input, const mem_region_t output);
+EXT_EXPORT size_t crypto_encode_base64(const const_mem_region_t input, const mem_region_t output);
 
 size_t crypto_decode_base64(const const_mem_region_t input, const mem_region_t output);
 

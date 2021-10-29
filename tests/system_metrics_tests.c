@@ -35,6 +35,11 @@ static bool is_alphanumeric_with_underscores(const char * const str, const size_
     return true;
 }
 
+void adk_runtime_override_system_metrics(adk_system_metrics_t * const out) {
+    strcpy(out->partner, "launchpad");
+    strcpy(out->partner_guid, "123");
+}
+
 void system_metrics_unit_test(void ** state) {
     adk_system_metrics_t static_system_info = {0};
     adk_get_system_metrics(&static_system_info);

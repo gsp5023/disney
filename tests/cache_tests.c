@@ -18,7 +18,9 @@
 #include "source/adk/steamboat/sb_socket.h"
 #include "testapi.h"
 
-struct {
+static const seconds_t cache_request_timeout = { .seconds = 30L };
+
+static struct {
     mem_region_t region;
     cache_t * cache;
 } statics;
@@ -127,7 +129,7 @@ static void test_cache_fetching(void ** state) {
             assert_int_equal(0x1466, file_content_size);
         }
 
-        assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_atomic));
+        assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_atomic, cache_request_timeout));
 
         sb_fclose(file);
     }
@@ -144,7 +146,7 @@ static void test_cache_fetch_in_place(void ** state) {
 
     assert_false(cache_get_content(cache, key, &file, &file_content_size));
 
-    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place));
+    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place, cache_request_timeout));
 
     assert_true(cache_get_content(cache, key, &file, &file_content_size));
     assert_non_null(file);
@@ -165,7 +167,7 @@ static void test_cache_delete_key(void ** state) {
     assert_false(cache_get_content(cache, key, &file, &file_content_size));
     assert_null(file);
 
-    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place));
+    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place, cache_request_timeout));
 
     assert_true(cache_get_content(cache, key, &file, &file_content_size));
     assert_non_null(file);
@@ -189,7 +191,7 @@ static void test_cache_corrupted_content(void ** state) {
     sb_file_t * file = NULL;
     size_t file_content_size = 0;
 
-    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place));
+    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place, cache_request_timeout));
     assert_true(cache_get_content(cache, key, &file, &file_content_size));
     assert_non_null(file);
     sb_fclose(file);
@@ -222,7 +224,7 @@ static void test_cache_content(void ** state) {
     sb_file_t * file = NULL;
     size_t file_content_size = 0;
 
-    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place));
+    assert_true(cache_fetch_success == cache_fetch_resource_from_url(cache, key, url, cache_update_mode_in_place, cache_request_timeout));
     assert_true(cache_get_content(cache, key, &file, &file_content_size));
     assert_non_null(file);
     assert_int_equal(file_content_size, strlen(content));

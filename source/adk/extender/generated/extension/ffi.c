@@ -45,7 +45,6 @@ sb_thread_id_t sb_create_thread(const char *name, const sb_thread_options_t opti
 _Bool sb_set_thread_priority(const sb_thread_id_t id, const sb_thread_priority_e priority) { return statics.functions->sb_set_thread_priority(id, priority); }
 void sb_join_thread(const sb_thread_id_t id) {  statics.functions->sb_join_thread(id); }
 void sb_thread_sleep(const milliseconds_t time) {  statics.functions->sb_thread_sleep(time); }
-void sb_thread_yield() {  statics.functions->sb_thread_yield(); }
 sb_mutex_t * sb_create_mutex(const char *const tag) { return statics.functions->sb_create_mutex(tag); }
 void sb_destroy_mutex(sb_mutex_t *const mutex, const char *const tag) {  statics.functions->sb_destroy_mutex(mutex, tag); }
 void sb_lock_mutex(sb_mutex_t *const mutex) {  statics.functions->sb_lock_mutex(mutex); }
@@ -77,42 +76,12 @@ _Bool cncbus_msg_set_size_unchecked(cncbus_msg_t *const msg, int size) { return 
 void cncbus_msg_cancel(cncbus_msg_t *const msg) {  statics.functions->cncbus_msg_cancel(msg); }
 int cncbus_msg_read(cncbus_msg_t *const msg, void *const dst, const int size) { return statics.functions->cncbus_msg_read(msg, dst, size); }
 void cncbus_send_async(cncbus_msg_t *const msg, const cncbus_address_t source_address, const cncbus_address_t dest_address, const cncbus_address_t subnet_mask, cncbus_signal_t *const signal) {  statics.functions->cncbus_send_async(msg, source_address, dest_address, subnet_mask, signal); }
-_Bool adk_mount_bundle(bundle_t *const bundle) { return statics.functions->adk_mount_bundle(bundle); }
-_Bool adk_unmount_bundle(bundle_t *const bundle) { return statics.functions->adk_unmount_bundle(bundle); }
-sb_file_t * adk_fopen(const sb_file_directory_e directory, const char *const path, const char *const mode) { return statics.functions->adk_fopen(directory, path, mode); }
-_Bool adk_fclose(sb_file_t *const file) { return statics.functions->adk_fclose(file); }
-sb_stat_result_t adk_stat(const sb_file_directory_e mount_point, const char *const subpath) { return statics.functions->adk_stat(mount_point, subpath); }
-size_t adk_fread(void *const buffer, const size_t elem_size, const size_t elem_count, sb_file_t *const file) { return statics.functions->adk_fread(buffer, elem_size, elem_count, file); }
-void adk_http_init(const char *const ssl_certificate_path, const mem_region_t region, const system_guard_page_mode_e guard_page_mode, const char *const tag) {  statics.functions->adk_http_init(ssl_certificate_path, region, guard_page_mode, tag); }
-void adk_http_shutdown(const char *const tag) {  statics.functions->adk_http_shutdown(tag); }
-void adk_http_dump_heap_usage() {  statics.functions->adk_http_dump_heap_usage(); }
-_Bool adk_http_tick() { return statics.functions->adk_http_tick(); }
-adk_http_header_list_t * adk_http_append_header_list(adk_http_header_list_t *list, const char *const name, const char *const value, const char *const tag) { return statics.functions->adk_http_append_header_list(list, name, value, tag); }
-adk_websocket_handle_t * adk_websocket_create(const char *const url, const char *const supported_protocols, adk_http_header_list_t *const header_list, const adk_websocket_callbacks_t callbacks, const char *const tag) { return statics.functions->adk_websocket_create(url, supported_protocols, header_list, callbacks, tag); }
-adk_websocket_handle_t * adk_websocket_create_with_ssl_ctx(const char *const url, const char *const supported_protocols, adk_http_header_list_t *const header_list, const adk_websocket_callbacks_t callbacks, mem_region_t ssl_ca, mem_region_t ssl_client, const char *const tag) { return statics.functions->adk_websocket_create_with_ssl_ctx(url, supported_protocols, header_list, callbacks, ssl_ca, ssl_client, tag); }
-void adk_websocket_close(adk_websocket_handle_t *const ws_handle, const char *const tag) {  statics.functions->adk_websocket_close(ws_handle, tag); }
-adk_websocket_status_e adk_websocket_get_status(adk_websocket_handle_t *const ws_handle) { return statics.functions->adk_websocket_get_status(ws_handle); }
-adk_websocket_status_e adk_websocket_send(adk_websocket_handle_t *const ws_handle, const const_mem_region_t message, const adk_websocket_message_type_e message_type, const adk_websocket_callbacks_t write_status_callback) { return statics.functions->adk_websocket_send(ws_handle, message, message_type, write_status_callback); }
-adk_websocket_message_type_e adk_websocket_begin_read(adk_websocket_handle_t *const ws_handle, const_mem_region_t *const message) { return statics.functions->adk_websocket_begin_read(ws_handle, message); }
-void adk_websocket_end_read(adk_websocket_handle_t *const ws_handle, const char *const tag) {  statics.functions->adk_websocket_end_read(ws_handle, tag); }
-void adk_websocket_backend_set(const adk_websocket_backend_e backend) {  statics.functions->adk_websocket_backend_set(backend); }
-void adk_websocket_backend_set_websocket_config(const websocket_config_t config) {  statics.functions->adk_websocket_backend_set_websocket_config(config); }
-void wasm_sig(wasm_sig_mask mask, char *const out) {  statics.functions->wasm_sig(mask, out); }
-void * wasm_translate_ptr_wasm_to_native(wasm_ptr_t addr) { return statics.functions->wasm_translate_ptr_wasm_to_native(addr); }
-#ifdef _WASM3
-void wasm3_export_native_function(IM3Module module, const char *const name, const wasm_sig_mask signature, const M3RawCall func_ptr) {  statics.functions->wasm3_export_native_function(module, name, signature, func_ptr); }
-#endif // _WASM3
-#ifdef _WAMR
-void wamr_export_native_function(wasm_exec_env_t env, const char *const name, const wasm_sig_mask signature, const uintptr_t func_ptr) {  statics.functions->wamr_export_native_function(env, name, signature, func_ptr); }
-#endif // _WAMR
-const char * log_get_level_short_name(const log_level_e level) { return statics.functions->log_get_level_short_name(level); }
-log_level_e log_get_min_level() { return statics.functions->log_get_min_level(); }
-void log_message(const char *const file, const int line, const char *const func, const log_level_t level, const uint32_t fourcc_tag, const char *const msg, va_list args) {  statics.functions->log_message(file, line, func, level, fourcc_tag, msg, args); }
 _Bool sb_preinit(const int argc, const char *const *const argv) { return statics.functions->sb_preinit(argc, argv); }
 _Bool sb_init(struct adk_api_t *api, const int argc, const char *const *const argv, const system_guard_page_mode_e guard_page_mode) { return statics.functions->sb_init(api, argc, argv, guard_page_mode); }
 void sb_shutdown() {  statics.functions->sb_shutdown(); }
 void sb_halt(const char *const message) {  statics.functions->sb_halt(message); }
 void sb_platform_dump_heap_usage() {  statics.functions->sb_platform_dump_heap_usage(); }
+heap_metrics_t sb_platform_get_heap_metrics() { return statics.functions->sb_platform_get_heap_metrics(); }
 mem_region_t sb_map_pages(const size_t size, const system_page_protect_e protect) { return statics.functions->sb_map_pages(size, protect); }
 void sb_protect_pages(const mem_region_t pages, const system_page_protect_e protect) {  statics.functions->sb_protect_pages(pages, protect); }
 void sb_unmap_pages(const mem_region_t pages) {  statics.functions->sb_unmap_pages(pages); }
@@ -130,10 +99,48 @@ void sb_text_to_speech(const char *const text) {  statics.functions->sb_text_to_
 sb_uuid_t sb_generate_uuid() { return statics.functions->sb_generate_uuid(); }
 void sb_report_app_metrics(const char *const app_id, const char *const app_name, const char *const app_version) {  statics.functions->sb_report_app_metrics(app_id, app_name, app_version); }
 sb_cpu_mem_status_t sb_get_cpu_mem_status() { return statics.functions->sb_get_cpu_mem_status(); }
+void crypto_generate_hmac(const const_mem_region_t key, const const_mem_region_t input, uint8_t output[32]) {  statics.functions->crypto_generate_hmac(key, input, output); }
+size_t crypto_encode_base64(const const_mem_region_t input, const mem_region_t output) { return statics.functions->crypto_encode_base64(input, output); }
+_Bool adk_mount_bundle(bundle_t *const bundle) { return statics.functions->adk_mount_bundle(bundle); }
+_Bool adk_unmount_bundle(bundle_t *const bundle) { return statics.functions->adk_unmount_bundle(bundle); }
+sb_file_t * adk_fopen(const sb_file_directory_e directory, const char *const path, const char *const mode) { return statics.functions->adk_fopen(directory, path, mode); }
+_Bool adk_fclose(sb_file_t *const file) { return statics.functions->adk_fclose(file); }
+sb_stat_result_t adk_stat(const sb_file_directory_e mount_point, const char *const subpath) { return statics.functions->adk_stat(mount_point, subpath); }
+size_t adk_fread(void *const buffer, const size_t elem_size, const size_t elem_count, sb_file_t *const file) { return statics.functions->adk_fread(buffer, elem_size, elem_count, file); }
+void adk_http_init(const char *const ssl_certificate_path, const mem_region_t region, const enum adk_websocket_backend_e backend, const struct websocket_config_t config, const system_guard_page_mode_e guard_page_mode, const char *const tag) {  statics.functions->adk_http_init(ssl_certificate_path, region, backend, config, guard_page_mode, tag); }
+void adk_http_shutdown(const char *const tag) {  statics.functions->adk_http_shutdown(tag); }
+void adk_http_dump_heap_usage() {  statics.functions->adk_http_dump_heap_usage(); }
+heap_metrics_t adk_http_get_heap_metrics() { return statics.functions->adk_http_get_heap_metrics(); }
+_Bool adk_http_tick() { return statics.functions->adk_http_tick(); }
+adk_http_header_list_t * adk_http_append_header_list(adk_http_header_list_t *list, const char *const name, const char *const value, const char *const tag) { return statics.functions->adk_http_append_header_list(list, name, value, tag); }
+adk_websocket_handle_t * adk_websocket_create(const char *const url, const char *const supported_protocols, adk_http_header_list_t *const header_list, const adk_websocket_callbacks_t callbacks, const char *const tag) { return statics.functions->adk_websocket_create(url, supported_protocols, header_list, callbacks, tag); }
+adk_websocket_handle_t * adk_websocket_create_with_ssl_ctx(const char *const url, const char *const supported_protocols, adk_http_header_list_t *const header_list, const adk_websocket_callbacks_t callbacks, mem_region_t ssl_ca, mem_region_t ssl_client, const char *const tag) { return statics.functions->adk_websocket_create_with_ssl_ctx(url, supported_protocols, header_list, callbacks, ssl_ca, ssl_client, tag); }
+void adk_websocket_close(adk_websocket_handle_t *const ws_handle, const char *const tag) {  statics.functions->adk_websocket_close(ws_handle, tag); }
+adk_websocket_status_e adk_websocket_get_status(adk_websocket_handle_t *const ws_handle) { return statics.functions->adk_websocket_get_status(ws_handle); }
+adk_websocket_status_e adk_websocket_send(adk_websocket_handle_t *const ws_handle, const const_mem_region_t message, const adk_websocket_message_type_e message_type, const adk_websocket_callbacks_t write_status_callback) { return statics.functions->adk_websocket_send(ws_handle, message, message_type, write_status_callback); }
+adk_websocket_message_type_e adk_websocket_begin_read(adk_websocket_handle_t *const ws_handle, const_mem_region_t *const message) { return statics.functions->adk_websocket_begin_read(ws_handle, message); }
+void adk_websocket_end_read(adk_websocket_handle_t *const ws_handle, const char *const tag) {  statics.functions->adk_websocket_end_read(ws_handle, tag); }
+void wasm_sig(wasm_sig_mask mask, char *const out) {  statics.functions->wasm_sig(mask, out); }
+void * wasm_translate_ptr_wasm_to_native(wasm_ptr_t addr) { return statics.functions->wasm_translate_ptr_wasm_to_native(addr); }
+#ifdef _WASM3
+void wasm3_export_native_function(IM3Module module, const char *const name, const wasm_sig_mask signature, const M3RawCall func_ptr) {  statics.functions->wasm3_export_native_function(module, name, signature, func_ptr); }
+#endif // _WASM3
+#ifdef _WAMR
+void wamr_export_native_function(wasm_exec_env_t env, const char *const name, const wasm_sig_mask signature, const uintptr_t func_ptr) {  statics.functions->wamr_export_native_function(env, name, signature, func_ptr); }
+#endif // _WAMR
+const char * log_get_level_short_name(const log_level_e level) { return statics.functions->log_get_level_short_name(level); }
+log_level_e log_get_min_level() { return statics.functions->log_get_min_level(); }
+void log_message(const char *const file, const int line, const char *const func, const log_level_t level, const uint32_t fourcc_tag, const char *const msg, va_list args) {  statics.functions->log_message(file, line, func, level, fourcc_tag, msg, args); }
 void log_init(cncbus_t *const bus, const cncbus_address_t address, const cncbus_address_t subnet_mask, adk_reporting_instance_t *const reporting_instance) {  statics.functions->log_init(bus, address, subnet_mask, reporting_instance); }
 void log_shutdown() {  statics.functions->log_shutdown(); }
 void log_receiver_init(cncbus_t *const bus, const cncbus_address_t address) {  statics.functions->log_receiver_init(bus, address); }
 void log_receiver_shutdown(cncbus_t *const bus) {  statics.functions->log_receiver_shutdown(bus); }
+_Bool sb_enumerate_display_modes(const int32_t display_index, const int32_t display_mode_index, sb_enumerate_display_modes_result_t *const out_results) { return statics.functions->sb_enumerate_display_modes(display_index, display_mode_index, out_results); }
+sb_window_t * sb_init_main_display(const int display_index, const int display_mode_index, const char *const title) { return statics.functions->sb_init_main_display(display_index, display_mode_index, title); }
+_Bool sb_set_main_display_refresh_rate(const int32_t hz) { return statics.functions->sb_set_main_display_refresh_rate(hz); }
+void sb_get_window_client_area(sb_window_t *const window, int *const out_width, int *const out_height) {  statics.functions->sb_get_window_client_area(window, out_width, out_height); }
+void sb_destroy_main_window() {  statics.functions->sb_destroy_main_window(); }
+void adk_get_system_metrics(adk_system_metrics_t *const out) {  statics.functions->adk_get_system_metrics(out); }
 rb_cmd_buf_t * render_get_cmd_buf(render_device_t *const device, const render_wait_mode_e wait_mode) { return statics.functions->render_get_cmd_buf(device, wait_mode); }
 void adk_app_metrics_init() {  statics.functions->adk_app_metrics_init(); }
 void adk_app_metrics_shutdown() {  statics.functions->adk_app_metrics_shutdown(); }
@@ -146,11 +153,6 @@ const char * adk_get_file_directory_path(const sb_file_directory_e directory) { 
 size_t adk_get_screenshot_required_memory() { return statics.functions->adk_get_screenshot_required_memory(); }
 void adk_take_screenshot_flush(image_t *const out_screenshot, const mem_region_t screenshot_mem_region) {  statics.functions->adk_take_screenshot_flush(out_screenshot, screenshot_mem_region); }
 size_t adk_write_screenshot_mem_user_by_type(const image_t *const screenshot, const mem_region_t region, const image_save_file_type_e file_type) { return statics.functions->adk_write_screenshot_mem_user_by_type(screenshot, region, file_type); }
-_Bool sb_enumerate_display_modes(const int32_t display_index, const int32_t display_mode_index, sb_enumerate_display_modes_result_t *const out_results) { return statics.functions->sb_enumerate_display_modes(display_index, display_mode_index, out_results); }
-sb_window_t * sb_init_main_display(const int display_index, const int display_mode_index, const char *const title) { return statics.functions->sb_init_main_display(display_index, display_mode_index, title); }
-_Bool sb_set_main_display_refresh_rate(const int32_t hz) { return statics.functions->sb_set_main_display_refresh_rate(hz); }
-void sb_get_window_client_area(sb_window_t *const window, int *const out_width, int *const out_height) {  statics.functions->sb_get_window_client_area(window, out_width, out_height); }
-void sb_destroy_main_window() {  statics.functions->sb_destroy_main_window(); }
 sb_locale_t sb_get_locale() { return statics.functions->sb_get_locale(); }
 sb_getaddrinfo_result_t sb_getaddrinfo(const char *const address, const char *const port, const sb_addrinfo_t *const hint, sb_addrinfo_t *const out_addrinfos, uint32_t *const out_addrinfo_size) { return statics.functions->sb_getaddrinfo(address, port, hint, out_addrinfos, out_addrinfo_size); }
 int sb_create_socket(const sb_socket_family_e domain, const sb_socket_type_e sock_type, const sb_socket_protocol_type_e protocol, sb_socket_t *const out_socket) { return statics.functions->sb_create_socket(domain, sock_type, protocol, out_socket); }

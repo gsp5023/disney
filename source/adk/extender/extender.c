@@ -69,7 +69,9 @@ static void runtime_config_bubble_up_max_values(runtime_configuration_t * dst, c
 
     ASSERT(dst->guard_page_mode == src->guard_page_mode); // Extensions shouldn't conflict here
 
-    dst->wasm_memory_size = max_uint32_t(dst->wasm_memory_size, src->wasm_memory_size);
+    dst->wasm_low_memory_size = max_uint32_t(dst->wasm_low_memory_size, src->wasm_low_memory_size);
+    dst->wasm_high_memory_size = max_uint32_t(dst->wasm_high_memory_size, src->wasm_high_memory_size);
+    dst->wasm_heap_allocation_threshold = max_uint32_t(dst->wasm_heap_allocation_threshold, src->wasm_heap_allocation_threshold);
     dst->http_max_pooled_connections = max_uint32_t(dst->http_max_pooled_connections, src->http_max_pooled_connections);
     dst->bundle_fetch.retry_max_attempts = max_uint32_t(dst->bundle_fetch.retry_max_attempts, src->bundle_fetch.retry_max_attempts);
     dst->bundle_fetch.retry_backoff_ms.ms = max_uint32_t(dst->bundle_fetch.retry_backoff_ms.ms, src->bundle_fetch.retry_backoff_ms.ms);

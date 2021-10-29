@@ -18,6 +18,7 @@ enum {
     cncbus_msg_type_utf8 = FOURCC('U', 'T', 'F', '8'),
     cncbus_msg_type_log_v1 = FOURCC('L', 'O', 'G', '1'),
     cncbus_msg_type_metric_v2 = FOURCC('M', 'E', 'T', '2'),
+    cncbus_msg_type_event = FOURCC('E', 'V', 'N', 'T'),
 };
 
 #ifdef __cplusplus

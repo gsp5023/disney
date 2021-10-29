@@ -11,6 +11,14 @@ project "http"
 	MODULES.include_libwebsockets()
 
 	filter { "platforms:not vader", "platforms:not leia" }
-		if player_is_any("nve-internal", "nve-shared") then
+		if player_is_any("nve-internal") then
 			defines "_ADK_NVE_CURL_SHARING=1"
 		end
+
+	-- TODO(M5-3317): remove curl-sharing for BME MIPS devices
+	if player_is_any("nve-shared") then
+		filter { "platforms:*brcm_bme*" }
+			defines "_ADK_NVE_CURL_SHARING=1"
+	end
+
+	filter {}

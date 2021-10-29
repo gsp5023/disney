@@ -17,35 +17,22 @@
 typedef struct adk_httpx_network_pump_t adk_httpx_network_pump_t;
 typedef struct adk_httpx_network_pump_fragment_t adk_httpx_network_pump_fragment_t;
 
-struct adk_httpx_client_t;
-
-struct adk_httpx_api_t {
+struct adk_httpx_client_t {
     adk_curl_context_t * ctx;
+    sb_thread_id_t thread_id;
     adk_httpx_network_pump_t * network_pump;
     heap_t * heap;
     sb_mutex_t * mutex;
     curl_common_certs_t certs;
 
-    sb_mutex_t * clients_list_lock;
-    sb_condition_variable_t * client_enqued;
-    struct adk_httpx_client_t * clients_list_head;
-    struct adk_httpx_client_t * clients_list_tail;
-};
-
-struct adk_httpx_client_t {
-    adk_httpx_api_t * api;
-
     // Any updates on the mutli object should be performed on the pump's thread,
     // any access from the main thread would cause a potential race condition.
     CURLM * multi;
 
-    bool destroyed;
-
-    struct adk_httpx_client_t * prev;
-    struct adk_httpx_client_t * next;
-
     struct adk_httpx_handle_t * handle_head;
     struct adk_httpx_handle_t * handle_tail;
+
+    curl_common_ssl_ctx_data_t ssl_ctx_data;
 };
 
 struct adk_httpx_response_t {

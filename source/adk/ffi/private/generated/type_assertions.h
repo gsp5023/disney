@@ -148,6 +148,8 @@ STATIC_ASSERT(offsetof(adk_system_metrics_t, persistent_storage_available_bytes)
 STATIC_ASSERT(offsetof(adk_system_metrics_t, persistent_storage_max_write_bytes_per_second) == 3680);
 STATIC_ASSERT(offsetof(adk_system_metrics_t, persona_id) == 3684);
 
+STATIC_ASSERT(sizeof(sb_network_type_e) == 4);
+
 STATIC_ASSERT(sizeof(adk_power_mode_e) == 4);
 
 STATIC_ASSERT(sizeof(adk_power_mode_t) == 4);
@@ -230,6 +232,12 @@ STATIC_ASSERT(offsetof(cg_rect_t, x) == 0);
 STATIC_ASSERT(offsetof(cg_rect_t, y) == 4);
 STATIC_ASSERT(offsetof(cg_rect_t, width) == 8);
 STATIC_ASSERT(offsetof(cg_rect_t, height) == 12);
+
+STATIC_ASSERT(sizeof(cg_sdf_rect_params_t) == 28);
+STATIC_ASSERT(offsetof(cg_sdf_rect_params_t, roundness) == 0);
+STATIC_ASSERT(offsetof(cg_sdf_rect_params_t, fade) == 4);
+STATIC_ASSERT(offsetof(cg_sdf_rect_params_t, border_color) == 8);
+STATIC_ASSERT(offsetof(cg_sdf_rect_params_t, border_width) == 24);
 
 STATIC_ASSERT(sizeof(cg_text_block_page_offsets_t) == 8);
 STATIC_ASSERT(offsetof(cg_text_block_page_offsets_t, begin_offset) == 0);

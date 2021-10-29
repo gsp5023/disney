@@ -2,7 +2,7 @@
 
 /* ===========================================================================
  *
- * Copyright (c) 2020-2021 Disney Streaming Technology LLC.All rights reserved.
+ * Copyright (c) 2020-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 

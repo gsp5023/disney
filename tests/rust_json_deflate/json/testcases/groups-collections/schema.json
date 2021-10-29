@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "properties": {
+        "first": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "second": {
+            "type": "map",
+            "items": {
+                "type": "string"
+            }
+        },
+        "third": {
+            "type": "object",
+            "properties": {
+                "ref_array": {
+                    "type": "/first"
+                },
+                "ref_map": {
+                    "type": "/second"
+                }
+            },
+            "required": ["ref_array", "ref_map"]
+        }
+    },
+    "required": ["first", "second", "third"]
+}

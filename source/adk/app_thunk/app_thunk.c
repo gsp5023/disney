@@ -12,8 +12,10 @@ standard ADK app init thunks
 
 #include "source/adk/app_thunk/app_thunk.h"
 
+#include "source/adk/app_thunk/watchdog.h"
 #include "source/adk/cmdlets/cmdlets.h"
 #include "source/adk/cncbus/cncbus_addresses.h"
+#include "source/adk/cncbus/cncbus_msg_types.h"
 #include "source/adk/coredump/coredump.h"
 #include "source/adk/extender/extender.h"
 #include "source/adk/ffi/ffi.h"
@@ -24,6 +26,7 @@ standard ADK app init thunks
 #include "source/adk/http/websockets/websockets.h"
 #include "source/adk/interpreter/interp_api.h"
 #include "source/adk/json_deflate/json_deflate.h"
+#include "source/adk/log/private/event_logger.h"
 #include "source/adk/log/private/log_p.h"
 #include "source/adk/log/private/log_receiver.h"
 #include "source/adk/manifest/manifest.h"
@@ -32,6 +35,7 @@ standard ADK app init thunks
 #include "source/adk/nve/video_texture_api.h"
 #include "source/adk/reporting/adk_reporting.h"
 #include "source/adk/reporting/adk_reporting_sentry_options.h"
+#include "source/adk/runtime/bifurcated_heap.h"
 #include "source/adk/runtime/hosted_app.h"
 #include "source/adk/runtime/private/events.h"
 #include "source/adk/runtime/runtime.h"
@@ -41,26 +45,6 @@ standard ADK app init thunks
 #include "source/adk/telemetry/telemetry.h"
 
 #include <limits.h>
-
-#ifdef _TTFI_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define TTFI_TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...) TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ##__VA_ARGS__)
-#define TTFI_TRACE_TIME_SPAN_END(_id) TRACE_TIME_SPAN_END(_id)
-#else
-#define TTFI_TRACE_TIME_SPAN_BEGIN(_id, span_name_fmt_str, ...)
-#define TTFI_TRACE_TIME_SPAN_END(_id)
-#endif
-
-#ifdef _APP_THUNK_TRACE
-#include "source/adk/telemetry/telemetry.h"
-#define APP_THUNK_TRACE_PUSH_FN() TRACE_PUSH_FN()
-#define APP_THUNK_TRACE_PUSH(_name) TRACE_PUSH(_name)
-#define APP_THUNK_TRACE_POP() TRACE_POP()
-#else
-#define APP_THUNK_TRACE_PUSH_FN()
-#define APP_THUNK_TRACE_PUSH(_name)
-#define APP_THUNK_TRACE_POP()
-#endif
 
 #define TAG_APP FOURCC('A', 'P', 'P', '\0')
 
@@ -129,6 +113,9 @@ static struct {
     bool foreground_requested;
     adk_memory_mode_e memory_mode;
     rhi_swap_interval_t swap_interval;
+    bool overridden_swap_interval;
+
+    watchdog_t watchdog;
 
     struct {
         int32_t max_write_bytes_per_second;
@@ -165,10 +152,9 @@ static void init_reporting(const adk_api_t * const api, const runtime_configurat
         heap_init_with_region(&statics.reporting_instance_heap, api->mmap.reporting.region, 8, 0, "reporting_instance_heap");
     }
 
-    the_app.reporting_instance_httpx_client = adk_httpx_client_create(the_app.httpx);
     adk_reporting_init_options_t reporting_options = {
         .heap = &statics.reporting_instance_heap,
-        .httpx_client = the_app.reporting_instance_httpx_client,
+        .httpx_client = the_app.httpx_client,
         .reporter_name = "core",
         .sentry_dsn = config->reporting.sentry_dsn,
         .send_queue_size = config->reporting.send_queue_size,
@@ -191,6 +177,7 @@ bool app_init_subsystems(const runtime_configuration_t runtime_config) {
     ZEROMEM(&the_app);
     the_app.guard_page_mode = runtime_config.guard_page_mode;
     the_app.display_settings._720p_hack = _720p_hack;
+    the_app.runtime_config = runtime_config;
 
     APP_THUNK_TRACE_PUSH("adk_init");
     const adk_api_t * const api = adk_init(
@@ -206,10 +193,17 @@ bool app_init_subsystems(const runtime_configuration_t runtime_config) {
         return false;
     }
     the_app.api = api;
+
     adk_app_metrics_init();
+
     APP_THUNK_TRACE_PUSH("adk_coredump_init");
-    adk_coredump_init(runtime_config.coredump_memory_size);
+    const bool did_init_core_dump = adk_coredump_init((int)runtime_config.coredump_memory_size);
     APP_THUNK_TRACE_POP();
+    if (!did_init_core_dump) {
+        LOG_ERROR(TAG_APP, "Failed to initialize core-dump component");
+        APP_THUNK_TRACE_POP();
+        return false;
+    }
 
     APP_THUNK_TRACE_PUSH("thread_pool_init");
     thread_pool_init(
@@ -217,15 +211,21 @@ bool app_init_subsystems(const runtime_configuration_t runtime_config) {
         api->mmap.default_thread_pool.region,
         the_app.guard_page_mode,
         (runtime_config.thread_pool_thread_count > 0) ? runtime_config.thread_pool_thread_count : default_thread_pool_thread_count,
-        "default-thp",
+        "dflt_thp",
         MALLOC_TAG);
     APP_THUNK_TRACE_POP();
 
     APP_THUNK_TRACE_PUSH("adk_httpx_init");
-    the_app.httpx = adk_httpx_api_create(
+    adk_httpx_init_global_certs(runtime_config.http.httpx_global_certs);
+    adk_httpx_enable_http2((adk_httpx_http2_options){
+        .enabled = runtime_config.http2.enabled,
+        .use_multiplexing = runtime_config.http2.use_multiplexing,
+        .multiplex_wait_for_existing_connection = runtime_config.http2.multiplex_wait_for_existing_connection});
+    the_app.httpx_client = adk_httpx_client_create(
         the_app.api->mmap.httpx.region,
         the_app.api->mmap.httpx_fragment_buffers.region,
         runtime_config.network_pump_fragment_size,
+        runtime_config.network_pump_sleep_period,
         the_app.guard_page_mode,
         adk_httpx_init_normal,
         "app-httpx");
@@ -240,6 +240,7 @@ bool app_init_subsystems(const runtime_configuration_t runtime_config) {
             the_app.api->mmap.curl.region,
             the_app.api->mmap.curl_fragment_buffers.region,
             runtime_config.network_pump_fragment_size,
+            runtime_config.network_pump_sleep_period,
             the_app.guard_page_mode,
             adk_curl_http_init_normal)) {
         LOG_ERROR(TAG_APP, "Failed to initialize HTTP stack");
@@ -256,7 +257,7 @@ bool app_init_subsystems(const runtime_configuration_t runtime_config) {
 
     statics.bus_dispatcher.bus = &the_app.bus;
     statics.bus_dispatcher.run = true;
-    statics.bus_dispatcher.thread_id = sb_create_thread("bus_dispatcher", sb_thread_default_options, bus_dispatcher_thread_proc, &statics.bus_dispatcher, MALLOC_TAG);
+    statics.bus_dispatcher.thread_id = sb_create_thread("m5_bus_disptchr", sb_thread_default_options, bus_dispatcher_thread_proc, &statics.bus_dispatcher, MALLOC_TAG);
     APP_THUNK_TRACE_POP();
 
     APP_THUNK_TRACE_PUSH("log_init");
@@ -264,14 +265,20 @@ bool app_init_subsystems(const runtime_configuration_t runtime_config) {
     log_init(&the_app.bus, CNCBUS_ADDRESS_LOGGER, CNCBUS_SUBNET_MASK_CORE, runtime_config.reporting.capture_logs ? the_app.reporting_instance : NULL);
     APP_THUNK_TRACE_POP();
 
+    APP_THUNK_TRACE_PUSH("event_logger init");
+    event_logger_init(&the_app.bus, CNCBUS_ADDRESS_EVENTS);
+    APP_THUNK_TRACE_POP();
+
     APP_THUNK_TRACE_PUSH("json_deflate_init");
     json_deflate_init(api->mmap.json_deflate.region, the_app.guard_page_mode, &the_app.default_thread_pool);
     APP_THUNK_TRACE_POP();
 
+    APP_THUNK_TRACE_PUSH("adk_ssl_init");
+    adk_mbedtls_init(api->mmap.ssl.region, the_app.guard_page_mode, MALLOC_TAG);
+    APP_THUNK_TRACE_POP();
+
     APP_THUNK_TRACE_PUSH("adk_http_init(ws)");
-    adk_websocket_backend_set(runtime_config.websocket.backend);
-    adk_websocket_backend_set_websocket_config(runtime_config.websocket.config);
-    adk_http_init(adk_http_init_default_cert_path, api->mmap.http2.region, the_app.guard_page_mode, MALLOC_TAG);
+    adk_http_init(adk_http_init_default_cert_path, api->mmap.http2.region, runtime_config.websocket.backend, runtime_config.websocket.config, the_app.guard_page_mode, MALLOC_TAG);
     APP_THUNK_TRACE_POP();
 
     APP_THUNK_TRACE_PUSH("adk_file_set_write_limit");
@@ -291,17 +298,21 @@ bool app_init_subsystems(const runtime_configuration_t runtime_config) {
     }
     publish_metric(metric_type_memory_footprint, &memory_footprint, sizeof(memory_footprint));
 
-    the_app.canvas.max_states = runtime_config.canvas.max_states;
-    the_app.canvas.max_tesselation_steps = runtime_config.canvas.max_tesselation_steps;
-    the_app.canvas.enable_punchthrough_blend_mode_fix = runtime_config.canvas.enable_punchthrough_blend_mode_fix;
-    the_app.canvas.font_atlas.width = runtime_config.canvas.font_atlas.width;
-    the_app.canvas.font_atlas.height = runtime_config.canvas.font_atlas.height;
-
     adk_reporting_instance_push_tag(the_app.reporting_instance, "websocket_backend", runtime_config.websocket.backend == adk_websocket_backend_http2 ? "http2" : "websocket");
     // when running as a native rust app we do not have a wasm interpreter; running demos we do this is due different path of running m5.
     if (get_active_wasm_interpreter()) {
         adk_reporting_instance_push_tag(the_app.reporting_instance, "wasm_interpreter", get_active_wasm_interpreter()->name);
     }
+
+    render_cmd_init((render_cmd_config_t){
+        .rhi_command_diffing = {
+            .enabled = the_app.runtime_config.renderer.rhi_command_diffing.enabled,
+            .verbose = the_app.runtime_config.renderer.rhi_command_diffing.verbose,
+            .tracking = {
+                .enabled = the_app.runtime_config.renderer.rhi_command_diffing.tracking.enabled,
+                .buffer_size = the_app.runtime_config.renderer.rhi_command_diffing.tracking.buffer_size,
+            }}});
+
     statics.subsystems_init = true;
 
     APP_THUNK_TRACE_POP();
@@ -332,8 +343,8 @@ void app_init_main_display(const int display_index, const int display_mode_index
         w,
         &err,
         the_app.api->mmap.render_device.region,
-        32,
-        64 * 1024,
+        (int)the_app.runtime_config.renderer.device.num_cmd_buffers,
+        (int)the_app.runtime_config.renderer.device.cmd_buf_size,
         1,
         the_app.guard_page_mode,
         MALLOC_TAG);
@@ -352,56 +363,48 @@ void app_init_main_display(const int display_index, const int display_mode_index
     cg_set_context(&the_app.canvas.context);
     cg_context_init(
         &the_app.canvas.context,
+        &the_app.canvas.cg_gl,
+        &the_app.default_thread_pool,
+        the_app.render_device,
         (cg_context_memory_initializers_t){
             .high_mem_size = the_app.api->high_mem_reservations.canvas,
             .low_mem_region = the_app.api->mmap.canvas_low_mem.region,
             .font_scratchpad_mem = the_app.api->mmap.canvas_font_scratchpad.region,
             .initial_memory_mode = cg_memory_mode_high,
             .guard_page_mode = the_app.guard_page_mode},
-        (cg_context_dimensions_t){
-            .virtual_dims = {
-                .width = the_app.display_settings._720p_hack ? 1280 : display_result.display_mode.width,
-                .height = the_app.display_settings._720p_hack ? 720 : display_result.display_mode.height,
-            },
-            .display_dims = {
-                .width = display_result.display_mode.width,
-                .height = display_result.display_mode.height,
-            },
-            .font_atlas_dims = {
-                .width = (the_app.canvas.font_atlas.width != 0) ? the_app.canvas.font_atlas.width : display_result.display_mode.width,
-                .height = (the_app.canvas.font_atlas.height != 0) ? the_app.canvas.font_atlas.height : display_result.display_mode.height,
-            }},
-        the_app.canvas.max_states,
-        the_app.canvas.max_tesselation_steps,
-        the_app.canvas.enable_punchthrough_blend_mode_fix,
-        &the_app.canvas.cg_gl,
-        &the_app.default_thread_pool,
-        the_app.render_device,
+        display_result.display_mode,
+        the_app.runtime_config.canvas,
+        the_app.display_settings._720p_hack ? cg_context_display_size_720p : cg_context_display_size_default,
 #ifndef _SHIP
-        (findarg("--log-canvas-image-load", statics.argc, statics.argv) != -1) || (findarg("-I", statics.argc, statics.argv) != -1),
+        (findarg("--log-canvas-image-load", statics.argc, statics.argv) != -1) || (findarg("-I", statics.argc, statics.argv) != -1) ? cg_context_image_time_logging_enabled : cg_context_image_time_logging_disabled,
 #else
-        false,
+        cg_context_image_time_logging_disabled,
 #endif
         MALLOC_TAG);
 
     APP_THUNK_TRACE_POP();
 }
 
-void app_shutdown_main_display() {
+void app_shutdown_main_display(const app_display_shutdown_mode_e window) {
     if (the_app.window) {
         // Drain thread pool to ensure we aren't currently performing operations before tearing down canvas
         thread_pool_drain(&the_app.default_thread_pool);
+        render_device_frame(the_app.render_device);
         flush_render_device(the_app.render_device);
 
         cg_gl_state_free(&the_app.canvas.cg_gl);
         cg_context_free(&the_app.canvas.context, MALLOC_TAG);
-        render_release(&the_app.render_device->resource, MALLOC_TAG);
 
-        sb_destroy_main_window();
+        const int ref_count = render_release(&the_app.render_device->resource, MALLOC_TAG);
+        VERIFY_MSG(ref_count == 0, "Resources not full cleaned up before video restart");
+
+        if (window == app_display_shutdown_mode_destroy_window) {
+            sb_destroy_main_window();
+        }
     }
 }
 
-static void app_shutdown_thunk() {
+void app_shutdown_thunk() {
     APP_THUNK_TRACE_PUSH_FN();
     if (!statics.subsystems_init) {
         LOG_ALWAYS(TAG_APP, "App shutdown (skipped: already shutdown)");
@@ -438,13 +441,17 @@ static void app_shutdown_thunk() {
     // so that any of the remaining shutdowns that try to log something would not report it to the reporting instance.
     log_init(&the_app.bus, CNCBUS_ADDRESS_LOGGER, CNCBUS_SUBNET_MASK_CORE, NULL);
     adk_reporting_instance_free(the_app.reporting_instance);
-    adk_httpx_client_free(the_app.reporting_instance_httpx_client);
+    adk_httpx_client_free(the_app.httpx_client);
     heap_destroy(&statics.reporting_instance_heap, MALLOC_TAG);
 
-    adk_httpx_api_free(the_app.httpx);
+    if (get_default_runtime_configuration().http.httpx_global_certs) {
+        adk_httpx_free_global_certs();
+    }
 
     adk_curl_api_shutdown_all_handles();
     adk_curl_api_shutdown();
+
+    adk_mbedtls_shutdown(MALLOC_TAG);
 
     adk_app_metrics_shutdown();
 
@@ -457,12 +464,15 @@ static void app_shutdown_thunk() {
     sb_join_thread(statics.bus_dispatcher.thread_id);
 
     log_receiver_shutdown(&the_app.bus);
+    event_logger_shutdown(&the_app.bus);
     cncbus_destroy(&the_app.bus);
     log_shutdown();
 
     adk_coredump_shutdown();
 
     adk_shutdown(MALLOC_TAG);
+
+    render_cmd_shutdown();
 
     statics.subsystems_init = false;
 
@@ -492,23 +502,10 @@ void adk_video_restart_begin(void) {
 #ifdef _NVE
     nve_begin_vid_restart();
 #endif // _NVE
-
     const wasm_call_result_t wasm_call_result = get_active_wasm_interpreter()->call_void("app_video_restart_begin");
     verify_wasm_call_and_halt_on_failure(wasm_call_result);
 
-    thread_pool_drain(&the_app.default_thread_pool);
-
-#ifndef _STB_NATIVE
-    ASSERT(the_app.window);
-#endif
-    render_device_frame(the_app.render_device);
-    flush_render_device(the_app.render_device);
-
-    cg_gl_state_free(&the_app.canvas.cg_gl);
-    cg_context_free(&the_app.canvas.context, MALLOC_TAG);
-
-    const int ref_count = render_release(&the_app.render_device->resource, MALLOC_TAG);
-    VERIFY_MSG(ref_count == 0, "Resources not full cleaned up before video restart");
+    app_shutdown_main_display(app_display_shutdown_mode_keep_window);
 }
 
 void adk_video_restart_end(void) {
@@ -577,8 +574,8 @@ void app_start_background() {
     // Stop rendering, Stop rendering threads, tear down rendering resources and devices
 #ifdef _NVE
     nve_begin_vid_restart();
-#endif
-    app_shutdown_main_display();
+#endif // _NVE
+    app_shutdown_main_display(app_display_shutdown_mode_destroy_window);
 }
 
 /*
@@ -600,53 +597,36 @@ bool thunk_check_restart_requested() {
 }
 #endif
 
-void app_display_cleanup() {
-    APP_THUNK_TRACE_PUSH_FN();
-    thread_pool_drain(&the_app.default_thread_pool);
-
-#ifndef _STB_NATIVE
-    if (the_app.window) {
-#else
-    {
-#endif
-        if (the_app.render_device) {
-            cg_gl_state_free(&the_app.canvas.cg_gl);
-            cg_context_free(&the_app.canvas.context, MALLOC_TAG);
-
-            render_release(&the_app.render_device->resource, MALLOC_TAG);
-            the_app.render_device = NULL;
-        }
-    }
-
-    sb_destroy_main_window();
-    the_app.window = NULL;
-
-    APP_THUNK_TRACE_POP();
-}
-
 int adk_main(const int argc, const char * const * const argv) {
-    LOG_ALWAYS(TAG_APP, "startup-adk-version: %s built on %s @ %s", ADK_VERSION_STRING, __DATE__, __TIME__);
+    LOG(log_level_none, TAG_APP, "startup-adk-version: %s built on %s @ %s", ADK_VERSION_STRING, __DATE__, __TIME__);
 
     if (!sb_preinit(argc, argv)) {
         LOG_ERROR(TAG_APP, "sb_preinit() failed");
         return merlin_exit_code_sb_preinit_failure;
     }
 
+    const int telemetry_help = findarg("--telemetry-help", argc, argv);
+    const char * const telemetry_groups = getargarg("--telemetry", argc, argv);
     const char * const telemetry_address = getargarg("--telemetry-server", argc, argv);
 #ifdef _TELEMETRY
+    if (telemetry_help != -1) {
+        telemetry_print_help();
+        return merlin_exit_code_success;
+    }
+
     if (telemetry_address) {
         char address_buff[1024];
         strcpy_s(address_buff, ARRAY_SIZE(address_buff), telemetry_address);
         char * const port_separator = strrchr(address_buff, ':');
         VERIFY_MSG(port_separator, "telemetry (--telemetry-server) address must be specified with the format: `<address>:<port>`\nReceived: [%s]", telemetry_address);
         *port_separator = '\0';
-        telemetry_init(address_buff, atoi(port_separator + 1));
+        telemetry_init(address_buff, atoi(port_separator + 1), telemetry_groups);
     } else {
-        telemetry_init("localhost", 4719);
+        telemetry_init("localhost", 4719, telemetry_groups);
     }
 #else
-    if (telemetry_address) {
-        LOG_ALWAYS(TAG_APP, "Telemetry disabled in build, ignoring `--telemetry-server");
+    if (telemetry_help || telemetry_groups || telemetry_address) {
+        LOG_ALWAYS(TAG_APP, "Telemetry disabled in build!");
     }
 #endif
 
@@ -659,7 +639,19 @@ int adk_main(const int argc, const char * const * const argv) {
 
     int exit_code = merlin_exit_code_success;
 
+    statics.overridden_swap_interval = false;
+
 #if !defined(_SHIP)
+    const char * arg_swap_interval = getargarg("--swap-interval", statics.argc, statics.argv);
+    if (!arg_swap_interval) {
+        arg_swap_interval = getargarg("-n", statics.argc, statics.argv);
+    }
+    if (arg_swap_interval) {
+        statics.swap_interval.interval = atoi(arg_swap_interval);
+        statics.overridden_swap_interval = true;
+        LOG_ALWAYS(TAG_APP, "overridden swap interval [%i]", statics.swap_interval.interval);
+    }
+
     const char * cmdlet_arg = (const char *)getargarg(CMDLET_FLAG, argc, argv);
 
     if (cmdlet_arg != NULL) {
@@ -697,6 +689,30 @@ void adk_set_memory_mode(const adk_memory_mode_e memory_mode) {
     APP_THUNK_TRACE_POP();
 }
 
+static void log_periodic_metrics(const milliseconds_t delta_time, const sb_display_mode_t display_mode) {
+    ++the_app.fps.num_frames;
+    the_app.fps.time.ms += delta_time.ms;
+
+    if (the_app.fps.time.ms >= 1000) {
+        const milliseconds_t ms_per_frame = {the_app.fps.time.ms / the_app.fps.num_frames};
+        LOG_ALWAYS(TAG_APP, "[%4" PRIu32 "] FPS: [%" PRIu32 "ms/frame] (%d:%d)", (ms_per_frame.ms > 0) ? 1000 / ms_per_frame.ms : 1000, ms_per_frame.ms, display_mode.hz, statics.swap_interval.interval);
+
+        render_cmd_log_metrics();
+        render_device_log_resource_tracking(the_app.render_device, the_app.runtime_config.renderer.render_resource_tracking.periodic_logging);
+
+        the_app.fps.time.ms = 0;
+        the_app.fps.num_frames = 0;
+    }
+}
+
+void adk_halt(const char * const message) {
+    if (statics.watchdog.running) {
+        watchdog_shutdown(&statics.watchdog);
+    }
+
+    sb_halt(message);
+}
+
 void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void * arg), void * const arg) {
     milliseconds_t time = {0};
     milliseconds_t last_time = {0};
@@ -711,7 +727,15 @@ void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void 
     }
     APP_THUNK_TRACE_POP();
 
+    const bool log_input_events = manifest_get_runtime_configuration()->log_input_events;
+
     bool did_init_back_buffer = false;
+
+    LOG_INFO(TAG_APP, "Starting a watchdog thread");
+    const runtime_configuration_t * const rt = manifest_get_runtime_configuration();
+    if (rt->watchdog.enabled) {
+        watchdog_start(&statics.watchdog, rt->watchdog.suspend_threshold, rt->watchdog.warning_delay_ms, rt->watchdog.fatal_delay_ms);
+    }
 
 #ifdef APP_THUNK_IGNORE_APP_TERMINATE
     // According to Leia and Vader TRCs, the app can't terminate itself
@@ -735,37 +759,37 @@ void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void 
             bglast_time.ms = current_time_ms;
         }
 
-        TRACE_PUSH_FN();
+        APP_THUNK_TRACE_PUSH_FN();
 
-        TRACE_PUSH("app_event_loop_pretick");
+        APP_THUNK_TRACE_PUSH("app_event_loop_pretick");
 
-        TRACE_PUSH("thread pool callbacks");
+        APP_THUNK_TRACE_PUSH("thread pool callbacks");
         thread_pool_run_completion_callbacks(&the_app.default_thread_pool);
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
-        TRACE_PUSH("adk_curl_run_callbacks");
+        APP_THUNK_TRACE_PUSH("adk_curl_run_callbacks");
         adk_curl_run_callbacks();
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
-        TRACE_PUSH("adk_http_tick");
+        APP_THUNK_TRACE_PUSH("adk_http_tick");
         adk_http_tick();
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
-        TRACE_PUSH("tick_extensions");
+        APP_THUNK_TRACE_PUSH("tick_extensions");
         tick_extensions(NULL);
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
-        TRACE_PUSH("adk_reporting_tick");
+        APP_THUNK_TRACE_PUSH("adk_reporting_tick");
         adk_reporting_tick(the_app.reporting_instance);
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
-        TRACE_PUSH("sb_tick");
+        APP_THUNK_TRACE_PUSH("sb_tick");
         ASSERT_MSG(the_app.event_head == the_app.event_tail, "Not all events handled!");
 
         sb_tick(PEDANTIC_CAST(const adk_event_t **) & the_app.event_head, PEDANTIC_CAST(const adk_event_t **) & the_app.event_tail);
 
         ASSERT(the_app.event_head < the_app.event_tail);
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
         // last event should be time;
         {
@@ -779,13 +803,30 @@ void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void 
 
         --the_app.event_tail;
 
+        if (log_input_events) {
+            APP_THUNK_TRACE_PUSH("sending events to cncbus");
+
+            // Per convention last event is alway a time event, thus this would exclude time events
+            // from sending to the cncbus.
+            const size_t batch_size = the_app.event_tail - the_app.event_head;
+            if (batch_size > 0) {
+                cncbus_msg_t * const cncbus_msg = cncbus_msg_begin_unchecked(&the_app.bus, cncbus_msg_type_event);
+                cncbus_msg_write_checked(cncbus_msg, &batch_size, sizeof(size_t));
+                cncbus_msg_write_checked(cncbus_msg, the_app.event_head, (int)(sizeof(adk_event_t) * batch_size));
+
+                cncbus_send_async(cncbus_msg, CNCBUS_INVALID_ADDRESS, CNCBUS_ADDRESS_EVENTS, CNCBUS_SUBNET_MASK_CORE, NULL);
+            }
+
+            APP_THUNK_TRACE_POP();
+        }
+
         const milliseconds_t delta_time = {time.ms - last_time.ms};
         ASSERT(delta_time.ms <= 1000);
-        TRACE_PUSH("publish fps");
+        APP_THUNK_TRACE_PUSH("publish fps");
         publish_metric(metric_type_delta_time_in_ms, &delta_time, sizeof(delta_time));
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
-        TRACE_PUSH("file rate limit drain");
+        APP_THUNK_TRACE_PUSH("file rate limit drain");
         if (statics.adk_file_rate_limiting.max_write_bytes_per_second > 0) {
             statics.adk_file_rate_limiting.bytes_to_drain += (((float)delta_time.ms / 1000) * (float)statics.adk_file_rate_limiting.max_write_bytes_per_second);
             const int32_t bytes_to_drain = (int32_t)statics.adk_file_rate_limiting.bytes_to_drain;
@@ -795,38 +836,28 @@ void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void 
 
             statics.adk_file_rate_limiting.bytes_to_drain -= (float)bytes_to_drain;
         }
-        TRACE_POP();
+        APP_THUNK_TRACE_POP();
 
         last_time = time;
 
-        ++the_app.frame_count;
-        ++the_app.fps.num_frames;
-        the_app.fps.time.ms += delta_time.ms;
-
-        if (the_app.fps.time.ms >= 1000) {
-            const milliseconds_t ms_per_frame = {the_app.fps.time.ms / the_app.fps.num_frames};
-            LOG_ALWAYS(TAG_APP, "[%4" PRIu32 "] FPS: [%" PRIu32 "ms/frame]", (ms_per_frame.ms > 0) ? 1000 / ms_per_frame.ms : 1000, ms_per_frame.ms);
-            the_app.fps.time.ms = 0;
-            the_app.fps.num_frames = 0;
-        }
-        the_app.elapsed_time.ms += delta_time.ms;
+        log_periodic_metrics(delta_time, display_mode_result.display_mode);
 
 #ifndef _STB_NATIVE
         if (!the_app.window) {
-            TRACE_POP(); // app_event_loop_pretick
-            TRACE_PUSH("app tick");
+            APP_THUNK_TRACE_POP(); // app_event_loop_pretick
+            APP_THUNK_TRACE_PUSH("app tick");
 #ifndef APP_THUNK_IGNORE_APP_TERMINATE
             running =
 #endif
                 tick_fn(time.ms, delta_time.ms / 1000.f, arg);
-            TRACE_POP(); // app tick
-            TRACE_PUSH("app_event_loop_post_tick");
+            APP_THUNK_TRACE_POP(); // app tick
+            APP_THUNK_TRACE_PUSH("app_event_loop_post_tick");
         } else {
 #else
         {
 #endif
             if (!app_check_is_backgrounded()) {
-                TRACE_PUSH("render_cmd write display & viewport");
+                APP_THUNK_TRACE_PUSH("render_cmd write display & viewport");
                 RENDER_ENSURE_WRITE_CMD_STREAM(
                     &the_app.render_device->default_cmd_stream,
                     render_cmd_buf_write_set_display_size,
@@ -844,27 +875,27 @@ void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void 
                     MALLOC_TAG);
 
                 did_init_back_buffer = true;
-                TRACE_POP();
+                APP_THUNK_TRACE_POP();
 
                 if (did_init_back_buffer) {
-                    TRACE_PUSH("cg_context_begin");
+                    APP_THUNK_TRACE_PUSH("cg_context_begin");
                     cg_context_begin(delta_time);
-                    TRACE_POP();
+                    APP_THUNK_TRACE_POP();
 
-                    TRACE_POP(); // app_event_loop_pretick
-                    TRACE_PUSH("app tick");
+                    APP_THUNK_TRACE_POP(); // app_event_loop_pretick
+                    APP_THUNK_TRACE_PUSH("app tick");
 #ifndef APP_THUNK_IGNORE_APP_TERMINATE
                     running =
 #endif
                         tick_fn(time.ms, delta_time.ms / 1000.f, arg);
-                    TRACE_POP();
+                    APP_THUNK_TRACE_POP();
 
-                    TRACE_PUSH("app_event_loop_post_tick");
-                    TRACE_PUSH("cg_context_end");
+                    APP_THUNK_TRACE_PUSH("app_event_loop_post_tick");
+                    APP_THUNK_TRACE_PUSH("cg_context_end");
                     cg_context_end(MALLOC_TAG);
-                    TRACE_POP();
+                    APP_THUNK_TRACE_POP();
 
-                    TRACE_PUSH("render write_present & device_frame");
+                    APP_THUNK_TRACE_PUSH("render write_present & device_frame");
                     RENDER_ENSURE_WRITE_CMD_STREAM(
                         &the_app.render_device->default_cmd_stream,
                         render_cmd_buf_write_present,
@@ -872,7 +903,7 @@ void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void 
                         MALLOC_TAG);
 
                     render_device_frame(the_app.render_device);
-                    TRACE_POP();
+                    APP_THUNK_TRACE_POP();
                 }
             } else {
 #ifndef APP_THUNK_IGNORE_APP_TERMINATE
@@ -882,21 +913,43 @@ void app_event_loop(int (*tick_fn)(const uint32_t abstime, const float dt, void 
                     tick_fn(time.ms, delta_time.ms / 1000.f, arg);
             }
         }
-        TRACE_POP(); // app_event_loop_post_tick
-        TRACE_POP();
+        APP_THUNK_TRACE_POP(); // app_event_loop_post_tick
+        APP_THUNK_TRACE_POP();
 
 #ifndef APP_THUNK_IGNORE_APP_TERMINATE
         if (thunk_check_restart_requested()) {
             running = false;
         }
 #endif
+
+        // Sleep for the 'remainder' of the tick (when RHI command diffing is enabled)
+        if (the_app.runtime_config.renderer.rhi_command_diffing.enabled && statics.swap_interval.interval > 0) {
+            APP_TRACE_PUSH("frame sleep");
+
+            const milliseconds_t tick_duration = {.ms = 1000 / (display_mode_result.display_mode.hz / statics.swap_interval.interval)};
+            if (tick_duration.ms > delta_time.ms) {
+                sb_thread_sleep((milliseconds_t){tick_duration.ms - delta_time.ms});
+            }
+
+            APP_TRACE_POP();
+        }
+
+        APP_TRACE_POP();
+        if (rt->watchdog.enabled) {
+            watchdog_tick(&statics.watchdog);
+        }
         TRACE_TICK();
+    }
+
+    if (rt->watchdog.enabled) {
+        watchdog_shutdown(&statics.watchdog);
     }
 }
 
 static void wasm_dump_heap_usage() {
-    extern heap_t wasm_heap;
-    heap_dump_usage(&wasm_heap);
+    extern bifurcated_heap_t wasm_heap;
+    heap_dump_usage(&wasm_heap.low);
+    heap_dump_usage(&wasm_heap.high);
 }
 
 void app_dump_heaps(const adk_dump_heap_flags_e heaps_to_dump) {
@@ -1078,77 +1131,30 @@ void app_run_callback_once_vi(void * const closure, void * const a0, const int a
     verify_wasm_call_and_halt_on_failure(call_result);
 }
 
-#ifdef _NATIVE_FFI
-runtime_configuration_t get_runtime_configuration(const int argc, const char * const * const argv) {
-    APP_THUNK_TRACE_PUSH_FN();
-
-    runtime_configuration_t bundle = get_default_runtime_configuration();
-    const char * config_filepath = getargarg("-c", argc, argv);
-    if (!config_filepath) {
-        config_filepath = getargarg("--config", argc, argv);
-    }
-    if (!config_filepath) {
-        LOG_INFO(TAG_APP, "No config location specified, defaulting to [%s]", default_bundle_config_file_path);
-        config_filepath = default_bundle_config_file_path;
+bool adk_try_override_min_log_level(const char * const cli_arg_value) {
+    for (uint8_t idx = 0; idx < num_log_levels; idx++) {
+        const log_level_e level = (log_level_e)idx;
+        if (strcasecmp(cli_arg_value, log_get_level_name(level)) == 0) {
+            log_set_min_level(level);
+            return true;
+        }
     }
 
-    adk_system_metrics_t system_metrics;
-    adk_get_system_metrics(&system_metrics);
-    manifest_init(&system_metrics);
-
-    if (!parse_bundle_config(config_filepath, &bundle)) {
-        LOG_ERROR(
-            TAG_APP,
-            "Failed to load configuration file (%s) - expected either the --config $FILE option or a file at %s",
-            config_filepath,
-            default_bundle_config_file_path);
-
-        APP_THUNK_TRACE_POP();
-        exit(EXIT_FAILURE);
+    const int level_value = atoi(cli_arg_value); // on failure returns 0 -- defaults to debug
+    if (level_value >= 0 && level_value < num_log_levels) {
+        log_set_min_level((log_level_e)level_value);
+        return true;
     }
 
-    manifest_shutdown();
-
-    APP_THUNK_TRACE_POP();
-    return bundle;
+    return false;
 }
 
-DLL_EXPORT void ffi_app_run(
-    const int argc,
-    const char * const * const argv,
-    int (*init_fn)(int (*init_thunk_arg)(), const int argc, void * argv),
-    int (*init_thunk_arg)(),
-    int (*tick_fn)(const uint32_t abstime, const float dt, void * const arg),
-    int (*shutdown_fn)(),
-    const rust_callbacks_t * const rust_callbacks,
-    void * const arg) {
-    statics.rust_calls = *rust_callbacks;
-
-    sb_preinit(argc, argv);
-
+#ifdef _NATIVE_FFI
+void adk_thunk_init(const int argc, const char * const * const argv, const rust_callbacks_t * const rust_callbacks) {
     statics.argc = argc;
     statics.argv = argv;
+    statics.rust_calls = *rust_callbacks;
     statics.app_state = adk_app_state_foreground;
-
-    if (!app_init_subsystems(get_runtime_configuration(argc, argv))) {
-        app_shutdown_thunk();
-        return;
-    }
-
-    TTFI_TRACE_TIME_SPAN_END(&time_to_first_interaction.main_timestamp);
-    TTFI_TRACE_TIME_SPAN_BEGIN(&time_to_first_interaction.app_init_timestamp, TIME_TO_FIRST_INTERACTION_STR " app init");
-    time_to_first_interaction.app_init_timestamp = adk_read_millisecond_clock();
-
-    if (!init_fn(init_thunk_arg, argc, (void *)argv)) {
-        app_shutdown_thunk();
-        return;
-    }
-
-    app_event_loop(tick_fn, arg);
-
-    shutdown_fn();
-
-    app_shutdown_thunk();
 }
 #endif
 
@@ -1176,12 +1182,16 @@ bool adk_set_refresh_rate(const int32_t refresh_rate, const int32_t video_fps) {
         return false;
     }
     if (refresh_rate == 0) {
+        if (statics.overridden_swap_interval) {
+            LOG_ALWAYS(TAG_APP, "unlimited refresh rate requested, but swap interval overridden: [%i]", statics.swap_interval.interval);
+        } else {
 #ifndef _SHIP
-        statics.swap_interval.interval = 0;
+            statics.swap_interval.interval = 0;
 #else
-        statics.swap_interval.interval = 1;
+            statics.swap_interval.interval = 1;
 #endif
-        LOG_ALWAYS(TAG_APP, "unlimited refresh rate requested, setting swap interval to: [%i]", statics.swap_interval.interval);
+            LOG_ALWAYS(TAG_APP, "unlimited refresh rate requested, setting swap interval to: [%i]", statics.swap_interval.interval);
+        }
     } else {
         sb_enumerate_display_modes_result_t old_mode;
         sb_enumerate_display_modes(the_app.display_settings.curr_display, the_app.display_settings.curr_display_mode, &old_mode);
@@ -1217,16 +1227,22 @@ bool adk_set_refresh_rate(const int32_t refresh_rate, const int32_t video_fps) {
 
         // NB: If refresh rate isn't an integer multiple of video fps, low video quality is likely.  In that case, the app should choose
         // the highest supported refresh rate.
-        statics.swap_interval.interval = video_fps ? refresh_rate / video_fps : 1;
+        // If refresh_rate is not an integer multiple of video_fps, closest swap interval will be calculated while not exceeding requested video_fps
+        const int new_interval = video_fps ? (1 + ((refresh_rate - 1) / video_fps)) : 1;
 
-        LOG_ALWAYS(TAG_APP, "refresh rate [%i] Hz, video rate [%i] fps, swap interval [%i]", refresh_rate, video_fps, statics.swap_interval.interval);
+        if (statics.overridden_swap_interval) {
+            LOG_ALWAYS(TAG_APP, "refresh rate [%i] Hz, video rate [%i] fps, swap interval [%i] (overridden from %i)", refresh_rate, video_fps, statics.swap_interval.interval, new_interval);
+        } else {
+            statics.swap_interval.interval = new_interval;
+            LOG_ALWAYS(TAG_APP, "refresh rate [%i] Hz, video rate [%i] fps, swap interval [%i]", refresh_rate, video_fps, statics.swap_interval.interval);
+        }
     }
 
     return true;
 }
 
 void adk_log_msg(const char * const msg) {
-    LOG_ALWAYS(TAG_APP, msg);
+    LOG(log_level_app, TAG_APP, "%s", msg);
 }
 
 int32_t read_events(void * const evbuffer, int32_t bufsize, int32_t sizeof_event) {
@@ -1242,9 +1258,47 @@ int32_t read_events(void * const evbuffer, int32_t bufsize, int32_t sizeof_event
     return read_count;
 }
 
-heap_metrics_t adk_get_wasm_heap_usage() {
-    extern heap_t wasm_heap;
-    return heap_get_metrics(&wasm_heap);
+heap_metrics_t adk_get_heap_usage(const adk_heap_e heap) {
+    switch (heap) {
+        case adk_heap_runtime:
+            return sb_platform_get_heap_metrics();
+        case adk_heap_rhi_and_renderer:
+            return render_get_heap_metrics(the_app.render_device);
+        case adk_heap_canvas_low:
+            return cg_context_get_heap_metrics_low(&the_app.canvas.context);
+        case adk_heap_canvas_high:
+            return cg_context_get_heap_metrics_high(&the_app.canvas.context);
+        case adk_heap_http_curl:
+            return adk_curl_get_heap_metrics();
+        case adk_heap_http2:
+            return adk_http_get_heap_metrics();
+        case adk_heap_json_deflate:
+            return json_deflate_get_heap_metrics();
+        case adk_heap_wasm_low:
+#ifdef _NATIVE_FFI
+            if (statics.rust_calls.drop_callback) {
+                return (heap_metrics_t){0};
+            } else
+#endif
+            {
+                extern bifurcated_heap_t wasm_heap;
+                return heap_get_metrics(&wasm_heap.low);
+            }
+        case adk_heap_wasm_high:
+#ifdef _NATIVE_FFI
+            if (statics.rust_calls.drop_callback) {
+                return (heap_metrics_t){0};
+            } else
+#endif
+            {
+                extern bifurcated_heap_t wasm_heap;
+                return heap_get_metrics(&wasm_heap.high);
+            }
+    }
+
+    TRAP("The specified heap cannot not be queried.");
+
+    return (heap_metrics_t){0};
 }
 
 void adk_notify_app_status(const sb_app_notify_e notify) {

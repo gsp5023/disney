@@ -18,6 +18,11 @@ void sb_unformatted_debug_write_line(const char * const msg) {
     NOT_IMPLEMENTED_EX;
 }
 
+sb_network_type_e sb_get_network_type() {
+    NOT_IMPLEMENTED_EX;
+    return sb_network_type_unknown;
+}
+
 void sb_unformatted_debug_write(const char * const msg) {
     UNUSED(msg);
 

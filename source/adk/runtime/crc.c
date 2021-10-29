@@ -419,13 +419,13 @@ uint64_t crc_64_we(const unsigned char * input_str, size_t num_bytes) {
 } /* crc_64_we */
 
 /*
-* uint64_t update_crc_64( uint64_t crc, unsigned char c );
+* uint64_t update_crc_64_ecma( uint64_t crc, unsigned char c );
 *
-* The function update_crc_64() calculates a new CRC-64 value based on the
+* The function update_crc_64_ecma() calculates a new CRC-64 value based on the
 * previous value of the CRC and the next byte of the data to be checked.
 */
 
-uint64_t update_crc_64(uint64_t crc, unsigned char c) {
+uint64_t update_crc_64_ecma(uint64_t crc, unsigned char c) {
     return (crc << 8) ^ crc_tab64[((crc >> 56) ^ (uint64_t)c) & 0x00000000000000FFull];
 
 } /* update_crc_64 */

@@ -31,7 +31,9 @@ static void wamr_unit_test(void ** state) {
     wamr_register_linker(wamr_link_adk);
     wamr_register_linker(wamr_link_tests);
 
-    wamr->load(sb_app_root_directory, "target/wasm32-unknown-unknown/release/wasm_tests.wasm", 0x03000000);
+    const uint32_t wasm_low_heap_size = 4 * 1024 * 1024;
+    const uint32_t wasm_high_heap_size = 44 * 1024 * 1024;
+    wamr->load(sb_app_root_directory, "target/wasm32-unknown-unknown/release/wasm_tests.wasm", wasm_low_heap_size, wasm_high_heap_size, 100 * 1024);
 
     const wasm_call_result_t ffi_test = wamr->call_i("exercise", 0);
     VERIFY_MSG(!ffi_test.status, ffi_test.details);

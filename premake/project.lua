@@ -11,7 +11,6 @@ local p = require("premake")
 local cwd = os.getcwd()
 os.chdir(cwd.."/..")
 M5_ROOT = os.getcwd()
---print(M5_ROOT)
 os.chdir(cwd)
 
 local function main(settings)
@@ -27,7 +26,6 @@ local function main(settings)
 	settings = settings or {}
 	  
 	ROOT = settings.root or M5_ROOT
-	--print(ROOT)
 	PROJECT_NAME = settings.project_name or "adk-m5"
 	
 	RELPATH = string.sub(M5_ROOT, string.len(ROOT)+2)
@@ -35,8 +33,6 @@ local function main(settings)
 	if RELPATH ~= "" then
 		RELPATH = RELPATH.."/"
 	end
-	
-	--print(RELPATH)
 	
 	SUBGROUP = nil
 	if (settings.generators or {}).projects then
@@ -55,7 +51,7 @@ local function main(settings)
 	location(BUILD_DIR)
 	targetdir(BUILD_DIR.."/"..TARGET_DIR)
 	language "c"
-	cdialect "c99"
+	cdialect "gnu99"
 	systemversion "latest"
 	exceptionhandling "SEH"
 	characterset "ascii"
@@ -101,7 +97,10 @@ local function main(settings)
 		end
 		for _,v in pairs(WORKSPACE.projects) do
 			p.api.scope.current = v
-			if v["tags"]["adk-link-opt-out"] == nil then
+			if v["tags"]["adk-platform"] ~= nil then
+				modules.optional.link_platform(v)
+			elseif v["tags"]["adk-link-opt-out"] == nil then
+				modules.optional.link_platform(v)
 				modules.optional.link(v)
 			end
 		end

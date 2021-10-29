@@ -9,13 +9,11 @@
 #include "source/adk/http/adk_httpx.h"
 #include "source/adk/http/private/adk_curl_shared.h"
 
-void adk_httpx_network_pump_init(adk_httpx_api_t * const api, const mem_region_t region, const size_t fragment_size, const system_guard_page_mode_e guard_page_mode);
+void adk_httpx_network_pump_init(adk_httpx_client_t * const client, const mem_region_t region, const size_t fragment_size, const uint32_t sleep_period, const system_guard_page_mode_e guard_page_mode);
 
-void adk_httpx_network_pump_shutdown(adk_httpx_network_pump_t * const network_pump);
+void adk_httpx_network_pump_shutdown(adk_httpx_network_pump_t * const pump);
 
-void adk_httpx_network_pump_add_request(adk_httpx_network_pump_t * const pump, adk_httpx_handle_t * const handle);
-
-void adk_httpx_network_pump_delete_enqued_requests(adk_httpx_network_pump_t * const pump, const adk_httpx_client_t * const client);
+void adk_httpx_network_pump_add_request(adk_httpx_handle_t * const handle);
 
 typedef enum adk_httpx_network_pump_fragment_type_e {
     adk_httpx_network_pump_header_fragment,
@@ -32,4 +30,4 @@ struct adk_httpx_network_pump_fragment_t {
     struct adk_httpx_network_pump_fragment_t * next;
 };
 
-void adk_httpx_network_pump_fragments_free(adk_httpx_network_pump_t * const network_pump, adk_httpx_network_pump_fragment_t * const head, adk_httpx_network_pump_fragment_t * const tail);
+void adk_httpx_network_pump_fragments_free(adk_httpx_network_pump_t * const pump, adk_httpx_network_pump_fragment_t * const head, adk_httpx_network_pump_fragment_t * const tail);

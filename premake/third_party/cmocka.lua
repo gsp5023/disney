@@ -28,7 +28,7 @@ third_party_project "cmocka"
 				"HAVE_SIGNAL_H"
 			}
 
-		filter {"action:gmake*", "toolset:not gcc-4.5.4-2.9-brcm"}
+		filter {"action:gmake*", "toolset:not gcc-4.8-1.7-brcm"}
 			disablewarnings "int-conversion"
 		filter "action:gmake*"
 			buildoptions "-include setjmp.h"

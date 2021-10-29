@@ -31,6 +31,10 @@ json_deflate_tests.c
 #include "source/adk/wamr/wamr_link.h"
 #endif // _WAMR
 
+#if _RESTRICTED && !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
+#define HAS_DEFLATE_GEN 1
+#endif
+
 wasm_interpreter_t * wasm;
 
 enum {
@@ -184,7 +188,6 @@ static void run_wasm_test_code_event_loop(void) {
 
         last_time = time;
 
-        ++the_app.frame_count;
         ++the_app.fps.num_frames;
         the_app.fps.time.ms += delta_time.ms;
 
@@ -195,15 +198,15 @@ static void run_wasm_test_code_event_loop(void) {
             the_app.fps.num_frames = 0;
         }
 
-        the_app.elapsed_time.ms += delta_time.ms;
-
         const wasm_call_result_t tick_call_result = wasm->call_ri_ifp("app_tick", &running, time.ms, delta_time.ms / 1000.f, NULL);
         VERIFY_MSG(!tick_call_result.status, tick_call_result.details);
     }
 }
 
 static void run_wasm(const char * const artifact_name, int argc, const char ** argv) {
-    wasm_memory_region_t wasm_memory = wasm->load(sb_app_root_directory, artifact_name, 80 * 1024 * 1024);
+    const uint32_t wasm_low_heap_size = 16 * 1024 * 1024;
+    const uint32_t wasm_high_heap_size = 80 * 1024 * 1024;
+    wasm_memory_region_t wasm_memory = wasm->load(sb_app_root_directory, artifact_name, wasm_low_heap_size, wasm_high_heap_size, 100 * 1024);
     VERIFY_MSG(wasm_memory.wasm_mem_region.region.consted.ptr != NULL, "deflate: Failed to load wasm app: %s", artifact_name);
 
     uint32_t init_ret = 0;
@@ -223,7 +226,8 @@ static void run_wasm_test_code_async(
     const char * const artifact_name,
     const char * const url,
     const char * const test_name,
-    const char * const parallel_param) {
+    const char * const parallel_param,
+    const bool perf) {
     if (url != NULL) {
         const char * argv[] = {"--name", test_name, "--from", url, "--parallel", parallel_param};
         run_wasm(artifact_name, ARRAY_SIZE(argv), argv);
@@ -231,11 +235,20 @@ static void run_wasm_test_code_async(
 // TODO: Uncomment once Leia/Vader have httpx support
 #if !defined(_LEIA) && !defined(_VADER)
         {
-            // Also: test HTTPx deflate
+            // Test HTTPx request deflate
             const char * httpx_argv[] = {"--name", test_name, "--from", url, "--parallel", parallel_param, "--httpx"};
             run_wasm(artifact_name, ARRAY_SIZE(httpx_argv), httpx_argv);
         }
+
+        {
+            // Test HTTPx response deflate
+            const char * httpx_argv[] = {"--name", test_name, "--from", url, "--parallel", parallel_param, "--httpx-deflate-response"};
+            run_wasm(artifact_name, ARRAY_SIZE(httpx_argv), httpx_argv);
+        }
 #endif
+    } else if (perf) {
+        const char * argv[] = {"--name", test_name, "--perf"};
+        run_wasm(artifact_name, ARRAY_SIZE(argv), argv);
     } else {
         const char * argv[] = {"--name", test_name, "--parallel", parallel_param};
         run_wasm(artifact_name, ARRAY_SIZE(argv), argv);
@@ -248,10 +261,13 @@ static void json_deflate_test_wasm(
     const char * const wasm_bytecode_file,
     const char * const url,
     const char * const test_name,
-    const char * const parallel_param) {
-    run_wasm_test_code_async(wasm_bytecode_file, url, test_name, parallel_param);
+    const char * const parallel_param,
+    const bool perf) {
+    run_wasm_test_code_async(wasm_bytecode_file, url, test_name, parallel_param, perf);
 
-    assert_text_files_equal(sb_app_config_directory, output_wasm_file, reference_output_file);
+    if (!perf) {
+        assert_text_files_equal(sb_app_config_directory, output_wasm_file, reference_output_file);
+    }
 }
 
 static void json_deflate_test_native(
@@ -259,18 +275,21 @@ static void json_deflate_test_native(
     const char * const reference_output_file,
     const char * const url,
     const char * const test_name,
-    const char * const parallel_param) {
-#if !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
+    const char * const parallel_param,
+    const bool perf) {
+#ifdef HAS_DEFLATE_GEN
 
     char system_args[json_deflate_max_string_length] = {0};
     strcpy_s(
         system_args,
         sizeof(system_args),
-        "cargo run --manifest-path tests/rust_json_deflate/Cargo.toml --features test -- --bundle tests/rust_json_deflate/json_deflate_bundle.json");
+        "cargo run --manifest-path tests/rust_json_deflate/Cargo.toml --features test ");
 
 #ifdef NDEBUG
-    strcat_s(system_args, sizeof(system_args), " --release");
+    strcat_s(system_args, sizeof(system_args), " --release ");
 #endif
+
+    strcat_s(system_args, sizeof(system_args), " -- --bundle tests/rust_json_deflate/json_deflate_bundle.json ");
 
     strcat_s(system_args, sizeof(system_args), " -- --headless");
 
@@ -285,12 +304,18 @@ static void json_deflate_test_native(
         strcat_s(system_args, sizeof(system_args), url);
     }
 
+    if (perf) {
+        strcat_s(system_args, sizeof(system_args), " --perf ");
+    }
+
     assert_int_equal(system(system_args), 0);
 
-    assert_text_files_equal(sb_app_config_directory, output_native_file, reference_output_file);
+    if (!perf) {
+        assert_text_files_equal(sb_app_config_directory, output_native_file, reference_output_file);
+    }
 
     if (url) {
-        // Also: test HTTPx system with deflate from URL
+        // Test HTTPx system deflating request and response from URL
 
         // First, delete previous output file
         sb_delete_file(sb_app_config_directory, output_native_file);
@@ -298,11 +323,19 @@ static void json_deflate_test_native(
         strcat_s(system_args, sizeof(system_args), " --httpx");
         assert_int_equal(system(system_args), 0);
         assert_text_files_equal(sb_app_config_directory, output_native_file, reference_output_file);
+
+        strcat_s(system_args, sizeof(system_args), "-deflate-response");
+        assert_int_equal(system(system_args), 0);
+        assert_text_files_equal(sb_app_config_directory, output_native_file, reference_output_file);
+
+        if (!perf) {
+            assert_text_files_equal(sb_app_config_directory, output_native_file, reference_output_file);
+        }
     }
 #endif
 }
 
-#if !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
+#ifdef HAS_DEFLATE_GEN
 static void infer_test_case_with_options(
     const char * const test_case,
     json_deflate_schema_type_group_t * const groups,
@@ -332,20 +365,20 @@ static void deflate_test_case_with_options(const char * const test_case, json_de
     JD_TEST_CASE_FILE(binary_schema_c_file, "testcases", "schema.dat", test_case);
     JD_TEST_CASE_FILE(rust_file, "testcases", "schema.rs", test_case);
 
-#if !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
+#ifdef HAS_DEFLATE_GEN
     options.directory = "schema.dat";
     json_deflate_prepare_schema(json_schema_file, binary_schema_c_file, rust_file, &options);
 #endif
 }
 
-static void deflate_test_case_with_invalid_input() {
+static void generate_test_case_with_invalid_input() {
     const char * const test_case = "all";
 
     JD_TEST_CASE_FILE(json_schema_file, "testcases-parse", "schema.json", test_case);
     JD_TEST_CASE_FILE(binary_schema_native_file, "testcases-parse", "schema-bare.dat", test_case);
     JD_TEST_CASE_FILE(rust_file, "testcases-parse", "schema.rs", test_case);
 
-#if !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
+#ifdef HAS_DEFLATE_GEN
     json_deflate_schema_options_t options = {0};
     options.root_name = "Root";
     options.directory = "schema.dat";
@@ -382,28 +415,28 @@ static void test_invalid_input() {
     json_deflate_free(layout.ptr);
 }
 
-static void deflate_test_case_no_key_conversion(const char * const test_case) {
+static void generate_test_case_without_key_conversion(const char * const test_case) {
     json_deflate_schema_options_t options = {0};
     options.root_name = "Root";
     options.skip_key_conversion = true;
     deflate_test_case_with_options(test_case, options);
 }
 
-static void deflate_test_case(const char * const test_case) {
+static void generate_test_case(const char * const test_case) {
     json_deflate_schema_options_t options = {0};
     options.root_name = "Root";
     options.skip_key_conversion = false;
     deflate_test_case_with_options(test_case, options);
 }
 
-static void deflate_test_case_with_slice(const char * const test_case, const char * const slice) {
+static void generate_test_case_with_slice(const char * const test_case, const char * const slice) {
     json_deflate_schema_options_t options = {0};
     options.root_name = "Root";
     options.slice = slice;
     deflate_test_case_with_options(test_case, options);
 }
 
-#if !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
+#ifdef HAS_DEFLATE_GEN
 static void test_infer_groups(void ** state) {
     json_deflate_schema_type_group_t groups[1] = {0};
     groups->name = "Alpha";
@@ -543,99 +576,108 @@ static void test_deflate_by_name_with_options(
     const char * const name,
     const json_deflate_run_tests_for_e run_tests_for,
     const char * const url,
-    const char * const parallel_param) {
+    const char * const parallel_param,
+    const bool perf) {
     // NOTE: output paths are hard-coded in rust_json_deflate Rust app
     const char output_file_wasm[] = "tests/rust_json_deflate/json/output-wasm.txt";
     const char output_file_native[] = "tests/rust_json_deflate/json/output-native.txt";
 
+#ifndef NDEBUG
     const char wasm_bytecode_file[] = "target/wasm32-unknown-unknown/debug/rust_json_deflate.wasm";
+#else
+    const char wasm_bytecode_file[] = "target/wasm32-unknown-unknown/release/rust_json_deflate.wasm";
+#endif
 
     JD_TEST_CASE_FILE(reference_output_file, "testcases", "output-reference.txt", name);
 
     if (run_tests_for & json_deflate_run_tests_for_wasm) {
-        json_deflate_test_wasm(output_file_wasm, reference_output_file, wasm_bytecode_file, url, name, parallel_param);
+        json_deflate_test_wasm(output_file_wasm, reference_output_file, wasm_bytecode_file, url, name, parallel_param, perf);
     }
 
     if (run_tests_for & json_deflate_run_tests_for_native) {
-        json_deflate_test_native(output_file_native, reference_output_file, url, name, parallel_param);
+        json_deflate_test_native(output_file_native, reference_output_file, url, name, parallel_param, perf);
     }
 }
 
-static void test_deflate_by_name(const char * const name) {
-    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, NULL, "1");
+static void run_test_case(const char * const name) {
+    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, NULL, "1", false);
 }
 
-static void test_deflate_by_name_on_native(const char * const name) {
-    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_native, NULL, "1");
+static void run_test_case_native_only(const char * const name) {
+    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_native, NULL, "1", false);
 }
 
-static void test_deflate_by_name_for_url(const char * const name, const char * const url) {
-    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, url, "1");
+static void run_test_case_from_url(const char * const name, const char * const url) {
+    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, url, "1", false);
 }
 
-static void test_parallel_deflate_by_name(const char * const name) {
-    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, NULL, parallel_deflate_count_param);
+static void run_test_case_in_parallel(const char * const name) {
+    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, NULL, parallel_deflate_count_param, false);
 }
 
-static void test_parallel_deflate_by_name_for_url(const char * const name, const char * const url) {
-    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, url, parallel_deflate_count_param);
+static void run_test_case_from_url_in_parallel(const char * const name, const char * const url) {
+    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, url, parallel_deflate_count_param, false);
 }
 
-static void test_deflate_test_cases(void ** state) {
+static void run_perf_test_case(const char * const name) {
+    test_deflate_by_name_with_options(name, json_deflate_run_tests_for_both, NULL, "1", true);
+}
+
+static void run_all_test_cases(void ** state) {
     // To test deflation - generated artifacts are processed via Rust code (see rust_json_deflate)
     // - the output of the deflation is written to a file via Rust and verified here via asserts
 
-    test_deflate_by_name("booleans");
-    test_deflate_by_name("integers");
-    test_deflate_by_name("numbers");
-    test_deflate_by_name("strings");
-    test_deflate_by_name("strings-alt");
-    test_deflate_by_name("strings-alt-2");
-    test_deflate_by_name("mismatch");
-    test_deflate_by_name("keywords");
-    test_deflate_by_name("snake_keys");
-    test_deflate_by_name("variants");
-    test_deflate_by_name("array-in-variant");
-    test_deflate_by_name("object-in-variant");
-    test_deflate_by_name("results");
-    test_deflate_by_name("arrays");
-    test_deflate_by_name("zst");
-    test_deflate_by_name("groups");
-    test_deflate_by_name("groups-inner");
-    test_deflate_by_name("names");
-    test_deflate_by_name("colon");
-    test_deflate_by_name("field-name");
-    test_deflate_by_name("tag-in-boolean");
-    test_deflate_by_name("tag-in-vector");
-    test_deflate_by_name("tag-in-boolean-or-vector");
-    test_deflate_by_name("tag-in-option");
-    test_deflate_by_name("tag-pool-1");
-    test_deflate_by_name("wrong-enum");
-    test_deflate_by_name("map");
-    test_deflate_by_name("top-array");
-    test_deflate_by_name("top-map");
-    test_deflate_by_name("huge");
-    test_deflate_by_name("real");
-    test_deflate_by_name("real-2");
-    test_deflate_by_name("real-2-groupped");
-    test_deflate_by_name("real-2-groupped-alt");
-    test_deflate_by_name("real-2-groupped-alt-2");
-    test_deflate_by_name("real-3");
+    run_test_case("booleans");
+    run_test_case("integers");
+    run_test_case("numbers");
+    run_test_case("strings");
+    run_test_case("strings-alt");
+    run_test_case("strings-alt-2");
+    run_test_case("mismatch");
+    run_test_case("keywords");
+    run_test_case("snake_keys");
+    run_test_case("variants");
+    run_test_case("array-in-variant");
+    run_test_case("object-in-variant");
+    run_test_case("results");
+    run_test_case("arrays");
+    run_test_case("zst");
+    run_test_case("groups");
+    run_test_case("groups-collections");
+    run_test_case("groups-inner");
+    run_test_case("names");
+    run_test_case("colon");
+    run_test_case("field-name");
+    run_test_case("tag-in-boolean");
+    run_test_case("tag-in-vector");
+    run_test_case("tag-in-boolean-or-vector");
+    run_test_case("tag-in-option");
+    run_test_case("tag-pool-1");
+    run_test_case("wrong-enum");
+    run_test_case("map");
+    run_test_case("top-array");
+    run_test_case("top-map");
+    run_test_case("huge");
+    run_test_case("real");
+    run_test_case("real-2");
+    run_test_case("real-2-groupped");
+    run_test_case("real-2-groupped-alt");
+    run_test_case("real-2-groupped-alt-2");
+    run_test_case("real-3");
+    run_test_case_native_only("real-4"); // NOTE: wasm3 fails to run this test due to the size of the `println!` formatting code
+    run_test_case("keys");
+    run_test_case("slice");
 
-    // NOTE: wasm3 fails to run this test due to the size of the `println!` formatting code
-    test_deflate_by_name_on_native("real-4");
-
-    test_deflate_by_name("keys");
-    test_deflate_by_name("slice");
-
-    test_deflate_by_name_for_url("real-2-groupped-alt-3", "https://prod-static.disney-plus.net/fed-container-configs/prod/connected/connected/3.0.2/output.json");
+    run_test_case_from_url("real-2-groupped-alt-3", "https://prod-static.disney-plus.net/fed-container-configs/prod/connected/connected/3.0.2/output.json");
 
     test_invalid_input();
 
-    test_parallel_deflate_by_name("real");
-    test_parallel_deflate_by_name("real-2");
-    test_parallel_deflate_by_name("real-3");
-    test_parallel_deflate_by_name_for_url("real-2-groupped-alt-3", "https://prod-static.disney-plus.net/fed-container-configs/prod/connected/connected/3.0.2/output.json");
+    run_test_case_in_parallel("real");
+    run_test_case_in_parallel("real-2");
+    run_test_case_in_parallel("real-3");
+    run_test_case_from_url_in_parallel("real-2-groupped-alt-3", "https://prod-static.disney-plus.net/fed-container-configs/prod/connected/connected/3.0.2/output.json");
+
+    run_perf_test_case("real-3");
 }
 
 static int test_json_deflate_setup(void ** state) {
@@ -643,7 +685,7 @@ static int test_json_deflate_setup(void ** state) {
     statics.thread_pool_region.size = 256 * 1024;
     statics.thread_pool_region.ptr = malloc(statics.thread_pool_region.size);
     TRAP_OUT_OF_MEMORY(statics.thread_pool_region.ptr);
-    statics.thread_pool = thread_pool_emplace_init(statics.thread_pool_region, thread_pool_max_threads, "jdf_thr_pol_", MALLOC_TAG);
+    statics.thread_pool = thread_pool_emplace_init(statics.thread_pool_region, thread_pool_max_threads, "json_pool_", MALLOC_TAG);
 
     statics.json_deflate_region.size = 24 * 1024 * 1024;
     statics.json_deflate_region.ptr = malloc(statics.json_deflate_region.size);
@@ -655,9 +697,8 @@ static int test_json_deflate_setup(void ** state) {
 
     statics.fragment_buffers_region.size = 4 * 1024 * 1024;
     statics.fragment_buffers_region.ptr = malloc(statics.fragment_buffers_region.size);
-    const uint32_t fragment_size = 4 * 1024;
     TRAP_OUT_OF_MEMORY(statics.fragment_buffers_region.ptr);
-    adk_curl_api_init(statics.curl_region, statics.fragment_buffers_region, fragment_size, unit_test_guard_page_mode, adk_curl_http_init_normal);
+    adk_curl_api_init(statics.curl_region, statics.fragment_buffers_region, network_pump_fragment_size, network_pump_sleep_period, unit_test_guard_page_mode, adk_curl_http_init_normal);
 
 #ifdef _WASM3
     if (!wasm) {
@@ -693,53 +734,58 @@ static int test_json_deflate_teardown(void ** state) {
     return 0;
 }
 
-static void generate(void ** state) {
+static void generate_all_test_cases(void ** state) {
 #if !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
-    deflate_test_case("booleans");
-    deflate_test_case("integers");
-    deflate_test_case("numbers");
-    deflate_test_case("strings");
-    deflate_test_case("strings-alt");
-    deflate_test_case("strings-alt-2");
-    deflate_test_case("mismatch");
-    deflate_test_case("keywords");
-    deflate_test_case("snake_keys");
-    deflate_test_case("variants");
-    deflate_test_case("array-in-variant");
-    deflate_test_case("object-in-variant");
-    deflate_test_case("results");
-    deflate_test_case("arrays");
-    deflate_test_case("zst");
-    deflate_test_case("groups");
-    deflate_test_case("groups-inner");
-    deflate_test_case("names");
-    deflate_test_case("colon");
-    deflate_test_case("field-name");
-    deflate_test_case("tag-in-boolean");
-    deflate_test_case("tag-in-vector");
-    deflate_test_case("tag-in-boolean-or-vector");
-    deflate_test_case("tag-in-option");
-    deflate_test_case("tag-pool-1");
-    deflate_test_case("wrong-enum");
-    deflate_test_case("map");
-    deflate_test_case("top-array");
-    deflate_test_case("top-map");
-    deflate_test_case("huge");
-    deflate_test_case("real");
-    deflate_test_case("real-2");
-    deflate_test_case("real-2-groupped");
-    deflate_test_case("real-2-groupped-alt");
-    deflate_test_case("real-2-groupped-alt-2");
-    deflate_test_case("real-2-groupped-alt-3");
-    deflate_test_case("real-3");
-    deflate_test_case("real-4");
+    generate_test_case("booleans");
+    generate_test_case("integers");
+    generate_test_case("numbers");
+    generate_test_case("strings");
+    generate_test_case("strings-alt");
+    generate_test_case("strings-alt-2");
+    generate_test_case("mismatch");
+    generate_test_case("keywords");
+    generate_test_case("snake_keys");
+    generate_test_case("variants");
+    generate_test_case("array-in-variant");
+    generate_test_case("object-in-variant");
+    generate_test_case("results");
+    generate_test_case("arrays");
+    generate_test_case("zst");
+    generate_test_case("groups");
+    generate_test_case("groups-collections");
+    generate_test_case("groups-inner");
+    generate_test_case("names");
+    generate_test_case("colon");
+    generate_test_case("field-name");
+    generate_test_case("tag-in-boolean");
+    generate_test_case("tag-in-vector");
+    generate_test_case("tag-in-boolean-or-vector");
+    generate_test_case("tag-in-option");
+    generate_test_case("tag-pool-1");
+    generate_test_case("wrong-enum");
+    generate_test_case("map");
+    generate_test_case("top-array");
+    generate_test_case("top-map");
+    generate_test_case("huge");
+    generate_test_case("real");
+    generate_test_case("real-2");
+    generate_test_case("real-2-groupped");
+    generate_test_case("real-2-groupped-alt");
+    generate_test_case("real-2-groupped-alt-2");
+    generate_test_case("real-2-groupped-alt-3");
+    generate_test_case("real-3");
+    generate_test_case("real-4");
 
-    deflate_test_case_no_key_conversion("keys");
-    deflate_test_case_with_slice("slice", "/i/am/root");
+    generate_test_case_without_key_conversion("keys");
+    generate_test_case_with_slice("slice", "/i/am/root");
 
-    deflate_test_case_with_invalid_input();
+    generate_test_case_with_invalid_input();
 
+#ifndef NDEBUG
     assert_int_equal(system("cargo build --manifest-path tests/rust_json_deflate/Cargo.toml --features test --target wasm32-unknown-unknown"), 0);
+#else
+    assert_int_equal(system("cargo build --manifest-path tests/rust_json_deflate/Cargo.toml --features test --target wasm32-unknown-unknown --release"), 0);
+#endif // !NDEBUG
 #endif
 }
 
@@ -747,15 +793,15 @@ int test_json_deflate() {
     // Specifying the --artifacts CLI option will run only the `generate` test suite (which generates the deflate artifacts for testing)
     const bool artifacts_only = test_findarg("--artifacts") != -1;
     if (artifacts_only) {
-        const struct CMUnitTest tests[] = {cmocka_unit_test(generate)};
+        const struct CMUnitTest tests[] = {cmocka_unit_test(generate_all_test_cases)};
         return cmocka_run_group_tests(tests, test_json_deflate_setup, test_json_deflate_teardown);
     }
 
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(generate),
-        cmocka_unit_test(test_deflate_test_cases),
+        cmocka_unit_test(generate_all_test_cases),
+        cmocka_unit_test(run_all_test_cases),
 
-#if !(defined(_STB_NATIVE) || defined(_RPI) || defined(_CONSOLE_NATIVE))
+#ifdef HAS_DEFLATE_GEN
         cmocka_unit_test(test_infer_groups),
         cmocka_unit_test(test_infer_groups_wildcard),
         cmocka_unit_test(test_infer_groups_inner),

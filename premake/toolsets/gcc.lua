@@ -45,6 +45,3 @@ filter "toolset:*gcc*"
 	disablewarnings "missing-braces"
 	disablewarnings "missing-field-initializers"
 	disablewarnings "unused-variable"
-
-filter {"language:c", "toolset:*gcc*"}
-	buildoptions "-std=gnu99"

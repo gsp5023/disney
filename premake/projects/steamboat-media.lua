@@ -8,8 +8,6 @@ if(player_is_any("nve-prebuilt") and _OPTIONS["stub-steamboat-media"]) then
     project ("steamboat-media", "source/adk/steamboat")
         kind "staticlib"
 
-        cppdialect "c++11"
-
         --header files will be locally sourced in customer repositories
         includedirs "extern/dss-nve/code/steamboat/include"
         files "**.h"

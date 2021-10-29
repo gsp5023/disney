@@ -49,9 +49,12 @@ static void * wasm3_dispatch(
     const wasm_sig_mask sig,
     uintptr_t func);
 
-#define FFI_THUNK(_sig, _ret, _name, _args, _body)                                                           \
-    static const void * TOKENPASTE(_wasm3_prethunk_, _name)(IM3Runtime runtime, uint64_t * sp, void * mem) { \
-        return wasm3_dispatch(runtime, sp, mem, #_name, _sig, (uintptr_t)TOKENPASTE(_wasm3_thunk_, _name));  \
+#define FFI_THUNK(_sig, _ret, _name, _args, _body)                                                                        \
+    static const void * TOKENPASTE(_wasm3_prethunk_, _name)(IM3Runtime runtime, uint64_t * sp, void * mem) {              \
+        WASM_FFI_TRACE_PUSH("ffi_" #_name);                                                                               \
+        void * const value = wasm3_dispatch(runtime, sp, mem, #_name, _sig, (uintptr_t)TOKENPASTE(_wasm3_thunk_, _name)); \
+        WASM_FFI_TRACE_POP();                                                                                             \
+        return value;                                                                                                     \
     }
 #undef FFI_ASSERT_ALIGNED_WASM_PTR
 #define FFI_ASSERT_ALIGNED_WASM_PTR(_x, _t)
@@ -89,7 +92,7 @@ static void * wasm3_dispatch(
 #define RET_WASM_PTR(_v) RET_I32(_v)
 
     switch (sig) {
-#include "source/adk/ffi/private/generated/wasm3_dispatcher.h"
+#include "source/adk/ffi/private/generated/wasm_dispatcher.h"
         default: {
             char textual_sig[32] = {0};
             wasm_sig(sig, textual_sig);
@@ -158,8 +161,6 @@ static void * wasm3_dispatch(
 #define FFI_GET_NATIVE_PTR(_t, _x) ((_t)(uintptr_t)((_x)))
 #define FFI_SET_NATIVE_PTR(_x) (uint64_t)(uintptr_t)(_x)
 
-#define FFI_WASM_INTERPRETER_STATE wasm_exec_env_t
-
 #define FFI_THUNK(_sig, _ret, _name, _args, _body) static _ret TOKENPASTE(_wamr_thunk_, _name) _args _body
 #include "source/adk/ffi/private/generated/ffi_thunks.h"
 #undef FFI_THUNK
@@ -173,8 +174,58 @@ static void * wasm3_dispatch(
 #define FFI_WASM_PTR_OFFSET(_x) (_x)
 #define FFI_WASM_PTR_OFFSET_TO_NATIVE_PTR(_x) (_x)
 
-#define FFI_THUNK(_sig, _ret, _name, _args, _body) static _ret TOKENPASTE(_wamr_prethunk_, _name) _args _body
-#include "source/adk/ffi/private/generated/wamr_dispatcher.h"
+static void * wamr_dispatch(
+    wasm_exec_env_t runtime,
+    uint64_t * sp,
+    void * mem,
+    const char * const name,
+    const wasm_sig_mask sig,
+    uintptr_t func) {
+#define ARG_I32(_i) *(int32_t *)&sp[_i]
+#define ARG_I64(_i) *(int64_t *)&sp[_i]
+#define ARG_F32(_i) *(float *)&sp[_i]
+#define ARG_F64(_i) *(double *)&sp[_i]
+#define ARG_WASM_PTR(_i)   \
+    (FFI_WASM_PTR) {       \
+        .ofs = ARG_I32(_i) \
+    }
+#define RET_VOID(_v) _v
+#define RET_I32(_v) (*(int32_t *)&sp[0]) = _v
+#define RET_I64(_v) (*(int64_t *)&sp[0]) = _v
+#define RET_F32(_v) (*(float *)&sp[0]) = _v
+#define RET_F64(_v) (*(double *)&sp[0]) = _v
+#define RET_WASM_PTR(_v) RET_I32(_v)
+
+    switch (sig) {
+#include "source/adk/ffi/private/generated/wasm_dispatcher.h"
+    default: {
+        char textual_sig[32] = { 0 };
+        wasm_sig(sig, textual_sig);
+        TRAP("Signature [%s](0x%X) not implemented -> function: [%s]", textual_sig, sig, name);
+    }
+    }
+
+    return NULL;
+#undef ARG_I32
+#undef ARG_I64
+#undef ARG_F32
+#undef ARG_F64
+#undef ARG_WASM_PTR
+#undef ARG_NATIVE_PTR
+#undef RET_VOID
+#undef RET_I32
+#undef RET_I64
+#undef RET_F32
+#undef RET_F64
+#undef RET_WASM_PTR
+#undef RET_NATIVE_PTR
+}
+
+#define FFI_THUNK(_sig, _ret, _name, _args, _body)                                                           \
+    static const void * TOKENPASTE(_wamr_prethunk_, _name)(wasm_exec_env_t runtime, uint64_t * sp) { \
+        return wamr_dispatch(runtime, sp, NULL, #_name, _sig, (uintptr_t)TOKENPASTE(_wamr_thunk_, _name));  \
+    }
+#include "source/adk/ffi/private/generated/ffi_thunks.h"
 #undef FFI_THUNK
 
 extender_status_e wamr_link_adk(wasm_exec_env_t env) {
@@ -184,8 +235,6 @@ extender_status_e wamr_link_adk(wasm_exec_env_t env) {
 #undef FFI_THUNK
     return extender_status_success;
 }
-
-#undef FFI_WASM_INTERPRETER_STATE
 
 #undef FFI_BOOL
 #undef FFI_GET_BOOL

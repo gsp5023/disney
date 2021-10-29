@@ -463,6 +463,8 @@ json_deflate_schema_type_t * json_deflate_schema_prepare_specific_rec(json_defla
         json_deflate_schema_type_t * const map_type_ctor = json_deflate_bump_get_ptr(area, ctx->ty_map);
         json_deflate_schema_type_t * const map_type = json_deflate_type_construct(area, map_type_ctor, elem_type);
 
+        add_path(map, node, map_type);
+
         if (root) {
             ctx->ty_root = (json_deflate_bump_ptr_t)json_deflate_bump_get_offset(area, map_type);
         }
@@ -600,7 +602,7 @@ This type may have been inferred from fields that had no type information in the
             return type;
         }
     } else {
-        TRAP("Missing or invalid type annotation: %s", json->valuestring);
+        TRAP("Missing or invalid type annotation: %s", json->string);
         return NULL;
     }
 }

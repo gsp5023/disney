@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2020-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -126,8 +126,4 @@ bool sb_wait_condition(
     NOT_IMPLEMENTED_EX;
 
     return false;
-}
-
-void sb_thread_yield() {
-    NOT_IMPLEMENTED_EX;
 }

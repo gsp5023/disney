@@ -40,6 +40,9 @@ typedef struct rhi_device_vtable_t {
     void (*upload_mesh_indices)(rhi_device_t * const device, rhi_mesh_t * const mesh, const int first_index, const int num_indices, const void * const indices);
     void (*upload_uniform_data)(rhi_device_t * const device, rhi_uniform_buffer_t * const uniform_buffer, const const_mem_region_t data, const int ofs);
     void (*upload_texture)(rhi_device_t * const device, rhi_texture_t * const texture, const image_mips_t * const mipmaps);
+#if !(defined(_VADER) || defined(_LEIA))
+    void (*upload_sub_texture)(rhi_device_t * const device, rhi_texture_t * const texture, const image_mips_t * const mipmaps);
+#endif
 #if defined(_LEIA) || defined(_VADER)
     void (*bind_texture_address)(rhi_device_t * const device, rhi_texture_t * const texture, const image_mips_t * const mipmaps);
 #endif
@@ -119,6 +122,14 @@ static inline void rhi_upload_texture(rhi_device_t * const device, rhi_texture_t
     device->vtable->upload_texture(device, texture, mipmaps);
 #endif
 }
+
+#if !(defined(_VADER) || defined(_LEIA))
+static inline void rhi_upload_sub_texture(rhi_device_t * const device, rhi_texture_t * const texture, const image_mips_t * const mipmaps) {
+#ifndef RHI_NULL_DEVICE
+    device->vtable->upload_sub_texture(device, texture, mipmaps);
+#endif
+}
+#endif
 
 #if defined(_LEIA) || defined(_VADER)
 static inline void rhi_bind_texture_address(rhi_device_t * const device, rhi_texture_t * const texture, const image_mips_t * const mipmaps) {

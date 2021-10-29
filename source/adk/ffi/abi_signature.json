@@ -1328,6 +1328,49 @@
       ]
     },
     {
+      "name": "adk_heap_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "CANVAS_HIGH",
+          "constant": 3
+        },
+        {
+          "name": "CANVAS_LOW",
+          "constant": 2
+        },
+        {
+          "name": "HTTP2",
+          "constant": 5
+        },
+        {
+          "name": "HTTP_CURL",
+          "constant": 4
+        },
+        {
+          "name": "JSON_DEFLATE",
+          "constant": 6
+        },
+        {
+          "name": "RHI_AND_RENDERER",
+          "constant": 1
+        },
+        {
+          "name": "RUNTIME",
+          "constant": 0
+        },
+        {
+          "name": "WASM_HIGH",
+          "constant": 8
+        },
+        {
+          "name": "WASM_LOW",
+          "constant": 7
+        }
+      ]
+    },
+    {
       "name": "adk_httpx_method_e",
       "size": 4,
       "align": 4,
@@ -2058,6 +2101,29 @@
       ]
     },
     {
+      "name": "adk_network_type_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "__sb_network_type_e__force_int32",
+          "constant": -2147483648
+        },
+        {
+          "name": "sb_network_type_ethernet",
+          "constant": 1
+        },
+        {
+          "name": "sb_network_type_unknown",
+          "constant": 0
+        },
+        {
+          "name": "sb_network_type_wireless",
+          "constant": 2
+        }
+      ]
+    },
+    {
       "name": "adk_power_mode_e",
       "size": 4,
       "align": 4,
@@ -2567,6 +2633,25 @@
       ]
     },
     {
+      "name": "cg_image_tiling_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "absolute",
+          "constant": 0
+        },
+        {
+          "name": "relative",
+          "constant": 1
+        },
+        {
+          "name": "stretch",
+          "constant": 2
+        }
+      ]
+    },
+    {
       "name": "cg_memory_region_e",
       "size": 4,
       "align": 4,
@@ -2703,6 +2788,45 @@
           "constant": 0
         }
       ]
+    },
+    {
+      "name": "log_level_e",
+      "size": 4,
+      "align": 4,
+      "members": [
+        {
+          "name": "log_level_always",
+          "constant": 4
+        },
+        {
+          "name": "log_level_app",
+          "constant": 5
+        },
+        {
+          "name": "log_level_debug",
+          "constant": 0
+        },
+        {
+          "name": "log_level_error",
+          "constant": 3
+        },
+        {
+          "name": "log_level_info",
+          "constant": 1
+        },
+        {
+          "name": "log_level_none",
+          "constant": 6
+        },
+        {
+          "name": "log_level_warn",
+          "constant": 2
+        },
+        {
+          "name": "num_log_levels",
+          "constant": 7
+        }
+      ]
     }
   ],
   "functions": [
@@ -2811,7 +2935,12 @@
     },
     {
       "name": "adk_analytics_get_buffer_length",
-      "args": [],
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
       "return": "i32"
     },
     {
@@ -2905,7 +3034,12 @@
     },
     {
       "name": "adk_analytics_get_min_buffer_length",
-      "args": [],
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
       "return": "i32"
     },
     {
@@ -2922,7 +3056,12 @@
     },
     {
       "name": "adk_analytics_get_playahead_time",
-      "args": [],
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
       "return": "i32"
     },
     {
@@ -2938,19 +3077,34 @@
     },
     {
       "name": "adk_analytics_get_player_type",
-      "args": [],
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
       "return": "* const i8",
       "return_origin": "native"
     },
     {
       "name": "adk_analytics_get_player_version",
-      "args": [],
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
       "return": "* const i8",
       "return_origin": "native"
     },
     {
       "name": "adk_analytics_get_rendered_framerate",
-      "args": [],
+      "args": [
+        {
+          "rust_type": "i32",
+          "wasm_type": "i32"
+        }
+      ],
       "return": "f32"
     },
     {
@@ -3952,14 +4106,34 @@
       "return_origin": "native"
     },
     {
+      "name": "adk_get_heap_usage",
+      "args": [
+        {
+          "rust_type": "adk_heap_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "heap_metrics_t"
+    },
+    {
       "name": "adk_get_locale",
       "args": [],
       "return": "_adk_locale_t"
     },
     {
+      "name": "adk_get_localtime_offset",
+      "args": [],
+      "return": "i64"
+    },
+    {
       "name": "adk_get_milliseconds_since_epoch",
       "args": [],
       "return": "u64"
+    },
+    {
+      "name": "adk_get_network_type",
+      "args": [],
+      "return": "adk_network_type_e"
     },
     {
       "name": "adk_get_supported_refresh_rate",
@@ -3986,11 +4160,6 @@
       "args": [],
       "return": "* const i8",
       "return_origin": "native"
-    },
-    {
-      "name": "adk_get_wasm_heap_usage",
-      "args": [],
-      "return": "heap_metrics_t"
     },
     {
       "name": "adk_http_append_header_list",
@@ -4037,18 +4206,7 @@
       "return": "()"
     },
     {
-      "name": "adk_httpx_client_free",
-      "args": [
-        {
-          "rust_type": "* mut adk_httpx_client_t",
-          "origin": "native",
-          "wasm_type": "i64"
-        }
-      ],
-      "return": "()"
-    },
-    {
-      "name": "adk_httpx_client_new",
+      "name": "adk_httpx_client_get",
       "args": [],
       "return": "* mut adk_httpx_client_t",
       "return_origin": "native"
@@ -4350,6 +4508,39 @@
       ],
       "return": "* mut adk_screenshot_t",
       "return_origin": "native"
+    },
+    {
+      "name": "adk_log_app_msg",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "log_level_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
     },
     {
       "name": "adk_log_msg",
@@ -5013,6 +5204,26 @@
       "return": "cg_font_metrics_t"
     },
     {
+      "name": "cg_context_fill_text_line",
+      "args": [
+        {
+          "rust_type": "* mut cg_font_context_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_vec2_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
       "name": "cg_context_fill_text_with_options",
       "args": [
         {
@@ -5393,11 +5604,81 @@
       "return": "()"
     },
     {
+      "name": "cg_context_sdf_draw_image_rect_rounded",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_sdf_rect_params_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_sdf_fill_image_rect_rounded",
+      "args": [
+        {
+          "rust_type": "* const cg_image_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_sdf_rect_params_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_image_tiling_e",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_sdf_fill_rect_rounded",
+      "args": [
+        {
+          "rust_type": "cg_rect_t",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "cg_sdf_rect_params_t",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
       "name": "cg_context_set_alpha_test_threshold",
       "args": [
         {
           "rust_type": "f32",
           "wasm_type": "f32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "cg_context_set_clear_color",
+      "args": [
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
         }
       ],
       "return": "()"
@@ -5913,6 +6194,53 @@
       "return": "()"
     },
     {
+      "name": "json_deflate_parse_httpx_response_async",
+      "args": [
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* mut adk_httpx_response_t",
+          "origin": "native",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const u8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "json_deflate_parse_target_e",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        },
+        {
+          "rust_type": "u32",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "* mut json_deflate_http_future_t",
+      "return_origin": "native"
+    },
+    {
+      "name": "log_get_min_level",
+      "args": [],
+      "return": "log_level_e"
+    },
+    {
       "name": "memcpy_n2r",
       "args": [
         {
@@ -5998,6 +6326,47 @@
         }
       ],
       "return": "i32"
+    },
+    {
+      "name": "telemetry_pop",
+      "args": [],
+      "return": "()"
+    },
+    {
+      "name": "telemetry_push",
+      "args": [
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "telemetry_span_begin",
+      "args": [
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        },
+        {
+          "rust_type": "* const i8",
+          "origin": "wasm",
+          "wasm_type": "i32"
+        }
+      ],
+      "return": "()"
+    },
+    {
+      "name": "telemetry_span_end",
+      "args": [
+        {
+          "rust_type": "u64",
+          "wasm_type": "i64"
+        }
+      ],
+      "return": "()"
     }
   ],
   "structs": [
@@ -6364,6 +6733,17 @@
         "y",
         "width",
         "height"
+      ]
+    },
+    {
+      "name": "cg_sdf_rect_params_t",
+      "size": 28,
+      "align": 4,
+      "members": [
+        "roundness",
+        "fade",
+        "border_color",
+        "border_width"
       ]
     },
     {

@@ -18,11 +18,11 @@ typedef struct adk_coredump_data_t {
     const char * value;
 } adk_coredump_data_t;
 
-void adk_coredump_init(int coredump_stack_size);
+bool adk_coredump_init(int coredump_stack_size);
 
 void adk_coredump_shutdown();
 
-void adk_coredump_handler();
+void adk_crash_handler();
 
 FFI_EXPORT void adk_coredump_add_data(FFI_PTR_WASM const char * name, FFI_PTR_WASM const char * value);
 

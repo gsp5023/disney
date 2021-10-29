@@ -30,6 +30,8 @@ This file documents all of the third party software used in the ADK. Third party
     * Public Domain [https://sqlite.org/copyright.html]
 * zip_iterator.h [https://bitbucket.org/IRSmoh/zip_iterator/src/master/zip_iterator/zip_iterator.h]
     * MIT [https://bitbucket.org/IRSmoh/zip_iterator/src/master/LICENSE.md]
+* meshoptimizer [https://github.com/zeux/meshoptimizer/tree/v0.16]
+    * MIT [https://github.com/zeux/meshoptimizer/blob/v0.16/LICENSE.md]
 	
 ### Development binary tools
 
@@ -79,3 +81,5 @@ This file documents all of the third party software used in the ADK. Third party
         * BSD [http://web.mit.edu/freebsd/head/contrib/wpa/src/utils/base64.c]
     * strcasestr [https://android.googlesource.com/platform/bionic/+/ics-mr0/libc/string/strcasestr.c]
         * MIT [https://android.googlesource.com/platform/bionic/+/ics-mr0/libc/string/strcasestr.c]
+    * nghttp2 (1.43.0) [https://github.com/nghttp2/nghttp2/releases/tag/v1.43.0]
+        * MIT [https://github.com/nghttp2/nghttp2/blob/v1.43.0/COPYING]

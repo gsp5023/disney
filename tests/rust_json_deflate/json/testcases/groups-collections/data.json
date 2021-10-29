@@ -1,0 +1,12 @@
+{
+    "first": ["foo"],
+    "second": {
+        "foo": "bar"
+    },
+    "third": {
+        "ref_array": ["baz"],
+        "ref_map": {
+            "quux": "hello"
+        }
+    }
+}

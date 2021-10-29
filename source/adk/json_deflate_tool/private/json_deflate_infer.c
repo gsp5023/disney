@@ -469,6 +469,8 @@ cJSON * infer_rec(void * const env, const cJSON * const data) {
         if (!cJSON_GetObjectItem(schema, "items")) {
             cJSON_AddItemToObject(env, schema, "items", emit_bottom(env));
         }
+    } else {
+        cJSON_AddArrayToObject(env, schema, "type");
     }
 
     const cJSON * verify = NULL;
@@ -481,6 +483,8 @@ cJSON * infer_rec(void * const env, const cJSON * const data) {
         int vitems = !strcmp("items", verify->string);
         VERIFY_MSG(vtype || vprop || vreq || vcatch || vname || vitems, "[json_deflate_tool] Created invalid schema");
     }
+
+    VERIFY_MSG(cJSON_GetArraySize(schema), "[json_deflate_tool] Created invalid schema");
 
     return schema;
 }

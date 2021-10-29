@@ -38,7 +38,6 @@ FFI_EXPORT typedef struct {
 } nve_network_request_error_data_t;
 
 void nve_network_init();
-void nve_enable_network_debug_logging();
 FFI_EXPORT_NVE FFI_PTR_NATIVE void * nve_network_request_create(FFI_PTR_WASM const char * url, nve_network_method_e method);
 FFI_EXPORT_NVE nve_result_e nve_network_request_release(FFI_PTR_NATIVE void * request_handle);
 FFI_EXPORT_NVE nve_result_e nve_network_request_header_set(FFI_PTR_NATIVE void * request_handle, FFI_PTR_WASM const char * header_name, FFI_PTR_WASM const char * header_data);

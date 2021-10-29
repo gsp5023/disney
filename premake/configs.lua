@@ -110,7 +110,7 @@ filter "configurations:*ship"
 	flags {"noincrementallink", "nominimalrebuild"}
 
 if not player_is_any("nve-partner") then
-	filter {"configurations:*release-o2 or *ship", "toolset:not *gcc-*-brcm*"}
+	filter {"configurations:*release-o2 or *ship", "toolset:not *gcc-*-brcm*", "platforms:not *rpi1*"}
 		flags {"linktimeoptimization"}
 end
 

@@ -69,10 +69,10 @@ typedef struct wasm_interpreter_t {
     const char * name;
 
     /// Initializes the interpreter and loads the specified Wasm file.
-    wasm_memory_region_t (*load)(const sb_file_directory_e directory, const char * const wasm_filename, const size_t sizeof_application_workingset);
+    wasm_memory_region_t (*load)(const sb_file_directory_e directory, const char * const wasm_filename, const size_t wasm_low_heap_size, const size_t wasm_high_heap_size, const size_t allocation_threshold);
 
     /// Initializes the interpreter and loads the specified Wasm binary from a reader function.
-    wasm_memory_region_t (*load_fp)(void * const wasm_file, const wasm_fread_t fread_func, const size_t wasm_file_content_size, const size_t sizeof_application_workingset);
+    wasm_memory_region_t (*load_fp)(void * const wasm_file, const wasm_fread_t fread_func, const size_t wasm_file_content_size, const size_t wasm_low_heap_size, const size_t wasm_high_heap_size, const size_t allocation_threshold);
 
     /// Unloads the Wasm binary and deinitializes the interpreter.
     void (*unload)(wasm_memory_region_t wasm_memory);

@@ -77,7 +77,7 @@ static char * write_expectation_error_message(json_deflate_bump_area_t * const a
     write_path(info, path, sizeof(path));
     sprintf_s(message, sizeof(message), "Expected %s but found %s at %s", expectation, get_node_type_string(json), path);
     char * ret = json_deflate_bump_store_str(area, message);
-    JSON_DEFLATE_TRACE_PUSH_FN();
+    JSON_DEFLATE_TRACE_POP();
     return ret;
 }
 
@@ -125,11 +125,28 @@ static void json_deflate_set_variant_tag(json_deflate_bump_area_t * const data_a
     JSON_DEFLATE_TRACE_PUSH_FN();
     const json_deflate_schema_field_t * const tag_field = json_deflate_type_lookup_field(schema_area, type, "tag");
     uint8_t * const tag_address = dest + tag_field->offset;
-    memcpy(tag_address, &choice->choice_value, sizeof(choice->choice_value));
+    const uint8_t choice_value = (uint8_t)choice->choice_value;
+    memcpy(tag_address, &choice_value, sizeof(choice_value));
     JSON_DEFLATE_TRACE_POP();
 }
 
-static void * json_deflate_process_variable(json_deflate_bump_area_t * const data_area, json_deflate_bump_area_t * const schema_area, json_deflate_schema_context_t * const ctx, const json_deflate_parse_target_e target, json_deflate_schema_type_t * const type, cJSON * const json, void * const override, uint8_t * const dest, json_deflate_context_info_t * const info, char ** error_msg);
+typedef union ptr_t {
+    uint8_t * u8;
+    uint16_t * u16;
+    uint32_t * u32;
+    uint64_t * u64;
+} ptr_t;
+
+static bool string_non_empty(json_deflate_schema_type_t * const ptr_ty, const ptr_t string_place) {
+    if (ptr_ty->var == 8) {
+        return *string_place.u64;
+    } else if (ptr_ty->var == 4) {
+        return *string_place.u32;
+    } else {
+        TRAP("[json_deflate] Unexpected pointer size %d. The schema may be corrupted.", ptr_ty->var);
+        return false;
+    }
+}
 
 static void * json_deflate_process_value(json_deflate_bump_area_t * const data_area, json_deflate_bump_area_t * const schema_area, json_deflate_schema_context_t * const ctx, const json_deflate_parse_target_e target, json_deflate_schema_type_t * const type, cJSON * const json, void * const override, uint8_t * const dest, json_deflate_context_info_t * const info, char ** error_msg) {
     JSON_DEFLATE_TRACE_PUSH_FN();
@@ -149,13 +166,6 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
         struct vectype_t * vec;
     } override_val = {
         .ptr = override};
-
-    union ptr_t {
-        uint8_t * u8;
-        uint16_t * u16;
-        uint32_t * u32;
-        uint64_t * u64;
-    };
 
     const void * src = NULL;
     char valuechar;
@@ -234,7 +244,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
         json_deflate_schema_type_t * const ok_type = json_deflate_bump_get_ptr(schema_area, ok_field->type);
         uint8_t * const ok_address = dest + ok_field->offset;
         char * inner_error_msg = NULL;
-        if (!json_deflate_process_variable(data_area, schema_area, ctx, target, ok_type, json, NULL, ok_address, info, &inner_error_msg)) {
+        if (!json_deflate_process_value(data_area, schema_area, ctx, target, ok_type, json, NULL, ok_address, info, &inner_error_msg)) {
             JSON_DEFLATE_TRACE_POP();
             return NULL;
         }
@@ -244,7 +254,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
             json_deflate_set_variant_tag(data_area, schema_area, ctx, target, type, err_field, dest);
             json_deflate_schema_type_t * const err_type = json_deflate_bump_get_ptr(schema_area, err_field->type);
             uint8_t * const err_address = dest + err_field->offset;
-            if (!json_deflate_process_variable(data_area, schema_area, ctx, target, err_type, NULL, &inner_error_msg, err_address, info, NULL)) {
+            if (!json_deflate_process_value(data_area, schema_area, ctx, target, err_type, NULL, &inner_error_msg, err_address, info, NULL)) {
                 JSON_DEFLATE_TRACE_POP();
                 return NULL;
             }
@@ -255,16 +265,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
             json_deflate_set_variant_tag(data_area, schema_area, ctx, target, type, some_field, dest);
             json_deflate_schema_type_t * const some_type = json_deflate_bump_get_ptr(schema_area, some_field->type);
             uint8_t * some_address = dest + some_field->offset;
-            if (!json_deflate_process_variable(data_area, schema_area, ctx, target, some_type, json, NULL, some_address, info, error_msg)) {
-                JSON_DEFLATE_TRACE_POP();
-                return NULL;
-            }
-        } else {
-            json_deflate_schema_field_t * none_field = json_deflate_type_lookup_field(schema_area, type, "None");
-            json_deflate_set_variant_tag(data_area, schema_area, ctx, target, type, none_field, dest);
-            json_deflate_schema_type_t * const none_type = json_deflate_bump_get_ptr(schema_area, none_field->type);
-            uint8_t * none_address = dest + none_field->offset;
-            if (!json_deflate_process_variable(data_area, schema_area, ctx, target, none_type, NULL, NULL, none_address, info, error_msg)) {
+            if (!json_deflate_process_value(data_area, schema_area, ctx, target, some_type, json, NULL, some_address, info, error_msg)) {
                 JSON_DEFLATE_TRACE_POP();
                 return NULL;
             }
@@ -277,24 +278,32 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                 return dest;
             }
 
-            ASSERT_MSG(type->field_count < 16384, "[json_deflate] Field count limit exceeded.");
-            uint8_t checkmarks[16384] = {0};
+            enum {
+                max_fields = 16384,
+            };
+            ASSERT_MSG(type->field_count < max_fields, "[json_deflate] Field count limit exceeded.");
+            uint8_t checkmarks[max_fields];
+            memset(&checkmarks[0], 0, type->field_count * sizeof(checkmarks[0]));
+
+            json_deflate_schema_type_t * const optional_type_ctor = json_deflate_bump_get_ptr(schema_area, ctx->ty_option);
+            json_deflate_schema_field_t * const optional_field_first = json_deflate_bump_get_ptr(schema_area, optional_type_ctor->fields);
+            json_deflate_schema_field_t * const optional_field_none = json_deflate_type_lookup_field(schema_area, optional_type_ctor, "None");
+            int32_t optional_field_none_idx = (int32_t)(optional_field_none - optional_field_first);
 
             json_deflate_schema_field_t * const fields = json_deflate_bump_get_ptr(schema_area, type->fields);
             for (uint32_t i = 0; i < type->field_count; i++) {
-                if (!json_deflate_field_is_required(&fields[i])) {
-                    json_deflate_schema_type_t * const optional_field_type = json_deflate_bump_get_ptr(schema_area, fields[i].type);
-                    if (optional_field_type->type_ctor == ctx->ty_option) {
-                        uint8_t * const place = dest + fields[i].offset;
-                        if (!json_deflate_process_value(data_area, schema_area, ctx, target, optional_field_type, NULL, NULL, place, info, error_msg)) {
-                            JSON_DEFLATE_TRACE_POP();
-                            return NULL;
-                        }
+                json_deflate_schema_type_t * const optional_field_type = json_deflate_bump_get_ptr(schema_area, fields[i].type);
+                if (optional_field_type->type_ctor == ctx->ty_option) {
+                    checkmarks[i] = UINT8_MAX;
 
-                        checkmarks[i] = 1;
+                    json_deflate_schema_field_t * const optional_field_type_first_field = json_deflate_bump_get_ptr(schema_area, optional_field_type->fields);
+                    json_deflate_schema_field_t * const optional_field_type_none_field = optional_field_type_first_field + optional_field_none_idx;
+                    if (optional_field_type_none_field->choice_value) {
+                        json_deflate_set_variant_tag(data_area, schema_area, ctx, target, optional_field_type, optional_field_type_none_field, dest);
                     }
                 }
             }
+
             cJSON * elem = NULL;
             cJSON_ArrayForEach(elem, json) {
                 json_deflate_schema_field_t * const field = json_deflate_type_lookup_field(schema_area, type, elem->string);
@@ -305,7 +314,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                     uint8_t * const place = dest + field->offset;
 
                     json_deflate_context_info_t info_new = NEW_CONTEXT_INFO(info, field_name);
-                    if (!json_deflate_process_variable(data_area, schema_area, ctx, target, field_type, elem, NULL, place, &info_new, error_msg)) {
+                    if (!json_deflate_process_value(data_area, schema_area, ctx, target, field_type, elem, NULL, place, &info_new, error_msg)) {
                         JSON_DEFLATE_TRACE_POP();
                         return NULL;
                     }
@@ -314,7 +323,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                         break;
                     }
 
-                    checkmarks[field - fields] = 1;
+                    checkmarks[field - fields] = UINT8_MAX;
                 }
             }
 
@@ -346,7 +355,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                 size_t extra;
                 if (!is_vec_override) {
                     if (type == json_deflate_bump_get_ptr(schema_area, ctx->ty_string)) {
-                        length = strlen(json ? cJSON_GetStringValue(json) : *override_val.string);
+                        length = json ? json->valuestring_length : strlen(*override_val.string);
                         extra = 1;
                     } else {
                         length = cJSON_GetArraySize(json);
@@ -355,6 +364,11 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                 } else {
                     length = override_val.vec->len;
                     extra = 0;
+                }
+
+                if (!length) {
+                    JSON_DEFLATE_TRACE_POP();
+                    return dest;
                 }
 
                 json_deflate_schema_type_t * const elem_type = json_deflate_bump_get_ptr(schema_area, type->rel_type);
@@ -420,7 +434,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                         sprintf_s(&index_num[0], sizeof(index_num), "<%d>", i);
                         i++;
                         json_deflate_context_info_t info_new = NEW_CONTEXT_INFO(info, &index_num[0]);
-                        if (!json_deflate_process_variable(data_area, schema_area, ctx, target, elem_type, elem, NULL, place, &info_new, error_msg)) {
+                        if (!json_deflate_process_value(data_area, schema_area, ctx, target, elem_type, elem, NULL, place, &info_new, error_msg)) {
                             JSON_DEFLATE_TRACE_POP();
                             return NULL;
                         }
@@ -447,6 +461,11 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
             json_deflate_schema_type_t * const string_type = json_deflate_bump_get_ptr(schema_area, ctx->ty_string);
 
             const int32_t elem_count = (int32_t)cJSON_GetArraySize(json);
+            if (!elem_count) {
+                JSON_DEFLATE_TRACE_POP();
+                return dest;
+            }
+
             uint8_t * const array_start_keys = json_deflate_bump_alloc(data_area, elem_count * key_type->var, key_type->align);
             uint8_t * const array_start_values = json_deflate_bump_alloc(data_area, elem_count * elem_type->var, elem_type->align);
             uint8_t * const array_start_strings = json_deflate_bump_alloc(data_area, elem_count * string_type->var, string_type->align);
@@ -512,10 +531,9 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                 union ptr_t key_place = {
                     .u8 = array_start_keys + key_type->var * found_index};
 
-                // The choice of a uint64_t * here means different things in Wasm versus native,
-                // but since we are peeking into the layout of a string, the check should return
-                // true or false in exactly the same cases.
-                while ((int32_t)found_index < elem_count && *key_place.u32 == hash && *string_place.u64) {
+                json_deflate_schema_type_t * const ptr_ty = json_deflate_bump_get_ptr(schema_area, ctx->ty_ptr);
+
+                while ((int32_t)found_index < elem_count && *key_place.u32 == hash && string_non_empty(ptr_ty, string_place)) {
                     string_place.u8 = array_start_strings + string_type->var * (++found_index);
                     key_place.u8 = array_start_keys + key_type->var * found_index;
                 }
@@ -524,12 +542,14 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                     found_index = initial_found_index;
                     string_place.u8 = array_start_strings + string_type->var * found_index;
                     key_place.u8 = array_start_keys + key_type->var * found_index;
-                    while ((int32_t)found_index >= 0 && *key_place.u32 == hash && *string_place.u64) {
+
+                    while ((int32_t)found_index >= 0 && *key_place.u32 == hash && string_non_empty(ptr_ty, string_place)) {
                         string_place.u8 = array_start_strings + string_type->var * (--found_index);
                         key_place.u8 = array_start_keys + key_type->var * found_index;
                     }
 
-                    ASSERT_MSG(((int32_t)found_index >= 0) && (*key_place.u32 == hash), "[json_deflate] Not enough space in the map");
+                    ASSERT_MSG((int32_t)found_index >= 0, "[json_deflate] Not enough space in the map");
+                    ASSERT_MSG(*key_place.u32 == hash, "[json_deflate] Not enough space in the map");
                 }
 
                 if (!json_deflate_process_value(data_area, schema_area, ctx, target, string_type, NULL, &elem->string, string_place.u8, info, error_msg)) {
@@ -539,7 +559,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
 
                 uint8_t * const elem_place = array_start_values + elem_type->var * found_index;
                 json_deflate_context_info_t info_new = NEW_CONTEXT_INFO(info, elem->string);
-                if (!json_deflate_process_variable(data_area, schema_area, ctx, target, elem_type, elem, NULL, elem_place, &info_new, error_msg)) {
+                if (!json_deflate_process_value(data_area, schema_area, ctx, target, elem_type, elem, NULL, elem_place, &info_new, error_msg)) {
                     JSON_DEFLATE_TRACE_POP();
                     return NULL;
                 }
@@ -605,7 +625,7 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
                 json_deflate_schema_type_t * const choice_type = json_deflate_bump_get_ptr(schema_area, choice->type);
                 uint8_t * const choice_address = dest + choice->offset;
                 json_deflate_set_variant_tag(data_area, schema_area, ctx, target, type, choice, dest);
-                if (!json_deflate_process_variable(data_area, schema_area, ctx, target, choice_type, json, NULL, choice_address, info, error_msg)) {
+                if (!json_deflate_process_value(data_area, schema_area, ctx, target, choice_type, json, NULL, choice_address, info, error_msg)) {
                     JSON_DEFLATE_TRACE_POP();
                     return NULL;
                 }
@@ -626,35 +646,6 @@ static void * json_deflate_process_value(json_deflate_bump_area_t * const data_a
 
     JSON_DEFLATE_TRACE_POP();
     return dest;
-}
-
-static void * json_deflate_process_variable(json_deflate_bump_area_t * const data_area, json_deflate_bump_area_t * const schema_area, json_deflate_schema_context_t * const ctx, const json_deflate_parse_target_e target, json_deflate_schema_type_t * const type, cJSON * const json, void * const override, uint8_t * const dest, json_deflate_context_info_t * const info, char ** error_msg) {
-    JSON_DEFLATE_TRACE_PUSH_FN();
-    if (json_deflate_type_is_stored_by_reference(type)) {
-        uint8_t * const instance_address = json_deflate_bump_alloc(data_area, type->size, type->align);
-        if (!instance_address) {
-            JSON_DEFLATE_TRACE_POP();
-            return NULL;
-        }
-
-        if (target == json_deflate_parse_target_native) {
-            memcpy(dest, &instance_address, sizeof(instance_address));
-        } else if (target == json_deflate_parse_target_wasm) {
-            uint32_t placed_address = wasm_ptr_to_offset_adapter(instance_address);
-            memcpy(dest, &placed_address, sizeof(placed_address));
-        } else {
-            TRAP("[json_deflate] Unsupported deflate target");
-        }
-
-        void * ret = json_deflate_process_value(data_area, schema_area, ctx, target, type, json, override, instance_address, info, error_msg);
-        JSON_DEFLATE_TRACE_POP();
-        return ret;
-    } else {
-        void * ret = json_deflate_process_value(data_area, schema_area, ctx, target, type, json, override, dest, info, error_msg);
-        JSON_DEFLATE_TRACE_POP();
-        return ret;
-    }
-    JSON_DEFLATE_TRACE_POP();
 }
 
 void * json_deflate_process_document(json_deflate_bump_area_t * const data_area, json_deflate_bump_area_t * const schema_area, json_deflate_schema_context_t * const ctx, const json_deflate_parse_target_e target, json_deflate_schema_type_t * const type, cJSON * const json) {

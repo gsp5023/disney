@@ -23,9 +23,7 @@ extern "C" {
  * Device ID, tenancy, and persona not defined here.
  */
 
-#define SB_METRICS_PARTNER_GUID "00000000-0000-0000-0000-000000000000"
 #define SB_METRICS_VENDOR "Vendor_Stub"
-#define SB_METRICS_PARTNER "partnerstub"
 #define SB_METRICS_DEVICE "PlatformStub"
 #define SB_METRICS_FIRMWARE "0.1.0"
 #define SB_METRICS_SOFTWARE "SW_STUB"

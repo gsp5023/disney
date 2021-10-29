@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2019-2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2019-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -24,11 +24,13 @@ extern "C" {
 
 enum {
     unit_test_guard_page_mode = system_guard_page_mode_enabled,
-    fragment_size = 4 * 1024
+    network_pump_fragment_size = 4 * 1024,
+    network_pump_sleep_period = 1,
 };
 
 int test_findarg(const char * arg);
 const char * test_getargarg(const char * arg);
+int tests_init_core(const int argc, const char * const * const argv);
 
 static float rand_float() {
     return rand() / (float)RAND_MAX;

@@ -247,7 +247,7 @@ void thread_pool_init(thread_pool_t * const pool, const mem_region_t _region, co
 
     char thread_name[posix_thread_name_max_length];
     for (uint8_t i = 0; i < pool->thread_count; ++i) {
-        sprintf_s(thread_name, ARRAY_SIZE(thread_name), "%s%i", pool_name, i);
+        sprintf_s(thread_name, ARRAY_SIZE(thread_name), "m5_%s_%i", pool_name, i);
         pool->threads[i] = sb_create_thread(thread_name, sb_thread_default_options, thread_pool_proc, pool, tag);
     }
 
@@ -287,7 +287,6 @@ thread_pool_t * thread_pool_emplace_init(const mem_region_t region, const uint8_
 
 void thread_pool_shutdown(thread_pool_t * const pool, const char * const tag) {
     pool->should_quit = true;
-    sb_compiler_barrier();
     sb_condition_wake_all(pool->cv);
     for (int i = 0; i < pool->thread_count; ++i) {
         sb_join_thread(pool->threads[i]);

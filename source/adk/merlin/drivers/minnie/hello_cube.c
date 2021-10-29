@@ -294,6 +294,8 @@ int hello_cube_main(const int argc, const char * const * const argv) {
                     const milliseconds_t ms_per_frame = {fps_time.ms / num_frames};
                     LOG_ALWAYS(TAG_CUBE, "[%4d] FPS: [%dms/frame]", (ms_per_frame.ms > 0) ? 1000 / ms_per_frame.ms : 1000, ms_per_frame.ms);
 
+                    render_device_log_resource_tracking(the_app.render_device, the_app.runtime_config.renderer.render_resource_tracking.periodic_logging);
+
                     fps_time.ms = 0;
                     num_frames = 0;
                 }
@@ -356,7 +358,15 @@ int hello_cube_main(const int argc, const char * const * const argv) {
                 render_mark_cmd_buf(the_app.render_device->default_cmd_stream.buf);
                 draw_single_mesh = render_cmd_buf_unchecked_alloc(the_app.render_device->default_cmd_stream.buf, 8, sizeof(*draw_single_mesh));
 
-                if (!draw_single_mesh || !render_cmd_buf_write_draw_indirect(the_app.render_device->default_cmd_stream.buf, (rhi_draw_params_indirect_t){.mesh_list = PEDANTIC_CAST(rhi_mesh_t * const * const *) & draw_single_mesh->mesh, .idx_ofs = NULL, .elm_counts = &draw_single_mesh->elem_count, .num_meshes = 1, .mode = rhi_triangles}, MALLOC_TAG)) {
+                if (!draw_single_mesh || !render_cmd_buf_write_draw_indirect(the_app.render_device->default_cmd_stream.buf, (rhi_draw_params_indirect_t){
+                                                                                                                                .mesh_list = PEDANTIC_CAST(rhi_mesh_t * const * const *) & draw_single_mesh->mesh,
+                                                                                                                                .idx_ofs = NULL,
+                                                                                                                                .elm_counts = &draw_single_mesh->elem_count,
+                                                                                                                                .num_meshes = 1,
+                                                                                                                                .mode = rhi_triangles,
+                                                                                                                                .hashes = &mesh->hash,
+                                                                                                                            },
+                                                                             MALLOC_TAG)) {
                     render_unwind_cmd_buf(the_app.render_device->default_cmd_stream.buf);
                     render_flush_cmd_stream(&the_app.render_device->default_cmd_stream, render_no_wait);
                     render_cmd_stream_blocking_latch_cmd_buf(&the_app.render_device->default_cmd_stream);
@@ -369,7 +379,9 @@ int hello_cube_main(const int argc, const char * const * const argv) {
                             .idx_ofs = NULL,
                             .elm_counts = &draw_single_mesh->elem_count,
                             .num_meshes = 1,
-                            .mode = rhi_triangles},
+                            .mode = rhi_triangles,
+                            .hashes = &mesh->hash,
+                        },
                         MALLOC_TAG));
                 }
 

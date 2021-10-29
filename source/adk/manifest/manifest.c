@@ -67,7 +67,10 @@ DECL_CONST_STR(thread_pool_thread_count);
 DECL_CONST_STR(guard_page_mode);
 #endif
 DECL_CONST_STR(wasm_memory_size);
+DECL_CONST_STR(log_input_events);
 DECL_CONST_STR(network_pump_fragment_size);
+DECL_CONST_STR(network_pump_sleep_period_ms);
+DECL_CONST_STR(watchdog);
 DECL_CONST_STR(low);
 DECL_CONST_STR(high);
 DECL_CONST_STR(bundle_fetch);
@@ -271,6 +274,8 @@ void manifest_free_file_blob(mem_region_t const manifest_blob) {
 }
 
 void manifest_format_default_url(char * const buf, const size_t buf_size, const char * const url_fmt) {
+    VERIFY_MSG(statics.metrics->partner[0] && statics.metrics->partner_guid[0], "Partner configuration is missing, please check the corresponding 'persona.json' file for proper values");
+
     sprintf_s(buf, buf_size, url_fmt, statics.metrics->partner, statics.metrics->partner_guid);
 }
 
@@ -520,6 +525,7 @@ static const struct {
     const char * const curl_fragment_buffers;
     const char * const json_deflate;
     const char * const default_thread_pool;
+    const char * const ssl;
     const char * const http2;
     const char * const httpx;
     const char * const httpx_fragment_buffers;
@@ -536,6 +542,7 @@ static const struct {
     .curl_fragment_buffers = "curl_fragment_buffers",
     .json_deflate = "json_deflate",
     .default_thread_pool = "default_thread_pool",
+    .ssl = "ssl",
     .http2 = "http2",
     .httpx = "httpx",
     .httpx_fragment_buffers = "httpx_fragment_buffers",
@@ -580,6 +587,23 @@ static void conditional_overwrite_high_memory_reservations(const cJSON * const m
     MANIFEST_TRACE_POP();
 }
 
+static void manifest_read_logging_mode(const cJSON * const logging_mode_obj, logging_mode_e * const logging_mode) {
+    if (!logging_mode_obj || !cJSON_IsString(logging_mode_obj)) {
+        return;
+    }
+    if (strcmp(logging_mode_obj->valuestring, "disabled") == 0) {
+        *logging_mode = logging_disabled;
+    } else if (strcmp(logging_mode_obj->valuestring, "tty") == 0) {
+        *logging_mode = logging_tty;
+    } else if (strcmp(logging_mode_obj->valuestring, "metrics") == 0) {
+        *logging_mode = logging_metrics;
+    } else if (strcmp(logging_mode_obj->valuestring, "tty_and_metrics") == 0) {
+        *logging_mode = logging_tty_and_metrics;
+    } else {
+        LOG_ERROR(MANIFEST_TAG, "Invalid logging_mode_e: [%s]", logging_mode_obj->valuestring);
+    }
+}
+
 #ifndef _SHIP
 static system_guard_page_mode_e bundle_get_guard_page_mode(const cJSON * const guard_page_obj) {
     MANIFEST_TRACE_PUSH_FN();
@@ -621,11 +645,18 @@ static bool bundle_conditional_overwrite_http_max_pooled_connections(const cJSON
 static void manifest_get_websocket_backend(const cJSON * const adk_websocket_obj, adk_websocket_backend_e * const out_backend) {
     MANIFEST_TRACE_PUSH_FN();
     const cJSON * const backend_obj = cJSON_GetObjectItem(adk_websocket_obj, "backend");
-    if (backend_obj && cJSON_IsString(backend_obj) && (strcmp(backend_obj->valuestring, "websocket") == 0)) {
-        LOG_INFO(MANIFEST_TAG, "Websocket backend: [websocket] set!");
-        *out_backend = adk_websocket_backend_websocket;
-        MANIFEST_TRACE_POP();
-        return;
+    if (backend_obj && cJSON_IsString(backend_obj)) {
+        if (strcmp(backend_obj->valuestring, "websocket") == 0) {
+            LOG_INFO(MANIFEST_TAG, "Websocket backend: [websocket] set!");
+            *out_backend = adk_websocket_backend_websocket;
+            MANIFEST_TRACE_POP();
+            return;
+        } else if (strcmp(backend_obj->valuestring, "null") == 0) {
+            LOG_INFO(MANIFEST_TAG, "Websocket backend: [none] set!");
+            *out_backend = adk_websocket_backend_null;
+            MANIFEST_TRACE_POP();
+            return;
+        }
     }
     LOG_INFO(MANIFEST_TAG, "Websocket backend: [http2] set!");
     *out_backend = adk_websocket_backend_http2;
@@ -693,6 +724,32 @@ static void manifest_get_canvas_font_atlas_dims(const cJSON * const canvas_obj, 
     MANIFEST_TRACE_POP();
 }
 
+static void manifest_parse_canvas_gl(const cJSON * const canvas_obj, runtime_configuration_t * const runtime_config) {
+    MANIFEST_TRACE_PUSH_FN();
+    const cJSON * const gl_obj = cJSON_GetObjectItem(canvas_obj, "gl");
+    if (!gl_obj || !cJSON_IsObject(gl_obj)) {
+        MANIFEST_TRACE_POP();
+        return;
+    }
+    {
+        const cJSON * const internal_limits_obj = cJSON_GetObjectItem(gl_obj, "internal_limits");
+        if (internal_limits_obj && cJSON_IsObject(internal_limits_obj)) {
+            const cJSON * const max_verts_per_vertex_bank_obj = cJSON_GetObjectItem(internal_limits_obj, "max_verts_per_vertex_bank");
+            if (max_verts_per_vertex_bank_obj && cJSON_IsNumber(max_verts_per_vertex_bank_obj)) {
+                runtime_config->canvas.gl.internal_limits.max_verts_per_vertex_bank = (uint32_t)max_verts_per_vertex_bank_obj->valueint;
+            }
+            const cJSON * const num_vertex_banks_obj = cJSON_GetObjectItem(internal_limits_obj, "num_vertex_banks");
+            if (num_vertex_banks_obj && cJSON_IsNumber(num_vertex_banks_obj)) {
+                runtime_config->canvas.gl.internal_limits.num_vertex_banks = (uint32_t)num_vertex_banks_obj->valueint;
+            }
+            const cJSON * const num_meshes_obj = cJSON_GetObjectItem(internal_limits_obj, "num_meshes");
+            if (num_meshes_obj && cJSON_IsNumber(num_meshes_obj) && (num_meshes_obj->valueint > 0)) {
+                runtime_config->canvas.gl.internal_limits.num_meshes = (uint32_t)num_meshes_obj->valueint;
+            }
+        }
+    }
+}
+
 static void manifest_parse_canvas(const cJSON * const sys_params_obj, runtime_configuration_t * const runtime_config) {
     MANIFEST_TRACE_PUSH_FN();
     const cJSON * const canvas_obj = cJSON_GetObjectItem(sys_params_obj, "canvas");
@@ -703,13 +760,18 @@ static void manifest_parse_canvas(const cJSON * const sys_params_obj, runtime_co
     {
         const cJSON * const max_states_obj = cJSON_GetObjectItem(canvas_obj, "max_states");
         if (max_states_obj && cJSON_IsNumber(max_states_obj)) {
-            runtime_config->canvas.max_states = (uint32_t)max_states_obj->valueint;
+            runtime_config->canvas.internal_limits.max_states = (uint32_t)max_states_obj->valueint;
         }
     }
     {
         const cJSON * const max_tesselation_steps_obj = cJSON_GetObjectItem(canvas_obj, "max_tesselation_steps");
         if (max_tesselation_steps_obj && cJSON_IsNumber(max_tesselation_steps_obj)) {
-            runtime_config->canvas.max_tesselation_steps = (uint32_t)max_tesselation_steps_obj->valueint;
+            runtime_config->canvas.internal_limits.max_tessellation_steps = (uint32_t)max_tesselation_steps_obj->valueint;
+        } else {
+            const cJSON * const max_tessellation_steps_obj = cJSON_GetObjectItem(canvas_obj, "max_tessellation_steps");
+            if (max_tessellation_steps_obj && cJSON_IsNumber(max_tessellation_steps_obj)) {
+                runtime_config->canvas.internal_limits.max_tessellation_steps = (uint32_t)max_tessellation_steps_obj->valueint;
+            }
         }
     }
     {
@@ -718,7 +780,83 @@ static void manifest_parse_canvas(const cJSON * const sys_params_obj, runtime_co
             runtime_config->canvas.enable_punchthrough_blend_mode_fix = (bool)enable_punchthrough_blend_mode_fix_obj->valueint;
         }
     }
+    {
+        const cJSON * const text_mesh_cache_obj = cJSON_GetObjectItem(canvas_obj, "text_mesh_cache");
+        if (text_mesh_cache_obj && cJSON_IsObject(text_mesh_cache_obj)) {
+            const cJSON * const enabled_obj = cJSON_GetObjectItem(text_mesh_cache_obj, "enabled");
+            if (enabled_obj && cJSON_IsBool(enabled_obj)) {
+                runtime_config->canvas.text_mesh_cache.enabled = (bool)enabled_obj->valueint;
+            }
+            const cJSON * const size_obj = cJSON_GetObjectItem(text_mesh_cache_obj, "size");
+            if (size_obj && cJSON_IsNumber(size_obj)) {
+                runtime_config->canvas.text_mesh_cache.size = (uint32_t)size_obj->valueint;
+            }
+        }
+    }
+    {
+        const cJSON * const gzip_limits_obj = cJSON_GetObjectItem(canvas_obj, "gzip_limits");
+        if (gzip_limits_obj && cJSON_IsObject(gzip_limits_obj)) {
+            const cJSON * const working_space_obj = cJSON_GetObjectItem(gzip_limits_obj, "working_space");
+            if (working_space_obj && cJSON_IsNumber(working_space_obj)) {
+                runtime_config->canvas.gzip_limits.working_space = (uint32_t)working_space_obj->valueint;
+            }
+        }
+    }
     manifest_get_canvas_font_atlas_dims(canvas_obj, &runtime_config->canvas.font_atlas.width, &runtime_config->canvas.font_atlas.height);
+    manifest_parse_canvas_gl(canvas_obj, runtime_config);
+    MANIFEST_TRACE_POP();
+}
+
+static void manifest_parse_renderer(const cJSON * const sys_params_obj, runtime_configuration_t * const runtime_config) {
+    MANIFEST_TRACE_PUSH_FN();
+
+    const cJSON * const renderer_obj = cJSON_GetObjectItem(sys_params_obj, "renderer");
+    if (renderer_obj != NULL) {
+        const cJSON * const device_obj = cJSON_GetObjectItem(renderer_obj, "device");
+        if ((device_obj != NULL) && cJSON_IsObject(device_obj)) {
+            const cJSON * const num_cmd_buffers_obj = cJSON_GetObjectItem(device_obj, "num_cmd_buffers");
+            if (num_cmd_buffers_obj && cJSON_IsNumber(num_cmd_buffers_obj)) {
+                runtime_config->renderer.device.num_cmd_buffers = num_cmd_buffers_obj->valueint;
+            }
+
+            const cJSON * const cmd_buf_size_obj = cJSON_GetObjectItem(device_obj, "cmd_buf_size");
+            if (cmd_buf_size_obj && cJSON_IsNumber(cmd_buf_size_obj)) {
+                runtime_config->renderer.device.cmd_buf_size = cmd_buf_size_obj->valueint;
+            }
+        }
+
+        const cJSON * const rhi_command_diffing_obj = cJSON_GetObjectItem(renderer_obj, "rhi_command_diffing");
+        if ((rhi_command_diffing_obj != NULL) && cJSON_IsObject(rhi_command_diffing_obj)) {
+            const cJSON * const enabled_obj = cJSON_GetObjectItem(rhi_command_diffing_obj, "enabled");
+            if (enabled_obj && cJSON_IsBool(enabled_obj)) {
+                runtime_config->renderer.rhi_command_diffing.enabled = (bool)enabled_obj->valueint;
+            }
+
+            const cJSON * const verbose_obj = cJSON_GetObjectItem(rhi_command_diffing_obj, "verbose");
+            if (verbose_obj && cJSON_IsBool(verbose_obj)) {
+                runtime_config->renderer.rhi_command_diffing.verbose = (bool)verbose_obj->valueint;
+            }
+
+            const cJSON * const tracking_obj = cJSON_GetObjectItem(rhi_command_diffing_obj, "tracking");
+            if ((tracking_obj != NULL) && cJSON_IsObject(tracking_obj)) {
+                const cJSON * const tracking_enabled_obj = cJSON_GetObjectItem(tracking_obj, "enabled");
+                if (tracking_enabled_obj && cJSON_IsBool(tracking_enabled_obj)) {
+                    runtime_config->renderer.rhi_command_diffing.tracking.enabled = (bool)tracking_enabled_obj->valueint;
+                }
+
+                const cJSON * const buffer_size_obj = cJSON_GetObjectItem(tracking_obj, "buffer_size");
+                if (buffer_size_obj && cJSON_IsNumber(buffer_size_obj)) {
+                    runtime_config->renderer.rhi_command_diffing.tracking.buffer_size = (size_t)buffer_size_obj->valueint;
+                }
+            }
+        }
+
+        const cJSON * const render_resource_tracking_obj = cJSON_GetObjectItem(renderer_obj, "render_resource_tracking");
+        if (render_resource_tracking_obj && cJSON_IsObject(render_resource_tracking_obj)) {
+            manifest_read_logging_mode(cJSON_GetObjectItem(render_resource_tracking_obj, "periodic_logging"), &runtime_config->renderer.render_resource_tracking.periodic_logging);
+        }
+    }
+
     MANIFEST_TRACE_POP();
 }
 
@@ -762,28 +900,101 @@ static void manifest_parse_reporting(const cJSON * const sys_params_obj, runtime
     MANIFEST_TRACE_POP();
 }
 
+static runtime_configuration_renderer_t renderer_get_default_config() {
+    return (runtime_configuration_renderer_t){
+        .device = {
+            .num_cmd_buffers = 32,
+            .cmd_buf_size = 64 * 1024,
+        },
+        .rhi_command_diffing = {.enabled = false, .verbose = false, .tracking = {
+                                                                        .enabled = false,
+                                                                        .buffer_size = 4096,
+                                                                    }},
+        .render_resource_tracking = {
+            .periodic_logging = logging_disabled,
+        }};
+}
+
+static void manifest_parse_http(const cJSON * const sys_params_obj, runtime_configuration_t * const runtime_config) {
+    MANIFEST_TRACE_PUSH_FN();
+    const cJSON * const http = cJSON_GetObjectItem(sys_params_obj, "http");
+    if (http != NULL) {
+        const cJSON * const httpx_global_certs = cJSON_GetObjectItem(http, "httpx_global_certs");
+        if (httpx_global_certs && cJSON_IsBool(httpx_global_certs)) {
+            runtime_config->http.httpx_global_certs = (bool)httpx_global_certs->valueint;
+        }
+    }
+    MANIFEST_TRACE_POP();
+}
+
+static void manifest_parse_http2(const cJSON * const sys_params_obj, runtime_configuration_t * const runtime_config) {
+    MANIFEST_TRACE_PUSH_FN();
+    const cJSON * const http = cJSON_GetObjectItem(sys_params_obj, "http2");
+    if (http != NULL) {
+        const cJSON * const enabled = cJSON_GetObjectItem(http, "enabled");
+        if (enabled && cJSON_IsBool(enabled)) {
+            runtime_config->http2.enabled = (bool)enabled->valueint;
+        }
+
+        const cJSON * const use_multiplexing = cJSON_GetObjectItem(http, "use_multiplexing");
+        if (use_multiplexing && cJSON_IsBool(use_multiplexing)) {
+            runtime_config->http2.use_multiplexing = (bool)use_multiplexing->valueint;
+        }
+
+        const cJSON * const multiplex_wait_for_existing_connection = cJSON_GetObjectItem(http, "multiplex_wait_for_existing_connection");
+        if (multiplex_wait_for_existing_connection && cJSON_IsBool(multiplex_wait_for_existing_connection)) {
+            runtime_config->http2.multiplex_wait_for_existing_connection = (bool)multiplex_wait_for_existing_connection->valueint;
+        }
+    }
+    MANIFEST_TRACE_POP();
+}
+
 runtime_configuration_t get_default_runtime_configuration(void) {
     runtime_configuration_t config = {
         .memory_reservations = adk_get_default_memory_reservations(),
-        .wasm_memory_size = 0, // No default, will fail if not provided by bundle or manifest
+        .wasm_low_memory_size = 0,
+        .wasm_high_memory_size = 0, // No default, will fail if not provided by bundle or manifest
+        .wasm_heap_allocation_threshold = 100 * 1024,
+        .log_input_events = false,
         .network_pump_fragment_size = 4096,
+        .network_pump_sleep_period = 1,
+        .watchdog = {
+            .enabled = false,
+            .suspend_threshold = 30,
+            .warning_delay_ms = 100,
+            .fatal_delay_ms = 3000,
+        },
         .coredump_memory_size = 16 * 1024, // default set for merlin demos, unable to load manifest prior to demos
         .guard_page_mode = default_guard_page_mode,
         .http_max_pooled_connections = 4,
         .bundle_fetch = {.retry_max_attempts = 0, .retry_backoff_ms = {.ms = 0}},
-        .websocket = {
-            .backend = adk_websocket_backend_http2,
-            .config = {
-                .ping_timeout = {10000},
-                .no_activity_wait_period = {50000},
-                .max_handshake_timeout = {60 * 1000},
-                .receive_buffer_size = 1024,
-                .send_buffer_size = 4 * 1024,
-                .max_receivable_message_size = 1024 * 1024,
-                .header_buffer_size = 2 * 1024,
-                .maximum_redirects = 10}},
-        .canvas = {.max_states = cg_default_max_states, .max_tesselation_steps = cg_default_max_tesselation_steps, .enable_punchthrough_blend_mode_fix = false, .font_atlas = {.width = 0, .height = 0}},
+        .websocket = {.backend = adk_websocket_backend_http2, .config = {.ping_timeout = {10000}, .no_activity_wait_period = {50000}, .max_handshake_timeout = {60 * 1000}, .receive_buffer_size = 1024, .send_buffer_size = 4 * 1024, .max_receivable_message_size = 1024 * 1024, .header_buffer_size = 2 * 1024, .maximum_redirects = 10}},
+        .canvas = {.enable_punchthrough_blend_mode_fix = false, .internal_limits = {
+                                                                    .max_states = cg_default_max_states,
+                                                                    .max_tessellation_steps = cg_default_max_tesselation_steps,
+                                                                },
+                   .font_atlas = {
+                       .width = 0,
+                       .height = 0,
+                   },
+                   .text_mesh_cache = {
+                       .size = cg_default_max_text_mesh_cache_size,
+                       .enabled = false,
+                   },
+                   .gzip_limits = {
+                       .working_space = cg_gzip_default_working_space,
+                   },
+                   .gl = {
+                       .internal_limits = {
+                           .max_verts_per_vertex_bank = cg_gl_default_max_verts_per_vertex_bank,
+                           .num_vertex_banks = cg_gl_default_vertex_banks,
+                           .num_meshes = cg_gl_default_num_meshes,
+                       },
+                   }},
+        .renderer = renderer_get_default_config(),
         .reporting = {.capture_logs = true, .minimum_event_level = event_level_error, .sentry_dsn = {0}, .send_queue_size = 256},
+        .http = {.httpx_global_certs = false},
+        .http2 = {.enabled = false, .use_multiplexing = false, .multiplex_wait_for_existing_connection = false},
     };
 
     strcpy_s(config.reporting.sentry_dsn, adk_reporting_max_string_length, "https://d922c6eded824f99b3aeb083fefb999e@disney.my.sentry.io/31");
@@ -825,20 +1036,73 @@ static void process_runtime_configuration(const cJSON * const runtime_config_obj
     // Process the "sys_params" node
     const cJSON * const system_params_obj = cJSON_GetObjectItem(runtime_config_obj, c_sys_params);
     if (cJSON_IsObject(system_params_obj)) {
-        // Extract WASM memory size
-        const cJSON * const wasm_mem_obj = cJSON_GetObjectItem(system_params_obj, c_wasm_memory_size);
+        // Extract WASM memory sizes
         // NOTE: since the the bin/.config file is currently optional, we are
-        // not requiring any of it's members and this parser will not fail if
-        // "wasm_memory_size" is not present. However, this value is required
-        // to load a WASM, so its absence may cause a load failure.
-        if (cJSON_IsNumber(wasm_mem_obj)) {
-            config->wasm_memory_size = wasm_mem_obj->valueint;
+        // not requiring any of its members and this parser will not fail if
+        // "wasm_memory_size"is not present.
+        // However, this property is required to load a WASM, so its absence
+        // may cause a load failure.
+        const cJSON * const wasm_memory_size_obj = cJSON_GetObjectItem(system_params_obj, c_wasm_memory_size);
+        if (cJSON_IsObject(wasm_memory_size_obj)) {
+            const cJSON * const wasm_low_mem_obj = cJSON_GetObjectItem(wasm_memory_size_obj, "low");
+            if (cJSON_IsNumber(wasm_low_mem_obj)) {
+                config->wasm_low_memory_size = wasm_low_mem_obj->valueint;
+            }
+
+            const cJSON * const wasm_high_mem_obj = cJSON_GetObjectItem(wasm_memory_size_obj, "high");
+            if (cJSON_IsNumber(wasm_high_mem_obj)) {
+                config->wasm_high_memory_size = wasm_high_mem_obj->valueint;
+            }
+
+            // Extract WASM heap allocation threshold
+            const cJSON * const wasm_heap_allocation_threshold_obj = cJSON_GetObjectItem(wasm_memory_size_obj, "allocation_threshold");
+            if (cJSON_IsNumber(wasm_heap_allocation_threshold_obj)) {
+                config->wasm_heap_allocation_threshold = wasm_heap_allocation_threshold_obj->valueint;
+            }
+        } else if (cJSON_IsNumber(wasm_memory_size_obj)) {
+            // Compatibility with the old wasm memory configuration
+            config->wasm_low_memory_size = 0;
+            config->wasm_high_memory_size = wasm_memory_size_obj->valueint;
+            config->wasm_heap_allocation_threshold = 0;
+        }
+
+        const cJSON * const log_input_events_obj = cJSON_GetObjectItem(system_params_obj, c_log_input_events);
+        if (cJSON_IsBool(log_input_events_obj)) {
+            config->log_input_events = (bool)(log_input_events_obj->valueint);
         }
 
         // Extract network pump's fragment size
         const cJSON * const net_pump_fragment_size = cJSON_GetObjectItem(system_params_obj, c_network_pump_fragment_size);
         if (cJSON_IsNumber(net_pump_fragment_size)) {
             config->network_pump_fragment_size = net_pump_fragment_size->valueint;
+        }
+
+        const cJSON * const net_pump_sleep_period = cJSON_GetObjectItem(system_params_obj, c_network_pump_sleep_period_ms);
+        if (cJSON_IsNumber(net_pump_sleep_period)) {
+            config->network_pump_sleep_period = net_pump_sleep_period->valueint;
+        }
+
+        const cJSON * const watchdog_value = cJSON_GetObjectItem(system_params_obj, c_watchdog);
+        if (cJSON_IsObject(watchdog_value)) {
+            const cJSON * const enabled_value = cJSON_GetObjectItem(watchdog_value, "enabled");
+            if (cJSON_IsBool(enabled_value)) {
+                config->watchdog.enabled = (bool)enabled_value->valueint;
+            }
+
+            const cJSON * const suspend_threshold_value = cJSON_GetObjectItem(watchdog_value, "suspend_threshold");
+            if (cJSON_IsNumber(suspend_threshold_value)) {
+                config->watchdog.suspend_threshold = suspend_threshold_value->valueint;
+            }
+
+            const cJSON * const warning_delay_value = cJSON_GetObjectItem(watchdog_value, "warning_delay_ms");
+            if (cJSON_IsNumber(warning_delay_value)) {
+                config->watchdog.warning_delay_ms = warning_delay_value->valueint;
+            }
+
+            const cJSON * const watchdog_fatal_delay_value = cJSON_GetObjectItem(watchdog_value, "fatal_delay_ms");
+            if (cJSON_IsNumber(watchdog_fatal_delay_value)) {
+                config->watchdog.fatal_delay_ms = watchdog_fatal_delay_value->valueint;
+            }
         }
 
         // Extract memory reservations
@@ -884,7 +1148,10 @@ static void process_runtime_configuration(const cJSON * const runtime_config_obj
         bundle_conditional_overwrite_http_max_pooled_connections(cJSON_GetObjectItem(system_params_obj, "http_max_pooled_connections"), &config->http_max_pooled_connections);
         manifest_parse_adk_websocket(system_params_obj, config);
         manifest_parse_canvas(system_params_obj, config);
+        manifest_parse_renderer(system_params_obj, config);
         manifest_parse_reporting(system_params_obj, config);
+        manifest_parse_http(system_params_obj, config);
+        manifest_parse_http2(system_params_obj, config);
     }
 
     MANIFEST_TRACE_POP();
@@ -1001,6 +1268,7 @@ void manifest_free_parser() {
     if (statics.json_root) {
         cJSON_Delete(&statics.json_ctx, statics.json_root);
         statics.json_root = NULL;
+        statics.manifest_config_json = NULL;
     }
 
     MANIFEST_TRACE_POP();

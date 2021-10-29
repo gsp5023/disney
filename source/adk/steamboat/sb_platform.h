@@ -12,6 +12,7 @@ steamboat platform functions
 
 #pragma once
 
+#include "source/adk/runtime/memory.h"
 #include "source/adk/runtime/runtime.h"
 #include "source/tools/adk-bindgen/lib/ffi_gen_macros.h"
 
@@ -49,6 +50,9 @@ EXT_EXPORT void sb_halt(const char * const message);
 /// Dumps internal heap allocations
 EXT_EXPORT void sb_platform_dump_heap_usage();
 
+/// Gets internal heap metrics
+EXT_EXPORT heap_metrics_t sb_platform_get_heap_metrics();
+
 /// Creates a page-aligned memory mapping of `size` bytes
 EXT_EXPORT mem_region_t sb_map_pages(const size_t size, const system_page_protect_e protect);
 
@@ -79,18 +83,19 @@ EXT_EXPORT void sb_assert_failed(const char * const message, const char * const 
 EXT_EXPORT void sb_on_app_load_failure();
 
 /// Application state-changes
-FFI_EXPORT FFI_NAME(adk_app_notify_e)
-    FFI_ENUM_CLEAN_NAMES
-    typedef enum sb_app_notify_e {
-        /// A user logged out of their account.
-        sb_app_notify_logged_out,
-        /// A user has logged into an account that is not entitled to play content.
-        sb_app_notify_logged_in_not_entitled,
-        /// A user has logged into an account that is entitled to play content.
-        sb_app_notify_logged_in_and_entitled,
-        /// The system loading screen has been dismissed.
-        sb_app_notify_dismiss_system_loading_screen
-    } sb_app_notify_e;
+FFI_EXPORT
+FFI_NAME(adk_app_notify_e)
+FFI_ENUM_CLEAN_NAMES
+typedef enum sb_app_notify_e {
+    /// A user logged out of their account.
+    sb_app_notify_logged_out,
+    /// A user has logged into an account that is not entitled to play content.
+    sb_app_notify_logged_in_not_entitled,
+    /// A user has logged into an account that is entitled to play content.
+    sb_app_notify_logged_in_and_entitled,
+    /// The system loading screen has been dismissed.
+    sb_app_notify_dismiss_system_loading_screen
+} sb_app_notify_e;
 
 /// Notify system of application state changes
 ///
@@ -103,6 +108,23 @@ EXT_EXPORT void sb_notify_app_status(const sb_app_notify_e notify);
 /// * `out`: The resulting device information
 ///
 EXT_EXPORT void sb_get_system_metrics(FFI_PTR_WASM struct adk_system_metrics_t * const out);
+
+FFI_EXPORT
+FFI_NAME(adk_network_type_e)
+FFI_ENUM_CLEAN_NAMES
+typedef enum sb_network_type_e {
+    sb_network_type_unknown,
+    /// Ethernet connection
+    sb_network_type_ethernet,
+    /// WIFI connection
+    sb_network_type_wireless,
+    FORCE_ENUM_INT32(sb_network_type_e)
+} sb_network_type_e;
+
+/// Returns the information about the network type used to communication over the network
+FFI_EXPORT
+FFI_NAME(adk_get_network_type)
+sb_network_type_e sb_get_network_type();
 
 /// Move the application forward a frame.
 ///
@@ -137,19 +159,19 @@ FFI_EXPORT typedef struct nanoseconds_t {
     uint64_t ns;
 } nanoseconds_t;
 
-/// monotonically increasing nanosecond clock
+/// Monotonically increasing nanosecond clock
 EXT_EXPORT FFI_EXPORT FFI_NAME(adk_read_nanosecond_clock) nanoseconds_t sb_read_nanosecond_clock();
 
-/// The system time since the UNIX Epoch in seconds and microseconds parts
+/// The system time since the UNIX Epoch in seconds and microseconds parts from the real-time clock
 typedef struct sb_time_since_epoch_t {
     uint32_t seconds;
     uint32_t microseconds;
 } sb_time_since_epoch_t;
 
-/// Returns the system time since the UNIX Epoch in seconds and microseconds parts
+/// Returns the system time since the UNIX Epoch in seconds and microseconds parts from the real-time clock
 EXT_EXPORT sb_time_since_epoch_t sb_get_time_since_epoch();
 
-/// Converts given time since epoch (in seconds) into 'local' calendar time
+/// Converts given time since the UNIX Epoch (in seconds) into 'local' calendar time
 EXT_EXPORT void sb_seconds_since_epoch_to_localtime(const time_t seconds, struct tm * const _tm);
 
 /// Converts `text` to audio output as speech (when available)
@@ -195,6 +217,15 @@ typedef struct sb_cpu_mem_status_t {
 
 /// Retrieves information on CPU and memory utilization
 EXT_EXPORT FFI_EXPORT FFI_NAME(adk_get_cpu_mem_status) sb_cpu_mem_status_t sb_get_cpu_mem_status();
+
+/// Return a signed offset in seconds between user's local timezone and GMT.
+/// Examples:
+/// * `GMT`: 0
+/// * `EST`: -18000 (-5h from GMT)
+/// * `CET`: 3600 (+1h from GMT)
+/// In case of an error should return 0 defaulting to GMT
+FFI_EXPORT FFI_NAME(adk_get_localtime_offset)
+    int64_t sb_get_localtime_offset();
 
 #ifdef __cplusplus
 }

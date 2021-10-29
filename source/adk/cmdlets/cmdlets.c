@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * Copyright (c) 2020 Disney Streaming Technology LLC. All rights reserved.
+ * Copyright (c) 2020-2021 Disney Streaming Technology LLC. All rights reserved.
  *
  * ==========================================================================*/
 
@@ -8,9 +8,8 @@
 
 #include "source/adk/runtime/runtime.h"
 
-#if !(defined(_STB_NATIVE) || defined(_CONSOLE_NATIVE) || defined(_RPI))
+#if _RESTRICTED && !(defined(_STB_NATIVE) || defined(_CONSOLE_NATIVE) || defined(_RPI))
 int cmdlet_bif_extract_tool(const int argc, const char * const * const argv);
-int cmdlet_shader_compiler_tool(const int argc, const char * const * const argv);
 int cmdlet_json_deflate_tool(const int argc, const char * const * const argv);
 #endif
 
@@ -43,9 +42,8 @@ int cmdlet_run(const int argc, const char * const * const argv) {
 
     // List of commandlets that can be invoked
     // Must have a method named cmdlet_<commandlet name>_tool
-#if !(defined(_STB_NATIVE) || defined(_CONSOLE_NATIVE) || defined(_RPI))
+#if _RESTRICTED && !(defined(_STB_NATIVE) || defined(_CONSOLE_NATIVE) || defined(_RPI))
     RUN_CMDLET(bif_extract_tool);
-    RUN_CMDLET(shader_compiler_tool);
     RUN_CMDLET(json_deflate_tool);
 #endif
 

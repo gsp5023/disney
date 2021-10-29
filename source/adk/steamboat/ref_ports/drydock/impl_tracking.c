@@ -112,7 +112,6 @@ drydock_api_entry_t g_sb_impl_table[] = {
     {"sb_lock_mutex", "", 0, steam_api_schrodinger},
     {"sb_set_thread_priority", "", 0, steam_api_schrodinger},
     {"sb_thread_sleep", "", 0, steam_api_schrodinger},
-    {"sb_thread_yield", "", 0, steam_api_schrodinger},
     {"sb_unlock_mutex", "", 0, steam_api_schrodinger},
     {"sb_wait_condition", "", 0, steam_api_schrodinger},
 

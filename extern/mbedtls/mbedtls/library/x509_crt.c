@@ -2655,7 +2655,7 @@ void mbedtls_x509_crt_free( mbedtls_x509_crt *crt )
     mbedtls_x509_sequence *seq_cur;
     mbedtls_x509_sequence *seq_prv;
 
-    if( crt == NULL )
+    if( crt == NULL || crt->keep )
         return;
 
     do

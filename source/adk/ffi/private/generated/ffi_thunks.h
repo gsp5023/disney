@@ -8,7 +8,7 @@
  * This is generated code. It will be regenerated on app build. Do not modify manually.
  */
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_ad_end, (const int32_t session_id), {
     adk_analytics_ad_end(session_id);
 })
@@ -16,9 +16,9 @@ FFI_THUNK(0x104, void, adk_analytics_ad_end, (const int32_t session_id), {
 FFI_THUNK(0x104, void, adk_analytics_ad_end, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_ad_start, (const int32_t session_id), {
     adk_analytics_ad_start(session_id);
 })
@@ -26,9 +26,9 @@ FFI_THUNK(0x104, void, adk_analytics_ad_start, (const int32_t session_id), {
 FFI_THUNK(0x104, void, adk_analytics_ad_start, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10AA, void, adk_analytics_add_event_to_dictionary, (FFI_WASM_PTR const key, FFI_WASM_PTR const event_name), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(key), "key cannot be NULL");
     ASSERT_MSG(FFI_PIN_WASM_PTR(event_name), "event_name cannot be NULL");
@@ -38,9 +38,9 @@ FFI_THUNK(0x10AA, void, adk_analytics_add_event_to_dictionary, (FFI_WASM_PTR con
 FFI_THUNK(0x10AA, void, adk_analytics_add_event_to_dictionary, (FFI_WASM_PTR const key, FFI_WASM_PTR const event_name), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x1048, void, adk_analytics_attach_player, (const int32_t session_id, FFI_NATIVE_PTR(void *) player), {
     ASSERT_MSG(FFI_GET_NATIVE_PTR(void *, player), "player cannot be NULL");
     adk_analytics_attach_player(session_id, FFI_GET_NATIVE_PTR(void *, player));
@@ -49,9 +49,9 @@ FFI_THUNK(0x1048, void, adk_analytics_attach_player, (const int32_t session_id, 
 FFI_THUNK(0x1048, void, adk_analytics_attach_player, (const int32_t session_id, FFI_NATIVE_PTR(void *) player), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_cleanup_session, (const int32_t session_id), {
     adk_analytics_cleanup_session(session_id);
 })
@@ -59,9 +59,9 @@ FFI_THUNK(0x104, void, adk_analytics_cleanup_session, (const int32_t session_id)
 FFI_THUNK(0x104, void, adk_analytics_cleanup_session, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10, void, adk_analytics_create_dictionary, (), {
     adk_analytics_create_dictionary();
 })
@@ -69,9 +69,9 @@ FFI_THUNK(0x10, void, adk_analytics_create_dictionary, (), {
 FFI_THUNK(0x10, void, adk_analytics_create_dictionary, (), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, int32_t, adk_analytics_create_session, (), {
     return adk_analytics_create_session();
 })
@@ -79,9 +79,9 @@ FFI_THUNK(0x40, int32_t, adk_analytics_create_session, (), {
 FFI_THUNK(0x40, int32_t, adk_analytics_create_session, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10, void, adk_analytics_destroy_dictionary, (), {
     adk_analytics_destroy_dictionary();
 })
@@ -89,9 +89,9 @@ FFI_THUNK(0x10, void, adk_analytics_destroy_dictionary, (), {
 FFI_THUNK(0x10, void, adk_analytics_destroy_dictionary, (), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_detach_player, (const int32_t session_id), {
     adk_analytics_detach_player(session_id);
 })
@@ -99,9 +99,9 @@ FFI_THUNK(0x104, void, adk_analytics_detach_player, (const int32_t session_id), 
 FFI_THUNK(0x104, void, adk_analytics_detach_player, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_asset_name, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_asset_name());
 })
@@ -109,9 +109,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_asset_name, (), {
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_asset_name, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x804, FFI_NATIVE_PTR(void *), adk_analytics_get_attached_player, (const int32_t session_id), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_attached_player(session_id));
 })
@@ -119,19 +119,19 @@ FFI_THUNK(0x804, FFI_NATIVE_PTR(void *), adk_analytics_get_attached_player, (con
 FFI_THUNK(0x804, FFI_NATIVE_PTR(void *), adk_analytics_get_attached_player, (const int32_t session_id), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
-FFI_THUNK(0x40, int32_t, adk_analytics_get_buffer_length, (), {
-    return adk_analytics_get_buffer_length();
+#ifdef _CONSOLE_NATIVE
+FFI_THUNK(0x404, int32_t, adk_analytics_get_buffer_length, (const int32_t session_id), {
+    return adk_analytics_get_buffer_length(session_id);
 })
 #else
-FFI_THUNK(0x40, int32_t, adk_analytics_get_buffer_length, (), {
+FFI_THUNK(0x404, int32_t, adk_analytics_get_buffer_length, (const int32_t session_id), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, int32_t, adk_analytics_get_default_bitrate, (), {
     return adk_analytics_get_default_bitrate();
 })
@@ -139,9 +139,9 @@ FFI_THUNK(0x40, int32_t, adk_analytics_get_default_bitrate, (), {
 FFI_THUNK(0x40, int32_t, adk_analytics_get_default_bitrate, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_default_cdn, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_default_cdn());
 })
@@ -149,9 +149,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_default_cdn, (), {
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_default_cdn, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_default_resource, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_default_resource());
 })
@@ -159,9 +159,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_default_resource, (), 
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_default_resource, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_brand, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_device_brand());
 })
@@ -169,9 +169,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_brand, ()
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_brand, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_manufacturer, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_device_manufacturer());
 })
@@ -179,9 +179,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_manufactu
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_manufacturer, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_model, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_device_model());
 })
@@ -189,9 +189,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_model, ()
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_model, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, FFI_ENUM(Device), adk_analytics_get_device_type, (), {
     return (FFI_ENUM(Device))adk_analytics_get_device_type();
 })
@@ -199,9 +199,9 @@ FFI_THUNK(0x40, FFI_ENUM(Device), adk_analytics_get_device_type, (), {
 FFI_THUNK(0x40, FFI_ENUM(Device), adk_analytics_get_device_type, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_version, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_device_version());
 })
@@ -209,9 +209,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_version, 
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_device_version, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, int32_t, adk_analytics_get_duration, (), {
     return adk_analytics_get_duration();
 })
@@ -219,9 +219,9 @@ FFI_THUNK(0x40, int32_t, adk_analytics_get_duration, (), {
 FFI_THUNK(0x40, int32_t, adk_analytics_get_duration, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, int32_t, adk_analytics_get_enable_player_state_inference, (), {
     return adk_analytics_get_enable_player_state_inference();
 })
@@ -229,9 +229,9 @@ FFI_THUNK(0x40, int32_t, adk_analytics_get_enable_player_state_inference, (), {
 FFI_THUNK(0x40, int32_t, adk_analytics_get_enable_player_state_inference, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_framework_name, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_framework_name());
 })
@@ -239,9 +239,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_framework_name, 
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_framework_name, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_framework_version, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_framework_version());
 })
@@ -249,9 +249,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_framework_versio
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_framework_version, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_getway_url, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_getway_url());
 })
@@ -259,9 +259,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_getway_url, (), {
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_getway_url, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, uint32_t, adk_analytics_get_heartbeat_interval, (), {
     return adk_analytics_get_heartbeat_interval();
 })
@@ -269,9 +269,9 @@ FFI_THUNK(0x40, uint32_t, adk_analytics_get_heartbeat_interval, (), {
 FFI_THUNK(0x40, uint32_t, adk_analytics_get_heartbeat_interval, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, int32_t, adk_analytics_get_is_live, (), {
     return adk_analytics_get_is_live();
 })
@@ -279,9 +279,9 @@ FFI_THUNK(0x40, int32_t, adk_analytics_get_is_live, (), {
 FFI_THUNK(0x40, int32_t, adk_analytics_get_is_live, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, FFI_ENUM(adk_analytics_log_e), adk_analytics_get_log_level, (), {
     return (FFI_ENUM(adk_analytics_log_e))adk_analytics_get_log_level();
 })
@@ -289,19 +289,19 @@ FFI_THUNK(0x40, FFI_ENUM(adk_analytics_log_e), adk_analytics_get_log_level, (), 
 FFI_THUNK(0x40, FFI_ENUM(adk_analytics_log_e), adk_analytics_get_log_level, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
-FFI_THUNK(0x40, int32_t, adk_analytics_get_min_buffer_length, (), {
-    return adk_analytics_get_min_buffer_length();
+#ifdef _CONSOLE_NATIVE
+FFI_THUNK(0x404, int32_t, adk_analytics_get_min_buffer_length, (const int32_t session_id), {
+    return adk_analytics_get_min_buffer_length(session_id);
 })
 #else
-FFI_THUNK(0x40, int32_t, adk_analytics_get_min_buffer_length, (), {
+FFI_THUNK(0x404, int32_t, adk_analytics_get_min_buffer_length, (const int32_t session_id), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_operating_system_name, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_operating_system_name());
 })
@@ -309,9 +309,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_operating_system
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_operating_system_name, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_operating_system_version, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_operating_system_version());
 })
@@ -319,19 +319,19 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_operating_system
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_operating_system_version, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
-FFI_THUNK(0x40, int32_t, adk_analytics_get_playahead_time, (), {
-    return adk_analytics_get_playahead_time();
+#ifdef _CONSOLE_NATIVE
+FFI_THUNK(0x404, int32_t, adk_analytics_get_playahead_time, (const int32_t session_id), {
+    return adk_analytics_get_playahead_time(session_id);
 })
 #else
-FFI_THUNK(0x40, int32_t, adk_analytics_get_playahead_time, (), {
+FFI_THUNK(0x404, int32_t, adk_analytics_get_playahead_time, (const int32_t session_id), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_player_name, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_player_name());
 })
@@ -339,9 +339,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_player_name, (), {
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_player_name, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40, uint32_t, adk_analytics_get_player_poll_interval, (), {
     return adk_analytics_get_player_poll_interval();
 })
@@ -349,39 +349,39 @@ FFI_THUNK(0x40, uint32_t, adk_analytics_get_player_poll_interval, (), {
 FFI_THUNK(0x40, uint32_t, adk_analytics_get_player_poll_interval, (), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
-FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_type, (), {
-    return FFI_SET_NATIVE_PTR(adk_analytics_get_player_type());
+#ifdef _CONSOLE_NATIVE
+FFI_THUNK(0x804, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_type, (const int32_t session_id), {
+    return FFI_SET_NATIVE_PTR(adk_analytics_get_player_type(session_id));
 })
 #else
-FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_type, (), {
+FFI_THUNK(0x804, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_type, (const int32_t session_id), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
-FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_version, (), {
-    return FFI_SET_NATIVE_PTR(adk_analytics_get_player_version());
+#ifdef _CONSOLE_NATIVE
+FFI_THUNK(0x804, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_version, (const int32_t session_id), {
+    return FFI_SET_NATIVE_PTR(adk_analytics_get_player_version(session_id));
 })
 #else
-FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_version, (), {
+FFI_THUNK(0x804, FFI_NATIVE_PTR(const char *), adk_analytics_get_player_version, (const int32_t session_id), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
-FFI_THUNK(0xF0, float, adk_analytics_get_rendered_framerate, (), {
-    return adk_analytics_get_rendered_framerate();
+#ifdef _CONSOLE_NATIVE
+FFI_THUNK(0xF04, float, adk_analytics_get_rendered_framerate, (const int32_t session_id), {
+    return adk_analytics_get_rendered_framerate(session_id);
 })
 #else
-FFI_THUNK(0xF0, float, adk_analytics_get_rendered_framerate, (), {
+FFI_THUNK(0xF04, float, adk_analytics_get_rendered_framerate, (const int32_t session_id), {
     return 0.0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_stream_url, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_stream_url());
 })
@@ -389,9 +389,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_stream_url, (), {
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_stream_url, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80A, FFI_NATIVE_PTR(const char *), adk_analytics_get_tag, (FFI_WASM_PTR const key), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(key), "key cannot be NULL");
     return FFI_SET_NATIVE_PTR(adk_analytics_get_tag(FFI_PIN_WASM_PTR(key)));
@@ -400,9 +400,9 @@ FFI_THUNK(0x80A, FFI_NATIVE_PTR(const char *), adk_analytics_get_tag, (FFI_WASM_
 FFI_THUNK(0x80A, FFI_NATIVE_PTR(const char *), adk_analytics_get_tag, (FFI_WASM_PTR const key), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_viewer_id, (), {
     return FFI_SET_NATIVE_PTR(adk_analytics_get_viewer_id());
 })
@@ -410,9 +410,9 @@ FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_viewer_id, (), {
 FFI_THUNK(0x80, FFI_NATIVE_PTR(char *), adk_analytics_get_viewer_id, (), {
     return FFI_SET_NATIVE_PTR(NULL);
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_init_client, (FFI_WASM_PTR const consumer_key), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(consumer_key), "consumer_key cannot be NULL");
     adk_analytics_init_client(FFI_PIN_WASM_PTR(consumer_key));
@@ -421,9 +421,9 @@ FFI_THUNK(0x10A, void, adk_analytics_init_client, (FFI_WASM_PTR const consumer_k
 FFI_THUNK(0x10A, void, adk_analytics_init_client, (FFI_WASM_PTR const consumer_key), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_notify_network_connection_type, (FFI_WASM_PTR const _type), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(_type), "_type cannot be NULL");
     adk_analytics_notify_network_connection_type(FFI_PIN_WASM_PTR(_type));
@@ -432,9 +432,9 @@ FFI_THUNK(0x10A, void, adk_analytics_notify_network_connection_type, (FFI_WASM_P
 FFI_THUNK(0x10A, void, adk_analytics_notify_network_connection_type, (FFI_WASM_PTR const _type), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10F, void, adk_analytics_notify_network_signal_strength, (const float strength), {
     adk_analytics_notify_network_signal_strength(strength);
 })
@@ -442,9 +442,9 @@ FFI_THUNK(0x10F, void, adk_analytics_notify_network_signal_strength, (const floa
 FFI_THUNK(0x10F, void, adk_analytics_notify_network_signal_strength, (const float strength), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_notify_network_wifi_link_encryption, (FFI_WASM_PTR const _type), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(_type), "_type cannot be NULL");
     adk_analytics_notify_network_wifi_link_encryption(FFI_PIN_WASM_PTR(_type));
@@ -453,9 +453,9 @@ FFI_THUNK(0x10A, void, adk_analytics_notify_network_wifi_link_encryption, (FFI_W
 FFI_THUNK(0x10A, void, adk_analytics_notify_network_wifi_link_encryption, (FFI_WASM_PTR const _type), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_remove_session, (int32_t session_id), {
     adk_analytics_remove_session(session_id);
 })
@@ -463,9 +463,9 @@ FFI_THUNK(0x104, void, adk_analytics_remove_session, (int32_t session_id), {
 FFI_THUNK(0x104, void, adk_analytics_remove_session, (int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104F, void, adk_analytics_seek_end, (const int32_t session_id, const float player_seek_end_pos), {
     adk_analytics_seek_end(session_id, player_seek_end_pos);
 })
@@ -473,9 +473,9 @@ FFI_THUNK(0x104F, void, adk_analytics_seek_end, (const int32_t session_id, const
 FFI_THUNK(0x104F, void, adk_analytics_seek_end, (const int32_t session_id, const float player_seek_end_pos), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_seek_start, (const int32_t session_id), {
     adk_analytics_seek_start(session_id);
 })
@@ -483,9 +483,9 @@ FFI_THUNK(0x104, void, adk_analytics_seek_start, (const int32_t session_id), {
 FFI_THUNK(0x104, void, adk_analytics_seek_start, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x40A, int32_t, adk_analytics_send_event, (FFI_WASM_PTR const event_name), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(event_name), "event_name cannot be NULL");
     return adk_analytics_send_event(FFI_PIN_WASM_PTR(event_name));
@@ -494,9 +494,9 @@ FFI_THUNK(0x40A, int32_t, adk_analytics_send_event, (FFI_WASM_PTR const event_na
 FFI_THUNK(0x40A, int32_t, adk_analytics_send_event, (FFI_WASM_PTR const event_name), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x404A, int32_t, adk_analytics_send_session_event, (const int32_t session_id, FFI_WASM_PTR const event_name), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(event_name), "event_name cannot be NULL");
     return adk_analytics_send_session_event(session_id, FFI_PIN_WASM_PTR(event_name));
@@ -505,9 +505,9 @@ FFI_THUNK(0x404A, int32_t, adk_analytics_send_session_event, (const int32_t sess
 FFI_THUNK(0x404A, int32_t, adk_analytics_send_session_event, (const int32_t session_id, FFI_WASM_PTR const event_name), {
     return 0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104A4, void, adk_analytics_session_report_error, (const int32_t session_id, FFI_WASM_PTR const error_msg, const int32_t is_fatal), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(error_msg), "error_msg cannot be NULL");
     adk_analytics_session_report_error(session_id, FFI_PIN_WASM_PTR(error_msg), is_fatal ? true : false);
@@ -516,9 +516,9 @@ FFI_THUNK(0x104A4, void, adk_analytics_session_report_error, (const int32_t sess
 FFI_THUNK(0x104A4, void, adk_analytics_session_report_error, (const int32_t session_id, FFI_WASM_PTR const error_msg, const int32_t is_fatal), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_asset_name, (FFI_WASM_PTR const name), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(name), "name cannot be NULL");
     adk_analytics_set_asset_name(FFI_PIN_WASM_PTR(name));
@@ -527,9 +527,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_asset_name, (FFI_WASM_PTR const name), 
 FFI_THUNK(0x10A, void, adk_analytics_set_asset_name, (FFI_WASM_PTR const name), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_buffering, (const int32_t session_id), {
     adk_analytics_set_buffering(session_id);
 })
@@ -537,9 +537,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_buffering, (const int32_t session_id), 
 FFI_THUNK(0x104, void, adk_analytics_set_buffering, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_default_bitrate, (const int32_t bitrate), {
     adk_analytics_set_default_bitrate(bitrate);
 })
@@ -547,9 +547,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_default_bitrate, (const int32_t bitrate
 FFI_THUNK(0x104, void, adk_analytics_set_default_bitrate, (const int32_t bitrate), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_default_cdn, (FFI_WASM_PTR const name), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(name), "name cannot be NULL");
     adk_analytics_set_default_cdn(FFI_PIN_WASM_PTR(name));
@@ -558,9 +558,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_default_cdn, (FFI_WASM_PTR const name),
 FFI_THUNK(0x10A, void, adk_analytics_set_default_cdn, (FFI_WASM_PTR const name), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_default_resource, (FFI_WASM_PTR const name), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(name), "name cannot be NULL");
     adk_analytics_set_default_resource(FFI_PIN_WASM_PTR(name));
@@ -569,9 +569,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_default_resource, (FFI_WASM_PTR const n
 FFI_THUNK(0x10A, void, adk_analytics_set_default_resource, (FFI_WASM_PTR const name), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_device_brand, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_device_brand(FFI_PIN_WASM_PTR(value));
@@ -580,9 +580,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_device_brand, (FFI_WASM_PTR const value
 FFI_THUNK(0x10A, void, adk_analytics_set_device_brand, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_device_manufacturer, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_device_manufacturer(FFI_PIN_WASM_PTR(value));
@@ -591,9 +591,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_device_manufacturer, (FFI_WASM_PTR cons
 FFI_THUNK(0x10A, void, adk_analytics_set_device_manufacturer, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_device_model, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_device_model(FFI_PIN_WASM_PTR(value));
@@ -602,9 +602,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_device_model, (FFI_WASM_PTR const value
 FFI_THUNK(0x10A, void, adk_analytics_set_device_model, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_device_type, (FFI_ENUM(const Device) value), {
     ASSERT_MSG((Device_Unknown == (FFI_ENUM(const Device))value) || (Device_Desktop == (FFI_ENUM(const Device))value) || (Device_Console == (FFI_ENUM(const Device))value) || (Device_Settop == (FFI_ENUM(const Device))value) || (Device_Mobile == (FFI_ENUM(const Device))value) || (Device_Tablet == (FFI_ENUM(const Device))value) || (Device_SmartTV == (FFI_ENUM(const Device))value), "Argument must be one of [Device_Unknown, Device_Desktop, Device_Console, Device_Settop, Device_Mobile, Device_Tablet, Device_SmartTV]");
     adk_analytics_set_device_type((FFI_ENUM(const Device))value);
@@ -613,9 +613,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_device_type, (FFI_ENUM(const Device) va
 FFI_THUNK(0x104, void, adk_analytics_set_device_type, (FFI_ENUM(const Device) value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_device_version, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_device_version(FFI_PIN_WASM_PTR(value));
@@ -624,9 +624,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_device_version, (FFI_WASM_PTR const val
 FFI_THUNK(0x10A, void, adk_analytics_set_device_version, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_duration, (const int32_t duration), {
     adk_analytics_set_duration(duration);
 })
@@ -634,9 +634,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_duration, (const int32_t duration), {
 FFI_THUNK(0x104, void, adk_analytics_set_duration, (const int32_t duration), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_enable_player_state_inference, (const int32_t state), {
     adk_analytics_set_enable_player_state_inference(state ? true : false);
 })
@@ -644,9 +644,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_enable_player_state_inference, (const i
 FFI_THUNK(0x104, void, adk_analytics_set_enable_player_state_inference, (const int32_t state), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_framework_name, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_framework_name(FFI_PIN_WASM_PTR(value));
@@ -655,9 +655,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_framework_name, (FFI_WASM_PTR const val
 FFI_THUNK(0x10A, void, adk_analytics_set_framework_name, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_framework_version, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_framework_version(FFI_PIN_WASM_PTR(value));
@@ -666,9 +666,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_framework_version, (FFI_WASM_PTR const 
 FFI_THUNK(0x10A, void, adk_analytics_set_framework_version, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_gateway_url, (FFI_WASM_PTR const url), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(url), "url cannot be NULL");
     adk_analytics_set_gateway_url(FFI_PIN_WASM_PTR(url));
@@ -677,9 +677,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_gateway_url, (FFI_WASM_PTR const url), 
 FFI_THUNK(0x10A, void, adk_analytics_set_gateway_url, (FFI_WASM_PTR const url), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_heartbeat_interval, (const uint32_t interval), {
     adk_analytics_set_heartbeat_interval(interval);
 })
@@ -687,9 +687,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_heartbeat_interval, (const uint32_t int
 FFI_THUNK(0x104, void, adk_analytics_set_heartbeat_interval, (const uint32_t interval), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_is_live, (const int32_t live), {
     adk_analytics_set_is_live(live ? true : false);
 })
@@ -697,9 +697,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_is_live, (const int32_t live), {
 FFI_THUNK(0x104, void, adk_analytics_set_is_live, (const int32_t live), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_log_level, (FFI_ENUM(const adk_analytics_log_e) level), {
     ASSERT_MSG((log_none == (FFI_ENUM(const adk_analytics_log_e))level) || (log_error == (FFI_ENUM(const adk_analytics_log_e))level) || (log_warn == (FFI_ENUM(const adk_analytics_log_e))level) || (log_info == (FFI_ENUM(const adk_analytics_log_e))level) || (log_debug == (FFI_ENUM(const adk_analytics_log_e))level), "Argument must be one of [log_none, log_error, log_warn, log_info, log_debug]");
     adk_analytics_set_log_level((FFI_ENUM(const adk_analytics_log_e))level);
@@ -708,9 +708,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_log_level, (FFI_ENUM(const adk_analytic
 FFI_THUNK(0x104, void, adk_analytics_set_log_level, (FFI_ENUM(const adk_analytics_log_e) level), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_operating_system_name, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_operating_system_name(FFI_PIN_WASM_PTR(value));
@@ -719,9 +719,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_operating_system_name, (FFI_WASM_PTR co
 FFI_THUNK(0x10A, void, adk_analytics_set_operating_system_name, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_operating_system_version, (FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
     adk_analytics_set_operating_system_version(FFI_PIN_WASM_PTR(value));
@@ -730,9 +730,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_operating_system_version, (FFI_WASM_PTR
 FFI_THUNK(0x10A, void, adk_analytics_set_operating_system_version, (FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_paused, (const int32_t session_id), {
     adk_analytics_set_paused(session_id);
 })
@@ -740,9 +740,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_paused, (const int32_t session_id), {
 FFI_THUNK(0x104, void, adk_analytics_set_paused, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_player_name, (FFI_WASM_PTR const name), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(name), "name cannot be NULL");
     adk_analytics_set_player_name(FFI_PIN_WASM_PTR(name));
@@ -751,9 +751,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_player_name, (FFI_WASM_PTR const name),
 FFI_THUNK(0x10A, void, adk_analytics_set_player_name, (FFI_WASM_PTR const name), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_player_poll_interval, (const uint32_t interval), {
     adk_analytics_set_player_poll_interval(interval);
 })
@@ -761,9 +761,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_player_poll_interval, (const uint32_t i
 FFI_THUNK(0x104, void, adk_analytics_set_player_poll_interval, (const uint32_t interval), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_playing, (const int32_t session_id), {
     adk_analytics_set_playing(session_id);
 })
@@ -771,9 +771,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_playing, (const int32_t session_id), {
 FFI_THUNK(0x104, void, adk_analytics_set_playing, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x1044, void, adk_analytics_set_session_bitrate, (const int32_t session_id, const int32_t bitrate), {
     adk_analytics_set_session_bitrate(session_id, bitrate);
 })
@@ -781,9 +781,9 @@ FFI_THUNK(0x1044, void, adk_analytics_set_session_bitrate, (const int32_t sessio
 FFI_THUNK(0x1044, void, adk_analytics_set_session_bitrate, (const int32_t session_id, const int32_t bitrate), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x1044, void, adk_analytics_set_session_duration, (const int32_t session_id, const int32_t duration), {
     adk_analytics_set_session_duration(session_id, duration);
 })
@@ -791,9 +791,9 @@ FFI_THUNK(0x1044, void, adk_analytics_set_session_duration, (const int32_t sessi
 FFI_THUNK(0x1044, void, adk_analytics_set_session_duration, (const int32_t session_id, const int32_t duration), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x1044, void, adk_analytics_set_session_encoded_framerate, (const int32_t session_id, const int32_t framerate), {
     adk_analytics_set_session_encoded_framerate(session_id, framerate);
 })
@@ -801,9 +801,9 @@ FFI_THUNK(0x1044, void, adk_analytics_set_session_encoded_framerate, (const int3
 FFI_THUNK(0x1044, void, adk_analytics_set_session_encoded_framerate, (const int32_t session_id, const int32_t framerate), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x1044AA, void, adk_analytics_set_session_stream, (const int32_t session_id, const int32_t bitrate_kbps, FFI_WASM_PTR const cdn, FFI_WASM_PTR const resource), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(cdn), "cdn cannot be NULL");
     ASSERT_MSG(FFI_PIN_WASM_PTR(resource), "resource cannot be NULL");
@@ -813,9 +813,9 @@ FFI_THUNK(0x1044AA, void, adk_analytics_set_session_stream, (const int32_t sessi
 FFI_THUNK(0x1044AA, void, adk_analytics_set_session_stream, (const int32_t session_id, const int32_t bitrate_kbps, FFI_WASM_PTR const cdn, FFI_WASM_PTR const resource), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10444, void, adk_analytics_set_session_video_size, (const int32_t session_id, const int32_t width, const int32_t height), {
     adk_analytics_set_session_video_size(session_id, width, height);
 })
@@ -823,9 +823,9 @@ FFI_THUNK(0x10444, void, adk_analytics_set_session_video_size, (const int32_t se
 FFI_THUNK(0x10444, void, adk_analytics_set_session_video_size, (const int32_t session_id, const int32_t width, const int32_t height), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_set_stopped, (const int32_t session_id), {
     adk_analytics_set_stopped(session_id);
 })
@@ -833,9 +833,9 @@ FFI_THUNK(0x104, void, adk_analytics_set_stopped, (const int32_t session_id), {
 FFI_THUNK(0x104, void, adk_analytics_set_stopped, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_stream_url, (FFI_WASM_PTR const url), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(url), "url cannot be NULL");
     adk_analytics_set_stream_url(FFI_PIN_WASM_PTR(url));
@@ -844,9 +844,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_stream_url, (FFI_WASM_PTR const url), {
 FFI_THUNK(0x10A, void, adk_analytics_set_stream_url, (FFI_WASM_PTR const url), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10AA, void, adk_analytics_set_tag, (FFI_WASM_PTR const key, FFI_WASM_PTR const value), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(key), "key cannot be NULL");
     ASSERT_MSG(FFI_PIN_WASM_PTR(value), "value cannot be NULL");
@@ -856,9 +856,9 @@ FFI_THUNK(0x10AA, void, adk_analytics_set_tag, (FFI_WASM_PTR const key, FFI_WASM
 FFI_THUNK(0x10AA, void, adk_analytics_set_tag, (FFI_WASM_PTR const key, FFI_WASM_PTR const value), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x10A, void, adk_analytics_set_viewer_id, (FFI_WASM_PTR const id), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(id), "id cannot be NULL");
     adk_analytics_set_viewer_id(FFI_PIN_WASM_PTR(id));
@@ -867,9 +867,9 @@ FFI_THUNK(0x10A, void, adk_analytics_set_viewer_id, (FFI_WASM_PTR const id), {
 FFI_THUNK(0x10A, void, adk_analytics_set_viewer_id, (FFI_WASM_PTR const id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
-#ifdef _LEIA
+#ifdef _CONSOLE_NATIVE
 FFI_THUNK(0x104, void, adk_analytics_update_content_info, (const int32_t session_id), {
     adk_analytics_update_content_info(session_id);
 })
@@ -877,7 +877,7 @@ FFI_THUNK(0x104, void, adk_analytics_update_content_info, (const int32_t session
 FFI_THUNK(0x104, void, adk_analytics_update_content_info, (const int32_t session_id), {
     (void)0;
 })
-#endif // _LEIA
+#endif // _CONSOLE_NATIVE
 
 FFI_THUNK(0x10, void, adk_app_request_restart, (), {
     thunk_request_restart();
@@ -1060,12 +1060,26 @@ FFI_THUNK(0x80A, FFI_NATIVE_PTR(const char *), adk_get_env, (FFI_WASM_PTR const 
     return FFI_SET_NATIVE_PTR(adk_get_env(FFI_PIN_WASM_PTR(env_name)));
 })
 
+FFI_THUNK(0x104A, void, adk_get_heap_usage, (FFI_ENUM(const adk_heap_e) heap, FFI_WASM_PTR const ret_val), {
+    ASSERT_MSG((adk_heap_runtime == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_rhi_and_renderer == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_canvas_low == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_canvas_high == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_http_curl == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_http2 == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_json_deflate == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_wasm_low == (FFI_ENUM(const adk_heap_e))heap) || (adk_heap_wasm_high == (FFI_ENUM(const adk_heap_e))heap), "Argument must be one of [adk_heap_runtime, adk_heap_rhi_and_renderer, adk_heap_canvas_low, adk_heap_canvas_high, adk_heap_http_curl, adk_heap_http2, adk_heap_json_deflate, adk_heap_wasm_low, adk_heap_wasm_high]");
+    FFI_ASSERT_ALIGNED_WASM_PTR(ret_val, heap_metrics_t);
+    *(heap_metrics_t *)FFI_PIN_WASM_PTR(ret_val) = adk_get_heap_usage((FFI_ENUM(const adk_heap_e))heap);
+})
+
 FFI_THUNK(0x10A, void, adk_get_locale, (FFI_WASM_PTR const ret_val), {
     *(sb_locale_t *)FFI_PIN_WASM_PTR(ret_val) = sb_get_locale();
 })
 
+FFI_THUNK(0x80, int64_t, adk_get_localtime_offset, (), {
+    return sb_get_localtime_offset();
+})
+
 FFI_THUNK(0x80, uint64_t, adk_get_milliseconds_since_epoch, (), {
     return adk_get_milliseconds_since_epoch();
+})
+
+FFI_THUNK(0x40, FFI_ENUM(sb_network_type_e), adk_get_network_type, (), {
+    return (FFI_ENUM(sb_network_type_e))sb_get_network_type();
 })
 
 FFI_THUNK(0x404, int32_t, adk_get_supported_refresh_rate, (const int32_t starting_refresh_rate), {
@@ -1080,11 +1094,6 @@ FFI_THUNK(0x10A, void, adk_get_system_metrics_native, (FFI_WASM_PTR const out), 
 
 FFI_THUNK(0x80, FFI_NATIVE_PTR(const char *), adk_get_wasm_call_stack, (), {
     return FFI_SET_NATIVE_PTR(adk_get_wasm_call_stack());
-})
-
-FFI_THUNK(0x10A, void, adk_get_wasm_heap_usage, (FFI_WASM_PTR const ret_val), {
-    FFI_ASSERT_ALIGNED_WASM_PTR(ret_val, heap_metrics_t);
-    *(heap_metrics_t *)FFI_PIN_WASM_PTR(ret_val) = adk_get_wasm_heap_usage();
 })
 
 FFI_THUNK(0x808AA, FFI_NATIVE_PTR(adk_http_header_list_t *), adk_http_append_header_list, (FFI_NATIVE_PTR(adk_http_header_list_t *) list, FFI_WASM_PTR const name, FFI_WASM_PTR const value), {
@@ -1103,13 +1112,8 @@ FFI_THUNK(0x10A, void, adk_http_set_socks, (FFI_WASM_PTR const socks), {
     adk_http_set_socks(FFI_PIN_WASM_PTR(socks));
 })
 
-FFI_THUNK(0x108, void, adk_httpx_client_free, (FFI_NATIVE_PTR(adk_httpx_client_t * const) client), {
-    ASSERT_MSG(FFI_GET_NATIVE_PTR(adk_httpx_client_t * const, client), "client cannot be NULL");
-    adk_httpx_client_free(FFI_GET_NATIVE_PTR(adk_httpx_client_t * const, client));
-})
-
-FFI_THUNK(0x80, FFI_NATIVE_PTR(adk_httpx_client_t *), adk_httpx_client_new, (), {
-    return FFI_SET_NATIVE_PTR(adk_httpx_client_new());
+FFI_THUNK(0x80, FFI_NATIVE_PTR(adk_httpx_client_t *), adk_httpx_client_get, (), {
+    return FFI_SET_NATIVE_PTR(adk_httpx_client_get());
 })
 
 FFI_THUNK(0x8084A, FFI_NATIVE_PTR(adk_httpx_request_t *), adk_httpx_client_request, (FFI_NATIVE_PTR(const adk_httpx_client_t * const) client, FFI_ENUM(const adk_httpx_method_e) method, FFI_WASM_PTR const url), {
@@ -1221,6 +1225,14 @@ FFI_THUNK(0x804A, FFI_NATIVE_PTR(adk_screenshot_t *), adk_load_screenshot, (FFI_
     ASSERT_MSG((sb_app_root_directory == (FFI_ENUM(const sb_file_directory_e))directory) || (sb_app_config_directory == (FFI_ENUM(const sb_file_directory_e))directory) || (sb_app_cache_directory == (FFI_ENUM(const sb_file_directory_e))directory), "Argument must be one of [sb_app_root_directory, sb_app_config_directory, sb_app_cache_directory]");
     ASSERT_MSG(FFI_PIN_WASM_PTR(filename), "filename cannot be NULL");
     return FFI_SET_NATIVE_PTR(ffi_load_screenshot((FFI_ENUM(const sb_file_directory_e))directory, FFI_PIN_WASM_PTR(filename)));
+})
+
+FFI_THUNK(0x10A4A44A, void, adk_log_app_msg, (FFI_WASM_PTR const file, const uint32_t line, FFI_WASM_PTR const func, FFI_ENUM(const log_level_e) level, const uint32_t tag, FFI_WASM_PTR const msg), {
+    ASSERT_MSG(FFI_PIN_WASM_PTR(file), "file cannot be NULL");
+    ASSERT_MSG(FFI_PIN_WASM_PTR(func), "func cannot be NULL");
+    ASSERT_MSG((log_level_debug == (FFI_ENUM(const log_level_e))level) || (log_level_info == (FFI_ENUM(const log_level_e))level) || (log_level_warn == (FFI_ENUM(const log_level_e))level) || (log_level_error == (FFI_ENUM(const log_level_e))level) || (log_level_always == (FFI_ENUM(const log_level_e))level) || (log_level_app == (FFI_ENUM(const log_level_e))level) || (log_level_none == (FFI_ENUM(const log_level_e))level) || (num_log_levels == (FFI_ENUM(const log_level_e))level), "Argument must be one of [log_level_debug, log_level_info, log_level_warn, log_level_error, log_level_always, log_level_app, log_level_none, num_log_levels]");
+    ASSERT_MSG(FFI_PIN_WASM_PTR(msg), "msg cannot be NULL");
+    adk_log_app_msg(FFI_PIN_WASM_PTR(file), line, FFI_PIN_WASM_PTR(func), (FFI_ENUM(const log_level_e))level, tag, FFI_PIN_WASM_PTR(msg));
 })
 
 FFI_THUNK(0x10A, void, adk_log_msg, (FFI_WASM_PTR const msg), {
@@ -1484,6 +1496,13 @@ FFI_THUNK(0x108AFFAA4A, void, cg_context_fill_text_block_with_options, (FFI_NATI
     *(cg_font_metrics_t *)FFI_PIN_WASM_PTR(ret_val) = cg_context_fill_text_block_with_options(FFI_GET_NATIVE_PTR(cg_font_context_t * const, font_ctx), *(cg_rect_t *)FFI_PIN_WASM_PTR(text_rect), text_scroll_offset, extra_line_spacing, FFI_PIN_WASM_PTR(text), FFI_PIN_WASM_PTR(optional_ellipses), (FFI_ENUM(const cg_text_block_options_e))options);
 })
 
+FFI_THUNK(0x108AA, void, cg_context_fill_text_line, (FFI_NATIVE_PTR(cg_font_context_t * const) font_ctx, FFI_WASM_PTR const pos, FFI_WASM_PTR const text), {
+    ASSERT_MSG(FFI_GET_NATIVE_PTR(cg_font_context_t * const, font_ctx), "font_ctx cannot be NULL");
+    FFI_ASSERT_ALIGNED_WASM_PTR(pos, cg_vec2_t);
+    ASSERT_MSG(FFI_PIN_WASM_PTR(text), "text cannot be NULL");
+    cg_context_fill_text_line(FFI_GET_NATIVE_PTR(cg_font_context_t * const, font_ctx), *(cg_vec2_t *)FFI_PIN_WASM_PTR(pos), FFI_PIN_WASM_PTR(text));
+})
+
 FFI_THUNK(0x108AA4A, void, cg_context_fill_text_with_options, (FFI_NATIVE_PTR(cg_font_context_t * const) font_ctx, FFI_WASM_PTR const pos, FFI_WASM_PTR const text, FFI_ENUM(const cg_font_fill_options_e) options, FFI_WASM_PTR const ret_val), {
     ASSERT_MSG(FFI_GET_NATIVE_PTR(cg_font_context_t * const, font_ctx), "font_ctx cannot be NULL");
     FFI_ASSERT_ALIGNED_WASM_PTR(pos, cg_vec2_t);
@@ -1631,8 +1650,34 @@ FFI_THUNK(0x10A, void, cg_context_scale, (FFI_WASM_PTR const scale), {
     cg_context_scale(*(cg_vec2_t *)FFI_PIN_WASM_PTR(scale));
 })
 
+FFI_THUNK(0x108AAA, void, cg_context_sdf_draw_image_rect_rounded, (FFI_NATIVE_PTR(const cg_image_t * const) image, FFI_WASM_PTR const src, FFI_WASM_PTR const dst, FFI_WASM_PTR const draw_params), {
+    ASSERT_MSG(FFI_GET_NATIVE_PTR(const cg_image_t * const, image), "image cannot be NULL");
+    FFI_ASSERT_ALIGNED_WASM_PTR(src, cg_rect_t);
+    FFI_ASSERT_ALIGNED_WASM_PTR(dst, cg_rect_t);
+    FFI_ASSERT_ALIGNED_WASM_PTR(draw_params, cg_sdf_rect_params_t);
+    cg_context_sdf_draw_image_rect_rounded(FFI_GET_NATIVE_PTR(const cg_image_t * const, image), *(cg_rect_t *)FFI_PIN_WASM_PTR(src), *(cg_rect_t *)FFI_PIN_WASM_PTR(dst), *(cg_sdf_rect_params_t *)FFI_PIN_WASM_PTR(draw_params));
+})
+
+FFI_THUNK(0x108AA4, void, cg_context_sdf_fill_image_rect_rounded, (FFI_NATIVE_PTR(const cg_image_t * const) image, FFI_WASM_PTR const dst, FFI_WASM_PTR const draw_params, FFI_ENUM(const cg_image_tiling_e) tiling), {
+    ASSERT_MSG(FFI_GET_NATIVE_PTR(const cg_image_t * const, image), "image cannot be NULL");
+    FFI_ASSERT_ALIGNED_WASM_PTR(dst, cg_rect_t);
+    FFI_ASSERT_ALIGNED_WASM_PTR(draw_params, cg_sdf_rect_params_t);
+    ASSERT_MSG((cg_image_tiling_absolute == (FFI_ENUM(const cg_image_tiling_e))tiling) || (cg_image_tiling_relative == (FFI_ENUM(const cg_image_tiling_e))tiling) || (cg_image_tiling_stretch == (FFI_ENUM(const cg_image_tiling_e))tiling), "Argument must be one of [cg_image_tiling_absolute, cg_image_tiling_relative, cg_image_tiling_stretch]");
+    cg_context_sdf_fill_image_rect_rounded(FFI_GET_NATIVE_PTR(const cg_image_t * const, image), *(cg_rect_t *)FFI_PIN_WASM_PTR(dst), *(cg_sdf_rect_params_t *)FFI_PIN_WASM_PTR(draw_params), (FFI_ENUM(const cg_image_tiling_e))tiling);
+})
+
+FFI_THUNK(0x10AA, void, cg_context_sdf_fill_rect_rounded, (FFI_WASM_PTR const rect, FFI_WASM_PTR const draw_params), {
+    FFI_ASSERT_ALIGNED_WASM_PTR(rect, cg_rect_t);
+    FFI_ASSERT_ALIGNED_WASM_PTR(draw_params, cg_sdf_rect_params_t);
+    cg_context_sdf_fill_rect_rounded(*(cg_rect_t *)FFI_PIN_WASM_PTR(rect), *(cg_sdf_rect_params_t *)FFI_PIN_WASM_PTR(draw_params));
+})
+
 FFI_THUNK(0x10F, void, cg_context_set_alpha_test_threshold, (const float threshold), {
     cg_context_set_alpha_test_threshold(threshold);
+})
+
+FFI_THUNK(0x104, void, cg_context_set_clear_color, (const uint32_t color), {
+    cg_context_set_clear_color(color);
 })
 
 FFI_THUNK(0x10A, void, cg_context_set_clip_rect, (FFI_WASM_PTR const rect), {
@@ -1805,6 +1850,18 @@ FFI_THUNK(0x108A8A8444, void, json_deflate_parse_httpx_resize, (FFI_NATIVE_PTR(j
     json_deflate_parse_httpx_resize(FFI_GET_NATIVE_PTR(json_deflate_http_future_t * const, future), FFI_PIN_WASM_PTR(schema_layout), (const size_t)schema_layout_size, FFI_PIN_WASM_PTR(buffer), (const size_t)buffer_size, (FFI_ENUM(const json_deflate_parse_target_e))target, expected_size, schema_hash);
 })
 
+FFI_THUNK(0x80A88A8444, FFI_NATIVE_PTR(json_deflate_http_future_t *), json_deflate_parse_httpx_response_async, (FFI_WASM_PTR const schema_layout, uint64_t schema_layout_size, FFI_NATIVE_PTR(adk_httpx_response_t * const) response, FFI_WASM_PTR const buffer, uint64_t buffer_size, FFI_ENUM(const json_deflate_parse_target_e) target, const uint32_t expected_size, const uint32_t schema_hash), {
+    ASSERT_MSG(FFI_PIN_WASM_PTR(schema_layout), "schema_layout cannot be NULL");
+    ASSERT_MSG(FFI_GET_NATIVE_PTR(adk_httpx_response_t * const, response), "response cannot be NULL");
+    ASSERT_MSG(FFI_PIN_WASM_PTR(buffer), "buffer cannot be NULL");
+    ASSERT_MSG((json_deflate_parse_target_wasm == (FFI_ENUM(const json_deflate_parse_target_e))target) || (json_deflate_parse_target_native == (FFI_ENUM(const json_deflate_parse_target_e))target), "Argument must be one of [json_deflate_parse_target_wasm, json_deflate_parse_target_native]");
+    return FFI_SET_NATIVE_PTR(json_deflate_parse_httpx_response_async(FFI_PIN_WASM_PTR(schema_layout), (const size_t)schema_layout_size, FFI_GET_NATIVE_PTR(adk_httpx_response_t * const, response), FFI_PIN_WASM_PTR(buffer), (const size_t)buffer_size, (FFI_ENUM(const json_deflate_parse_target_e))target, expected_size, schema_hash));
+})
+
+FFI_THUNK(0x40, FFI_ENUM(log_level_e), log_get_min_level, (), {
+    return (FFI_ENUM(log_level_e))log_get_min_level();
+})
+
 FFI_THUNK(0x10A844, void, memcpy_n2r, (FFI_WASM_PTR const dst, FFI_NATIVE_PTR(const void * const) src, const int32_t offset, const int32_t num_bytes), {
     ASSERT_MSG(FFI_PIN_WASM_PTR(dst), "dst cannot be NULL");
     ASSERT_MSG(FFI_GET_NATIVE_PTR(const void * const, src), "src cannot be NULL");
@@ -1827,4 +1884,46 @@ FFI_THUNK(0x40A484, int32_t, strcpy_n2r_upto, (FFI_WASM_PTR const dst, const int
     ASSERT_MSG(FFI_GET_NATIVE_PTR(const char * const, src), "src cannot be NULL");
     return strcpy_n2r_upto(FFI_PIN_WASM_PTR(dst), dst_buff_size, FFI_GET_NATIVE_PTR(const char * const, src), max_copy_len);
 })
+
+#ifdef _TELEMETRY
+FFI_THUNK(0x10, void, telemetry_pop, (), {
+    app_telemetry_pop();
+})
+#else
+FFI_THUNK(0x10, void, telemetry_pop, (), {
+    (void)0;
+})
+#endif // _TELEMETRY
+
+#ifdef _TELEMETRY
+FFI_THUNK(0x10A, void, telemetry_push, (FFI_WASM_PTR const func_name), {
+    ASSERT_MSG(FFI_PIN_WASM_PTR(func_name), "func_name cannot be NULL");
+    app_telemetry_push(FFI_PIN_WASM_PTR(func_name));
+})
+#else
+FFI_THUNK(0x10A, void, telemetry_push, (FFI_WASM_PTR const func_name), {
+    (void)0;
+})
+#endif // _TELEMETRY
+
+#ifdef _TELEMETRY
+FFI_THUNK(0x108A, void, telemetry_span_begin, (const uint64_t id, FFI_WASM_PTR const str), {
+    ASSERT_MSG(FFI_PIN_WASM_PTR(str), "str cannot be NULL");
+    app_telemetry_span_begin(id, FFI_PIN_WASM_PTR(str));
+})
+#else
+FFI_THUNK(0x108A, void, telemetry_span_begin, (const uint64_t id, FFI_WASM_PTR const str), {
+    (void)0;
+})
+#endif // _TELEMETRY
+
+#ifdef _TELEMETRY
+FFI_THUNK(0x108, void, telemetry_span_end, (const uint64_t id), {
+    app_telemetry_span_end(id);
+})
+#else
+FFI_THUNK(0x108, void, telemetry_span_end, (const uint64_t id), {
+    (void)0;
+})
+#endif // _TELEMETRY
 

@@ -24,6 +24,7 @@ steamboat for posix
 #include "source/adk/steamboat/sb_thread.h"
 #include "source/adk/telemetry/telemetry.h"
 
+#include <errno.h>
 #include <locale.h>
 #include <pthread.h>
 #include <sched.h>
@@ -37,7 +38,9 @@ steamboat for posix
 #include <sys/socket.h>
 // reorder barrier (needs to before linux/if.h)?
 #ifndef _VADER
+#include <ifaddrs.h>
 #include <linux/if.h>
+#include <linux/wireless.h>
 #include <netdb.h>
 #include <sys/ioctl.h>
 #include <sys/resource.h>
@@ -48,10 +51,6 @@ steamboat for posix
 
 #if defined(NEXUS_PLATFORM) && (NEXUS_PLATFORM_VERSION_MAJOR >= 19)
 #define HAS_PTHREAD_SET_NAME
-#endif
-
-#ifndef CLOCK_MONOTONIC_RAW
-#define CLOCK_MONOTONIC_RAW CLOCK_MONOTONIC
 #endif
 
 enum {
@@ -68,11 +67,18 @@ void __shutdown_adk_events();
 bool __sb_posix_init_platform(adk_api_t * api, const int argc, const char * const * const argv);
 void __sb_posix_shutdown_platform();
 
+typedef enum network_connection_status_e {
+    network_connection_status_disconnected,
+    network_connection_status_connected,
+    network_connection_status_unknown
+} network_connection_status_e;
+
 static struct {
     bool init;
     pthread_mutex_t mutex;
     heap_t heap;
     crypto_hmac_hex_t device_id;
+    network_connection_status_e network_status;
 } statics;
 
 void * sb_runtime_heap_alloc(const size_t size, const char * const tag) {
@@ -118,6 +124,161 @@ mem_region_t sb_map_pages(const size_t size, const system_page_protect_e protect
               .size = size}}};
     }
     return (mem_region_t){0};
+}
+
+static bool is_wireless(const char * const ifname) {
+    int sock = -1;
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        return false;
+    }
+
+    struct iwreq pwrq = {0};
+    strncpy(pwrq.ifr_name, ifname, IFNAMSIZ);
+    const bool has_wireless = ioctl(sock, SIOCGIWNAME, &pwrq) != -1;
+    close(sock);
+    return has_wireless;
+}
+
+/*
+  Assigns currently used network iface name to `out_iface_name` and returns its length.
+  Returns `-1`: in case of an error
+           `0`: if there's no default interface informatin found in the routes file
+           iface_name_length: on success
+ */
+static int32_t resolve_default_network_iface_name(char out_iface_name[]) {
+    FILE * const route_file_handle = fopen("/proc/net/route", "r");
+    if (!route_file_handle) {
+        LOG_WARN(TAG_RT_IX, "Failed to read /proc/net/route file, this file is needed to get network information");
+        return -1;
+    }
+
+    enum { max_line_length = 128 };
+    char line[max_line_length] = {0};
+
+    // Ignore first line with table headers
+    if (!fgets(line, max_line_length, route_file_handle)) {
+        LOG_WARN(TAG_RT_IX, "Failed to read first line from /proc/net/route file, this file is needed to get network information");
+        fclose(route_file_handle);
+        return -1;
+    }
+
+    ASSERT_MSG(strncmp("Iface\tDestination", line, 17) == 0, "/proc/net/route has unexpected format");
+
+    while (fgets(line, max_line_length, route_file_handle) != NULL) {
+        if (line[0] == '\n') {
+            continue;
+        }
+
+        /* We are interested in first two columns from the /proc/net/route file: Iface and Destination.
+         * If the table contains a default routing rule we'll grab the first one, which seem to be the one
+         * that Linux would use to route the request and parse the interface name assigned to it.
+         *
+         * On both Desktop and RPi's that were checked, plugging / unplugging ethernet cable updates the routing
+         * table respectively.
+         */
+
+        const int32_t iface_length = strchr(line, '\t') - line;
+
+        const char * destination_column = line + iface_length + 1; // 1 for space
+        const size_t destination_length = strchr(destination_column, '\t') - destination_column;
+
+        if (!strncmp("00000000", destination_column, destination_length)) {
+            strncpy(out_iface_name, line, iface_length);
+            fclose(route_file_handle);
+            return iface_length;
+        }
+    }
+
+    fclose(route_file_handle);
+
+    return 0;
+}
+
+sb_network_type_e sb_get_network_type() {
+    char iface_name[64] = {0};
+    if (resolve_default_network_iface_name(iface_name) <= 0) {
+        LOG_ERROR(TAG_RT_IX, "Can't detected network's type due: couldn't resolve default network iface name");
+        return sb_network_type_unknown;
+    }
+
+    sb_network_type_e type = is_wireless(iface_name) ? sb_network_type_wireless : sb_network_type_ethernet;
+    return type;
+}
+
+static network_connection_status_e get_network_connection_status() {
+    char iface_name[64] = {0};
+    if (resolve_default_network_iface_name(iface_name) <= 0) {
+        LOG_ERROR(TAG_RT_IX, "Can't process network status: couldn't resolve default network iface name");
+        return network_connection_status_unknown;
+    }
+
+    char carrier_path[sb_max_path_length] = {0};
+    sprintf_s(carrier_path, sb_max_path_length, "/sys/class/net/%s/carrier", iface_name);
+
+    FILE * const carrier_file_handle = fopen(carrier_path, "r");
+    if (!carrier_file_handle) {
+        LOG_WARN(TAG_RT_IX, "Failed to read the %s file, this file is used to check the default network connection status", carrier_path);
+        return network_connection_status_unknown;
+    }
+
+    char link_status_line[8] = {0}; // This would be a single number 0 or 1
+    if (!fgets(link_status_line, 8, carrier_file_handle)) {
+        LOG_WARN(TAG_RT_IX, "Failed to read the %s file content (first line), it's used to check the default network connection status", carrier_path);
+        fclose(carrier_file_handle);
+        return network_connection_status_unknown;
+    }
+
+    fclose(carrier_file_handle);
+
+    switch (link_status_line[0]) {
+        case '0': {
+            return network_connection_status_disconnected;
+        }
+        case '1': {
+            return network_connection_status_connected;
+        }
+        default: {
+            return network_connection_status_unknown;
+        }
+    }
+}
+
+void process_network_status() {
+    const milliseconds_t time = adk_read_millisecond_clock();
+
+    const network_connection_status_e current_network_status = get_network_connection_status();
+    switch (current_network_status) {
+        case network_connection_status_disconnected: {
+            if (statics.network_status == network_connection_status_connected) {
+                statics.network_status = network_connection_status_disconnected;
+
+                adk_post_event((adk_event_t){
+                    .time = time,
+                    .event_data = (adk_event_data_t){
+                        .type = adk_application_event,
+                        {.app = (adk_application_event_t){
+                             .event = adk_application_event_link_down}}}});
+            }
+            break;
+        }
+        case network_connection_status_connected: {
+            if (statics.network_status == network_connection_status_disconnected) {
+                statics.network_status = network_connection_status_connected;
+
+                adk_post_event((adk_event_t){
+                    .time = time,
+                    .event_data = (adk_event_data_t){
+                        .type = adk_application_event,
+                        {.app = (adk_application_event_t){
+                             .event = adk_application_event_link_up}}}});
+            }
+            break;
+        }
+        case network_connection_status_unknown: {
+            LOG_ERROR(TAG_RT_IX, "Failed to get an updated network status");
+            break;
+        }
+    }
 }
 
 void sb_protect_pages(const mem_region_t pages, const system_page_protect_e protect) {
@@ -275,6 +436,13 @@ void sb_platform_dump_heap_usage() {
     pthread_mutex_unlock(&statics.mutex);
 }
 
+heap_metrics_t sb_platform_get_heap_metrics() {
+    pthread_mutex_lock(&statics.mutex);
+    const heap_metrics_t metrics = heap_get_metrics(&statics.heap);
+    pthread_mutex_unlock(&statics.mutex);
+    return metrics;
+}
+
 void __sb_posix_get_device_id(adk_system_metrics_t * const out) {
     out->device_id = statics.device_id;
 }
@@ -356,15 +524,15 @@ System clocks
 
 nanoseconds_t sb_read_nanosecond_clock() {
     struct timespec spec;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &spec);
+    VERIFY(clock_gettime(CLOCK_MONOTONIC, &spec) == 0);
     enum { sec_to_ns = 1000 * 1000 * 1000 };
     return (nanoseconds_t){((uint64_t)spec.tv_sec * (uint64_t)sec_to_ns) + spec.tv_nsec};
 }
 
 sb_time_since_epoch_t sb_get_time_since_epoch() {
-    struct timeval tv;
-    VERIFY(gettimeofday(&tv, NULL) == 0);
-    const sb_time_since_epoch_t time_since_epoch = {.seconds = tv.tv_sec, .microseconds = tv.tv_usec};
+    struct timespec spec;
+    VERIFY(clock_gettime(CLOCK_REALTIME, &spec) == 0);
+    const sb_time_since_epoch_t time_since_epoch = {.seconds = (uint32_t)spec.tv_sec, .microseconds = (uint32_t)spec.tv_nsec / 1000};
     return time_since_epoch;
 }
 
@@ -405,7 +573,19 @@ Condition Variable
 
 sb_condition_variable_t * sb_create_condition_variable(const char * const tag) {
     pthread_cond_t * const cnd = sb_runtime_heap_alloc(sizeof(pthread_cond_t), tag);
-    pthread_cond_init(cnd, NULL);
+    pthread_condattr_t attr = {0};
+    pthread_condattr_init(&attr);
+
+    // https://man7.org/linux/man-pages/man3/pthread_cond_wait.3p.html
+    // The condition variable shall have a clock attribute which
+    // specifies the clock that shall be used to measure the time
+    // specified by the abstime argument.
+    const int err = pthread_condattr_setclock(&attr, CLOCK_MONOTONIC);
+    ASSERT_MSG(!err, "Error setting clock: %d\n", err);
+
+    pthread_cond_init(cnd, &attr);
+    pthread_condattr_destroy(&attr);
+
     return (sb_condition_variable_t *)cnd;
 }
 
@@ -427,7 +607,7 @@ bool sb_wait_condition(sb_condition_variable_t * cnd, sb_mutex_t * mutex, const 
     } else {
         struct timespec ts = {0};
         const lldiv_t div_result = lldiv(timeout.ms, 1000);
-        clock_gettime(CLOCK_REALTIME, &ts);
+        VERIFY(clock_gettime(CLOCK_MONOTONIC, &ts) == 0);
         ts.tv_sec += (uint32_t)div_result.quot;
         ts.tv_nsec += 1000000 * (uint32_t)div_result.rem;
         if (ts.tv_nsec >= 1000000000) {
@@ -541,11 +721,11 @@ void sb_thread_sleep(const milliseconds_t time) {
     struct timespec ts;
     ts.tv_sec = seconds;
     ts.tv_nsec = nanos;
-    nanosleep(&ts, NULL);
-}
 
-void sb_thread_yield() {
-    sched_yield();
+    // Older systems do not support clock_nanosleep(), however nanosleep() should still behave
+    // as expected, since it should not be affected by any clock changes:
+    // https://man7.org/linux/man-pages/man2/nanosleep.2.html#NOTES
+    nanosleep(&ts, NULL);
 }
 
 void sb_unformatted_debug_write(const char * const msg) {
@@ -643,4 +823,16 @@ void sb_release_deeplink(sb_deeplink_handle_t * const handle) {
     // App will call this function when it has no further use for the specified deeplink.
     // Any required cleanup should be performed here.
     // This reference implementation retrieves deeplinks via command line and does not allocate memory, so no cleanup is required.
+}
+
+int64_t sb_get_localtime_offset() {
+    time_t current_time = time(NULL);
+    const struct tm * const info = localtime(&current_time);
+    if (info == NULL) {
+        LOG_ERROR(TAG_RT_IX, "Couldn't get user's timezone offset, 'localtime' call failed with: %s", strerror(errno));
+        return 0;
+    }
+
+    int64_t offset = info->tm_gmtoff; // returns seconds
+    return offset;
 }

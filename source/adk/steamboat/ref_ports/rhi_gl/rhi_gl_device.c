@@ -422,39 +422,59 @@ static void gl_upload_uniform_matrix4x4(const int index, const gl_uniform_buffer
     ASSERT(ub->data.size == sizeof(float) * 16);
     ASSERT(ub->data.ptr);
     GL_CALL(glUniformMatrix4fv(index, 1, false, ub->data.ptr));
+    CHECK_GL_ERRORS();
 }
 
 static void gl_upload_uniform_1i(const int index, const gl_uniform_buffer_t * const ub) {
     ASSERT(ub->data.size == 16); // 16 byte aligned
     ASSERT(ub->data.ptr);
     GL_CALL(glUniform1i(index, *(const int *)ub->data.ptr));
+    CHECK_GL_ERRORS();
 }
 
 static void gl_upload_uniform_1f(const int index, const gl_uniform_buffer_t * const ub) {
     ASSERT(ub->data.size == 16); // 16 byte aligned
     ASSERT(ub->data.ptr);
     GL_CALL(glUniform1f(index, *(const float *)ub->data.ptr));
+    CHECK_GL_ERRORS();
+}
+
+static void gl_upload_uniform_ivec2(const int index, const gl_uniform_buffer_t * const ub) {
+    ASSERT(ub->data.size == 16); // 16 byte aligned
+    ASSERT(ub->data.ptr);
+    GL_CALL(glUniform2iv(index, 1, (const int *)ub->data.ptr));
+    CHECK_GL_ERRORS();
 }
 
 static void gl_upload_uniform_vec2f(const int index, const gl_uniform_buffer_t * const ub) {
     ASSERT(ub->data.size == 16); // 16 byte aligned
     ASSERT(ub->data.ptr);
     GL_CALL(glUniform2fv(index, 1, (const float *)ub->data.ptr));
+    CHECK_GL_ERRORS();
 }
 
 static void gl_upload_uniform_vec4f(const int index, const gl_uniform_buffer_t * const ub) {
     ASSERT(ub->data.size == 16); // 16 byte aligned
     ASSERT(ub->data.ptr);
     GL_CALL(glUniform4fv(index, 1, (const float *)ub->data.ptr));
+    CHECK_GL_ERRORS();
 }
 
 static void (*gl_upload_uniform_funcs[rhi_program_num_uniforms])(const int index, const gl_uniform_buffer_t * const ub) = {
-    gl_upload_uniform_matrix4x4, // mvp
-    gl_upload_uniform_vec2f, // viewport
-    gl_upload_uniform_1i, // tex0
-    gl_upload_uniform_1i, // tex1
-    gl_upload_uniform_vec4f, // fill
-    gl_upload_uniform_1f, // threshold
+    [rhi_program_uniform_mvp] = gl_upload_uniform_matrix4x4,
+    [rhi_program_uniform_viewport] = gl_upload_uniform_vec2f,
+    [rhi_program_uniform_tex0] = gl_upload_uniform_1i,
+    [rhi_program_uniform_tex1] = gl_upload_uniform_1i,
+    [rhi_program_uniform_fill] = gl_upload_uniform_vec4f,
+    [rhi_program_uniform_threshold] = gl_upload_uniform_1f,
+    [rhi_program_uniform_rect_roundness] = gl_upload_uniform_1f,
+    [rhi_program_uniform_rect] = gl_upload_uniform_vec4f,
+    [rhi_program_uniform_fade] = gl_upload_uniform_1f,
+    [rhi_program_uniform_stroke_color] = gl_upload_uniform_vec4f,
+    [rhi_program_uniform_stroke_size] = gl_upload_uniform_1f,
+    [rhi_program_uniform_ltexsize] = gl_upload_uniform_ivec2,
+    [rhi_program_uniform_ctexsize] = gl_upload_uniform_ivec2,
+    [rhi_program_uniform_framesize] = gl_upload_uniform_ivec2,
 };
 
 static inline void glc_sync_program_uniform_data(gl_context_t * const context) {
@@ -965,9 +985,6 @@ gld_upload_texture
 */
 
 static void gld_upload_texture(rhi_device_t * const device, rhi_texture_t * const texture, const image_mips_t * const mipmaps) {
-    if (texture == NULL) {
-        return;
-    }
     const gl_texture_t * const gl_texture = (gl_texture_t *)texture;
     const rhi_pixel_format_e pixel_format = gl_texture->pixel_format;
 
@@ -986,18 +1003,20 @@ static void gld_upload_texture(rhi_device_t * const device, rhi_texture_t * cons
                 && (pixel_format <= rhi_pixel_format_rgba8_unorm)) {
                 glc_texture_subimage_2d(
                     DC,
-                    GL_TEXTURE0,
-                    gl_texture->target,
-                    gl_texture->texture,
-                    gl_texture->resource.resource.instance_id,
-                    i,
-                    0,
-                    0,
-                    image.width,
-                    image.height,
-                    gl_pixel_format.format,
-                    gl_pixel_format.type,
-                    image.data);
+                    (texture_subimage_2d_args_t){
+                        .tunit = GL_TEXTURE0,
+                        .target = gl_texture->target,
+                        .texture = gl_texture->texture,
+                        .id = gl_texture->resource.resource.instance_id,
+                        .level = i,
+                        .xoffset = 0,
+                        .yoffset = 0,
+                        .w = image.width,
+                        .h = image.height,
+                        .format = gl_pixel_format.format,
+                        .type = gl_pixel_format.type,
+                        .pixels = image.data,
+                    });
             } else {
 #ifdef GL_CORE
                 ASSERT((pixel_format == rhi_pixel_format_bc1_unorm) || (pixel_format == rhi_pixel_format_bc3_unorm));
@@ -1035,6 +1054,41 @@ static void gld_upload_texture(rhi_device_t * const device, rhi_texture_t * cons
 
             ++DC->counters.num_upload_textures;
             DC->counters.upload_texture_size += image.spitch;
+        }
+    }
+}
+
+static void gld_upload_sub_texture(rhi_device_t * const device, rhi_texture_t * const texture, const image_mips_t * const mipmaps) {
+    const gl_texture_t * const gl_texture = (gl_texture_t *)texture;
+    const rhi_pixel_format_e pixel_format = gl_texture->pixel_format;
+
+    ASSERT(pixel_format >= 0);
+    ASSERT_MSG((pixel_format >= rhi_pixel_format_r8_unorm) && (pixel_format <= rhi_pixel_format_rgba8_unorm), "Cannot upload a sub image/texture with a compressed format -- support is not in currently");
+
+    const gl_pixel_format_t gl_pixel_format = pixel_formats[pixel_format];
+
+    for (int i = 0; i < mipmaps->num_levels; ++i) {
+        const image_t image = mipmaps->levels[i];
+        if (image.data) {
+            ASSERT(image.depth == 1);
+            ASSERT(image.spitch > 0);
+
+            glc_texture_subimage_2d(
+                DC,
+                (texture_subimage_2d_args_t){
+                    .tunit = GL_TEXTURE0,
+                    .target = gl_texture->target,
+                    .texture = gl_texture->texture,
+                    .id = gl_texture->resource.resource.instance_id,
+                    .level = i,
+                    .xoffset = image.x,
+                    .yoffset = image.y,
+                    .w = image.width,
+                    .h = image.height,
+                    .format = gl_pixel_format.format,
+                    .type = gl_pixel_format.type,
+                    .pixels = image.data,
+                });
         }
     }
 }
@@ -1190,7 +1244,7 @@ gld_set_uniform_bindings
 static void gld_set_uniform_bindings(rhi_device_t * const device, rhi_uniform_buffer_t * const uniform_buffer, const int index) {
     ASSERT(uniform_buffer);
     ASSERT(index >= 0);
-    ASSERT(index < rhi_program_input_max_uniforms);
+    ASSERT(index < rhi_program_num_uniforms);
     gl_uniform_buffer_t * const gl_uniform_buffer = (gl_uniform_buffer_t *)uniform_buffer;
     DC->ubuffers[index] = gl_uniform_buffer;
     ++DC->uniform_updates;
@@ -1278,6 +1332,7 @@ static void gld_clear_render_target_color_buffers(rhi_device_t * const device, r
     for (int i = 0; i < ARRAY_SIZE(gl_render_target->color_buffer_ids); ++i) {
         if (gl_render_target->color_buffer_ids[i]) {
             glf.glClearNamedFramebufferfv(framebuffer, GL_COLOR, i, floats_rgba);
+            CHECK_GL_ERRORS();
         }
     }
 
@@ -1288,7 +1343,9 @@ static void gld_clear_render_target_color_buffers(rhi_device_t * const device, r
     glc_bind_framebuffer(DC, GL_FRAMEBUFFER, framebuffer, gl_render_target->resource.resource.instance_id);
 #endif
     glClearColor(floats_rgba[0], floats_rgba[1], floats_rgba[2], floats_rgba[3]);
+    CHECK_GL_ERRORS();
     glClear(GL_COLOR_BUFFER_BIT);
+    CHECK_GL_ERRORS();
 
     // restore active render target
     if (D->active_render_target) {
@@ -1344,6 +1401,7 @@ static void glc_framebuffer_blit(gl_context_t * const context, const gl_render_t
 
 #if defined(GL_DSA) && defined(GL_VAOS)
     glf.glVertexArrayVertexBuffer(glcore_default_vertex_array_id, 0, gl_framebuffer_blit_program.vb, 0, 8);
+    CHECK_GL_ERRORS();
 #elif defined(GL_VAOS)
     glc_bind_buffer(context, GL_ARRAY_BUFFER, gl_framebuffer_blit_program.vb, gl_framebuffer_blit_program.vbid, true);
 #else
@@ -1372,6 +1430,7 @@ static void glc_framebuffer_blit(gl_context_t * const context, const gl_render_t
     if (context->program_id != gl_framebuffer_blit_program.id) {
         context->program_id = gl_framebuffer_blit_program.id;
         GL_CALL(glUseProgram(gl_framebuffer_blit_program.program));
+        CHECK_GL_ERRORS();
     }
 
     const GLuint old_t = context->textures[0];
@@ -1380,6 +1439,7 @@ static void glc_framebuffer_blit(gl_context_t * const context, const gl_render_t
     glc_bind_texture(context, GL_TEXTURE0, GL_TEXTURE_2D, src->color_buffers[0]->texture, src->color_buffer_ids[0]);
 #ifdef GL_CORE
     glf.glBindSampler(0, src->color_buffers[0]->sampler);
+    CHECK_GL_ERRORS();
 #endif
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
@@ -1402,11 +1462,13 @@ static void glc_framebuffer_blit(gl_context_t * const context, const gl_render_t
 
 #ifdef GL_DSA
     glf.glBlitNamedFramebuffer(src->framebuffer, dst, 0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    CHECK_GL_ERRORS();
 #else
     glc_bind_framebuffer(context, GL_READ_FRAMEBUFFER, src->framebuffer, src->resource.resource.instance_id);
     glc_bind_framebuffer(context, GL_DRAW_FRAMEBUFFER, dst, dst_id);
 
     glf.glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    CHECK_GL_ERRORS();
     ++context->counters.num_api_calls;
 #endif
 #endif
@@ -1485,12 +1547,12 @@ static void gld_draw_indirect(rhi_device_t * const device, const rhi_draw_params
             if (mesh->index_buffer) {
 #if defined(GL_DSA) && defined(GL_VAOS)
                 glf.glVertexArrayElementBuffer(vao->vao_id, mesh->index_buffer);
+                CHECK_GL_ERRORS();
 #elif defined(GL_VAOS)
                 glc_bind_buffer(DC, GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer, mesh->index_buffer_id, true);
 #else
             glc_bind_buffer(DC, GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer, mesh->index_buffer_id, false);
 #endif
-                CHECK_GL_ERRORS();
             }
 
 #if !defined(GL_DSA) || !defined(GL_VAOS)
@@ -1498,6 +1560,7 @@ static void gld_draw_indirect(rhi_device_t * const device, const rhi_draw_params
                 const int max_inputs = min_int(rhi_program_input_num_semantics, DC->caps.max_vertex_inputs);
                 for (int j = 0; j < max_inputs; ++j) {
                     GL_CALL(glDisableVertexAttribArray(j));
+                    CHECK_GL_ERRORS();
                 }
             }
 #endif
@@ -1528,10 +1591,10 @@ static void gld_draw_indirect(rhi_device_t * const device, const rhi_draw_params
                         ASSERT(mesh->vertex_buffers[j]);
 #if defined(GL_DSA) && defined(GL_VAOS)
                         glf.glVertexArrayVertexBuffer(vao->vao_id, j, mesh->vertex_buffers[j], 0, channel.stride);
+                        CHECK_GL_ERRORS();
 #else
                         glc_bind_buffer(DC, GL_ARRAY_BUFFER, mesh->vertex_buffers[j], mesh->vertex_buffer_ids[j], false);
 #endif
-                        CHECK_GL_ERRORS();
                         bound = true;
                         ++DC->counters.num_api_calls;
                     }
@@ -1601,15 +1664,19 @@ static void gld_clear_screen_cds(rhi_device_t * const device, const float r, con
     glc_bind_framebuffer(DC, GL_FRAMEBUFFER, 0, 0);
 
     glClearColor(r, g, b, a);
+    CHECK_GL_ERRORS();
     glClearStencil(s);
+    CHECK_GL_ERRORS();
 
 #ifdef GL_CORE
     glClearDepth(d);
 #else // GL_ES
     glClearDepthf(d);
 #endif
+    CHECK_GL_ERRORS();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    CHECK_GL_ERRORS();
 
     glc_color_mask(DC, old_color_mask);
     glc_depth_mask(DC, old_depth_mask);
@@ -1635,14 +1702,17 @@ static void gld_clear_screen_ds(rhi_device_t * const device, const float d, cons
     glc_bind_framebuffer(DC, GL_FRAMEBUFFER, 0, 0);
 
     glClearStencil(s);
+    CHECK_GL_ERRORS();
 
 #ifdef GL_CORE
     glClearDepth(d);
 #else // GL_ES
     glClearDepthf(d);
 #endif
+    CHECK_GL_ERRORS();
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    CHECK_GL_ERRORS();
 
     glc_depth_mask(DC, old_depth_mask);
     glc_stencil_mask(DC, old_stencil_mask);
@@ -1665,8 +1735,10 @@ static void gld_clear_screen_c(rhi_device_t * const device, const float r, const
     glc_bind_framebuffer(DC, GL_FRAMEBUFFER, 0, 0);
 
     glClearColor(r, g, b, a);
+    CHECK_GL_ERRORS();
 
     glClear(GL_COLOR_BUFFER_BIT);
+    CHECK_GL_ERRORS();
 
     glc_color_mask(DC, old_color_mask);
     glc_enable_scissor(DC, old_scissor);
@@ -1692,8 +1764,10 @@ static void gld_clear_screen_d(rhi_device_t * const device, const float d) {
 #else // GL_ES
     glClearDepthf(d);
 #endif
+    CHECK_GL_ERRORS();
 
     glClear(GL_DEPTH_BUFFER_BIT);
+    CHECK_GL_ERRORS();
 
     glc_depth_mask(DC, old_depth_mask);
     glc_enable_scissor(DC, old_scissor);
@@ -1715,8 +1789,10 @@ static void gld_clear_screen_s(rhi_device_t * const device, const uint8_t s) {
     glc_bind_framebuffer(DC, GL_FRAMEBUFFER, 0, 0);
 
     glClearStencil(s);
+    CHECK_GL_ERRORS();
 
     glClear(GL_STENCIL_BUFFER_BIT);
+    CHECK_GL_ERRORS();
 
     glc_stencil_mask(DC, old_stencil_mask);
     glc_enable_scissor(DC, old_scissor);
@@ -1757,8 +1833,10 @@ static void gld_screenshot(rhi_device_t * const device, image_t * const out_imag
 
 #ifdef GL_CORE
     glReadBuffer(GL_BACK);
+    CHECK_GL_ERRORS();
 #endif
     glReadPixels(0, 0, D->display_width, D->display_height, GL_RGBA, GL_UNSIGNED_BYTE, out_image->data);
+    CHECK_GL_ERRORS();
 
     image_vertical_flip_in_place(out_image);
 }
@@ -2078,97 +2156,103 @@ static rhi_texture_t * gld_create_texture_2d(rhi_device_t * const device, const 
 
     const gl_pixel_format_t gl_pixel_format = pixel_formats[format];
 
-    glc_texture_storage_2d(
-        DC,
-        GL_TEXTURE0,
-        texture->texture,
-        texture->resource.resource.instance_id,
-        mipmaps->num_levels,
-        gl_pixel_format.internal,
-        texture->width,
-        texture->height,
-        gl_pixel_format.format,
-        gl_pixel_format.type);
+#ifndef GL_CORE
+    if (format == rhi_pixel_format_etc1) {
+        const image_t img = mipmaps->levels[0];
+        glc_compressed_texture_image_2d(
+            DC,
+            GL_TEXTURE0,
+            texture->target,
+            texture->texture,
+            texture->resource.resource.instance_id,
+            0,
+            img.width,
+            img.height,
+            gl_pixel_format.internal,
+            0,
+            img.data_len,
+            img.data);
+    } else
+#endif
+    {
+        glc_texture_storage_2d(
+            DC,
+            GL_TEXTURE0,
+            texture->texture,
+            texture->resource.resource.instance_id,
+            mipmaps->num_levels,
+            gl_pixel_format.internal,
+            texture->width,
+            texture->height,
+            gl_pixel_format.format,
+            gl_pixel_format.type);
 
-    if (mipmaps->levels[0].data) {
-        for (int i = 0; i < mipmaps->num_levels; ++i) {
-            const image_t img = mipmaps->levels[i];
+        if (mipmaps->levels[0].data) {
+            for (int i = 0; i < mipmaps->num_levels; ++i) {
+                const image_t img = mipmaps->levels[i];
 
-            if ((format >= rhi_pixel_format_r8_unorm)
-                && (format <= rhi_pixel_format_rgba8_unorm)) {
-                glc_texture_subimage_2d(
-                    DC,
-                    GL_TEXTURE0,
-                    texture->target,
-                    texture->texture,
-                    texture->resource.resource.instance_id,
-                    i,
-                    0,
-                    0,
-                    img.width,
-                    img.height,
-                    gl_pixel_format.format,
-                    gl_pixel_format.type,
-                    img.data);
+                if ((format >= rhi_pixel_format_r8_unorm)
+                    && (format <= rhi_pixel_format_rgba8_unorm)) {
+                    glc_texture_subimage_2d(
+                        DC,
+                        (texture_subimage_2d_args_t){
+                            .tunit = GL_TEXTURE0,
+                            .target = texture->target,
+                            .texture = texture->texture,
+                            .id = texture->resource.resource.instance_id,
+                            .level = i,
+                            .xoffset = 0,
+                            .yoffset = 0,
+                            .w = img.width,
+                            .h = img.height,
+                            .format = gl_pixel_format.format,
+                            .type = gl_pixel_format.type,
+                            .pixels = img.data,
+                        });
 #ifdef GL_CORE
-                // swizzle grayscale images
-                if (format == rhi_pixel_format_ra8_unorm) {
-                    glc_texture_set_swizzle_mask(DC, GL_TEXTURE0, texture->target, texture->texture, texture->resource.resource.instance_id, GL_RED, GL_RED, GL_RED, GL_GREEN);
-                } else if (format == rhi_pixel_format_r8_unorm) {
-                    glc_texture_set_swizzle_mask(DC, GL_TEXTURE0, texture->target, texture->texture, texture->resource.resource.instance_id, GL_RED, GL_RED, GL_RED, GL_ONE);
+                    // swizzle grayscale images
+                    if (format == rhi_pixel_format_ra8_unorm) {
+                        glc_texture_set_swizzle_mask(DC, GL_TEXTURE0, texture->target, texture->texture, texture->resource.resource.instance_id, GL_RED, GL_RED, GL_RED, GL_GREEN);
+                    } else if (format == rhi_pixel_format_r8_unorm) {
+                        glc_texture_set_swizzle_mask(DC, GL_TEXTURE0, texture->target, texture->texture, texture->resource.resource.instance_id, GL_RED, GL_RED, GL_RED, GL_ONE);
+                    }
+#endif
+                } else {
+#ifdef GL_CORE
+                    ASSERT((format == rhi_pixel_format_bc1_unorm) || (format == rhi_pixel_format_bc3_unorm));
+                    glc_compressed_texture_subimage_2d(
+                        DC,
+                        GL_TEXTURE0,
+                        texture->target,
+                        texture->texture,
+                        texture->resource.resource.instance_id,
+                        i,
+                        0,
+                        0,
+                        img.width,
+                        img.height,
+                        gl_pixel_format.internal,
+                        img.data_len,
+                        img.data);
+#endif
                 }
-#endif
-            } else {
-#ifdef GL_CORE
-                ASSERT((format == rhi_pixel_format_bc1_unorm) || (format == rhi_pixel_format_bc3_unorm));
-                glc_compressed_texture_subimage_2d(
-                    DC,
-                    GL_TEXTURE0,
-                    texture->target,
-                    texture->texture,
-                    texture->resource.resource.instance_id,
-                    i,
-                    0,
-                    0,
-                    img.width,
-                    img.height,
-                    gl_pixel_format.internal,
-                    img.data_len,
-                    img.data);
-#else // GL_ES
-                ASSERT(format == rhi_pixel_format_etc1);
-                glc_compressed_texture_image_2d(
-                    DC,
-                    GL_TEXTURE0,
-                    texture->target,
-                    texture->texture,
-                    texture->resource.resource.instance_id,
-                    i,
-                    img.width,
-                    img.height,
-                    gl_pixel_format.internal,
-                    0,
-                    img.data_len,
-                    img.data);
-#endif
-            }
 
 #ifdef GL_ES
-            // GL_ES requires a complete mipmap chain,
-            // if we don't send a complete one in then skip loading sublevels
-            // and mipmap this
-            if ((i == 0) && (sampler_state.min_filter != rhi_min_filter_nearest) && (sampler_state.min_filter != rhi_min_filter_linear)) {
-                const image_t last_mip = mipmaps->levels[mipmaps->num_levels - 1];
-                if ((last_mip.width == 1) && (last_mip.height == 1)) {
-                    texture->mipmaps = true; // full mipmaps
-                } else {
-                    VERIFY_MSG(format <= rhi_pixel_format_rgba8_unorm, "GLES error: compressed texture without complete mipchain!");
+                // GL_ES requires a complete mipmap chain,
+                // if we don't send a complete one in then skip loading sublevels
+                // and mipmap this
+                if ((i == 0) && (sampler_state.min_filter != rhi_min_filter_nearest) && (sampler_state.min_filter != rhi_min_filter_linear)) {
+                    const image_t last_mip = mipmaps->levels[mipmaps->num_levels - 1];
+                    if ((last_mip.width == 1) && (last_mip.height == 1)) {
+                        texture->mipmaps = true; // full mipmaps
+                    } else {
+                        VERIFY_MSG(format <= rhi_pixel_format_rgba8_unorm, "GLES error: compressed texture without complete mipchain!");
+                    }
                 }
-            }
 #endif
+            }
         }
     }
-
 #ifdef GL_CORE
     glc_tex_parameter_i(
         DC,
@@ -2186,8 +2270,9 @@ static rhi_texture_t * gld_create_texture_2d(rhi_device_t * const device, const 
     glc_sampler_parameter_i(DC, texture->sampler, GL_TEXTURE_WRAP_R, get_gl_wrap_mode(sampler_state.w_wrap_mode));
     glc_sampler_parameter_i(DC, texture->sampler, GL_TEXTURE_MAX_ANISOTROPY_EXT, sampler_state.max_anisotropy ? sampler_state.max_anisotropy : DC->caps.max_anisotropy);
 #else // GL_ES
-    if (!texture->mipmaps && (sampler_state.min_filter != GL_LINEAR) && (sampler_state.min_filter != GL_NEAREST)) {
+    if (!texture->mipmaps && (sampler_state.min_filter != rhi_min_filter_linear) && (sampler_state.min_filter != rhi_min_filter_nearest)) {
         glGenerateMipmap(texture->target);
+        CHECK_GL_ERRORS();
         texture->mipmaps = true;
     }
     glc_tex_parameter_i(DC, GL_TEXTURE0, texture->target, texture->texture, texture->resource.resource.instance_id, GL_TEXTURE_MIN_FILTER, get_gl_min_filter(sampler_state.min_filter));
@@ -2223,6 +2308,7 @@ static const rhi_device_vtable_t gl_rhi_device_vtable = {
     .upload_mesh_indices = gld_upload_mesh_indices,
     .upload_uniform_data = gld_upload_uniform_data,
     .upload_texture = gld_upload_texture,
+    .upload_sub_texture = gld_upload_sub_texture,
     .set_display_size = gld_set_display_size,
     .set_viewport = gld_set_viewport,
     .set_scissor_rect = gld_set_scissor_rect,
@@ -2281,12 +2367,17 @@ static int gl_device_release(rhi_resource_t * const resource, const char * const
 
     if (r == 1) {
         gl_device_and_context_t * const device = (gl_device_and_context_t *)resource;
+        CHECK_GL_ERRORS();
         glc_make_current(&device->context);
+        CHECK_GL_ERRORS();
 #ifdef GL_VAOS
         gl_free_vao_chain(&device->context, &device->vao_used_chain, tag);
+        CHECK_GL_ERRORS();
         gl_free_vao_chain(&device->context, &device->vao_pending_destroy_chain, tag);
+        CHECK_GL_ERRORS();
 #endif
         glc_destroy(&device->context, tag);
+        CHECK_GL_ERRORS();
         devices[device->index] = NULL;
         gl_free(resource, tag);
     }
@@ -2340,7 +2431,9 @@ rhi_device_t * gl_rhi_api_create_device(struct sb_window_t * const window, rhi_e
     device->device.vtable = &gl_rhi_device_vtable;
 
     glClearColor(0, 0, 0, 0);
+    CHECK_GL_ERRORS();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    CHECK_GL_ERRORS();
 
     glc_make_current(NULL);
 

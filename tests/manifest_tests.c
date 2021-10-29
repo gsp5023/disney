@@ -29,7 +29,14 @@ static int teardown(void ** state) {
 }
 
 static void compare_runtime_configs(runtime_configuration_t results, runtime_configuration_t expected) {
-    assert_true(results.wasm_memory_size == expected.wasm_memory_size);
+    assert_true(results.wasm_low_memory_size == expected.wasm_low_memory_size);
+    assert_true(results.wasm_high_memory_size == expected.wasm_high_memory_size);
+    assert_true(results.wasm_heap_allocation_threshold == expected.wasm_heap_allocation_threshold);
+    assert_true(results.network_pump_fragment_size == expected.network_pump_fragment_size);
+    assert_true(results.network_pump_sleep_period == expected.network_pump_sleep_period);
+    assert_true(results.watchdog.enabled == expected.watchdog.enabled);
+    assert_true(results.watchdog.warning_delay_ms == expected.watchdog.warning_delay_ms);
+    assert_true(results.watchdog.fatal_delay_ms == expected.watchdog.fatal_delay_ms);
     assert_true(results.memory_reservations.low.runtime == expected.memory_reservations.low.runtime);
     assert_true(results.memory_reservations.low.rhi == expected.memory_reservations.low.rhi);
     assert_true(results.memory_reservations.low.render_device == expected.memory_reservations.low.render_device);
@@ -40,6 +47,7 @@ static void compare_runtime_configs(runtime_configuration_t results, runtime_con
     assert_true(results.memory_reservations.low.curl == expected.memory_reservations.low.curl);
     assert_true(results.memory_reservations.low.json_deflate == expected.memory_reservations.low.json_deflate);
     assert_true(results.memory_reservations.low.default_thread_pool == expected.memory_reservations.low.default_thread_pool);
+    assert_true(results.memory_reservations.low.ssl == expected.memory_reservations.low.ssl);
     assert_true(results.memory_reservations.low.http2 == expected.memory_reservations.low.http2);
     assert_true(results.memory_reservations.low.httpx == expected.memory_reservations.low.httpx);
 }
@@ -157,6 +165,7 @@ static void test_memory_reservations(void ** _) {
             .curl_fragment_buffers = 7777,
             .json_deflate = 99,
             .default_thread_pool = 1010,
+            .ssl = 1000,
             .http2 = 1111,
             .httpx = 1212,
             .httpx_fragment_buffers = 1414,
@@ -181,6 +190,8 @@ static void test_memory_reservations(void ** _) {
     assert_int_equal(manifest.runtime_config.guard_page_mode, system_guard_page_mode_disabled);
 #endif
     assert_int_equal(manifest.runtime_config.http_max_pooled_connections, 3);
+
+    assert_int_equal(manifest.runtime_config.http.httpx_global_certs, true);
 }
 
 static void test_guard_page_enabled_override(void ** _) {
@@ -203,6 +214,13 @@ static void test_no_overrides(void ** _) {
     sb_fclose(manifest_file);
 
     assert_int_equal(manifest.runtime_config.guard_page_mode, default_guard_page_mode);
+
+    assert_int_equal(manifest.runtime_config.renderer.device.num_cmd_buffers, 32);
+    assert_int_equal(manifest.runtime_config.renderer.device.cmd_buf_size, 64 * 1024);
+    assert_false(manifest.runtime_config.renderer.rhi_command_diffing.enabled);
+    assert_false(manifest.runtime_config.renderer.rhi_command_diffing.verbose);
+    assert_false(manifest.runtime_config.renderer.rhi_command_diffing.tracking.enabled);
+    assert_int_equal(manifest.runtime_config.renderer.rhi_command_diffing.tracking.buffer_size, 4096);
 }
 
 static void test_manifest_config_override(void ** _) {
@@ -222,6 +240,7 @@ static void test_manifest_config_override(void ** _) {
                 .curl = 77,
                 .json_deflate = 99,
                 .default_thread_pool = 1010,
+                .ssl = 1000,
                 .http2 = 1111,
                 .httpx = 1212,
                 .reporting = 1414,
@@ -229,7 +248,12 @@ static void test_manifest_config_override(void ** _) {
         },
         .guard_page_mode = system_guard_page_mode_minimal,
         .http_max_pooled_connections = 3,
-        .wasm_memory_size = 0};
+        .wasm_low_memory_size = 0,
+        .wasm_high_memory_size = 0,
+        .wasm_heap_allocation_threshold = 0,
+        .network_pump_fragment_size = 0,
+        .network_pump_sleep_period = 0,
+        .http = {.httpx_global_certs = true}};
 
     sb_file_t * const manifest_file = sb_fopen(
         sb_app_root_directory, "source/adk/manifest/examples/manifest-reservations-test.json", "rb");
@@ -441,14 +465,16 @@ static void test_resolution_settings(void ** _) {
     assert_true(manifest_get_platform_setting_int("leia", "max_height", &out_height));
     assert_true(out_width == 1920 && out_height == 1080);
 
+    assert_true(manifest_get_platform_setting_int("nexus", "display_width", &out_width));
+    assert_true(manifest_get_platform_setting_int("nexus", "display_height", &out_height));
+    assert_true(out_width == 1280 && out_height == 720);
+
     assert_false(manifest_get_platform_setting_int("doesntexist", "max_width", &out_width));
     assert_false(manifest_get_platform_setting_int("doesntexist", "max_height", &out_height));
 }
 
 static void test_thread_pool_size(void ** _) {
-    print_message("test_thread_pool_size\n");
-    sb_file_t * const manifest_file = sb_fopen(
-        sb_app_root_directory, "tests/manifest/manifest-with-thread-pool.json", "rb");
+    sb_file_t * const manifest_file = sb_fopen(sb_app_root_directory, "tests/manifest/manifest-with-thread-pool.json", "rb");
     const size_t manifest_file_size = (size_t)get_file_size(manifest_file);
 
     const manifest_t manifest = manifest_parse_fp(manifest_file, manifest_file_size);
@@ -456,6 +482,22 @@ static void test_thread_pool_size(void ** _) {
     sb_fclose(manifest_file);
 
     assert_int_equal(manifest.runtime_config.thread_pool_thread_count, 2);
+}
+
+static void test_wasm_memory_config(void ** _) {
+    print_message("test_wasm_memory_config\n");
+
+    sb_file_t * const manifest_file = sb_fopen(
+        sb_app_root_directory, "tests/manifest/manifest-wasm-backwards-compatibility.json", "rb");
+    const size_t manifest_file_size = (size_t)get_file_size(manifest_file);
+
+    const manifest_t manifest = manifest_parse_fp(manifest_file, manifest_file_size);
+
+    sb_fclose(manifest_file);
+
+    assert_int_equal(manifest.runtime_config.wasm_low_memory_size, 0);
+    assert_int_equal(manifest.runtime_config.wasm_high_memory_size, 50331648);
+    assert_int_equal(manifest.runtime_config.wasm_heap_allocation_threshold, 0);
 }
 
 static void test_adk_websocket(void ** state) {
@@ -476,18 +518,50 @@ static void test_adk_websocket(void ** state) {
     sb_fclose(manifest_fp);
 }
 
+static void test_adk_websocket_null_backend(void ** _) {
+    sb_file_t * const manifest_fp = sb_fopen(sb_app_root_directory, "source/adk/manifest/examples/adk-websocket-backend-null.json", "rb");
+    const size_t manifest_file_size = (size_t)get_file_size(manifest_fp);
+    const manifest_t manifest = manifest_parse_fp(manifest_fp, manifest_file_size);
+
+    assert_int_equal(manifest.runtime_config.websocket.backend, adk_websocket_backend_null);
+
+    sb_fclose(manifest_fp);
+}
+
 static void test_canvas(void ** state) {
     sb_file_t * const manifest_fp = sb_fopen(sb_app_root_directory, "source/adk/manifest/examples/canvas-override-test.json", "rb");
     const size_t manifest_file_size = (size_t)get_file_size(manifest_fp);
     const manifest_t manifest = manifest_parse_fp(manifest_fp, manifest_file_size);
 
-    assert_int_equal(manifest.runtime_config.canvas.max_states, 1);
-    assert_int_equal(manifest.runtime_config.canvas.max_tesselation_steps, 13);
+    assert_int_equal(manifest.runtime_config.canvas.internal_limits.max_states, 1);
+    assert_int_equal(manifest.runtime_config.canvas.internal_limits.max_tessellation_steps, 13);
     assert_int_equal(manifest.runtime_config.canvas.enable_punchthrough_blend_mode_fix, true);
     assert_int_equal(manifest.runtime_config.canvas.font_atlas.width, 2);
     assert_int_equal(manifest.runtime_config.canvas.font_atlas.height, 3);
+    assert_true(manifest.runtime_config.canvas.text_mesh_cache.enabled);
+    assert_int_equal(manifest.runtime_config.canvas.text_mesh_cache.size, 33);
+    assert_int_equal(manifest.runtime_config.canvas.gl.internal_limits.max_verts_per_vertex_bank, 7001);
+    assert_int_equal(manifest.runtime_config.canvas.gl.internal_limits.num_vertex_banks, 3);
+    assert_int_equal(manifest.runtime_config.canvas.gl.internal_limits.num_meshes, 7);
+    assert_int_equal(manifest.runtime_config.canvas.gzip_limits.working_space, 7000);
 
     sb_fclose(manifest_fp);
+}
+
+static void test_renderer(void ** state) {
+    sb_file_t * const manifest_fp = sb_fopen(sb_app_root_directory, "source/adk/manifest/examples/renderer-override-test.json", "rb");
+    const size_t manifest_file_size = (size_t)get_file_size(manifest_fp);
+    const manifest_t manifest = manifest_parse_fp(manifest_fp, manifest_file_size);
+    sb_fclose(manifest_fp);
+
+    assert_int_equal(manifest.runtime_config.renderer.device.num_cmd_buffers, 123);
+    assert_int_equal(manifest.runtime_config.renderer.device.cmd_buf_size, 456);
+
+    assert_true(manifest.runtime_config.renderer.rhi_command_diffing.enabled);
+    assert_true(manifest.runtime_config.renderer.rhi_command_diffing.verbose);
+    assert_true(manifest.runtime_config.renderer.rhi_command_diffing.tracking.enabled);
+    assert_int_equal(manifest.runtime_config.renderer.rhi_command_diffing.tracking.buffer_size, 12345);
+    assert_int_equal(manifest.runtime_config.renderer.render_resource_tracking.periodic_logging, logging_tty_and_metrics);
 }
 
 static void test_reporting(void ** state) {
@@ -520,6 +594,18 @@ static void test_reporting(void ** state) {
     }
 }
 
+static void test_network_pump(void ** state) {
+    sb_file_t * const manifest_file = sb_fopen(sb_app_root_directory, "tests/manifest/manifest-network-pump.json", "rb");
+    const size_t manifest_file_size = (size_t)get_file_size(manifest_file);
+
+    const manifest_t manifest = manifest_parse_fp(manifest_file, manifest_file_size);
+
+    sb_fclose(manifest_file);
+
+    assert_int_equal(manifest.runtime_config.network_pump_fragment_size, 1024);
+    assert_int_equal(manifest.runtime_config.network_pump_sleep_period, 512);
+}
+
 int test_manifest() {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_manifest_rules_lists),
@@ -537,10 +623,13 @@ int test_manifest() {
         cmocka_unit_test(test_no_platform_settings),
         cmocka_unit_test(test_resolution_settings),
         cmocka_unit_test(test_thread_pool_size),
+        cmocka_unit_test(test_wasm_memory_config),
         cmocka_unit_test(test_adk_websocket),
+        cmocka_unit_test(test_adk_websocket_null_backend),
         cmocka_unit_test(test_canvas),
+        cmocka_unit_test(test_renderer),
         cmocka_unit_test(test_reporting),
-    };
+        cmocka_unit_test(test_network_pump)};
 
     return cmocka_run_group_tests(tests, setup, teardown);
 }

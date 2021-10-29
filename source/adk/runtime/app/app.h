@@ -93,7 +93,7 @@ FFI_EXPORT FFI_NAME(adk_native_system_metrics_t) typedef struct adk_system_metri
     /// **FILLED IN BY PARTNER**
     char vendor[adk_metrics_string_max];
     /// Disney assigned partner name
-    /// **PROVIDED TO PARTNER BY DISNEY**
+    /// **FILLED IN BY CORE**
     char partner[adk_metrics_string_max];
     /// Disney assigned device name
     /// **PROVIDED TO PARTNER BY DISNEY**
@@ -128,7 +128,7 @@ FFI_EXPORT FFI_NAME(adk_native_system_metrics_t) typedef struct adk_system_metri
     /// **PROVIDED TO PARTNER BY DISNEY**
     char tenancy[adk_metrics_string_max];
     /// Disney assigned partner specific unique identifier
-    /// **PROVIDED TO PARTNER BY DISNEY**
+    /// **FILLED IN BY CORE**
     char partner_guid[adk_metrics_string_max];
     /// Partner provided advertising ID. Set to NULL
     /// **Reserved - please contact Disney Partner Integration before using any value other than NULL**
@@ -177,14 +177,22 @@ FFI_EXPORT FFI_NAME(adk_native_system_metrics_t) typedef struct adk_system_metri
     /// Must be comprised of the following characters: 'a'-'z', 'A'-'Z', '0'-'9', or '_'
     /// **PROVIDED TO PARTNER BY DISNEY**
     char persona_id[adk_metrics_string_max];
-
 } adk_system_metrics_t;
 
+EXT_EXPORT
 FFI_EXPORT
 FFI_RETURN(out)
 FFI_NAME(adk_get_system_metrics_native)
 FFI_PUB_CRATE
 void adk_get_system_metrics(FFI_PTR_WASM adk_system_metrics_t * const out);
+
+/*
+  A hook function introduced to address the request from the client team to move partner-related
+  configuration values from steamboat layer to persona.json files. Since persona is a runtime thing
+  this function has been introduced. Ideally, we should introduce a struct and a corresponding 
+  function to get these value, but at this time we don't want to introduce new things to the FFI layer.
+ */
+void adk_runtime_override_system_metrics(adk_system_metrics_t * const out);
 
 /*
 ===============================================================================
@@ -208,6 +216,7 @@ typedef struct adk_low_memory_reservations_t {
     uint32_t curl_fragment_buffers;
     uint32_t json_deflate;
     uint32_t default_thread_pool;
+    uint32_t ssl;
     uint32_t http2;
     uint32_t httpx;
     uint32_t httpx_fragment_buffers;
@@ -266,6 +275,8 @@ typedef struct adk_memory_map_t {
     adk_mem_region_t json_deflate;
     /// memory for the thread pool
     adk_mem_region_t default_thread_pool;
+    /// memory for ssl backend
+    adk_mem_region_t ssl;
     /// memory for web sockets
     adk_mem_region_t http2;
     /// memory for HTTP subsystem
