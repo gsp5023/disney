@@ -198,16 +198,6 @@ void adk_get_system_metrics(adk_system_metrics_t * const out) {
     ZEROMEM(out);
     sb_get_system_metrics(out);
     adk_runtime_override_system_metrics(out);
-#if defined(BRCM_DEVICE_OVERRIDE_HIGH) 
-    // Force metrics device alignment if we are overriding
-    VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), "97xx_high"));
-#elif defined(BRCM_DEVICE_OVERRIDE_MID) 
-    // Force metrics device alignment if we are overriding
-    VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), "97xx_mid"));
-#elif defined(BRCM_DEVICE_OVERRIDE_LOW)
-    // Force metrics device alignment if we are overriding
-    VERIFY(0 == strcpy_s(out->device, ARRAY_SIZE(out->device), "97xx_low"));
-#endif    
     VERIFY(0 == strcpy_s(out->core_version, ARRAY_SIZE(out->core_version), ADK_VERSION_STRING));
 #if defined(_SHIP)
 #if defined(NDEBUG)

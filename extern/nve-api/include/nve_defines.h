@@ -126,6 +126,7 @@ FFI_EXPORT typedef enum nve_event_type_e {
     nve_event_type_audio_manifest_updated,
     nve_event_type_media_player_general_info,
     nve_event_type_main_manifest_updated,
+    nve_event_type_play_start
 } nve_event_type_e;
 
 FFI_EXPORT typedef enum nve_timed_metadata_type_e {

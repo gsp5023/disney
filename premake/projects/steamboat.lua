@@ -69,12 +69,12 @@ project "steamboat"
 		removefiles "**gles_*.*"
 
 	filter {"platforms:*brcm_bme*"}
-	    -- Retain the POSIX-y ref-port components, but not the Nexus pieces
+		-- Retain the POSIX-y ref-port components, but not the Nexus pieces
 		removefiles "ref_ports/nexus/**"
 
 		cppdialect "gnu++0x"
 
-    	includedirs "extern/curl/curl/include"
+		includedirs "extern/curl/curl/include"
 		includedirs "extern/dss-nve/code/third_party/dss-nve-shared/steamboat/include"
 		includedirs "extern/private/bme"
 
@@ -87,27 +87,27 @@ project "steamboat"
 		p.original.files "extern/private/bme/TextToSpeech.cpp"
 
 		if(player_is_any("nve-prebuilt", "nve-shared")) then
-            push_filter {}
+			push_filter()
 
 			p.original.files "extern/private/bme/Playback.cpp"
 			p.original.files "extern/private/bme/DrmPlayback.cpp"
 			p.original.files "extern/private/bme/drm/Drm.cpp"
 
-	        filter {"platforms:*brcm_bme*", "tags:bme-prdy-32"}
+			filter {"platforms:*brcm_bme*", "tags:bme-prdy-32"}
 				p.original.files "extern/private/bme/playready/PlayReadyBase.cpp"
 				p.original.files "extern/private/bme/playready/PlayReady3Plus.cpp"
 				p.original.files "extern/private/bme/playready/PolicyCallback3Plus.cpp"
 				p.original.files "extern/private/bme/playready/Clock.cpp"
 
-	        filter {"platforms:*brcm_bme*", "tags:bme-prdy-25"}
+			filter {"platforms:*brcm_bme*", "tags:bme-prdy-25"}
 				p.original.files "extern/private/bme/playready/PlayReadyBase.cpp"
 				p.original.files "extern/private/bme/playready/PlayReady25.cpp"
 				p.original.files "extern/private/bme/playready/PolicyCallback25.cpp"
 
-            -- TODO(M5-3316): WV support
-            -- p.original.files "extern/private/bme/widevine/Widevine.cpp"
+			-- TODO(M5-3316): WV support
+			-- p.original.files "extern/private/bme/widevine/Widevine.cpp"
 
-            pop_filter {}
+			pop_filter()
 		end
 
 	filter {}

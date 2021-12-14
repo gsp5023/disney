@@ -415,6 +415,10 @@
           "constant": 0
         },
         {
+          "name": "nve_event_type_play_start",
+          "constant": 21
+        },
+        {
           "name": "nve_event_type_playback_rate",
           "constant": 7
         },

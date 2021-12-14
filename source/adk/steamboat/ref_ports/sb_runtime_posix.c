@@ -197,7 +197,7 @@ static int32_t resolve_default_network_iface_name(char out_iface_name[]) {
 sb_network_type_e sb_get_network_type() {
     char iface_name[64] = {0};
     if (resolve_default_network_iface_name(iface_name) <= 0) {
-        LOG_ERROR(TAG_RT_IX, "Can't detected network's type due: couldn't resolve default network iface name");
+        LOG_WARN(TAG_RT_IX, "Can't detected network's type due: couldn't resolve default network iface name");
         return sb_network_type_unknown;
     }
 
@@ -208,7 +208,7 @@ sb_network_type_e sb_get_network_type() {
 static network_connection_status_e get_network_connection_status() {
     char iface_name[64] = {0};
     if (resolve_default_network_iface_name(iface_name) <= 0) {
-        LOG_ERROR(TAG_RT_IX, "Can't process network status: couldn't resolve default network iface name");
+        LOG_WARN(TAG_RT_IX, "Can't process network status: couldn't resolve default network iface name");
         return network_connection_status_unknown;
     }
 
@@ -275,7 +275,7 @@ void process_network_status() {
             break;
         }
         case network_connection_status_unknown: {
-            LOG_ERROR(TAG_RT_IX, "Failed to get an updated network status");
+            LOG_WARN(TAG_RT_IX, "Failed to get an updated network status");
             break;
         }
     }
