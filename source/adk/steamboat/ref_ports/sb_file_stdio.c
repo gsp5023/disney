@@ -75,7 +75,9 @@ static void combine_directory_and_file_path(const sb_file_directory_e directory,
 }
 
 bool sb_create_directory_path(const sb_file_directory_e directory, const char * const input_path) {
+    LOG_DEBUG(TAG_SBIO, "%s %s %d", __FILE__, __func__, __LINE__);
     if ((directory == sb_app_root_directory)) {
+        LOG_DEBUG(TAG_SBIO, "%s %s %d", __FILE__, __func__, __LINE__);
         return false;
     }
     // this function will traverse a re-created filepath to either where you want to store a file.
@@ -88,9 +90,12 @@ bool sb_create_directory_path(const sb_file_directory_e directory, const char * 
     // can't assert due to unit tests needing to tell if this fails properly.....
 
 #ifndef _SHIP
+LOG_DEBUG(TAG_SBIO, "%s %s %d", __FILE__, __func__, __LINE__);
     VERIFY(adk_is_valid_sub_path(input_path));
+    LOG_DEBUG(TAG_SBIO, "%s %s %d", __FILE__, __func__, __LINE__);
 #else
     if (!adk_is_valid_sub_path(input_path)) {
+         LOG_DEBUG(TAG_SBIO, "%s %s %d", __FILE__, __func__, __LINE__);
         return false;
     }
 #endif
@@ -117,11 +122,13 @@ bool sb_create_directory_path(const sb_file_directory_e directory, const char * 
         }
 #else
         if ((mkdir(path, get_file_perms(directory)) != 0) && (errno != EEXIST)) {
+            LOG_ERROR(TAG_SBIO, "Can not make directory %s", path);
             return false;
         }
 #endif
         curr_ptr[1] = curr_char;
     }
+    LOG_DEBUG(TAG_SBIO, "%s %s %d path %s", __FILE__, __func__, __LINE__, path);
     return true;
 }
 

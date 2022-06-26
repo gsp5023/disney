@@ -546,7 +546,8 @@ static struct
         NEXUS_SimpleVideoDecoder_SetStartPts(videoPlayer.getDecoder(), NANO_SECONDS_TO_BRCM_PTS(pts));
         NEXUS_SimpleVideoDecoder_Start(videoPlayer.getDecoder(), &videoStartSettings);
     }
-
+    
+    NEXUS_ClientConfiguration clientConfig;
     DRMSystem drmSystem;
 
     struct OpenCDMSystem* getOcdmSystem() {
@@ -582,6 +583,21 @@ sb_media_result_t sb_media_global_init()
     connectSettings.simpleAudioDecoder.id = statics.allocResults.simpleAudioDecoder.id;
     rc = NxClient_Connect(&connectSettings, &statics.connectId);
     BDBG_ASSERT(!rc);
+
+    /* Show heaps info */
+    NEXUS_Platform_GetClientConfiguration(&statics.clientConfig);
+
+    int g;
+    LOG_DEBUG(TAG_RT_MEDIA, "NxClient Heaps Info -----------------");
+    for (g = NXCLIENT_DEFAULT_HEAP; g <= NXCLIENT_ARR_HEAP; g++)
+    {
+        NEXUS_MemoryStatus status;
+        rc = NEXUS_Heap_GetStatus(statics.clientConfig.heap[g], &status);
+        if (!rc) continue;
+        LOG_DEBUG(TAG_RT_MEDIA, "Heap[%d]: memoryType=%u, heapType=0x%x, offset=%u, addr=%p, size=%u",
+            g, status.memoryType, status.heapType, (uint32_t)status.offset, status.addr, status.size);
+    }
+    LOG_DEBUG(TAG_RT_MEDIA, "-------------------------------------");
 
     statics.audioPlayer.init();
     statics.videoPlayer.init();

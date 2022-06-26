@@ -159,7 +159,7 @@ adk_curl_context_t * adk_curl_context_create(void * const ctx, const adk_curl_co
 #ifdef _ADK_NVE_CURL_SHARING
         const size_t buffer_size = 10 * 1024 * 1024;
 #else
-        const size_t buffer_size = 64 * 1024;
+        const size_t buffer_size = 1024 * 1024;
 #endif
 
         statics.region = sb_map_pages(PAGE_ALIGN_INT(buffer_size), system_page_protect_read_write);

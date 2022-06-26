@@ -174,7 +174,9 @@ void debug_heap_init(heap_t * const heap, const size_t heap_size, const int alig
     ASSERT(tag);
     ASSERT((block_header_size == 0) || (block_header_size >= (int)sizeof(heap_block_header_t)));
 
-    const size_t aligned_heap_size = PAGE_ALIGN_INT(heap_size);
+LOG_WARN(TAG_MEMORY_HEAP, "debug_heap_init name %s, size %d", name, heap_size);
+
+    const size_t aligned_heap_size = PAGE_ALIGN_INT(heap_size)*4;
 
 #ifdef GUARD_PAGE_SUPPORT
     if (guard_pages == system_guard_page_mode_enabled) {
@@ -186,6 +188,7 @@ void debug_heap_init(heap_t * const heap, const size_t heap_size, const int alig
 
         strcpy_s(heap->name, ARRAY_SIZE(heap->name), name);
 
+        heap->internal.heap_size = aligned_heap_size;
         heap->internal.init = true;
         heap->internal.guard_pages = true;
         heap->internal.guard_pages_max_heap_size = aligned_heap_size;
@@ -312,6 +315,7 @@ void * heap_unchecked_alloc(heap_t * const heap, const size_t size, const char *
     const size_t aligned_size = size ? ALIGN_INT(size, heap->internal.alignment) : heap->internal.alignment;
     // catch overflow
     if (aligned_size < size) {
+        LOG_ERROR(TAG_MEMORY_HEAP, "aligned size is small!!");
         return NULL;
     }
     const size_t ptr_ofs = heap->internal.ptr_ofs;
@@ -330,6 +334,7 @@ void * heap_unchecked_alloc(heap_t * const heap, const size_t size, const char *
         const size_t page_size = get_sys_page_size();
 
         if ((heap->internal.used_block_size + needed) > heap->internal.guard_pages_max_heap_size) {
+            LOG_ERROR(TAG_MEMORY_HEAP, "guard_pages_max_heap_size small %s %s %d %d %d, %d", __FILE__, __func__, __LINE__, heap->internal.guard_pages_max_heap_size, heap->internal.used_block_size + needed, needed);
             return NULL;
         }
 
@@ -364,8 +369,12 @@ void * heap_unchecked_alloc(heap_t * const heap, const size_t size, const char *
 #ifdef _MAT_ENABLED
             MAT_ALLOC(ptr, size, 0, 0);
 #endif
+        if (ptr == NULL)
+            LOG_DEBUG(TAG_MEMORY_HEAP, "Returning %p", ptr);
             return ptr;
         }
+
+        LOG_ERROR(TAG_MEMORY_HEAP, "Can not alloc!!!");
         return NULL;
     } else
 #endif
@@ -449,10 +458,13 @@ void * heap_unchecked_alloc(heap_t * const heap, const size_t size, const char *
 #ifdef _MAT_ENABLED
             MAT_ALLOC(uptr, size, 0, 0);
 #endif
+if (uptr == NULL)
+LOG_DEBUG(TAG_MEMORY_HEAP, "Returning uptr %p", uptr);
             return uptr;
         }
     }
 
+    LOG_ERROR(TAG_MEMORY_HEAP, "Error end of alloc!!!");
     return NULL;
 }
 

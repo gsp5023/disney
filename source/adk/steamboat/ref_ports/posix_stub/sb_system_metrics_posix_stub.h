@@ -17,43 +17,45 @@ steamboat static system metrics functions
 extern "C" {
 #endif
 
-/*
- * PARTNER TODO: 
- * Implement static system metrics for appropriate platform.
- * Device ID, tenancy, and persona not defined here.
- */
+    /*
+     * PARTNER TODO:
+     *  1) complete TODO lines at bottom of file.
+     *  2) define one of:
+     *     NUUDAYDK_YS4000 (default)
+     *     NUUDAYDK_YS5000 
+     */
 
-#define SB_METRICS_VENDOR "Vendor_Stub"
-#define SB_METRICS_DEVICE "PlatformStub"
-#define SB_METRICS_FIRMWARE "0.1.0"
-#define SB_METRICS_SOFTWARE "SW_STUB"
-#define SB_METRICS_REVISION "1.0.0"
-#define SB_METRICS_GPU "GPU_STUB"
-#define SB_METRICS_REGION "1"
-#define SB_METRICS_ADVERTISING_ID "0000-0000"
+#define SB_METRICS_PARTNER_GUID "0e0de8ec-bdc3-48cf-8941-bc073d32eacd"
+#define NUUDAYDK_YS5000
 
-#if defined(_X86)
-#define SB_METRICS_CPU "x86"
-#elif defined(_X86_64)
-#define SB_METRICS_CPU "x86_64"
-#elif defined(_MIPS64)
-#define SB_METRICS_CPU "mips64"
-#elif defined(_MIPS)
-#define SB_METRICS_CPU "mips32"
-#elif defined(_ARM64)
-#define SB_METRICS_CPU "arm64"
-#elif defined(_ARM)
-#define SB_METRICS_CPU "arm32"
-#else
-#error "unrecognized architecture"
-#endif
+#if defined(NUUDAYDK_YS5000) //NUUDAYDK_YS5000
+#define SB_METRICS_DEVICE "ys-5000"
+#define SB_METRICS_VENDOR "humax"
+#else //NUUDAYDK_YS4000
+#define SB_METRICS_DEVICE "ys-4000"
+#define SB_METRICS_VENDOR "humax"
+#endif // defined(NUUDAYDK_YS5000)
+
+#define SB_METRICS_PARTNER "nuuday_dk"
+
+#define SB_METRICS_FIRMWARE "1.0.0" //TODO: Fill this in
+
+#define SB_METRICS_SOFTWARE "1.0.0" //TODO: Fill this in
+#define SB_METRICS_REVISION "1.0.0" //TODO: Fill this in
+#define SB_METRICS_CPU "partner provided" //TODO: Fill this in
+#define SB_METRICS_GPU "partner provided" //TODO: Fill this in
+
+#define SB_METRICS_REGION "dk"
+#define SB_METRICS_ADVERTISING_ID "" //TODO: Fill this in
+
+
 
 enum {
     // num cores, main memory mbytes and num hardware threads are handled inline
-    sb_metrics_video_memory_mbytes = 1024,
-    sb_metrics_persistent_storage_available_bytes = 0,
-    sb_metrics_persistent_storage_max_write_bps = 0,
-    sb_metrics_texture_format = adk_gpu_ready_texture_format_etc1,
+    sb_metrics_video_memory_mbytes = 1024, //TODO: Fill this in
+    sb_metrics_persistent_storage_available_bytes = 0, //TODO: Fill this in
+    sb_metrics_persistent_storage_max_write_bps = 0, //TODO: Fill this in
+    sb_metrics_texture_format = adk_gpu_ready_texture_format_etc1, //TODO: Fill this in
     sb_metrics_device_class = adk_device_class_stb
 };
 

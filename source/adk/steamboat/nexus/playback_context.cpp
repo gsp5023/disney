@@ -55,13 +55,13 @@ BDBG_MODULE(playback_context);
 #define LOGV BDBG_MSG
 
 using namespace dif_streamer;
-using namespace media_parser;
+// using namespace media_parser;
 
 PlaybackContext::PlaybackContext()
 {
     for (int i = 0; i < MAX_MOSAICS; i++) {
-        parser[i] = NULL;
-        decryptor[i] = NULL;
+        // parser[i] = NULL;
+        // decryptor[i] = NULL;
         videoStreamer[i] = NULL;
         audioStreamer[i] = NULL;
         video_decode_hdr[i] = 0;
@@ -99,15 +99,15 @@ PlaybackContext::~PlaybackContext()
     LOGW(("%s: cleaning up", BSTD_FUNCTION));
 
     for (int i = 0; i < MAX_MOSAICS; i++) {
-        if(parser[i]) {
-            delete parser[i];
-            LOGW(("Destroying parser %p", (void*)parser[i]));
-        }
+        // if(parser[i]) {
+        //     delete parser[i];
+        //     LOGW(("Destroying parser %p", (void*)parser[i]));
+        // }
 
-        if (decryptor[i] != NULL) {
-            LOGW(("Destroying decryptor %p", (void*)decryptor[i]));
-            DecryptorFactory::DestroyDecryptor(decryptor[i]);
-        }
+        // if (decryptor[i] != NULL) {
+        //     LOGW(("Destroying decryptor %p", (void*)decryptor[i]));
+        //     DecryptorFactory::DestroyDecryptor(decryptor[i]);
+        // }
 
         if (videoStreamer[i] != NULL) {
             LOGW(("Destroying videoStreamer %p", (void*)videoStreamer[i]));

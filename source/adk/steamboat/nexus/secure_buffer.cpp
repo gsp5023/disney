@@ -39,6 +39,7 @@
  *  WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
  *  FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
  ******************************************************************************/
+#include "nexus_config.h"
 #include "nexus_base_mmap.h"
 #ifndef ASTRA_SUPPORT
 #include "sage_srai.h"

@@ -304,6 +304,7 @@ retry:
     return true;
 }
 
+#if 0
 bool BaseStreamer::SubmitSample(SampleInfo *pSample, IBuffer *clear, IBuffer *decrypted)
 {
     if (m_playpump == NULL) {
@@ -361,6 +362,7 @@ bool BaseStreamer::SubmitSample(SampleInfo *pSample, IBuffer *clear, IBuffer *de
 
     return true;
 }
+#endif
 
 bool BaseStreamer::Push(uint32_t size)
 {

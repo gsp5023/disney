@@ -56,7 +56,7 @@ local function is_stubtype_mw()
 end
 
 if is_stubtype_mw() then
-	add_gcc_toolset("gcc-6.3-1.2-soc", "/opt/mw/toolchain/stbgcc-6.3-1.2/bin/aarch64-linux-")
+	add_gcc_toolset("gcc-6.3-1.2-soc", "/home/kdhong/work/ys5000/ys5000/build-brcm972180vc-ys5000/tmp/sysroots/x86_64-linux/usr/bin/arm-rdk-linux-gnueabi/arm-rdk-linux-gnueabi-")
 end
 
 filter "action:gmake*"
@@ -67,10 +67,10 @@ filter "action:gmake*"
 		libdirs "/opt/mw/lib/linux"				-- <-- add path to MW and/or custom libs folder(s), example 'mw/usr/lib'
 	end
 	if is_stubtype_mw() then
-		platforms "stb_soc_gpu_mwstub_arm8-a_64"
+		platforms "stb_soc_gpu_mwstub_arm8-a_32"
 		toolset "gcc-6.3-1.2-soc"
-		architecture "arm64"
-		libdirs "/opt/mw/lib/mw" 				-- <-- add path to MW and/or custom libs folder(s), example 'mw/usr/lib'
+		architecture "arm"
+		libdirs "/home/kdhong/work/ys5000/ys5000/build-brcm972180vc-ys5000/tmp/sysroots/brcm972180vc-ys5000/usr/lib" 				-- <-- add path to MW and/or custom libs folder(s), example 'mw/usr/lib'
 	end
 
 filter "platforms:*soc_arm8*"
@@ -95,11 +95,12 @@ filter "platforms:*x86*"
 filter "platforms:*mw*"
 	sysincludedirs {
 		-- gles
-		"/opt/mw/include/gles/mw/include"		-- <-- PARTNER TODO: add path to GLES headers
+		"/home/kdhong/work/ys5000/ys5000/build-brcm972180vc-ys5000/tmp/sysroots/brcm972180vc-ys5000/usr/include/GLES"		-- <-- PARTNER TODO: add path to GLES headers
 	}
 
 	includedirs {
-		"/opt/mw/include/"						-- <-- PARTNER TODO: add path to device support and/or MW headers
+		"/home/kdhong/work/ys5000/ys5000/build-brcm972180vc-ys5000/tmp/sysroots/brcm972180vc-ys5000/usr/include",						-- <-- PARTNER TODO: add path to device support and/or MW headers
+		"/home/kdhong/work/ys5000/ys5000/build-brcm972180vc-ys5000/tmp/sysroots/brcm972180vc-ys5000/usr/include/opencdm"						-- <-- PARTNER TODO: add path to device support and/or MW headers
 	}
 
 function m.link()
@@ -109,13 +110,13 @@ function m.link()
 		links "m"
 
 	filter {"platforms:*soc*", KIND_APP}
-		links {"mwopengl"} 							-- <-- PARTNER TODO: add custom MW and/or vendor OpenGL implementation libraries
+		links {"ocdm", "xkbcommon", "westeros_simpleshell_client", "wayland-client", "wayland-egl", "GLESv2"} 							-- <-- PARTNER TODO: add custom MW and/or vendor OpenGL implementation libraries
 
 	filter {"platforms:*x86*", KIND_APP}
 		links {"X11","EGL","GLESv2"} 
 
 	filter "platforms:*mw*"
-		-- links {"soclibrary","mwlibrary",...}		-- <-- PARTNER TODO: add custom MW and/or SoC/vendor specific libraries needed for Steamboat integration
+		 links {"nghttp2", "ssl", "crypto", "nxclient", "nexus"}		-- <-- PARTNER TODO: add custom MW and/or SoC/vendor specific libraries needed for Steamboat integration
 end
 
 return m

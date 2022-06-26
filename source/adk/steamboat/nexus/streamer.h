@@ -48,7 +48,7 @@
 #include "nexus_security.h"
 #endif
 
-#include "bmp4.h"
+// #include "bmp4.h"
 
 #define DEBUG_OUTPUT_CAPTURE 0
 
@@ -234,7 +234,7 @@ public:
     virtual bool SubmitScatterGather(void* addr, uint32_t length, bool flush = true, bool last = false) = 0;
 
     // Used to submit a sample with sub-samples with decrypted buffer
-    virtual bool SubmitSample(SampleInfo *pSample, IBuffer *clear, IBuffer *decrypted) = 0;
+    // virtual bool SubmitSample(SampleInfo *pSample, IBuffer *clear, IBuffer *decrypted) = 0;
 
     // Used to push data to AV pipeline
     virtual bool Push(uint32_t size) = 0;
@@ -274,7 +274,7 @@ public:
     virtual bool SubmitScatterGather(IBuffer* buffer, bool last = false) OVERRIDE;
     virtual bool SubmitScatterGather(void* addr, uint32_t length, bool flush = true, bool last = false) OVERRIDE;
 
-    virtual bool SubmitSample(SampleInfo *pSample, IBuffer *clear, IBuffer *decrypted) OVERRIDE;
+    // virtual bool SubmitSample(SampleInfo *pSample, IBuffer *clear, IBuffer *decrypted) OVERRIDE;
 
     virtual bool Push(uint32_t size) OVERRIDE;
 

@@ -49,8 +49,10 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#include "decryptor.h"
-#include "media_parser.h"
+#include "streamer.h"
+
+// #include "decryptor.h"
+// #include "media_parser.h"
 
 #define MAX_MOSAICS 8
 
@@ -61,7 +63,7 @@
 #endif
 
 using namespace dif_streamer;
-using namespace media_parser;
+// using namespace media_parser;
 
 class PlaybackContext
 {
@@ -69,8 +71,8 @@ public:
     PlaybackContext();
     ~PlaybackContext();
 
-    MediaParser* parser[MAX_MOSAICS];
-    IDecryptor* decryptor[MAX_MOSAICS];
+    // MediaParser* parser[MAX_MOSAICS];
+    // IDecryptor* decryptor[MAX_MOSAICS];
     IStreamer* videoStreamer[MAX_MOSAICS];
     IStreamer* audioStreamer[MAX_MOSAICS];
     int video_decode_hdr[MAX_MOSAICS];
