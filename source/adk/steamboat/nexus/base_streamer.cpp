@@ -40,6 +40,7 @@
  *  FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
  ******************************************************************************/
 #include "streamer.h"
+#include "nxclient.h"
 #include "nexus_base_mmap.h"
 
 BDBG_MODULE(base_streamer);
@@ -273,6 +274,7 @@ retry:
     /* Flush if source is GLR and destination is secure */
     for (unsigned i = 0; i < m_numDesc; i++) {
         if (m_flush[i] && IsSecure()) {
+            LOGD(("Flush!!!"));
             NEXUS_FlushCache(m_desc[i].addr, m_desc[i].length);
         }
         lengthToSubmit += m_desc[i].length;

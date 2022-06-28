@@ -57,8 +57,8 @@ BDBG_MODULE(buffer);
 #undef LOGV
 #define LOGE BDBG_ERR
 #define LOGW BDBG_WRN
-#define LOGD BDBG_MSG
-#define LOGV BDBG_MSG
+#define LOGD BDBG_WRN
+#define LOGV BDBG_WRN
 
 using namespace dif_streamer;
 

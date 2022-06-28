@@ -502,6 +502,25 @@ void sb_tick(const adk_event_t ** const head, const adk_event_t ** const tail) {
 
     wl_display_dispatch_pending(statics.ctx->display);
     if (statics.ctx->disneyPendingKeyEvent != 0) {
+/*
+        adk_post_event((adk_event_t){
+            .time = adk_read_millisecond_clock(),
+            .event_data = (adk_event_data_t){
+                .type = adk_stb_rich_input_event,
+                .stb_rich_input.stb_key = statics.ctx->disneyPendingKeyEvent,
+                .stb_rich_input.event = adk_key_event_key_down,
+                .stb_rich_input.repeat = 0
+            }});
+
+        adk_post_event((adk_event_t){
+            .time = adk_read_millisecond_clock(),
+            .event_data = (adk_event_data_t){
+                .type = adk_stb_rich_input_event,
+                .stb_rich_input.stb_key = statics.ctx->disneyPendingKeyEvent,
+                .stb_rich_input.event = adk_key_event_key_up,
+                .stb_rich_input.repeat = 0
+            }});
+*/
         adk_post_event((adk_event_t){
             .time = adk_read_millisecond_clock(),
             .event_data = (adk_event_data_t){

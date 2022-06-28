@@ -181,6 +181,7 @@ private:
     static NEXUS_DmaHandle s_dmaHandle;
     NEXUS_DmaJobHandle m_dmaJob;
     bool m_givenDmaJob;
+    BKNI_EventHandle event;
 };
 
 #define MAX_DESCRIPTORS 16
@@ -241,6 +242,8 @@ public:
 
     // Returns if this streamer is secure or not
     virtual bool IsSecure() = 0;
+
+    virtual void Wakeup() = 0;
 };
 
 // Parent class to provide streamer API
@@ -279,6 +282,12 @@ public:
     virtual bool Push(uint32_t size) OVERRIDE;
 
     virtual bool IsSecure() OVERRIDE { return false; }
+
+    virtual void Wakeup() OVERRIDE {
+        if (m_event.event) {
+            BKNI_SetEvent(m_event.event);
+        }
+    }
 protected:
     virtual bool SetupPlaypump(NEXUS_PlaypumpOpenSettings *playpumpOpenSettings) = 0;
     virtual bool SetupPidChannel() { return true; }

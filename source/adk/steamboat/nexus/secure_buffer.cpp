@@ -41,6 +41,7 @@
  ******************************************************************************/
 #include "nexus_config.h"
 #include "nexus_base_mmap.h"
+// #define ASTRA_SUPPORT
 #ifndef ASTRA_SUPPORT
 #include "sage_srai.h"
 #endif
@@ -92,6 +93,8 @@ SecureBuffer::~SecureBuffer()
         SRAI_Cleanup();
 #endif
     }
+
+    BKNI_DestroyEvent(event);
 }
 
 #ifdef ASTRA_SUPPORT
@@ -104,6 +107,7 @@ bool SecureBuffer::Initialize()
 {
     m_dmaJob = NULL;
     m_givenDmaJob = false;
+    BKNI_CreateEvent(&event);
 
     if (m_data == NULL) {
         uint8_t *pBuf = NULL;
@@ -161,7 +165,10 @@ void SecureBuffer::PrivateCopy(void *pDest, const void *pSrc, uint32_t nSize, bo
     if (m_dmaJob == NULL) {
         NEXUS_DmaJobSettings dmaJobSettings;
         NEXUS_DmaJob_GetDefaultSettings(&dmaJobSettings);
-        dmaJobSettings.completionCallback.callback = NULL;
+        dmaJobSettings.completionCallback.callback = [](void* context, int param) {
+            BKNI_SetEvent((BKNI_EventHandle)context);
+        };
+        dmaJobSettings.completionCallback.context = event;
         dmaJobSettings.bypassKeySlot = NEXUS_BypassKeySlot_eGR2R;
 
         if (s_dmaHandle == NULL) {
@@ -193,6 +200,7 @@ void SecureBuffer::PrivateCopy(void *pDest, const void *pSrc, uint32_t nSize, bo
 
     rc = NEXUS_DmaJob_ProcessBlocks(m_dmaJob, &blockSettings, 1);
     if (rc == NEXUS_DMA_QUEUED) {
+        #if 1
         for (;;) {
             NEXUS_DmaJobStatus status;
             rc = NEXUS_DmaJob_GetStatus(m_dmaJob, &status);
@@ -205,6 +213,15 @@ void SecureBuffer::PrivateCopy(void *pDest, const void *pSrc, uint32_t nSize, bo
             }
             BKNI_Delay(1);
         }
+        #else
+            NEXUS_DmaJobStatus status;
+            rc = BKNI_WaitForEvent(event, BKNI_INFINITE);
+            BDBG_ASSERT(!rc);
+            rc = NEXUS_DmaJob_GetStatus(m_dmaJob, &status);
+            BDBG_ASSERT(!rc);
+            BDBG_ASSERT(status.currentState == NEXUS_DmaJobState_eComplete);
+            LOGD(("%s : dma Done!!", BSTD_FUNCTION));
+            #endif
     }
     else if (rc != NEXUS_SUCCESS) {
         LOGE(("%s: error in dma transfer, err:%d", BSTD_FUNCTION, rc));

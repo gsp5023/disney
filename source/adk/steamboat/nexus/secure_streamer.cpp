@@ -40,7 +40,7 @@
  *  FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
  ******************************************************************************/
 #include "nexus_config.h"
-
+// #define ASTRA_SUPPORT
 #ifndef ASTRA_SUPPORT
 #include "sage_srai.h"
 #endif

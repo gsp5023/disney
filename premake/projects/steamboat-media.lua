@@ -10,6 +10,8 @@ if(player_is_any("nve-prebuilt") and _OPTIONS["stub-steamboat-media"]) then
         --header files will be locally sourced in customer repositories
         includedirs "extern/dss-nve/code/steamboat/include"
         includedirs "source/adk/steamboat/nexus"
+        includedirs "extern/curl/curl/include"
+        includedirs "extern/curl/curl/lib"
         files "**.h"
         files "**.cpp"
 
