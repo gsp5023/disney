@@ -238,33 +238,6 @@ public:
                 buf->buffer[16+0], buf->buffer[16+1], buf->buffer[16+2], buf->buffer[16+3], buf->buffer[16+4], buf->buffer[16+5], buf->buffer[16+6], buf->buffer[16+7]);
                 */
 
-#if 0
-               if (BUFFER_SIZE == VIDEO_PLAYPUMP_BUF_SIZE) {
-                while ((written < buf->len) && !stopped) {
-                    // LOG_DEBUG(TAG_RT_MEDIA, "Write %d %d", written, buf->len);
-                    void *nexus_buffer;
-                    size_t nexus_space;
-                    int ret = NEXUS_Playpump_GetBuffer(playpump, &nexus_buffer, &nexus_space);
-                    // LOG_DEBUG(TAG_RT_MEDIA, "Nexus space %d", nexus_space);
-                    if (nexus_space > 0) {
-                        int writeBytes = nexus_space;
-                        if (writeBytes > (buf->len - written)) {
-                            writeBytes = (buf->len - written);
-                        }
-                        memcpy(nexus_buffer, buf->buffer + written, writeBytes);
-                        NEXUS_Playpump_WriteComplete(playpump, 0, writeBytes);
-                        written += writeBytes;
-                    } else {
-                        if (event) {
-                            NEXUS_Event_Wait(event, 750);
-                        } else {
-                            LOG_ERROR(TAG_RT_MEDIA, "Event is null!!");
-                            usleep(30*1000);
-                        }
-                    }
-                }
-               } else 
-#endif
 
                {
                     if (buf->len > 0 && buf->buffer != nullptr) {
@@ -614,24 +587,6 @@ struct DRMSystem {
 
             const uint8_t kidPattern[] = {0x3c, 0x00,  0x4b, 0x00, 0x49, 0x00, 0x44, 0x00, 0x3e, 0x00};
             const uint8_t kidEndPattern[] = {0x3c, 0x00, 0x2f, 0x00, 0x4b, 0x00, 0x49, 0x00, 0x44, 0x00, 0x3e, 0x00};
-            
-            // if (i == 0) {
-            //     memcpy(assembledBuffer, initData + offset, recordLength);
-            //     assembledLength = recordLength;
-            //     nextKIDStartPoint = (uint8_t*)memmem(assembledBuffer, recordLength, kidEndPattern, sizeof(kidEndPattern)) + sizeof(kidEndPattern);
-            // } else {
-            //     if (nextKIDStartPoint != nullptr) {
-            //         uint8_t* kidStart = (uint8_t*)memmem(initData + offset, recordLength, kidPattern, sizeof(kidPattern));        
-            //         uint8_t* kidEnd = (uint8_t*)memmem(initData + offset, recordLength, kidEndPattern, sizeof(kidEndPattern));        
-            //         if (kidStart && kidEnd && kidEnd > kidStart) {
-            //             int copySize = kidEnd - kidStart + sizeof(kidEndPattern);
-            //             memmove(nextKIDStartPoint + copySize, nextKIDStartPoint, (assembledBuffer + assembledLength - nextKIDStartPoint));
-            //             memcpy(nextKIDStartPoint, kidStart, copySize);
-            //             nextKIDStartPoint = nextKIDStartPoint + copySize;
-            //             assembledLength += copySize;
-            //         }
-            //     }
-            // } 
 
             const uint8_t* kidStart = (uint8_t*)memmem(initData + offset, recordLength, kidPattern, sizeof(kidPattern));  
             const uint8_t* kidEnd = (uint8_t*)memmem(initData + offset, recordLength, kidEndPattern, sizeof(kidEndPattern));        
@@ -670,35 +625,7 @@ struct DRMSystem {
 
             remainedSize -= recordLength;
             offset += recordLength;
-        }
-
-        // for(auto& session : ocdmSessions) {
-        //     if (session->delayedInit) {
-        //         opencdm_session_set_drm_header(ocdmCurrentSession->session, session->initData.data(), session->initData.size());
-        //         uint8_t challenge[64*1024];
-        //         memset(challenge, 0, sizeof(challenge));
-        //         uint32_t challengeSize;
-        //         if (opencdm_session_get_challenge_data(ocdmCurrentSession->session, challenge, &challengeSize, 0) == ERROR_NONE) {
-        //             LOG_DEBUG(TAG_RT_MEDIA, "Challenge %s", (const char*)challenge);
-        //             session->licenseNonce = parseTag((const char*)challenge, "LicenseNonce");
-        //             LOG_DEBUG(TAG_RT_MEDIA, "Delayed session challenge got successful nonce %s", session->licenseNonce.c_str());
-        //             session->challengeData = std::vector<uint8_t>(challenge, challenge + challengeSize);
-        //             session->challengeCallback(challenge, challengeSize);
-        //         }
-        //     }
-        // }
-
-        // FILE* fp = fopen ("/userdata/assembled.bin", "w");
-        // if (fp) {
-        //     fwrite(assembledBuffer, 1, assembledLength, fp);
-        //     fclose(fp);
-        // }
-
-        // std::shared_ptr<DRMSession> session = std::make_shared<DRMSession>(ocdmSystem, callback);
-        // if (session->init(assembledBuffer, assembledLength)) {
-        //     ocdmCurrentSession = session;
-        //     ocdmSessions.push_back(session);
-        // }            
+        }         
     }
 };
 
@@ -980,66 +907,6 @@ sb_media_result_t sb_media_init_video_decoder(sb_media_video_config_t * config, 
     return SB_MEDIA_RESULT_SUCCESS;
 }
 
-#define B_SET_BIT(name,v,b)  (((unsigned)((v)!=0)<<(b)))
-#define B_SET_BITS(name,v,e,b)  (((unsigned)(v))<<(b))
-#define B_GET_BIT(w,b)  ((w)&(1<<(b)))
-#define B_GET_BITS(w,e,b)  (((w)>>(b))&(((unsigned)(-1))>>((sizeof(unsigned))*8-(e+1-b))))
-
-static void print_adts(int size) {
-    const static uint32_t config_sample_rate_table[] = {
-        96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350
-    };
-    #define CONFIG_SAMPLE_RATE_COUNT  (sizeof(config_sample_rate_table) / sizeof(uint32_t))
-    int samplingFrequencyIndex = 3;
-    int frameLength = size - 14;
-    int channelConfiguration = 2;
-    int profile = 1;
-
-    for (int i = 0; i < (int)CONFIG_SAMPLE_RATE_COUNT; i++) {
-        if (statics.audioConfig.sample_rate == config_sample_rate_table[i]) {
-            LOG_DEBUG(TAG_RT_MEDIA, "Sampling Frequency %d index %d", statics.audioConfig.sample_rate, i);
-            samplingFrequencyIndex = i;
-            break;
-        }
-    }    
-
-    uint8_t pData[16];
-    pData[0] =
-        0xFF; /* sync word */
-    pData[1] =
-        0xF0 |  /* sync word */
-        B_SET_BIT( ID, 0, 3) | /* MPEG-2 AAC */
-        B_SET_BITS( "00", 0, 2, 1) |
-        B_SET_BIT( protection_absent, 1, 0);
-
-    pData[2] =
-        B_SET_BITS( profile, profile, 7, 6) |
-        B_SET_BITS( sampling_frequency_index, samplingFrequencyIndex, 5, 2 ) |
-        B_SET_BIT( private_bit, 0, 1) |
-        B_SET_BIT( channel_configuration[2], B_GET_BIT(channelConfiguration, 2), 0);
-
-    pData[3] = /* 4'th byte is shared */
-        B_SET_BITS( channel_configuration[2], B_GET_BITS(channelConfiguration, 1, 0), 7, 6) |
-        B_SET_BIT( original_copy, 0, 5) |
-        B_SET_BIT( home, 0, 4) |
-        /* IS 13818-7 1.2.2 Variable Header of ADTS */
-        B_SET_BIT( copyright_identification_bit, 0, 3) |
-        B_SET_BIT( copyright_identification_start, 0, 2) |
-        B_SET_BITS( aac_frame_length[12..11], B_GET_BITS(frameLength, 12, 11), 1, 0);
-    pData[4] =
-            B_SET_BITS(aac_frame_length[10..3], B_GET_BITS(frameLength, 10, 3), 7, 0);
-    pData[5] =
-            B_SET_BITS(aac_frame_length[2..0], B_GET_BITS(frameLength, 2, 0), 7, 5) |
-            B_SET_BITS(adts_buffer_fullness[10..6], B_GET_BITS( 0x7FF /* VBR */, 10, 6), 4, 0);
-    pData[6] =
-            B_SET_BITS(adts_buffer_fullness[5..0], B_GET_BITS( 0x7FF /* VBR */, 5, 0), 7, 2) |
-            B_SET_BITS(no_raw_data_blocks_in_frame, 0, 2, 0);
-
-    LOG_DEBUG(TAG_RT_MEDIA, "ADTS Header %02x %02x %02x %02x %02x %02x %02x", pData[0], pData[1], 
-        pData[2], pData[3], pData[4], pData[5], pData[6]);
-
-}
-
 sb_media_result_t sb_media_decode(sb_media_decoder_handle handle, uint8_t * pes, uint32_t size, sb_media_timestamp_t pts, sb_media_output_buffer_t * out, sb_media_decrypt_t * key)
 {
     if (pes == nullptr || size == 0) {
@@ -1048,73 +915,7 @@ sb_media_result_t sb_media_decode(sb_media_decoder_handle handle, uint8_t * pes,
     LOG_DEBUG(TAG_RT_MEDIA, "sb_media_decode %x %p %d %lld %p %p", handle, pes, size, pts, out, key);
 
     LOG_DEBUG(TAG_RT_MEDIA, "DecoderHandle %p... A:%p. V:%p", handle, statics.audioPlayer.steamboatDecoderHandle, statics.videoPlayer.steamboatDecoderHandle);
-    #if 0
-    if (key){
-        LOG_DEBUG(TAG_RT_MEDIA, "DecryptKey %s %d %d %d", key->keyID, key->iv_size, key->key_size, key->number_of_subsamples);
-        int offset = 16;
-        int remainedSize = size;
-        if (statics.drmSystem.ocdmCurrentSession) {
-            for (int i = 0; i < key->number_of_subsamples; i++) {
-                LOG_DEBUG(TAG_RT_MEDIA, "Decrypt subsample[%d] clearData %d encryptedData %d size %d", i, key->sub_samples[i].clear_data, key->sub_samples[i].encrypted_data, size);
-                offset += key->sub_samples[i].clear_data;
-                if (offset + key->sub_samples[i].encrypted_data <= size) {
-                    for (auto& session : statics.drmSystem.ocdmSessions) {
-                        if (session->keySize == key->key_size && memcmp(session->keyData, key->keyID, key->key_size) == 0) {
-                            LOG_DEBUG(TAG_RT_MEDIA, "Session found..");
-                            LOG_DEBUG(TAG_RT_MEDIA, "Before Decrypt %02x %02x %02x %02x", pes[offset], pes[offset+1], pes[offset+2], pes[offset+3]);
 
-                            uint8_t* buf = pes;
-                LOG_DEBUG(TAG_RT_MEDIA, "Buffer %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x"
-                " %02x %02x %02x %02x %02x %02x %02x %02x",
-                buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7],
-                buf[8+0], buf[8+1], buf[8+2], buf[8+3], buf[8+4], buf[8+5], buf[8+6], buf[8+7],
-                buf[16+0], buf[16+1], buf[16+2], buf[16+3], buf[16+4], buf[16+5], buf[16+6], buf[16+7], 
-                buf[24+0], buf[24+1], buf[24+2], buf[24+3], buf[24+4], buf[24+5], buf[24+6], buf[24+7],
-                buf[32+0], buf[32+1], buf[32+2], buf[32+3], buf[32+4], buf[32+5], buf[32+6], buf[32+7],
-                buf[40+0], buf[40+1], buf[40+2], buf[40+3], buf[40+4], buf[40+5], buf[40+6], buf[40+7]);                            
-                            int retValue = opencdm_session_decrypt(statics.drmSystem.ocdmCurrentSession->session,
-                                                    pes + offset, key->sub_samples[i].encrypted_data,
-                                                    key->iv, key->iv_size,
-                                                    key->keyID, key->key_size);
-
-                void* token;
-                memcpy(&token, pes + offset, 4);
-                LOG_DEBUG(TAG_RT_MEDIA, "Token %p", token);
-                NEXUS_MemoryBlockHandle block = NEXUS_MemoryBlock_Clone ((NEXUS_MemoryBlockTokenHandle)token);
-                if (!block) {
-                    LOG_ERROR(TAG_RT_MEDIA, "Can not allocate memory");
-                } else {
-                    uint8_t* ptr_generic;
-                    NEXUS_Error rc = NEXUS_MemoryBlock_Lock(block, (void**)&ptr_generic);
-                    if (rc == 0) {
-                        LOG_DEBUG(TAG_RT_MEDIA, "Memory locked %p", ptr_generic);
-                        LOG_DEBUG(TAG_RT_MEDIA, "locked %02x %02x %02x %02x", ptr_generic[0], ptr_generic[1], ptr_generic[2], ptr_generic[3]);
-                    } else {
-                        LOG_DEBUG(TAG_RT_MEDIA, "Can not lock block %x", rc);
-                    }
-                }
-
-                LOG_DEBUG(TAG_RT_MEDIA, "Buffer After decrypt %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x"
-                " %02x %02x %02x %02x %02x %02x %02x %02x",
-                buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7],
-                buf[8+0], buf[8+1], buf[8+2], buf[8+3], buf[8+4], buf[8+5], buf[8+6], buf[8+7],
-                buf[16+0], buf[16+1], buf[16+2], buf[16+3], buf[16+4], buf[16+5], buf[16+6], buf[16+7], 
-                buf[24+0], buf[24+1], buf[24+2], buf[24+3], buf[24+4], buf[24+5], buf[24+6], buf[24+7],
-                buf[32+0], buf[32+1], buf[32+2], buf[32+3], buf[32+4], buf[32+5], buf[32+6], buf[32+7],
-                buf[40+0], buf[40+1], buf[40+2], buf[40+3], buf[40+4], buf[40+5], buf[40+6], buf[40+7]);                            
-                            LOG_DEBUG(TAG_RT_MEDIA, "decrypt called %d %02x %02x %02x %02x", retValue, pes[offset], pes[offset+1], pes[offset+2], pes[offset+3]);
-                            if (retValue != 0) {
-                                LOG_DEBUG(TAG_RT_MEDIA, "Returning SB_MEDIA_RESULT_OVERFLOW");
-                                return SB_MEDIA_RESULT_OVERFLOW;
-                            }
-                        }
-                    }
-                }
-                offset += key->sub_samples[i].encrypted_data;
-            }
-        }
-    }
-    #endif
     if (handle == statics.audioPlayer.steamboatDecoderHandle) {
         LOG_DEBUG(TAG_RT_MEDIA, "Decode audio data pts %f (%f) size %d",  pts/1000000000.0, (pts - statics.audioPlayer.lastBufferedPts)/1000000000.0, size); 
         if (pes != nullptr && std::llabs(pts - statics.audioPlayer.lastBufferedPts) < 5000000000) {
@@ -1141,12 +942,7 @@ sb_media_result_t sb_media_decode(sb_media_decoder_handle handle, uint8_t * pes,
         LOG_DEBUG(TAG_RT_MEDIA, "Decode video data pts %f (%f) size %d",  pts/1000000000.0, (pts - statics.videoPlayer.lastBufferedPts)/1000000000.0, size); 
         if (pes != nullptr && std::llabs(pts - statics.videoPlayer.lastBufferedPts) < 5000000000) {
             LOG_DEBUG(TAG_RT_MEDIA, "VideoBuffered %lldms", statics.videoPlayer.getBufferedRangeMs());
-            // if (statics.videoPlayer.getBufferedRangeMs() > 5000) {
-            //     return SB_MEDIA_RESULT_OVERFLOW; 
-            // }
-            // if (statics.videoPlayer.bufferedBytes + size > VIDEO_LOOP_BUFFER_SIZE) {
-            //     return SB_MEDIA_RESULT_OVERFLOW; 
-            // }
+
             if (statics.videoPlayer.paused) {
                 statics.resumeVideo(pts);
             }
@@ -1209,31 +1005,10 @@ sb_media_result_t sb_media_decode(sb_media_decoder_handle handle, uint8_t * pes,
                                 }
                                 break;
                             } else {
-                                // LOG_DEBUG(TAG_RT_MEDIA, "sessionId %d LicenseNonce %s KID %02x %02x %02x %x", sessionIndex, session->licenseNonce.c_str(), session->KID[0], session->KID[1], session->KID[2]
-                                // , session->KID[3]);
                                 if (memcmp(session->KID, key->keyID, key->key_size) == 0 || sessionIndex == 1) {
-                                //     LOG_DEBUG(TAG_RT_MEDIA, "KID match found.. %s", session->delaye);
-                                //     if (session->delayedInit) {
-                                //         if (statics.event_callback) {
-                                //             LOG_DEBUG(TAG_RT_MEDIA, "Calling SB_MEDIA_PLAY_EVENT_REQUEST_KEY");
-                                //             statics.event_callback(handle, SB_MEDIA_PLAY_EVENT_REQUEST_KEY);
-                                //         }
-                                //         session->init(session->initData.data(), session->initData.size());
-                                //     }
                                     usleep(100*1000);
                                     return SB_MEDIA_RESULT_OVERFLOW;
                                 }
-                                // OpenCDMError error = opencdm_session_select_key_id(session->session, key->key_size, key->keyID);
-                                // if (error == ERROR_NONE) {
-                                //     std::vector<uint8_t> newKey(key->key_size);
-                                //     memcpy(newKey.data(), key->keyID, key->key_size);
-                                //     session->keyData.push_back(newKey);
-                                //     LOG_DEBUG(TAG_RT_MEDIA, "Check hasKey %d", session->hasKey(key->keyID, key->key_size));
-                                //     session->keyState = DRMSession::KeyState::KEY_READY;
-                                // }
-                                // LOG_DEBUG(TAG_RT_MEDIA, "select key returns %d", error);
-                                // usleep(100*1000);
-                                // return SB_MEDIA_RESULT_OVERFLOW;
                             }
                         }
                     } else {
@@ -1269,7 +1044,6 @@ sb_media_result_t sb_media_reset_decoder(sb_media_decoder_handle handle)
 
 sb_media_result_t sb_media_get_time(sb_media_decoder_handle handle, sb_media_timestamp_t * presentation_time)
 {
-    // LOG_DEBUG(TAG_RT_MEDIA, "%s %s %d", __FILE__, __func__, __LINE__);
     if (statics.isAudioDecoder(handle)) {
         NEXUS_AudioDecoderStatus status;
         NEXUS_SimpleAudioDecoder_GetStatus(statics.getAudioDecoder(), &status);
@@ -1278,11 +1052,6 @@ sb_media_result_t sb_media_get_time(sb_media_decoder_handle handle, sb_media_tim
     } else if (statics.isVideoDecoder(handle)) {
         NEXUS_VideoDecoderStatus status;
         NEXUS_SimpleVideoDecoder_GetStatus(statics.getVideoDecoder(), &status);
-        // static bool init = false;
-        // if (!init) {
-        //     NEXUS_SimpleStcChannel_SetStc(statics.stcChannel, status.pts);
-        //     init = true;
-        // }
         uint64_t pts = status.pts;
         *presentation_time = BRCM_PTS_TO_NANO_SECONDS(pts);
     }
