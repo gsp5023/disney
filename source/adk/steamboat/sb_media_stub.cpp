@@ -284,6 +284,10 @@ public:
                         streamer->Push(buf->encryptedLength);
                         BufferFactory::DestroyBuffer(input);
                         BufferFactory::DestroyBuffer(data);
+
+                        if (buf->encrypted) {
+                            NEXUS_Memory_Free(buf->encrypted);
+                        }
                     }
                }
             }
@@ -296,26 +300,6 @@ class OpenCDMContext {
     private:
     
 };
-
-// trim from start (in place)
-// static inline void ltrim(std::string &s) {
-//     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-//         return !std::isspace(ch);
-//     }));
-// }
-
-// // trim from end (in place)
-// static inline void rtrim(std::string &s) {
-//     s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-//         return !std::isspace(ch);
-//     }).base(), s.end());
-// }
-
-// // trim from both ends (in place)
-// static inline void trim(std::string &s) {
-//     ltrim(s);
-//     rtrim(s);
-// }
 
 static std::string parseTag(const std::string content, const std::string tag){
     std::string startTag = "<" + tag + ">";
@@ -352,7 +336,7 @@ struct DRMSession {
     KeyState keyState;
     sb_media_challenge_callback challengeCallback;
     OpenCDMSessionCallbacks ocdmCallbacks;
-    bool keyUpdated;
+    bool challengeProcessed;
     std::condition_variable waitForKeyUpdate;
     std::mutex lock;
     std::string licenseNonce;
@@ -362,10 +346,9 @@ struct DRMSession {
     std::vector<uint8_t> initData;
     std::vector<uint8_t> responseData;
     std::vector<uint8_t> challengeData;
-    bool delayedInit;
 
     DRMSession (OpenCDMSystem* system, sb_media_challenge_callback callback) : system(system), session(nullptr), keyState(KeyState::KEY_INIT), 
-                challengeCallback(callback), keyUpdated(false), delayedInit(false) {}
+                challengeCallback(callback), challengeProcessed(false) {}
 
     ~DRMSession () {
         if (session) {
@@ -373,13 +356,9 @@ struct DRMSession {
         }
     }
 
-    bool init(const uint8_t* initData, uint32_t initDataSize, bool delayedInit = false) {
-        this->delayedInit = delayedInit;
+    bool init(const uint8_t* initData, uint32_t initDataSize) {
 
-        if (delayedInit) {
-            this->initData = std::vector<uint8_t>(initData, initData + initDataSize);
-            return true;
-        }
+        this->initData = std::vector<uint8_t>(initData, initData + initDataSize);
 
 		memset(&ocdmCallbacks, 0, sizeof(ocdmCallbacks));
 		ocdmCallbacks.process_challenge_callback = [](OpenCDMSession* session, void* userData, const char destUrl[], const uint8_t challenge[], const uint16_t challengeSize) {
@@ -474,12 +453,9 @@ struct DRMSession {
 	void processOCDMChallenge(const char destUrl[], const uint8_t challenge[], const uint16_t challengeSize);
 
     void update(const uint8_t* response, int response_size) {
-        LOG_DEBUG(TAG_RT_MEDIA, "update - delayedInit %d", delayedInit);
-        if (!delayedInit) {
-            // opencdm_session_set_drm_header(session, initData.data(), initData.size());
-            // opencdm_session_select_key_id(session, 16, KID);
-            opencdm_session_update(session, response, response_size);
-        }
+        LOG_DEBUG(TAG_RT_MEDIA, "update");
+        opencdm_session_set_drm_header(session, initData.data(), initData.size());
+        opencdm_session_update(session, response, response_size);
         responseData = std::vector<uint8_t>(response, response + response_size);
         LOG_DEBUG(TAG_RT_MEDIA, "update memcmp %d", memcmp(responseData.data(), response, response_size));
         char filename[256];
@@ -493,17 +469,13 @@ struct DRMSession {
 
     void waitForKey() {
         std::unique_lock<std::mutex> lk(lock);
-        if (!keyUpdated) {
-            waitForKeyUpdate.wait_for(lk, std::chrono::milliseconds(5000), [this]() {return keyUpdated;});
+        if (!challengeProcessed) {
+            waitForKeyUpdate.wait_for(lk, std::chrono::milliseconds(5000), [this]() {return challengeProcessed;});
         }
     }
 
 	void keysUpdatedOCDM() {
-        std::unique_lock<std::mutex> lk(lock);
-        if (!keyUpdated) {
-            keyUpdated = true;
-            waitForKeyUpdate.notify_one();
-        }
+        LOG_DEBUG(TAG_RT_MEDIA, "Key updated!! ");
     }
 
 	void keyUpdateOCDM(const uint8_t key[], const uint8_t keySize){
@@ -591,96 +563,94 @@ struct DRMSystem {
     }
 
 
-    void initPlayReadySessions(const uint8_t* data, int initDataLength, sb_media_challenge_callback callback) {
-        initDrmThread = std::thread([data, initDataLength, callback, this] () {
-            std::vector<uint8_t> vec(initDataLength);
-            uint8_t* initData = vec.data();
-            memcpy(initData, data, initDataLength);
-            int remainedSize = initDataLength;
-            int offset = 0;
-            int data = 0;
-            #define READ_DWORD() { \
-                if (remainedSize <= 4) { LOG_ERROR(TAG_RT_MEDIA, "Can not read 4 bytes!!"); return; } \
-                remainedSize -= 4; \
-                data = (initData[offset] << 0) | (initData[offset + 1] << 8) | (initData[offset + 2] << 16) | (initData[offset + 3] << 24); \
-                offset += 4; \
-            };
-            #define READ_WORD() { \
-                if (remainedSize <= 2) { LOG_ERROR(TAG_RT_MEDIA, "Can not read 2 bytes!!"); return; } \
-                remainedSize -= 2; \
-                data = (initData[offset] << 0) | (initData[offset + 1] << 8); \
-                offset += 2; \
-            };
+    void initPlayReadySessions(const uint8_t* drmHeader, int initDataLength, sb_media_challenge_callback callback) {
+        std::vector<uint8_t> vec(initDataLength);
+        uint8_t* initData = vec.data();
+        memcpy(initData, drmHeader, initDataLength);
+        int remainedSize = initDataLength;
+        int offset = 0;
+        int data = 0;
+        #define READ_DWORD() { \
+            if (remainedSize <= 4) { LOG_ERROR(TAG_RT_MEDIA, "Can not read 4 bytes!!"); return; } \
+            remainedSize -= 4; \
+            data = (initData[offset] << 0) | (initData[offset + 1] << 8) | (initData[offset + 2] << 16) | (initData[offset + 3] << 24); \
+            offset += 4; \
+        };
+        #define READ_WORD() { \
+            if (remainedSize <= 2) { LOG_ERROR(TAG_RT_MEDIA, "Can not read 2 bytes!!"); return; } \
+            remainedSize -= 2; \
+            data = (initData[offset] << 0) | (initData[offset + 1] << 8); \
+            offset += 2; \
+        };
 
-            READ_DWORD();
-            LOG_DEBUG(TAG_RT_MEDIA, "Total length %d %d", data, initDataLength);
-            if (data != initDataLength) {
-                LOG_ERROR(TAG_RT_MEDIA, "Invalid length? %d %d", data, initDataLength);
-            }
+        READ_DWORD();
+        LOG_DEBUG(TAG_RT_MEDIA, "Total length %d %d", data, initDataLength);
+        if (data != initDataLength) {
+            LOG_ERROR(TAG_RT_MEDIA, "Invalid length? %d %d", data, initDataLength);
+        }
+        READ_WORD();
+        LOG_DEBUG(TAG_RT_MEDIA, "PRO has %d objects", data);
+        int objCount = data;
+
+        uint8_t assembledBuffer[64*1024];
+        int assembledLength = 0;
+        uint8_t* nextKIDStartPoint = nullptr;
+
+        for (int i = 0; i < objCount; i++) {
             READ_WORD();
-            LOG_DEBUG(TAG_RT_MEDIA, "PRO has %d objects", data);
-            int objCount = data;
+            int recordType = data;
+            READ_WORD();
+            int recordLength = data;
+            LOG_DEBUG(TAG_RT_MEDIA, "RecordType %d RecordLength %d", recordType, recordLength);
+            if (recordLength > remainedSize) {
+                LOG_ERROR(TAG_RT_MEDIA, "Insufficient length!!! %d %d", recordLength, remainedSize);
+                return;
+            }
 
-            uint8_t assembledBuffer[64*1024];
-            int assembledLength = 0;
-            uint8_t* nextKIDStartPoint = nullptr;
+            if (recordLength <= 0) {
+                LOG_ERROR(TAG_RT_MEDIA, "Error invalid recordLength");
+                break;
+            }
 
-            for (int i = 0; i < objCount; i++) {
-                READ_WORD();
-                int recordType = data;
-                READ_WORD();
-                int recordLength = data;
-                LOG_DEBUG(TAG_RT_MEDIA, "RecordType %d RecordLength %d", recordType, recordLength);
-                if (recordLength > remainedSize) {
-                    LOG_ERROR(TAG_RT_MEDIA, "Insufficient length!!! %d %d", recordLength, remainedSize);
-                    return;
-                }
+            const uint8_t kidPattern[] = {0x3c, 0x00,  0x4b, 0x00, 0x49, 0x00, 0x44, 0x00, 0x3e, 0x00};
+            const uint8_t kidEndPattern[] = {0x3c, 0x00, 0x2f, 0x00, 0x4b, 0x00, 0x49, 0x00, 0x44, 0x00, 0x3e, 0x00};
+            
+            // if (i == 0) {
+            //     memcpy(assembledBuffer, initData + offset, recordLength);
+            //     assembledLength = recordLength;
+            //     nextKIDStartPoint = (uint8_t*)memmem(assembledBuffer, recordLength, kidEndPattern, sizeof(kidEndPattern)) + sizeof(kidEndPattern);
+            // } else {
+            //     if (nextKIDStartPoint != nullptr) {
+            //         uint8_t* kidStart = (uint8_t*)memmem(initData + offset, recordLength, kidPattern, sizeof(kidPattern));        
+            //         uint8_t* kidEnd = (uint8_t*)memmem(initData + offset, recordLength, kidEndPattern, sizeof(kidEndPattern));        
+            //         if (kidStart && kidEnd && kidEnd > kidStart) {
+            //             int copySize = kidEnd - kidStart + sizeof(kidEndPattern);
+            //             memmove(nextKIDStartPoint + copySize, nextKIDStartPoint, (assembledBuffer + assembledLength - nextKIDStartPoint));
+            //             memcpy(nextKIDStartPoint, kidStart, copySize);
+            //             nextKIDStartPoint = nextKIDStartPoint + copySize;
+            //             assembledLength += copySize;
+            //         }
+            //     }
+            // } 
 
-                if (recordLength <= 0) {
-                    LOG_ERROR(TAG_RT_MEDIA, "Error invalid recordLength");
-                    break;
-                }
+            const uint8_t* kidStart = (uint8_t*)memmem(initData + offset, recordLength, kidPattern, sizeof(kidPattern));  
+            const uint8_t* kidEnd = (uint8_t*)memmem(initData + offset, recordLength, kidEndPattern, sizeof(kidEndPattern));        
+            uint8_t in[256];
+            memset(in, 0, sizeof(256));
+            int len = 0;
+            for (const uint8_t* start = kidStart + 10; start < kidEnd; start += 2) {
+                in[len] = *start;
+                len++;
+            }
 
-                
-                const uint8_t kidPattern[] = {0x3c, 0x00,  0x4b, 0x00, 0x49, 0x00, 0x44, 0x00, 0x3e, 0x00};
-                const uint8_t kidEndPattern[] = {0x3c, 0x00, 0x2f, 0x00, 0x4b, 0x00, 0x49, 0x00, 0x44, 0x00, 0x3e, 0x00};
-                
-                // if (i == 0) {
-                //     memcpy(assembledBuffer, initData + offset, recordLength);
-                //     assembledLength = recordLength;
-                //     nextKIDStartPoint = (uint8_t*)memmem(assembledBuffer, recordLength, kidEndPattern, sizeof(kidEndPattern)) + sizeof(kidEndPattern);
-                // } else {
-                //     if (nextKIDStartPoint != nullptr) {
-                //         uint8_t* kidStart = (uint8_t*)memmem(initData + offset, recordLength, kidPattern, sizeof(kidPattern));        
-                //         uint8_t* kidEnd = (uint8_t*)memmem(initData + offset, recordLength, kidEndPattern, sizeof(kidEndPattern));        
-                //         if (kidStart && kidEnd && kidEnd > kidStart) {
-                //             int copySize = kidEnd - kidStart + sizeof(kidEndPattern);
-                //             memmove(nextKIDStartPoint + copySize, nextKIDStartPoint, (assembledBuffer + assembledLength - nextKIDStartPoint));
-                //             memcpy(nextKIDStartPoint, kidStart, copySize);
-                //             nextKIDStartPoint = nextKIDStartPoint + copySize;
-                //             assembledLength += copySize;
-                //         }
-                //     }
-                // } 
+            uint8_t* out = nullptr;
+            size_t base64Out = 256;
+            Curl_base64_decode((const char*)in, (uint8_t**)&out, &base64Out);
 
-                const uint8_t* kidStart = (uint8_t*)memmem(initData + offset, recordLength, kidPattern, sizeof(kidPattern));  
-                const uint8_t* kidEnd = (uint8_t*)memmem(initData + offset, recordLength, kidEndPattern, sizeof(kidEndPattern));        
-                uint8_t in[256];
-                memset(in, 0, sizeof(256));
-                int len = 0;
-                for (const uint8_t* start = kidStart + 10; start < kidEnd; start += 2) {
-                    in[len] = *start;
-                    len++;
-                }
+            LOG_DEBUG(TAG_RT_MEDIA, "Session Init i = %d", i);
+            std::shared_ptr<DRMSession> session = std::make_shared<DRMSession>(ocdmSystem, callback);
 
-                uint8_t* out = nullptr;
-                size_t base64Out = 256;
-                Curl_base64_decode((const char*)in, (uint8_t**)&out, &base64Out);
- 
-
-                LOG_DEBUG(TAG_RT_MEDIA, "Session Init i = %d", i);
-                std::shared_ptr<DRMSession> session = std::make_shared<DRMSession>(ocdmSystem, callback);
-
+            if (out != nullptr) {
                 LOG_DEBUG(TAG_RT_MEDIA, "KID %s outlen : %d %02x %02x %02x %02x", in, base64Out, out[0], out[1], out[2], out[3]);
                 if (base64Out == 16) {
                     for (int i = 0; i < 4; i += 4) {
@@ -690,51 +660,45 @@ struct DRMSystem {
                         session->KID[i+3] = out[i];
                     }
                 }
-
-                if (session->init(initData + offset, recordLength, false /*(i != 0)*/)) {
-                    ocdmSessions.push_back(session);    
-                    if (i == 0) {
-                        ocdmCurrentSession = session;
-                    }
-                    usleep(500*1000);
-                    LOG_DEBUG(TAG_RT_MEDIA, "WaitForKey...");
-                    // session->waitForKey();
-                }
-
-                remainedSize -= recordLength;
-                offset += recordLength;
             }
 
-            // for(auto& session : ocdmSessions) {
-            //     if (session->delayedInit) {
-            //         opencdm_session_set_drm_header(ocdmCurrentSession->session, session->initData.data(), session->initData.size());
-            //         uint8_t challenge[64*1024];
-            //         memset(challenge, 0, sizeof(challenge));
-            //         uint32_t challengeSize;
-            //         if (opencdm_session_get_challenge_data(ocdmCurrentSession->session, challenge, &challengeSize, 0) == ERROR_NONE) {
-            //             LOG_DEBUG(TAG_RT_MEDIA, "Challenge %s", (const char*)challenge);
-            //             session->licenseNonce = parseTag((const char*)challenge, "LicenseNonce");
-            //             LOG_DEBUG(TAG_RT_MEDIA, "Delayed session challenge got successful nonce %s", session->licenseNonce.c_str());
-            //             session->challengeData = std::vector<uint8_t>(challenge, challenge + challengeSize);
-            //             session->challengeCallback(challenge, challengeSize);
-            //         }
-            //     }
-            // }
+            if (session->init(initData + offset, recordLength)) {
+                ocdmSessions.push_back(session);    
+                LOG_DEBUG(TAG_RT_MEDIA, "WaitForKey...");
+                session->waitForKey();
+            }
 
-            // FILE* fp = fopen ("/userdata/assembled.bin", "w");
-            // if (fp) {
-            //     fwrite(assembledBuffer, 1, assembledLength, fp);
-            //     fclose(fp);
-            // }
+            remainedSize -= recordLength;
+            offset += recordLength;
+        }
 
-            // std::shared_ptr<DRMSession> session = std::make_shared<DRMSession>(ocdmSystem, callback);
-            // if (session->init(assembledBuffer, assembledLength)) {
-            //     ocdmCurrentSession = session;
-            //     ocdmSessions.push_back(session);
-            // }            
-        });
+        // for(auto& session : ocdmSessions) {
+        //     if (session->delayedInit) {
+        //         opencdm_session_set_drm_header(ocdmCurrentSession->session, session->initData.data(), session->initData.size());
+        //         uint8_t challenge[64*1024];
+        //         memset(challenge, 0, sizeof(challenge));
+        //         uint32_t challengeSize;
+        //         if (opencdm_session_get_challenge_data(ocdmCurrentSession->session, challenge, &challengeSize, 0) == ERROR_NONE) {
+        //             LOG_DEBUG(TAG_RT_MEDIA, "Challenge %s", (const char*)challenge);
+        //             session->licenseNonce = parseTag((const char*)challenge, "LicenseNonce");
+        //             LOG_DEBUG(TAG_RT_MEDIA, "Delayed session challenge got successful nonce %s", session->licenseNonce.c_str());
+        //             session->challengeData = std::vector<uint8_t>(challenge, challenge + challengeSize);
+        //             session->challengeCallback(challenge, challengeSize);
+        //         }
+        //     }
+        // }
 
-        initDrmThread.join();
+        // FILE* fp = fopen ("/userdata/assembled.bin", "w");
+        // if (fp) {
+        //     fwrite(assembledBuffer, 1, assembledLength, fp);
+        //     fclose(fp);
+        // }
+
+        // std::shared_ptr<DRMSession> session = std::make_shared<DRMSession>(ocdmSystem, callback);
+        // if (session->init(assembledBuffer, assembledLength)) {
+        //     ocdmCurrentSession = session;
+        //     ocdmSessions.push_back(session);
+        // }            
     }
 };
 
@@ -784,7 +748,7 @@ static struct
 
     void resumeAudio(uint64_t pts) {
         LOG_DEBUG(TAG_RT_MEDIA, "resumeAudio %lld", pts);
-        audioPlayer.init(AUDIO_PLAYPUMP_BUF_SIZE);
+        audioPlayer.init(AUDIO_PLAYPUMP_BUF_SIZE, true);
         audioPlayer.start();
         // NEXUS_SimpleAudioDecoder_SetStcChannel(audioPlayer.getDecoder(), stcChannel);
         audioStartSettings.primary.pidChannel = audioPlayer.pidChannel;
@@ -796,7 +760,7 @@ static struct
 
     void resumeVideo(uint64_t pts) {
         LOG_DEBUG(TAG_RT_MEDIA, "resumeVideo %lld", pts);
-        videoPlayer.init(VIDEO_PLAYPUMP_BUF_SIZE);
+        videoPlayer.init(VIDEO_PLAYPUMP_BUF_SIZE, true);
         videoPlayer.start();
         NEXUS_SimpleStcChannel_Invalidate(stcChannel);
          // NEXUS_SimpleVideoDecoder_SetStcChannel(videoPlayer.getDecoder(), stcChannel);
@@ -818,19 +782,21 @@ static struct
 } statics;
 
 void DRMSession::processOCDMChallenge(const char destUrl[], const uint8_t challenge[], const uint16_t challengeSize)
- {
-        LOG_DEBUG(TAG_RT_MEDIA, "processOCDMChallenge delayedInit %d Size %d TID %d", delayedInit, challengeSize, syscall(__NR_gettid));
-        licenseNonce = parseTag((const char*)challenge, "LicenseNonce");
-        LOG_DEBUG(TAG_RT_MEDIA, "LicenseNonce %s", licenseNonce.c_str());
-        
-        if (!delayedInit) {
-            LOG_DEBUG(TAG_RT_MEDIA, "Calling ChallengeCallback");
-            challengeCallback(nullptr, 0);
-            challengeCallback(challenge, challengeSize);
-        }
-        statics.event_callback(statics.videoPlayer.steamboatDecoderHandle, SB_MEDIA_PLAY_EVENT_REQUEST_KEY);
-        challengeData = std::vector<uint8_t>(challenge, challenge + challengeSize);
-    }
+{
+    LOG_DEBUG(TAG_RT_MEDIA, "processOCDMChallenge Size %d TID %d", challengeSize, syscall(__NR_gettid));
+    licenseNonce = parseTag((const char*)challenge, "LicenseNonce");
+    LOG_DEBUG(TAG_RT_MEDIA, "LicenseNonce %s", licenseNonce.c_str());
+    
+    LOG_DEBUG(TAG_RT_MEDIA, "Calling ChallengeCallback");
+    challengeCallback(challenge, challengeSize);
+    
+    statics.event_callback(statics.videoPlayer.steamboatDecoderHandle, SB_MEDIA_PLAY_EVENT_REQUEST_KEY);
+    challengeData = std::vector<uint8_t>(challenge, challenge + challengeSize);
+
+    std::unique_lock<std::mutex> lk(lock);
+    challengeProcessed = true;
+    waitForKeyUpdate.notify_one();
+}
 
 
 sb_media_result_t sb_media_global_init()
@@ -950,7 +916,7 @@ sb_media_result_t sb_media_init_audio_decoder(sb_media_audio_config_t * config, 
     statics.audioPlayer.start();
     statics.audioPlayer.run();
 
-
+    *handle = reinterpret_cast<int>(&statics.audioPlayer);
     statics.audioPlayer.steamboatDecoderHandle = handle;
     if (config->config_done) {
         config->config_done(handle);
@@ -1006,6 +972,7 @@ sb_media_result_t sb_media_init_video_decoder(sb_media_video_config_t * config, 
     statics.videoPlayer.start();
     statics.videoPlayer.run();
 
+    *handle = reinterpret_cast<int>(&statics.videoPlayer);
     statics.videoPlayer.steamboatDecoderHandle = handle;
     if (config->config_done) {
         config->config_done(handle);
@@ -1201,7 +1168,7 @@ sb_media_result_t sb_media_decode(sb_media_decoder_handle handle, uint8_t * pes,
                 }
                 int remainedSize = size;
                 for (int i = 0; i < key->number_of_subsamples; i++) {
-                    LOG_DEBUG(TAG_RT_MEDIA, "Decrypt subsample[%d] clearData %d encryptedData %d size %d sessions %d", i, key->sub_samples[i].clear_data, key->sub_samples[i].encrypted_data, size, statics.drmSystem.ocdmSessions.size());
+                    LOG_DEBUG(TAG_RT_MEDIA, "Decrypt subsample[%d] clearData %d encryptedData %d size %d sessions %d", i, key->sub_samples[i].clear_data + offset, key->sub_samples[i].encrypted_data, size, statics.drmSystem.ocdmSessions.size());
                     offset += key->sub_samples[i].clear_data;
                     if (key->sub_samples[i].encrypted_data == 0) {
                         count += statics.videoPlayer.push(pes, offset, pts);
@@ -1242,17 +1209,17 @@ sb_media_result_t sb_media_decode(sb_media_decoder_handle handle, uint8_t * pes,
                                 }
                                 break;
                             } else {
-                                LOG_DEBUG(TAG_RT_MEDIA, "sessionId %d LicenseNonce %s KID %02x %02x %02x %x", sessionIndex, session->licenseNonce.c_str(), session->KID[0], session->KID[1], session->KID[2]
-                                , session->KID[3]);
+                                // LOG_DEBUG(TAG_RT_MEDIA, "sessionId %d LicenseNonce %s KID %02x %02x %02x %x", sessionIndex, session->licenseNonce.c_str(), session->KID[0], session->KID[1], session->KID[2]
+                                // , session->KID[3]);
                                 if (memcmp(session->KID, key->keyID, key->key_size) == 0 || sessionIndex == 1) {
-                                    LOG_DEBUG(TAG_RT_MEDIA, "KID match found.. delayedInit %d", session->delayedInit);
-                                    if (session->delayedInit) {
-                                        if (statics.event_callback) {
-                                            LOG_DEBUG(TAG_RT_MEDIA, "Calling SB_MEDIA_PLAY_EVENT_REQUEST_KEY");
-                                            statics.event_callback(handle, SB_MEDIA_PLAY_EVENT_REQUEST_KEY);
-                                        }
-                                        session->init(session->initData.data(), session->initData.size());
-                                    }
+                                //     LOG_DEBUG(TAG_RT_MEDIA, "KID match found.. %s", session->delaye);
+                                //     if (session->delayedInit) {
+                                //         if (statics.event_callback) {
+                                //             LOG_DEBUG(TAG_RT_MEDIA, "Calling SB_MEDIA_PLAY_EVENT_REQUEST_KEY");
+                                //             statics.event_callback(handle, SB_MEDIA_PLAY_EVENT_REQUEST_KEY);
+                                //         }
+                                //         session->init(session->initData.data(), session->initData.size());
+                                //     }
                                     usleep(100*1000);
                                     return SB_MEDIA_RESULT_OVERFLOW;
                                 }
@@ -1341,7 +1308,6 @@ sb_media_result_t sb_media_generate_challenge(const uint8_t * object, const uint
                 // }
 
     statics.drmSystem.initPlayReadySessions(object, object_size, callback);
-    usleep(1000*1000);
     return SB_MEDIA_RESULT_SUCCESS;
 }
 
@@ -1357,14 +1323,14 @@ sb_media_result_t sb_media_process_key_message_response(const uint8_t * response
     LOG_DEBUG(TAG_RT_MEDIA, "LicenseNonce %s", licenseNonce.c_str());
     for (auto session : statics.drmSystem.ocdmSessions) {
         LOG_DEBUG(TAG_RT_MEDIA, "Session LicenseNonce %s", session->licenseNonce.c_str());
-        // if(session->licenseNonce == licenseNonce) {
+        if(session->licenseNonce == licenseNonce) {
             KeyStatus status = opencdm_session_status(session->session, session->KID, 16);
             LOG_DEBUG(TAG_RT_MEDIA, "License & Key status %d", status);
             if (status != Usable) {
                 session->update(response, response_size);
             }
-            // return SB_MEDIA_RESULT_SUCCESS;
-        // }
+            return SB_MEDIA_RESULT_SUCCESS;
+        }
     }
 
 /*
@@ -1453,7 +1419,7 @@ sb_media_result_t sb_media_get_decoder_stats(sb_media_decoder_handle handle, sb_
                             (AUDIO_LOOP_BUFFER_SIZE > statics.audioPlayer.bufferedBytes ? (AUDIO_LOOP_BUFFER_SIZE - statics.audioPlayer.bufferedBytes) : 0);
         stats->active = status.started;
         stats->used = 1;
-        // LOG_DEBUG(TAG_RT_MEDIA, "Audio status frames displayed %d free buffer %d", stats->frames_displayed,stats->free_buffer_bytes);
+        // LOG_DEBUG(TAG_RT_MEDIA, "Audio status frames displayed %d free buffer %d active %d", stats->frames_displayed,stats->free_buffer_bytes, stats->active);
     } else if (statics.isVideoDecoder(handle)) {
         NEXUS_VideoDecoderStatus status;
         NEXUS_SimpleVideoDecoder_GetStatus(statics.getVideoDecoder(), &status);
@@ -1466,7 +1432,7 @@ sb_media_result_t sb_media_get_decoder_stats(sb_media_decoder_handle handle, sb_
                             (VIDEO_LOOP_BUFFER_SIZE > statics.videoPlayer.bufferedBytes ? (VIDEO_LOOP_BUFFER_SIZE - statics.videoPlayer.bufferedBytes) : 0);
         stats->active = status.started;
         stats->used = 1;
-        // LOG_DEBUG(TAG_RT_MEDIA, "VideoDecoder status frames displayed %d free buffer %d", stats->frames_displayed,stats->free_buffer_bytes);
+        // LOG_DEBUG(TAG_RT_MEDIA, "VideoDecoder status frames displayed %d free buffer %d active %d", stats->frames_displayed,stats->free_buffer_bytes, stats->active);
     }
     return SB_MEDIA_RESULT_SUCCESS;
 }

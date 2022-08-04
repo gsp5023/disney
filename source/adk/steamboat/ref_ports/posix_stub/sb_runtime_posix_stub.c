@@ -778,6 +778,42 @@ static void keyboardKey( void *data, struct wl_keyboard *keyboard, uint32_t seri
                 case 0xFF1B:
                     ctx->disneyPendingKeyEvent = adk_stb_key_menu;
                     break;
+                case 0x1008FF3E:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_rewind;
+                    break;
+                case 0x1008FF97:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_fast_forward;
+                    break;
+                case 0xFF13:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_play_pause;
+                    break;
+                case 0x1008FF14:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_play_from_start;
+                    break;
+                case 0x1008FFA3:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_red;
+                    break;
+                case 0x1008FFA4:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_green;
+                    break;
+                case 0x1008FFA5:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_yellow;
+                    break;
+                case 0x1008FFA6:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_blue;
+                    break;
+                case 0x1008FF13:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_vol_up;
+                    break;
+                case 0x1008FF11:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_vol_down;
+                    break;
+                case 0xFF6A:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_info;
+                    break;
+                case 0x1008FF18:
+                    ctx->disneyPendingKeyEvent = adk_stb_key_guide;
+                    break;
                 default:
                     ctx->disneyPendingKeyEvent = 0;
                     break;
