@@ -57,7 +57,23 @@ enum {
     VIDEO_LOOP_BUFFER_SIZE = 0x500000*5,
 };
 
-template <typename Decoder> class NexusSteamboatPlayHelper {
+class SteamboatPlayHelper {
+public:
+    virtual void pause() = 0;
+    virtual void resume() = 0;
+
+    virtual void stop() = 0;
+    virtual void restart(uint64_t pts) = 0;
+    virtual int64_t getBufferedRangeMs() = 0;
+    virtual int getLoopBufferSize() = 0;
+    virtual uint64_t getLastBufferedPts() = 0;
+    virtual int getBufferedBytes() = 0;
+    virtual const char* getType() = 0;
+    virtual bool isPaused() = 0;
+    virtual int push(uint8_t* buf, int len, uint64_t pts) = 0;
+};
+
+template <typename Decoder> class NexusSteamboatPlayHelper : public SteamboatPlayHelper {
 public:
     NexusSteamboatPlayHelper() : streamer(nullptr) {
         stopped = false;
@@ -127,6 +143,9 @@ public:
             if (buffer) {
                 free(buffer);
             }
+            if (encrypted) {
+                NEXUS_Memory_Free(encrypted);
+            }
         }
         uint8_t* buffer;
         int len;
@@ -136,8 +155,11 @@ public:
     };
 
     Decoder decoder;
+    NEXUS_SimpleAudioDecoderStartSettings audioStartSettings;
+    NEXUS_SimpleVideoDecoderStartSettings videoStartSettings;
     NEXUS_PlaypumpHandle playpump;
     NEXUS_PidChannelHandle pidChannel;
+    NEXUS_SimpleStcChannelHandle stcChannel;
     NEXUS_EventHandle event;
     sb_media_decoder_handle steamboatDecoderHandle;
     std::thread thread;
@@ -157,13 +179,34 @@ public:
         return decoder;
     }
 
-
     void start() {
         paused = false;
         NEXUS_Playpump_Start(playpump);
     }
 
-    void pause() {
+    void pause() {}
+    void resume() {}
+
+    void stop() {
+    }
+
+    void restart(uint64_t pts) {
+
+    }
+
+    int getLoopBufferSize() {
+        return AUDIO_LOOP_BUFFER_SIZE;
+    }
+
+    const char* getType() {
+        return "Audio";
+    }
+
+    bool isPaused() {
+        return paused;
+    }
+
+    void stopStreamer() {
         LOG_DEBUG(TAG_RT_MEDIA, "Start pause..");
         std::unique_lock<std::mutex> lk(lock);
         buffers.clear();
@@ -201,6 +244,14 @@ public:
 
     int64_t getBufferedRangeMs() {
         return (lastBufferedPts - lastConsumedPts)/10000000;
+    }
+
+    uint64_t getLastBufferedPts() {
+        return lastBufferedPts;
+    }
+
+    int getBufferedBytes() {
+        return bufferedBytes;
     }
 
     void run() {
@@ -257,16 +308,100 @@ public:
                         streamer->Push(buf->encryptedLength);
                         BufferFactory::DestroyBuffer(input);
                         BufferFactory::DestroyBuffer(data);
-
-                        if (buf->encrypted) {
-                            NEXUS_Memory_Free(buf->encrypted);
-                        }
                     }
                }
             }
         });
     }
 };
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleAudioDecoderHandle>::pause() {
+    LOG_DEBUG(TAG_RT_MEDIA, "Pause Audio - ");
+    NEXUS_SimpleAudioDecoder_Suspend(decoder);
+}
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleVideoDecoderHandle>::pause() {
+    NEXUS_VideoDecoderTrickState trickState;
+    NEXUS_SimpleVideoDecoder_GetTrickState(decoder, &trickState);
+    LOG_DEBUG(TAG_RT_MEDIA, "Pause Video - %d", trickState.rate);
+    if (trickState.rate != 0) {
+        trickState.rate = 0;
+        NEXUS_SimpleVideoDecoder_SetTrickState(decoder, &trickState);
+    }
+}
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleAudioDecoderHandle>::resume() {
+    LOG_DEBUG(TAG_RT_MEDIA, "Resume Audio - ");
+    NEXUS_SimpleAudioDecoder_Resume(decoder);
+}
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleVideoDecoderHandle>::resume() {
+    NEXUS_VideoDecoderTrickState trickState;
+    NEXUS_SimpleVideoDecoder_GetTrickState(decoder, &trickState);
+    LOG_DEBUG(TAG_RT_MEDIA, "Resume Video - %d", trickState.rate);
+    if (trickState.rate != NEXUS_NORMAL_DECODE_RATE) {
+        trickState.rate = NEXUS_NORMAL_DECODE_RATE;
+        NEXUS_SimpleVideoDecoder_SetTrickState(decoder, &trickState);
+    }
+}
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleAudioDecoderHandle>::stop() {
+    LOG_DEBUG(TAG_RT_MEDIA, "stop Audio - ");
+    NEXUS_SimpleAudioDecoder_Stop(decoder);
+    stopStreamer();
+    deinit();
+}
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleVideoDecoderHandle>::stop() {
+    LOG_DEBUG(TAG_RT_MEDIA, "stop Video - ");
+
+    NEXUS_SimpleVideoDecoder_Stop(getDecoder());
+    stopStreamer();
+    deinit();
+    NEXUS_SimpleStcChannel_Invalidate(stcChannel);
+}
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleAudioDecoderHandle>::restart(uint64_t pts) {
+    LOG_DEBUG(TAG_RT_MEDIA, "resumeAudio %lld", pts);
+    init(AUDIO_PLAYPUMP_BUF_SIZE, true);
+    start();
+    audioStartSettings.primary.pidChannel = pidChannel;
+    NEXUS_SimpleAudioDecoder_Start(getDecoder(), &audioStartSettings);
+    lastBufferedPts = pts;
+    lastConsumedPts = pts;
+    run();
+}
+
+template<> void NexusSteamboatPlayHelper<NEXUS_SimpleVideoDecoderHandle>::restart(uint64_t pts) {
+    LOG_DEBUG(TAG_RT_MEDIA, "resumeVideo %lld", pts);
+    init(VIDEO_PLAYPUMP_BUF_SIZE, true);
+    start();
+    NEXUS_SimpleStcChannel_Invalidate(stcChannel);
+    videoStartSettings.settings.pidChannel = pidChannel;
+    NEXUS_SimpleVideoDecoder_Start(getDecoder(), &videoStartSettings);
+
+    resume();
+
+    lastBufferedPts = pts;
+    lastConsumedPts = pts;
+    run();
+}
+
+template<> int NexusSteamboatPlayHelper<NEXUS_SimpleVideoDecoderHandle>::getLoopBufferSize() {
+    return VIDEO_LOOP_BUFFER_SIZE;
+}
+
+template<> const char* NexusSteamboatPlayHelper<NEXUS_SimpleVideoDecoderHandle>::getType() {
+    return "Video";
+}
+
+#define PLAYER_CALL(handle, func, ...) \
+    (*handle == reinterpret_cast<int>(&statics.videoPlayer) ? statics.videoPlayer.func(__VA_ARGS__) : statics.audioPlayer.func(__VA_ARGS__))
+
+#define PLAYER_MEMBER(handle, member) \
+    (*handle == reinterpret_cast<int>(&statics.videoPlayer) ? statics.videoPlayer.member : statics.audioPlayer.member)
+    
+// #define PLAYER(handle) reinterpret_cast<SteamboatPlayHelper*>(handle)
 
 class OpenCDMContext {
     public:
@@ -382,7 +517,8 @@ struct DRMSession {
         ocdmInitData[5] = 's';
         ocdmInitData[6] = 's';
         ocdmInitData[7] = 'h';
-        memcpy(ocdmInitData + 12, playreadySystemId, 16);
+        memcpy(ocdmInitData + 12, playreadySy
+        stemId, 16);
         ocdmInitData[28] = ((initDataSize >> 24) & 0xff);
         ocdmInitData[29] = ((initDataSize >> 16) & 0xff);
         ocdmInitData[30] = ((initDataSize >> 8) & 0xff);
@@ -533,6 +669,8 @@ struct DRMSystem {
         }
         ocdmSessions.clear();
         opencdm_destruct_system(ocdmSystem);
+        drmType = SB_MEDIA_DRM_NONE;
+        ocdmSystem = nullptr;
     }
 
 
@@ -632,13 +770,10 @@ struct DRMSystem {
 static struct
 {
     NxClient_AllocResults allocResults;
-    NEXUS_SimpleStcChannelHandle stcChannel;
     NexusSteamboatPlayHelper<NEXUS_SimpleAudioDecoderHandle> audioPlayer;
     NexusSteamboatPlayHelper<NEXUS_SimpleVideoDecoderHandle> videoPlayer; 
     sb_media_audio_config_t audioConfig;
     sb_media_video_config_t videoConfig;
-    NEXUS_SimpleAudioDecoderStartSettings audioStartSettings;
-    NEXUS_SimpleVideoDecoderStartSettings videoStartSettings;
 
     unsigned connectId;
 
@@ -658,46 +793,6 @@ static struct
         return videoPlayer.getDecoder();
     }
 
-    void pauseAudio() {
-        LOG_DEBUG(TAG_RT_MEDIA, "pauseAudio");
-        NEXUS_SimpleAudioDecoder_Stop(audioPlayer.getDecoder());
-        audioPlayer.pause();
-        audioPlayer.deinit();
-    }
-    
-    void pauseVideo() {
-        LOG_DEBUG(TAG_RT_MEDIA, "pauseVideo");
-        NEXUS_SimpleVideoDecoder_Stop(videoPlayer.getDecoder());
-        videoPlayer.pause();
-        videoPlayer.deinit();
-        NEXUS_SimpleStcChannel_Invalidate(stcChannel);
-    }
-
-    void resumeAudio(uint64_t pts) {
-        LOG_DEBUG(TAG_RT_MEDIA, "resumeAudio %lld", pts);
-        audioPlayer.init(AUDIO_PLAYPUMP_BUF_SIZE, true);
-        audioPlayer.start();
-        // NEXUS_SimpleAudioDecoder_SetStcChannel(audioPlayer.getDecoder(), stcChannel);
-        audioStartSettings.primary.pidChannel = audioPlayer.pidChannel;
-        NEXUS_SimpleAudioDecoder_Start(audioPlayer.getDecoder(), &audioStartSettings);
-        audioPlayer.lastBufferedPts = pts;
-        audioPlayer.lastConsumedPts = pts;
-        audioPlayer.run();
-    }
-
-    void resumeVideo(uint64_t pts) {
-        LOG_DEBUG(TAG_RT_MEDIA, "resumeVideo %lld", pts);
-        videoPlayer.init(VIDEO_PLAYPUMP_BUF_SIZE, true);
-        videoPlayer.start();
-        NEXUS_SimpleStcChannel_Invalidate(stcChannel);
-         // NEXUS_SimpleVideoDecoder_SetStcChannel(videoPlayer.getDecoder(), stcChannel);
-        // NEXUS_SimpleVideoDecoder_SetStartPts(videoPlayer.getDecoder(), NANO_SECONDS_TO_BRCM_PTS(pts));
-        videoStartSettings.settings.pidChannel = videoPlayer.pidChannel;
-        NEXUS_SimpleVideoDecoder_Start(videoPlayer.getDecoder(), &videoStartSettings);
-        videoPlayer.lastBufferedPts = pts;
-        videoPlayer.lastConsumedPts = pts;
-        videoPlayer.run();
-    }
     
     NEXUS_ClientConfiguration clientConfig;
     DRMSystem drmSystem;
@@ -742,13 +837,13 @@ sb_media_result_t sb_media_global_init()
     allocSettings.simpleAudioDecoder = 1;
     rc = NxClient_Alloc(&allocSettings, &statics.allocResults);
 
-    statics.stcChannel = NEXUS_SimpleStcChannel_Create(NULL);
+    statics.videoPlayer.stcChannel = NEXUS_SimpleStcChannel_Create(NULL);
     NEXUS_SimpleStcChannelSettings stcSettings;
-    NEXUS_SimpleStcChannel_GetSettings(statics.stcChannel, &stcSettings);
+    NEXUS_SimpleStcChannel_GetSettings(statics.videoPlayer.stcChannel, &stcSettings);
     stcSettings.mode = NEXUS_StcChannelMode_eAuto;
     stcSettings.modeSettings.Auto.transportType = NEXUS_TransportType_eMpeg2Pes;
     stcSettings.modeSettings.Auto.behavior = NEXUS_StcChannelAutoModeBehavior_eVideoMaster;
-    NEXUS_SimpleStcChannel_SetSettings(statics.stcChannel, &stcSettings);
+    NEXUS_SimpleStcChannel_SetSettings(statics.videoPlayer.stcChannel, &stcSettings);
 
     statics.videoPlayer.decoder = NEXUS_SimpleVideoDecoder_Acquire(statics.allocResults.simpleVideoDecoder[0].id);
     statics.audioPlayer.decoder = NEXUS_SimpleAudioDecoder_Acquire(statics.allocResults.simpleAudioDecoder.id);
@@ -799,6 +894,13 @@ sb_media_result_t sb_media_init_audio_config(sb_media_audio_config_t * config)
     return SB_MEDIA_RESULT_SUCCESS;
 }
 
+// static inline SteamboatPlayHelper* PLAYER(sb_media_decoder_handle handle) {
+//     return (*handle == reinterpret_cast<int>(&statics.videoPlayer) ? static_cast<SteamboatPlayHelper*>(&statics.videoPlayer)
+//      : static_cast<SteamboatPlayHelper*>(&statics.audioPlayer));
+// }
+
+#define PLAYER(handle) reinterpret_cast<SteamboatPlayHelper*>(*handle)
+
 sb_media_result_t sb_media_init_audio_decoder(sb_media_audio_config_t * config, sb_media_decoder_handle handle)
 {
     LOG_DEBUG(TAG_RT_MEDIA, "sb_media_init_audio_decoder handle %p callback %p, %p", handle, config->config_done, config->decode_done);   
@@ -833,11 +935,11 @@ sb_media_result_t sb_media_init_audio_decoder(sb_media_audio_config_t * config, 
     startSettings.primary.pidChannel = statics.audioPlayer.pidChannel;
     startSettings.master = true;
 
-    NEXUS_SimpleAudioDecoder_SetStcChannel(statics.getAudioDecoder(), statics.stcChannel);
+    NEXUS_SimpleAudioDecoder_SetStcChannel(statics.getAudioDecoder(), statics.videoPlayer.stcChannel);
 
     int ret = NEXUS_SimpleAudioDecoder_Start(statics.getAudioDecoder(), &startSettings);
     LOG_DEBUG(TAG_RT_MEDIA, "SimpleAudio Started returns %d", ret);
-    statics.audioStartSettings = startSettings;
+    statics.audioPlayer.audioStartSettings = startSettings;
 
     
     statics.audioPlayer.start();
@@ -855,6 +957,13 @@ sb_media_result_t sb_media_init_video_config(sb_media_video_config_t * config)
 {
     LOG_DEBUG(TAG_RT_MEDIA, "sb_media_init_video_config");   
     statics.videoPlayer.init(VIDEO_PLAYPUMP_BUF_SIZE, true);
+
+    NxClient_DisplaySettings displaySettings;
+    NxClient_GetDisplaySettings(&displaySettings);
+	displaySettings.hdmiPreferences.dynamicRangeMode = (config->dynamic_range == SB_MEDIA_VIDEO_DYNAMIC_RANGE_HDR10) ? 
+            NEXUS_VideoDynamicRangeMode_eHdr10 : NEXUS_VideoDynamicRangeMode_eSdr;
+    NxClient_SetDisplaySettings(&displaySettings);
+
 
     return SB_MEDIA_RESULT_SUCCESS;
 }
@@ -889,11 +998,11 @@ sb_media_result_t sb_media_init_video_decoder(sb_media_video_config_t * config, 
     startSettings.maxHeight = 2160;
 
     statics.videoConfig = *config;
-    NEXUS_SimpleVideoDecoder_SetStcChannel(statics.getVideoDecoder(), statics.stcChannel);
+    NEXUS_SimpleVideoDecoder_SetStcChannel(statics.getVideoDecoder(), statics.videoPlayer.stcChannel);
 
     int ret = NEXUS_SimpleVideoDecoder_Start(statics.getVideoDecoder(), &startSettings);
     LOG_DEBUG(TAG_RT_MEDIA, "SimpleVideo Started returns %d", ret);
-    statics.videoStartSettings = startSettings;
+    statics.videoPlayer.videoStartSettings = startSettings;
 
 
     statics.videoPlayer.start();
@@ -909,123 +1018,114 @@ sb_media_result_t sb_media_init_video_decoder(sb_media_video_config_t * config, 
 
 sb_media_result_t sb_media_decode(sb_media_decoder_handle handle, uint8_t * pes, uint32_t size, sb_media_timestamp_t pts, sb_media_output_buffer_t * out, sb_media_decrypt_t * key)
 {
-    if (pes == nullptr || size == 0) {
-        LOG_WARN(TAG_RT_MEDIA, "Pause : Calling with PES null!!!!");
-    }
     LOG_DEBUG(TAG_RT_MEDIA, "sb_media_decode %x %p %d %lld %p %p", handle, pes, size, pts, out, key);
-
     LOG_DEBUG(TAG_RT_MEDIA, "DecoderHandle %p... A:%p. V:%p", handle, statics.audioPlayer.steamboatDecoderHandle, statics.videoPlayer.steamboatDecoderHandle);
 
+    if (pes == nullptr || size == 0) {
+        LOG_WARN(TAG_RT_MEDIA, "Pause : Calling with PES null!!!!");
+        PLAYER(handle)->stop();
+        PLAYER(handle)->restart(pts);
+        // PLAYER_CALL(handle, stop);
+        // PLAYER_CALL(handle, restart, pts);
+        return SB_MEDIA_RESULT_SUCCESS;
+    }
+
+    int64_t bufferLengthMills = PLAYER(handle)->getBufferedRangeMs();
+    LOG_DEBUG(TAG_RT_MEDIA, "Decode %s data pts %f (%f) size %d %d Buffered %lldms",  PLAYER(handle)->getType(),
+        pts/1000000000.0, (pts - PLAYER(handle)->getLastBufferedPts())/1000000000.0, size, PLAYER(handle)->getLoopBufferSize(), bufferLengthMills); 
+
+    // LOG_DEBUG(TAG_RT_MEDIA, "Buffered %lldms", bufferLengthMills);
+    if (bufferLengthMills > 5000) {
+        return SB_MEDIA_RESULT_OVERFLOW; 
+    }
+    if (PLAYER(handle)->getBufferedBytes() + (int)size > PLAYER(handle)->getLoopBufferSize()) {
+        return SB_MEDIA_RESULT_OVERFLOW; 
+    }
+    if (PLAYER(handle)->isPaused()) {
+        PLAYER(handle)->restart(pts);
+    }
+    int count = 0;
+    if (key == nullptr) {
+        count = PLAYER(handle)->push(pes, size, pts);
+    } else {
+        LOG_DEBUG(TAG_RT_MEDIA, "DecryptKey (%02x %02x %02x %02x) %d %d %d", key->keyID[0], key->keyID[1], key->keyID[2], key->keyID[3],
+                key->iv_size, key->key_size, key->number_of_subsamples);
+        int allClearBytes = 0;
+        int allEncryptedBytes = 0;
+        for (int i = 0; i < key->number_of_subsamples; i++) {
+            allClearBytes += key->sub_samples[i].clear_data;
+            allEncryptedBytes += key->sub_samples[i].encrypted_data;
+        }
+        int offset = size - (allClearBytes + allEncryptedBytes);
+        if (offset < 0) {
+            offset = 0;
+        }
+        int remainedSize = size;
+        for (int i = 0; i < key->number_of_subsamples; i++) {
+            LOG_DEBUG(TAG_RT_MEDIA, "Decrypt subsample[%d] clearData %d encryptedData %d size %d sessions %d", i, key->sub_samples[i].clear_data + offset, key->sub_samples[i].encrypted_data, size, statics.drmSystem.ocdmSessions.size());
+            offset += key->sub_samples[i].clear_data;
+            if (key->sub_samples[i].encrypted_data == 0) {
+                count += statics.videoPlayer.push(pes, offset, pts);
+            }
+            else if (offset + key->sub_samples[i].encrypted_data <= size) {
+                int sessionIndex = -1;
+                bool keyFound = false;
+                for (auto& session : statics.drmSystem.ocdmSessions) {
+                    sessionIndex++;
+                    if (session->hasKey(key->keyID, key->key_size)) {
+                        keyFound = true;
+                        LOG_DEBUG(TAG_RT_MEDIA, "DecryptSession found..  sesison %d", sessionIndex);
+                        LOG_DEBUG(TAG_RT_MEDIA, "Before Decrypt %02x %02x %02x %02x", pes[offset], pes[offset+1], pes[offset+2], pes[offset+3]);
+
+                        uint8_t* buf = pes;                           
+                        int retValue = opencdm_session_decrypt(session->session,
+                                                pes + offset, key->sub_samples[i].encrypted_data,
+                                                key->iv, key->iv_size,
+                                                key->keyID, key->key_size);
+                        LOG_DEBUG(TAG_RT_MEDIA, "After Decrypt %02x %02x %02x %02x", pes[offset], pes[offset+1], pes[offset+2], pes[offset+3]);
+                        void* token;
+                        memcpy(&token, pes + offset, 4);
+                        LOG_DEBUG(TAG_RT_MEDIA, "Token %p", token);
+                        NEXUS_MemoryBlockHandle block = NEXUS_MemoryBlock_Clone ((NEXUS_MemoryBlockTokenHandle)token);
+                        if (!block) {
+                            LOG_ERROR(TAG_RT_MEDIA, "Can not allocate memory");
+                        } else {
+                            uint8_t* ptr_generic;
+                            NEXUS_Error rc = NEXUS_MemoryBlock_Lock(block, (void**)&ptr_generic);
+                            if (rc == 0) {
+                                LOG_DEBUG(TAG_RT_MEDIA, "Memory locked %p", ptr_generic);
+                                count += statics.videoPlayer.push(pes, offset, ptr_generic, key->sub_samples[i].encrypted_data, pts);
+                            } else {
+                                LOG_DEBUG(TAG_RT_MEDIA, "Can not lock block %x", rc);
+                            }
+                        }                         
+                        if (retValue != 0) {
+                            LOG_DEBUG(TAG_RT_MEDIA, "Returning SB_MEDIA_RESULT_OVERFLOW");
+                            return SB_MEDIA_RESULT_OVERFLOW;
+                        }
+                        break;
+                    }
+                }
+                if (!keyFound) {
+                    usleep(100*1000);
+                    LOG_DEBUG(TAG_RT_MEDIA, "Key not found!!");
+                    return SB_MEDIA_RESULT_OVERFLOW;
+                }
+            } else {
+                LOG_ERROR(TAG_RT_MEDIA, "Invalid Size!!!!!!!!");
+            }
+            offset += key->sub_samples[i].encrypted_data;
+        }
+    }        
+
     if (handle == statics.audioPlayer.steamboatDecoderHandle) {
-        LOG_DEBUG(TAG_RT_MEDIA, "Decode audio data pts %f (%f) size %d",  pts/1000000000.0, (pts - statics.audioPlayer.lastBufferedPts)/1000000000.0, size); 
-        if (pes != nullptr && std::llabs(pts - statics.audioPlayer.lastBufferedPts) < 5000000000) {
-            LOG_DEBUG(TAG_RT_MEDIA, "AudioBuffered %lldms", statics.audioPlayer.getBufferedRangeMs());
-            if (statics.audioPlayer.getBufferedRangeMs() > 5000) {
-                return SB_MEDIA_RESULT_OVERFLOW; 
-            }
-            if (statics.audioPlayer.bufferedBytes + size > AUDIO_LOOP_BUFFER_SIZE) {
-                return SB_MEDIA_RESULT_OVERFLOW; 
-            }
-            if (statics.audioPlayer.paused) {
-                statics.resumeAudio(pts);
-            }
-            int count = statics.audioPlayer.push(pes, size, pts);
-            if (statics.audioConfig.decode_done) {
-                statics.audioConfig.decode_done(handle);
-            }
-        } else {
-            statics.pauseAudio();
-            statics.resumeAudio(pts);
-            return SB_MEDIA_RESULT_OVERFLOW;
+        if (statics.audioConfig.decode_done) {
+            statics.audioConfig.decode_done(handle);
         }
     } else {
-        LOG_DEBUG(TAG_RT_MEDIA, "Decode video data pts %f (%f) size %d",  pts/1000000000.0, (pts - statics.videoPlayer.lastBufferedPts)/1000000000.0, size); 
-        if (pes != nullptr && std::llabs(pts - statics.videoPlayer.lastBufferedPts) < 5000000000) {
-            LOG_DEBUG(TAG_RT_MEDIA, "VideoBuffered %lldms", statics.videoPlayer.getBufferedRangeMs());
-
-            if (statics.videoPlayer.paused) {
-                statics.resumeVideo(pts);
-            }
-            int count = 0;
-            if (key == nullptr) {
-                count = statics.videoPlayer.push(pes, size, pts);
-            } else {
-                LOG_DEBUG(TAG_RT_MEDIA, "DecryptKey (%02x %02x %02x %02x) %d %d %d", key->keyID[0], key->keyID[1], key->keyID[2], key->keyID[3],
-                        key->iv_size, key->key_size, key->number_of_subsamples);
-                int allClearBytes = 0;
-                int allEncryptedBytes = 0;
-                for (int i = 0; i < key->number_of_subsamples; i++) {
-                    allClearBytes += key->sub_samples[i].clear_data;
-                    allEncryptedBytes += key->sub_samples[i].encrypted_data;
-                }
-                int offset = size - (allClearBytes + allEncryptedBytes);
-                if (offset < 0) {
-                    offset = 0;
-                }
-                int remainedSize = size;
-                for (int i = 0; i < key->number_of_subsamples; i++) {
-                    LOG_DEBUG(TAG_RT_MEDIA, "Decrypt subsample[%d] clearData %d encryptedData %d size %d sessions %d", i, key->sub_samples[i].clear_data + offset, key->sub_samples[i].encrypted_data, size, statics.drmSystem.ocdmSessions.size());
-                    offset += key->sub_samples[i].clear_data;
-                    if (key->sub_samples[i].encrypted_data == 0) {
-                        count += statics.videoPlayer.push(pes, offset, pts);
-                    }
-                    else if (offset + key->sub_samples[i].encrypted_data <= size) {
-                        int sessionIndex = -1;
-                        for (auto& session : statics.drmSystem.ocdmSessions) {
-                            sessionIndex++;
-                            if (session->hasKey(key->keyID, key->key_size)) {
-                                LOG_DEBUG(TAG_RT_MEDIA, "DecryptSession found..  sesison %d", sessionIndex);
-                                LOG_DEBUG(TAG_RT_MEDIA, "Before Decrypt %02x %02x %02x %02x", pes[offset], pes[offset+1], pes[offset+2], pes[offset+3]);
-
-                                uint8_t* buf = pes;                           
-                                int retValue = opencdm_session_decrypt(session->session,
-                                                        pes + offset, key->sub_samples[i].encrypted_data,
-                                                        key->iv, key->iv_size,
-                                                        key->keyID, key->key_size);
-                                LOG_DEBUG(TAG_RT_MEDIA, "After Decrypt %02x %02x %02x %02x", pes[offset], pes[offset+1], pes[offset+2], pes[offset+3]);
-                                void* token;
-                                memcpy(&token, pes + offset, 4);
-                                LOG_DEBUG(TAG_RT_MEDIA, "Token %p", token);
-                                NEXUS_MemoryBlockHandle block = NEXUS_MemoryBlock_Clone ((NEXUS_MemoryBlockTokenHandle)token);
-                                if (!block) {
-                                    LOG_ERROR(TAG_RT_MEDIA, "Can not allocate memory");
-                                } else {
-                                    uint8_t* ptr_generic;
-                                    NEXUS_Error rc = NEXUS_MemoryBlock_Lock(block, (void**)&ptr_generic);
-                                    if (rc == 0) {
-                                        LOG_DEBUG(TAG_RT_MEDIA, "Memory locked %p", ptr_generic);
-                                        count += statics.videoPlayer.push(pes, offset, ptr_generic, key->sub_samples[i].encrypted_data, pts);
-                                    } else {
-                                        LOG_DEBUG(TAG_RT_MEDIA, "Can not lock block %x", rc);
-                                    }
-                                }                         
-                                if (retValue != 0) {
-                                    LOG_DEBUG(TAG_RT_MEDIA, "Returning SB_MEDIA_RESULT_OVERFLOW");
-                                    return SB_MEDIA_RESULT_OVERFLOW;
-                                }
-                                break;
-                            } else {
-                                if (memcmp(session->KID, key->keyID, key->key_size) == 0 || sessionIndex == 1) {
-                                    usleep(100*1000);
-                                    return SB_MEDIA_RESULT_OVERFLOW;
-                                }
-                            }
-                        }
-                    } else {
-                        LOG_ERROR(TAG_RT_MEDIA, "Invalid Size!!!!!!!!");
-                    }
-                    offset += key->sub_samples[i].encrypted_data;
-                }
-            }
-            LOG_DEBUG(TAG_RT_MEDIA, "video buffer count %d", count);
-            if (statics.videoConfig.decode_done) {
-                statics.videoConfig.decode_done(handle);
-            }
-        } else {
-            statics.pauseVideo();
-            statics.resumeVideo(pts);
-            return SB_MEDIA_RESULT_OVERFLOW;
-        }
+        if (statics.videoConfig.decode_done) {
+            statics.videoConfig.decode_done(handle);
+        }   
     }
     return SB_MEDIA_RESULT_SUCCESS;
 }
@@ -1039,6 +1139,7 @@ sb_media_result_t sb_media_set_video_output_rectangle(sb_media_decoder_handle ha
 sb_media_result_t sb_media_reset_decoder(sb_media_decoder_handle handle)
 {
     LOG_DEBUG(TAG_RT_MEDIA, "%s %s %d", __FILE__, __func__, __LINE__);
+    PLAYER(handle)->stop();
     return SB_MEDIA_RESULT_SUCCESS;
 }
 
@@ -1082,11 +1183,11 @@ sb_media_result_t sb_media_generate_challenge(const uint8_t * object, const uint
 
 sb_media_result_t sb_media_process_key_message_response(const uint8_t * response, const uint16_t response_size)
 {
-    FILE* fp = fopen("/userdata/response.bin", "w");
-    if (fp) {
-        fwrite(response, 1, response_size, fp);
-        fclose(fp);
-    }
+    // FILE* fp = fopen("/userdata/response.bin", "w");
+    // if (fp) {
+    //     fwrite(response, 1, response_size, fp);
+    //     fclose(fp);
+    // }
     LOG_DEBUG(TAG_RT_MEDIA, "%s %s %d responseSize %d TID %d", __FILE__, __func__, __LINE__, response_size, syscall(__NR_gettid));
     std::string licenseNonce = parseTag((const char*)response, "LicenseNonce");
     LOG_DEBUG(TAG_RT_MEDIA, "LicenseNonce %s", licenseNonce.c_str());
@@ -1118,12 +1219,52 @@ sb_media_result_t sb_media_get_decoder_capabilities(sb_media_decoder_capabilitie
     capabilities->audio_codecs = SB_MEDIA_AUDIO_CODEC_EAC3 | SB_MEDIA_AUDIO_CODEC_AAC | SB_MEDIA_AUDIO_CODEC_AC3;
     capabilities->profile = SB_MEDIA_PROFILE_H264_MAIN | SB_MEDIA_PROFILE_H264_HIGH | SB_MEDIA_PROFILE_HEVC_MAIN | SB_MEDIA_PROFILE_HEVC_MAIN_10;
     capabilities->level = SB_MEDIA_LEVEL_3_1 | SB_MEDIA_LEVEL_4;
-    capabilities->dynamic_range = SB_MEDIA_VIDEO_DYNAMIC_RANGE_HDR10;
+    capabilities->dynamic_range = SB_MEDIA_VIDEO_DYNAMIC_RANGE_STANDARD | SB_MEDIA_VIDEO_DYNAMIC_RANGE_HDR10;
     capabilities->video_output_resolution = SB_MEDIA_PLAYER_VIDEO_OUT_SD | SB_MEDIA_PLAYER_VIDEO_OUT_720P | 
                 SB_MEDIA_PLAYER_VIDEO_OUT_1080P | SB_MEDIA_PLAYER_VIDEO_OUT_1440P | SB_MEDIA_PLAYER_VIDEO_OUT_4K;
-    capabilities->video_output_rate = SB_MEDIA_PLAYER_VIDEO_RATE_25;
-    capabilities->hdcp_level = SB_MEDIA_HDCP_2_2;
-    capabilities->drm = SB_MEDIA_DRM_PLAYREADY | SB_MEDIA_DRM_WIDEVINE;
+    capabilities->video_output_rate = SB_MEDIA_PLAYER_VIDEO_RATE_25 |
+        SB_MEDIA_PLAYER_VIDEO_RATE_50 | SB_MEDIA_PLAYER_VIDEO_RATE_29_97_OR_30 | SB_MEDIA_PLAYER_VIDEO_RATE_59_94_OR_60;
+    capabilities->hdcp_level = SB_MEDIA_HDCP_1_1 | SB_MEDIA_HDCP_2_2;
+    capabilities->drm = SB_MEDIA_DRM_PLAYREADY;
+
+    NEXUS_HdmiOutputHandle hdmiHandle;
+    NEXUS_HdmiOutputEdidData edidData;
+    NEXUS_PlatformConfiguration platformConfig;
+
+    NEXUS_Platform_GetConfiguration(&platformConfig);
+    hdmiHandle = platformConfig.outputs.hdmi[0]; /* always first output. */
+    int errCode = NEXUS_HdmiOutput_GetEdidData(hdmiHandle, &edidData);    
+    if (errCode != NEXUS_SUCCESS) {
+        if (edidData.hdrdb.valid) {
+            capabilities->dynamic_range = 0;
+            if (edidData.hdrdb.eotfSupported[NEXUS_VideoEotf_eSdr]) {
+                capabilities->dynamic_range |= SB_MEDIA_VIDEO_DYNAMIC_RANGE_STANDARD;
+            }
+            if (edidData.hdrdb.eotfSupported[NEXUS_VideoEotf_eHdr10]) {
+                capabilities->dynamic_range |= SB_MEDIA_VIDEO_DYNAMIC_RANGE_HDR10;
+            }
+        }
+    }    
+
+    NEXUS_HdmiOutputHandle hdmiOutput;
+    hdmiOutput = NEXUS_HdmiOutput_Open(NEXUS_ALIAS_ID + 0, NULL);
+    if (hdmiOutput){
+        NEXUS_HdmiOutputStatus status;
+        NEXUS_HdmiOutputHdcpStatus hdcpStatus;
+
+        int rc = NEXUS_HdmiOutput_GetStatus(hdmiOutput, &status);
+        if(!rc && status.connected ){
+            capabilities->hdcp_level = 0;
+            NEXUS_HdmiOutput_GetHdcpStatus(hdmiOutput, &hdcpStatus);
+            if(hdcpStatus.hdcp2_2Features){
+                capabilities->hdcp_level |= SB_MEDIA_HDCP_2_2;
+            }
+            if (hdcpStatus.hdcp1_1Features) {
+                capabilities->hdcp_level |= SB_MEDIA_HDCP_1_1;
+            }
+        }
+        NEXUS_HdmiOutput_Close(hdmiOutput);
+    }    
     return SB_MEDIA_RESULT_SUCCESS;
 }
 
@@ -1209,6 +1350,11 @@ sb_media_result_t sb_media_get_decoder_stats(sb_media_decoder_handle handle, sb_
 sb_media_result_t sb_media_set_playback_rate(sb_media_decoder_handle handle, int8_t playback_rate)
 {
     LOG_DEBUG(TAG_RT_MEDIA, "%s %s %d", __FILE__, __func__, __LINE__);
+    if (playback_rate == 0) {
+        PLAYER(handle)->pause();
+    } else {
+        PLAYER(handle)->resume();
+    }
     return SB_MEDIA_RESULT_SUCCESS;
 }
 
@@ -1224,14 +1370,140 @@ sb_media_result_t sb_media_audio_set_volume(const float volume)
     return SB_MEDIA_RESULT_SUCCESS;
 }
 
+struct hdmi_audio_format_map_t {
+    NEXUS_AudioCodec nexusCodec;
+    const char *formatString;
+    int dssFormat;
+    const char *additionalFormatString;
+};
+
+static struct hdmi_audio_format_map_t formatMap[] =
+{
+    {
+        .nexusCodec = NEXUS_AudioCodec_ePcm,
+        .formatString = "AUDIO_FORMAT_PCM_16_BIT",
+        .dssFormat = SB_MEDIA_AUDIO_LPCM,
+    },
+    {
+        .nexusCodec = NEXUS_AudioCodec_eAc3,
+        .formatString = "AUDIO_FORMAT_AC3",
+        .dssFormat = SB_MEDIA_AUDIO_DOLBY_DIGITAL, 
+    },
+    {
+        .nexusCodec = NEXUS_AudioCodec_eAc3Plus,
+        .formatString = "AUDIO_FORMAT_E_AC3",
+        .dssFormat = SB_MEDIA_AUDIO_DOLBY_DIGITAL, 
+        .additionalFormatString = "AUDIO_FORMAT_E_AC3_JOC",
+    },
+};
+
+typedef struct {
+        const char *name; /* string for nexus enum */
+        NEXUS_VideoFormat value;  /* nexus enum */
+        int dssFormat; 
+        int dssHz;
+} HdmiFormat_t;
+
+static int num_codecs = sizeof(formatMap)/sizeof(formatMap[0]);
+#define E_AC3_JOC_BIT 0x01
+
+const HdmiFormat_t g_videoFormatStrs[] = {
+        {"576i",         NEXUS_VideoFormat_ePal             ,SB_MEDIA_PLAYER_VIDEO_OUT_SD,      SB_MEDIA_PLAYER_VIDEO_RATE_50},
+        {"576p",         NEXUS_VideoFormat_e576p            ,SB_MEDIA_PLAYER_VIDEO_OUT_SD,      SB_MEDIA_PLAYER_VIDEO_RATE_50},
+        {"720p",         NEXUS_VideoFormat_e720p            ,SB_MEDIA_PLAYER_VIDEO_OUT_720P,    SB_MEDIA_PLAYER_VIDEO_RATE_59_94_OR_60},
+        {"720p",         NEXUS_VideoFormat_e720p50hz        ,SB_MEDIA_PLAYER_VIDEO_OUT_720P,    SB_MEDIA_PLAYER_VIDEO_RATE_50},
+        {"1080p",        NEXUS_VideoFormat_e1080p           ,SB_MEDIA_PLAYER_VIDEO_OUT_1080P,   SB_MEDIA_PLAYER_VIDEO_RATE_59_94_OR_60},
+        {"1080p",        NEXUS_VideoFormat_e1080p50hz       ,SB_MEDIA_PLAYER_VIDEO_OUT_1080P,   SB_MEDIA_PLAYER_VIDEO_RATE_50},
+        {"3840x2160p50", NEXUS_VideoFormat_e3840x2160p50hz  ,SB_MEDIA_PLAYER_VIDEO_OUT_4K,      SB_MEDIA_PLAYER_VIDEO_RATE_50},
+        {"3840x2160p60", NEXUS_VideoFormat_e3840x2160p60hz  ,SB_MEDIA_PLAYER_VIDEO_OUT_4K,      SB_MEDIA_PLAYER_VIDEO_RATE_59_94_OR_60},
+        {NULL,           NEXUS_VideoFormat_eUnknown,        SB_MEDIA_PLAYER_VIDEO_OUT_NONE, SB_MEDIA_PLAYER_VIDEO_RATE_NONE}
+};
+
 sb_media_result_t sb_media_get_hdmi_capabilities(sb_media_hdmi_capabilities_t *capabilities)
 {
     LOG_DEBUG(TAG_RT_MEDIA, "sb_media_get_hdmi_capabilities" );   
-    capabilities->audio_capabilities = SB_MEDIA_AUDIO_LPCM | SB_MEDIA_AUDIO_DOLBY_DIGITAL | SB_MEDIA_AUDIO_DOLBY_ATMOS; 
-    capabilities->video_output_resolution = SB_MEDIA_PLAYER_VIDEO_OUT_4K;
-    capabilities->video_output_rate = SB_MEDIA_PLAYER_VIDEO_RATE_50;
-    capabilities->color_format = SB_MEDIA_COLOR_FORMAT_4_2_0;
-    capabilities->color_depth = SB_MEDIA_COLOR_DEPTH_12BPC;
-    capabilities->color_space = SB_MEDIA_COLOR_SPACE_ITU_R_BT2020; 
+
+    memset(capabilities, 0, sizeof(sb_media_hdmi_capabilities_t));
+    NEXUS_HdmiOutputHandle hdmiHandle;
+    NEXUS_HdmiOutputEdidData edidData;
+    NEXUS_PlatformConfiguration platformConfig;
+    NEXUS_Error errCode;
+
+    NxClient_DisplayStatus status;
+    NEXUS_DisplayCapabilities caps;
+
+    int rc = NxClient_GetDisplayStatus(&status);
+    if (rc) {
+        LOG_WARN(TAG_RT_MEDIA, "FAILED TO GET DISPLAY STATUS.");
+        return SB_MEDIA_RESULT_FAIL;
+    }
+
+    NEXUS_GetDisplayCapabilities(&caps);
+    int i = 0;
+    do {
+        if (status.hdmi.status.videoFormatSupported[g_videoFormatStrs[i].value]){
+            if (caps.displayFormatSupported[g_videoFormatStrs[i].value]) {
+                LOG_DEBUG(TAG_RT_MEDIA, "Supported VideoFormat %s", g_videoFormatStrs[i].name);
+                capabilities->video_output_resolution |= g_videoFormatStrs[i].dssFormat;
+                capabilities->video_output_rate |= g_videoFormatStrs[i].dssHz;
+            }
+        }
+        i++;
+    } while (g_videoFormatStrs[i].name != NULL);
+
+    NEXUS_Platform_GetConfiguration(&platformConfig);
+    hdmiHandle = platformConfig.outputs.hdmi[0]; /* always first output. */
+    errCode = NEXUS_HdmiOutput_GetEdidData(hdmiHandle, &edidData);
+    if (errCode != NEXUS_SUCCESS) {
+        LOG_WARN(TAG_RT_MEDIA, "Error %d getting EDID data", errCode);
+        return SB_MEDIA_RESULT_FAIL; 
+    }
+
+    LOG_DEBUG(TAG_RT_MEDIA, "edidData valid %d audioValid %d", edidData.valid, edidData.audiodb.valid);
+
+    if (edidData.valid) {
+        capabilities->color_depth |= SB_MEDIA_COLOR_DEPTH_8BPC; 
+        capabilities->color_format |= SB_MEDIA_COLOR_FORMAT_4_2_0;
+
+        if (edidData.audiodb.valid) {
+            int codec;
+            for (codec = 0; codec < num_codecs; codec++) {
+                if (edidData.audiodb.audioFormat[formatMap[codec].nexusCodec].supported) {
+                    LOG_DEBUG(TAG_RT_MEDIA, "%s: codec %s supported", __func__, formatMap[codec].formatString);
+                    capabilities->audio_capabilities |= formatMap[codec].dssFormat;
+
+                    /* Handle format specifics */
+                    switch (formatMap[codec].nexusCodec) {
+                        case NEXUS_AudioCodec_eAc3Plus:
+                            if (edidData.audiodb.audioFormat[formatMap[codec].nexusCodec].dataType.compressed.formatDependentValue & E_AC3_JOC_BIT) {
+                                capabilities->audio_capabilities |= SB_MEDIA_AUDIO_DOLBY_ATMOS;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        if (edidData.hdmiVsdb.valid) {
+            if (edidData.hdmiVsdb.deepColor30bit) {
+                capabilities->color_depth |= SB_MEDIA_COLOR_DEPTH_10BPC; 
+            }
+            if (edidData.hdmiVsdb.deepColor36bit) {
+                capabilities->color_depth |= SB_MEDIA_COLOR_DEPTH_12BPC; 
+            }
+        }
+        if (edidData.hdmiForumVsdb.valid) {
+            if (edidData.hdmiForumVsdb.deepColor420_30bit) {
+                capabilities->color_depth |= SB_MEDIA_COLOR_DEPTH_10BPC; 
+            }
+            if (edidData.hdmiForumVsdb.deepColor420_36bit) {
+                capabilities->color_depth |= SB_MEDIA_COLOR_DEPTH_12BPC; 
+            }
+        }
+    
+        capabilities->color_space = SB_MEDIA_COLOR_SPACE_ITU_R_BT2020; 
+    }
+    LOG_DEBUG(TAG_RT_MEDIA, "HDMI capabilities audio : %x, resolution %x, ", capabilities->audio_capabilities, capabilities->video_output_resolution);
     return SB_MEDIA_RESULT_SUCCESS;
 }
