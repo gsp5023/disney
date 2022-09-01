@@ -19,7 +19,7 @@ project "steamboat"
 	files "**.c"
 	pch()
 
-	removefiles "sb_media_stub.c"
+	removefiles "sb_media_stub.cpp"
 
 	filter "platforms:*win*"
 		links "Iphlpapi"

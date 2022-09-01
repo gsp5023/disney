@@ -191,7 +191,6 @@ typedef struct sb_media_decoder_capabilities_t {
     sb_media_drm_flag_t                             drm;                     /**< DRM capabilities */
     sb_media_encryption_t                           encryption;              /**< Encryption Capabilities */
     sb_media_hdcp_level_t                           hdcp_level;              /**< HDCP Level */
-    sb_media_hdcp_level_t                           hdcp_level;              /**< HDCP Level */
     uint8_t                                         unused;                  /**< alignment */
 }sb_media_decoder_capabilities_t;
 

@@ -116,7 +116,7 @@ function m.link()
 		links {"X11","EGL","GLESv2"} 
 
 	filter "platforms:*mw*"
-		 links {"nghttp2", "ssl", "crypto", "nxclient", "nexus"}		-- <-- PARTNER TODO: add custom MW and/or SoC/vendor specific libraries needed for Steamboat integration
+		 links {"nghttp2", "ssl", "crypto", "srai", "nxclient", "nexus"}		-- <-- PARTNER TODO: add custom MW and/or SoC/vendor specific libraries needed for Steamboat integration
 end
 
 return m

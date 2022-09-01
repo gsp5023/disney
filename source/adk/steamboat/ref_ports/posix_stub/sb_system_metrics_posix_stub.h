@@ -38,10 +38,10 @@ extern "C" {
 
 #define SB_METRICS_PARTNER "nuuday_dk"
 
-#define SB_METRICS_FIRMWARE "1.0.0" //TODO: Fill this in
+#define SB_METRICS_FIRMWARE "partner provided" //TODO: Fill this in
 
-#define SB_METRICS_SOFTWARE "1.0.0" //TODO: Fill this in
-#define SB_METRICS_REVISION "1.0.0" //TODO: Fill this in
+#define SB_METRICS_SOFTWARE "partner provided" //TODO: Fill this in
+#define SB_METRICS_REVISION "partner provided" //TODO: Fill this in
 #define SB_METRICS_CPU "partner provided" //TODO: Fill this in
 #define SB_METRICS_GPU "partner provided" //TODO: Fill this in
 
